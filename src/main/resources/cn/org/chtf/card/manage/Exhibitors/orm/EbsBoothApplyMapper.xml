@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.Exhibitors.dao.EbsBoothApplyMapper">
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsBoothApply">
+        select
+			a.apply_id as applyId,
+			c.id as sessionId,
+			a.apply_products as applyProducts,
+			a.apply_license as applyLicense,
+			a.apply_file as applyFile,
+			b.member_username as memberUsername,
+			a.company_id as companyId,
+			a.apply_addtime as applyAddtime,
+			b.member_id as memberId
+        from ebs_booth_apply as a
+        left join web_member b on a.member_id = b.member_id
+        left join sys_session c on a.session_id = c.id
+        where a.apply_id = #{apply_id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsBoothApply">
+        select
+			a.apply_id as applyId,
+			a.session_id as sessionId,
+			a.apply_products as applyProducts,
+			a.apply_license as applyLicense,
+			a.apply_file as applyFile,
+			a.member_id as memberId,
+			a.company_id as companyId,
+			a.apply_addtime as applyAddtime
+        from ebs_booth_apply as a
+        <where>
+			<if test="applyId != null and applyId != ''">
+				and a.apply_id = #{applyId}
+			</if>
+			<if test="sessionId != null and sessionId != ''">
+				and a.session_id = #{sessionId}
+			</if>
+			<if test="applyProducts != null and applyProducts != ''">
+				and a.apply_products = #{applyProducts}
+			</if>
+			<if test="applyLicense != null and applyLicense != ''">
+				and a.apply_license = #{applyLicense}
+			</if>
+			<if test="applyFile != null and applyFile != ''">
+				and a.apply_file = #{applyFile}
+			</if>
+			<if test="memberId != null and memberId != ''">
+				and a.member_id = #{memberId}
+			</if>
+			<if test="companyId != null and companyId != ''">
+				and a.company_id = #{companyId}
+			</if>
+			<if test="applyAddtime != null and applyAddtime != ''">
+				and a.apply_addtime = #{applyAddtime}
+			</if>
+        </where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsBoothApply">
+        select
+			a.apply_id as applyId,
+			c.sessionid as sessionId,
+			a.apply_products as applyProducts,
+			a.apply_license as applyLicense,
+			a.apply_file as applyFile,
+			a.member_id as memberId,
+			b.member_username as memberUsername,
+			a.company_id as companyId,
+			a.apply_addtime as applyAddtime
+        from ebs_booth_apply as a
+        left join web_member b on a.member_id = b.member_id
+        left join sys_session c on a.session_id = c.id
+        <where>
+            <if test="applyId != null and applyId != ''">
+                and a.apply_id = #{applyId}
+            </if>
+            <if test="sessionId != null and sessionId != ''">
+                and a.session_id = #{sessionId}
+            </if>
+            <if test="applyProducts != null and applyProducts != ''">
+                and a.apply_products = #{applyProducts}
+            </if>
+            <if test="applyLicense != null and applyLicense != ''">
+                and a.apply_license = #{applyLicense}
+            </if>
+            <if test="applyFile != null and applyFile != ''">
+                and a.apply_file = #{applyFile}
+            </if>
+            <if test="memberId != null and memberId != ''">
+                and a.member_id = #{memberId}
+            </if>
+			<if test="companyId != null and companyId != ''">
+				and a.company_id = #{companyId}
+			</if>
+            <if test="applyAddtime != null and applyAddtime != ''">
+                and a.apply_addtime = #{applyAddtime}
+            </if>
+        </where>
+        order by a.apply_id desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(*) FROM ebs_booth_apply a
+		<where>
+            <if test="applyId != null and applyId != ''">
+                and a.apply_id = #{applyId}
+            </if>
+            <if test="sessionId != null and sessionId != ''">
+                and a.session_id = #{sessionId}
+            </if>
+            <if test="applyProducts != null and applyProducts != ''">
+                and a.apply_products = #{applyProducts}
+            </if>
+            <if test="applyLicense != null and applyLicense != ''">
+                and a.apply_license = #{applyLicense}
+            </if>
+            <if test="applyFile != null and applyFile != ''">
+                and a.apply_file = #{applyFile}
+            </if>
+            <if test="memberId != null and memberId != ''">
+                and a.member_id = #{memberId}
+            </if>
+			<if test="companyId != null and companyId != ''">
+				and a.company_id = #{companyId}
+			</if>
+            <if test="applyAddtime != null and applyAddtime != ''">
+                and a.apply_addtime = #{applyAddtime}
+            </if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.Exhibitors.model.EbsBoothApply" useGeneratedKeys="true" keyProperty="applyId">
+        insert into ebs_booth_apply(
+        	<trim suffixOverrides=",">
+                <if test="sessionId != null">`session_id`,</if>
+                <if test="applyProducts != null">`apply_products`,</if>
+                <if test="applyLicense != null">`apply_license`,</if>
+                <if test="applyFile != null">`apply_file`,</if>
+                <if test="memberId != null">`member_id`,</if>
+                <if test="companyId != null">`company_id`,</if>
+                <if test="applyAddtime != null">`apply_addtime`</if>
+			</trim>
+		) values (
+        	<trim suffixOverrides=",">
+                <if test="sessionId != null">#{sessionId},</if>
+                <if test="applyProducts != null">#{applyProducts},</if>
+                <if test="applyLicense != null">#{applyLicense},</if>
+                <if test="applyFile != null">#{applyFile},</if>
+                <if test="memberId != null">#{memberId},</if>
+                <if test="companyId != null">#{companyId},</if>
+                <if test="applyAddtime != null">#{applyAddtime}</if>
+			</trim>
+		)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.Exhibitors.model.EbsBoothApply">
+        update ebs_booth_apply
+        <set>
+			<if test="sessionId != null">`session_id` = #{sessionId},</if>
+			<if test="applyProducts != null">`apply_products` = #{applyProducts},</if>
+			<if test="applyLicense != null">`apply_license` = #{applyLicense},</if>
+			<if test="applyFile != null">`apply_file` = #{applyFile},</if>
+			<if test="memberId != null">`member_id` = #{memberId},</if>
+			<if test="companyId != null">`company_id` = #{companyId},</if>
+			<if test="applyAddtime != null">`apply_addtime` = #{applyAddtime}</if>
+        </set>
+        where apply_id = #{applyId}
+    </update>
+
+    <delete id="deleteById">
+        delete from ebs_booth_apply where apply_id = #{apply_id}
+    </delete>
+    
+    <select id="findByCompanyId" resultType="map">
+        select apply_id applyId from ebs_booth_apply
+		where company_id = #{companyId} and session_id = #{sessionId}
+    </select>
+</mapper>

@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.org.chtf.card.manage.person.dao.PersonDAO">
+  <resultMap id="BaseResultMap" type="cn.org.chtf.card.manage.person.pojo.Person">
+    <id column="person_id" jdbcType="INTEGER" property="personId" />
+    <result column="person_order" jdbcType="INTEGER" property="personOrder" />
+    <result column="person_name" jdbcType="VARCHAR" property="personName" />
+    <result column="person_pinyin" jdbcType="VARCHAR" property="personPinyin" />
+    <result column="menu_id" jdbcType="INTEGER" property="menuId" />
+    <result column="person_ico" jdbcType="VARCHAR" property="personIco" />
+    <result column="person_position" jdbcType="VARCHAR" property="personPosition" />
+    <result column="person_profession" jdbcType="VARCHAR" property="personProfession" />
+    <result column="person_qualifications" jdbcType="VARCHAR" property="personQualifications" />
+    <result column="person_workplace" jdbcType="VARCHAR" property="personWorkplace" />
+    <result column="person_language" jdbcType="VARCHAR" property="personLanguage" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="cn.org.chtf.card.manage.person.pojo.PersonWithBLOBs">
+    <result column="person_experience" jdbcType="LONGVARCHAR" property="personExperience" />
+    <result column="person_background" jdbcType="LONGVARCHAR" property="personBackground" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    person_id, person_order, person_name, person_pinyin, menu_id, person_ico, person_position, 
+    person_profession, person_qualifications, person_workplace, person_language
+  </sql>
+  <sql id="Blob_Column_List">
+    person_experience, person_background
+  </sql>
+  <insert id="insert" parameterType="cn.org.chtf.card.manage.person.pojo.PersonWithBLOBs">
+    insert into web_person
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="personId != null">
+        person_id,
+      </if>
+      <if test="personOrder != null">
+        person_order,
+      </if>
+      <if test="personName != null">
+        person_name,
+      </if>
+      <if test="personPinyin != null">
+        person_pinyin,
+      </if>
+      <if test="menuId != null">
+        menu_id,
+      </if>
+      <if test="personIco != null">
+        person_ico,
+      </if>
+      <if test="personPosition != null">
+        person_position,
+      </if>
+      <if test="personProfession != null">
+        person_profession,
+      </if>
+      <if test="personQualifications != null">
+        person_qualifications,
+      </if>
+      <if test="personWorkplace != null">
+        person_workplace,
+      </if>
+      <if test="personLanguage != null">
+        person_language,
+      </if>
+      <if test="personExperience != null">
+        person_experience,
+      </if>
+      <if test="personBackground != null">
+        person_background,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="personId != null">
+        #{personId,jdbcType=INTEGER},
+      </if>
+      <if test="personOrder != null">
+        #{personOrder,jdbcType=INTEGER},
+      </if>
+      <if test="personName != null">
+        #{personName,jdbcType=VARCHAR},
+      </if>
+      <if test="personPinyin != null">
+        #{personPinyin,jdbcType=VARCHAR},
+      </if>
+      <if test="menuId != null">
+        #{menuId,jdbcType=INTEGER},
+      </if>
+      <if test="personIco != null">
+        #{personIco,jdbcType=VARCHAR},
+      </if>
+      <if test="personPosition != null">
+        #{personPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="personProfession != null">
+        #{personProfession,jdbcType=VARCHAR},
+      </if>
+      <if test="personQualifications != null">
+        #{personQualifications,jdbcType=VARCHAR},
+      </if>
+      <if test="personWorkplace != null">
+        #{personWorkplace,jdbcType=VARCHAR},
+      </if>
+      <if test="personLanguage != null">
+        #{personLanguage,jdbcType=VARCHAR},
+      </if>
+      <if test="personExperience != null">
+        #{personExperience,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="personBackground != null">
+        #{personBackground,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <delete id="delete" parameterType="java.lang.Integer">
+    delete from web_person
+    where person_id = #{personId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deletes"  parameterType="java.util.List">
+    delete from web_person
+    where person_id in  
+        <foreach collection="idList" item="id" index="index"
+            open="(" close=")" separator=",">
+            #{id,jdbcType=INTEGER}
+        </foreach>;
+  </delete> 
+  <update id="update" parameterType="cn.org.chtf.card.manage.person.pojo.PersonWithBLOBs">
+    update web_person
+    <set>
+      <if test="personOrder != null">
+        person_order = #{personOrder,jdbcType=INTEGER},
+      </if>
+      <if test="personName != null">
+        person_name = #{personName,jdbcType=VARCHAR},
+      </if>
+      <if test="personPinyin != null">
+        person_pinyin = #{personPinyin,jdbcType=VARCHAR},
+      </if>
+      <if test="menuId != null">
+        menu_id = #{menuId,jdbcType=INTEGER},
+      </if>
+      <if test="personIco != null">
+        person_ico = #{personIco,jdbcType=VARCHAR},
+      </if>
+      <if test="personPosition != null">
+        person_position = #{personPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="personProfession != null">
+        person_profession = #{personProfession,jdbcType=VARCHAR},
+      </if>
+      <if test="personQualifications != null">
+        person_qualifications = #{personQualifications,jdbcType=VARCHAR},
+      </if>
+      <if test="personWorkplace != null">
+        person_workplace = #{personWorkplace,jdbcType=VARCHAR},
+      </if>
+      <if test="personLanguage != null">
+        person_language = #{personLanguage,jdbcType=VARCHAR},
+      </if>
+      <if test="personExperience != null">
+        person_experience = #{personExperience,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="personBackground != null">
+        person_background = #{personBackground,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where person_id = #{personId,jdbcType=INTEGER}
+  </update>
+  <select id="select" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from web_person
+    where person_id = #{personId,jdbcType=INTEGER}
+  </select>
+  <select id="list"  parameterType="cn.org.chtf.card.manage.person.pojo.PersonParameter"  resultMap="ResultMapWithBLOBs">
+  	SELECT
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from web_person
+	<where>
+      <if test="personId != null">
+         AND person_id = #{personId,jdbcType=INTEGER}
+      </if>
+      <if test="personOrder != null">
+         AND person_order = #{personOrder,jdbcType=INTEGER}
+      </if>
+      <if test="personName != null">
+         AND person_name LIKE  concat('%',#{personName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="personPinyin != null">
+         AND person_pinyin LIKE concat(#{personPinyin,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="menuId != null">
+         AND menu_id = #{menuId,jdbcType=INTEGER}
+      </if>
+      <if test="personIco != null">
+         AND person_ico = #{personIco,jdbcType=VARCHAR}
+      </if>
+      <if test="personPosition != null">
+         AND person_position LIKE concat('%',#{personPosition,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="personProfession != null">
+         AND person_profession LIKE concat('%',#{personProfession,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="personQualifications != null">
+         AND person_qualifications LIKE concat('%',#{personQualifications,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="personWorkplace != null">
+         AND person_workplace LIKE concat('%',#{personWorkplace,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="personLanguage != null">
+         AND person_language LIKE concat('%',#{personLanguage,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="personExperience != null">
+         AND person_experience LIKE concat('%',#{personExperience,jdbcType=LONGVARCHAR},'%')
+      </if>
+      <if test="personBackground != null">
+         AND person_background LIKE concat('%',#{personBackground,jdbcType=LONGVARCHAR},'%')
+      </if>
+    </where>
+	ORDER BY ${field} ${order}
+	LIMIT #{start,jdbcType=INTEGER},
+	 #{limit,jdbcType=INTEGER};
+  </select>
+  <select id="total"  parameterType="cn.org.chtf.card.manage.person.pojo.PersonParameter"  resultType="java.lang.Integer">
+    select count(*) from web_person
+	<where>
+      <if test="personId != null">
+         AND person_id = #{personId,jdbcType=INTEGER}
+      </if>
+      <if test="personOrder != null">
+         AND person_order = #{personOrder,jdbcType=INTEGER}
+      </if>
+      <if test="personName != null">
+         AND person_name LIKE  concat('%',#{personName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="personPinyin != null">
+         AND person_pinyin LIKE concat(#{personPinyin,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="menuId != null">
+         AND menu_id = #{menuId,jdbcType=INTEGER}
+      </if>
+      <if test="personIco != null">
+         AND person_ico = #{personIco,jdbcType=VARCHAR}
+      </if>
+      <if test="personPosition != null">
+         AND person_position LIKE concat('%',#{personPosition,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="personProfession != null">
+         AND person_profession LIKE concat('%',#{personProfession,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="personQualifications != null">
+         AND person_qualifications LIKE concat('%',#{personQualifications,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="personWorkplace != null">
+         AND person_workplace LIKE concat('%',#{personWorkplace,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="personLanguage != null">
+         AND person_language LIKE concat('%',#{personLanguage,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="personExperience != null">
+         AND person_experience LIKE concat('%',#{personExperience,jdbcType=LONGVARCHAR},'%')
+      </if>
+      <if test="personBackground != null">
+         AND person_background LIKE concat('%',#{personBackground,jdbcType=LONGVARCHAR},'%')
+      </if>
+    </where>
+  </select>
+  <update id="alterMenu"  parameterType="cn.org.chtf.card.manage.common.pojo.AlterMenuParameter">
+    update web_person set menu_id=#{menuId}
+    where person_id in  
+        <foreach collection="idList" item="articleId" index="index"
+            open="(" close=")" separator=",">
+            #{articleId,jdbcType=VARCHAR}
+        </foreach>;
+  </update>
+  <select id="searchList"  resultMap="ResultMapWithBLOBs">
+  	SELECT
+ 		person_id, person_order, person_name, person_pinyin, web_person.menu_id, person_ico, person_position, 
+    	person_profession, person_qualifications, person_workplace, person_language
+    from web_person LEFT JOIN web_menu ON web_person.menu_id=web_menu.menu_id
+    where menu_language=#{language,jdbcType=VARCHAR} 
+      <if test="personName != null">
+         AND person_name LIKE  concat('%',#{personName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="personPinyin != null">
+         AND person_pinyin LIKE concat(#{personPinyin,jdbcType=VARCHAR},'%')
+      </if>
+	ORDER BY person_order DESC
+	LIMIT #{start,jdbcType=INTEGER},
+	 #{end,jdbcType=INTEGER};
+  </select>
+  <select id="searchTotal"  resultType="java.lang.Integer">
+    select count(*) from web_person LEFT JOIN web_menu ON web_person.menu_id=web_menu.menu_id 
+    where menu_language=#{language,jdbcType=VARCHAR} 
+      <if test="personName != null">
+         AND person_name LIKE  concat('%',#{personName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="personPinyin != null">
+         AND person_pinyin LIKE concat(#{personPinyin,jdbcType=VARCHAR},'%')
+      </if>
+	ORDER BY person_order DESC
+	LIMIT #{start,jdbcType=INTEGER},
+	 #{end,jdbcType=INTEGER};
+  </select>
+  <select id="groupCountry" resultType="string">
+  	SELECT DISTINCT b.name FROM ebs_personnelcard a
+	LEFT JOIN sys_country_area b ON a.country = b.id WHERE a.session = #{session} AND a.country != 0
+  </select>
+  <select id="groupForeignCountry" resultType="string">
+  	SELECT DISTINCT b.name FROM ebs_personnelcard a
+	LEFT JOIN sys_country_area b ON a.country = b.id WHERE a.session = #{session} AND a.country != 0 and a.country != 900000
+  </select>
+  <select id="groupForeignerCardCountry" resultType="string">
+  	SELECT CONCAT(b.name,'：',COUNT(a.id)) FROM ebs_personnelcard a
+	LEFT JOIN sys_country_area b ON a.country = b.id
+	WHERE a.session = #{session} AND a.country != 0 and a.country != 900000 GROUP BY a.country
+  </select>
+  <select id="groupForeignExhibitorsCountry" resultType="string">
+	SELECT CONCAT(b.name,'：',COUNT(a.id)) FROM ebs_companyinfo a
+	LEFT JOIN sys_country_area b ON a.country = b.id
+	WHERE a.session = #{session} AND a.useable = 1 AND a.country != 0 AND a.country != 900000 GROUP BY a.country
+  </select>
+  <select id="groupCertificateNumber" resultType="map">
+  	SELECT
+	(SELECT COUNT(a.id) FROM ebs_personnelcard a
+	LEFT JOIN cm_certificate_type b ON a.cardtype = b.id
+	WHERE a.session = #{session} AND b.session = #{session} AND b.useable = 1 AND b.type = 0 AND b.id = 7
+	) distinguishedGuestBNumber,
+	(SELECT COUNT(a.id) FROM ebs_personnelcard a
+	LEFT JOIN cm_certificate_type b ON a.cardtype = b.id
+	WHERE a.session = #{session} AND b.session = #{session} AND b.useable = 1 AND b.type = 0 AND b.id = 7 AND (a.country = 900001 OR a.country = 900022)
+	) distinguishedGuestBNumberInRussian,
+	(SELECT COUNT(a.id) FROM ebs_personnelcard a
+	LEFT JOIN cm_certificate_type b ON a.cardtype = b.id
+	WHERE a.session = #{session} AND b.session = #{session} AND b.useable = 1 AND b.type = 0 AND b.id = 7 AND a.country != 900001 AND a.country != 900022
+	) distinguishedGuestBNumberNoRussian,
+	(SELECT COUNT(a.id) FROM ebs_personnelcard a
+	LEFT JOIN cm_certificate_type b ON a.cardtype = b.id
+	WHERE a.session = #{session} AND b.session = #{session} AND b.useable = 1 AND b.type = 0 AND b.id = 21
+	) VIPNumber,
+	(SELECT COUNT(a.id) FROM ebs_personnelcard a
+	LEFT JOIN cm_certificate_type b ON a.cardtype = b.id
+	WHERE a.session = #{session} AND b.session = #{session} AND b.useable = 1 AND b.type = 0 AND b.id = 13 AND a.country != 900000
+	) foreignDistinguishedGuestNumber,
+	(SELECT COUNT(a.id) FROM ebs_personnelcard a
+	LEFT JOIN cm_certificate_type b ON a.cardtype = b.id
+	WHERE a.session = #{session} AND b.session = #{session} AND b.useable = 1 AND b.type = 0 AND b.id = 21 AND (a.country = 900001 OR a.country = 900022)
+	) VIPNumberInRussian,
+	(SELECT COUNT(a.id) FROM ebs_personnelcard a
+	LEFT JOIN cm_certificate_type b ON a.cardtype = b.id
+	WHERE a.session = #{session} AND b.session = #{session} AND b.useable = 1 AND b.type = 0 AND b.id = 21 AND a.country = 900000
+	) VIPNumberInChina,
+	(SELECT COUNT(a.id) FROM ebs_personnelcard a
+	LEFT JOIN cm_certificate_type b ON a.cardtype = b.id
+	WHERE a.session = #{session} AND b.session = #{session} AND b.useable = 1 AND b.type = 0 AND (b.id = 1 OR b.id = 5)
+	) exhibitionCardNumber,
+	(SELECT COUNT(a.id) FROM ebs_personnelcard a
+	LEFT JOIN cm_certificate_type b ON a.cardtype = b.id
+	WHERE a.session = #{session} AND b.session = #{session} AND b.useable = 1 AND b.type = 0 AND (b.id = 1 OR b.id = 5)
+	) exhibitionCardNumber,
+	(SELECT COUNT(a.id) FROM ebs_personnelcard a
+	LEFT JOIN cm_certificate_type b ON a.cardtype = b.id
+	WHERE a.session = #{session} AND b.session = #{session} AND b.useable = 1 AND b.type = 0 AND (b.id = 1 OR b.id = 5) AND a.country != 900000
+	) foreignExhibitionCardNumber,
+	(SELECT COUNT(a.id) FROM ebs_personnelcard a
+	LEFT JOIN cm_certificate_type b ON a.cardtype = b.id
+	WHERE a.session = #{session} AND b.session = #{session} AND b.useable = 1 AND b.type = 0 AND (b.id = 1 OR b.id = 5) AND (a.country = 900001 OR a.country = 900022)
+	) exhibitionCardNumberInRussian,
+	(SELECT COUNT(a.id) FROM ebs_personnelcard a
+	LEFT JOIN cm_certificate_type b ON a.cardtype = b.id
+	WHERE a.session = #{session} AND b.session = #{session} AND b.useable = 1 AND b.type = 0 AND (b.id = 1 OR b.id = 5) AND a.country = 900000
+	) exhibitionCardNumberInChina,
+	(SELECT COUNT(a.id) FROM ebs_personnelcard a
+	LEFT JOIN cm_certificate_type b ON a.cardtype = b.id
+	WHERE a.session = #{session} AND b.session = #{session} AND b.useable = 1 AND b.type = 0 AND a.country != 0 AND a.country != 900000
+	) foreignerCardNumber,
+	(SELECT COUNT(a.id) FROM ebs_personnelcard a
+	LEFT JOIN cm_certificate_type b ON a.cardtype = b.id
+	WHERE a.session = #{session} AND b.session = #{session} AND b.useable = 1 AND b.type = 0 AND (a.country = 900001 OR a.country = 900022)
+	) personCardNumberInRussian,
+	(SELECT COUNT(a.id) FROM ebs_personnelcard a
+	LEFT JOIN cm_certificate_type b ON a.cardtype = b.id
+	WHERE a.session = #{session} AND b.session = #{session} AND b.useable = 1 AND b.type = 0 AND a.country != 900000 AND a.country != 900001 AND a.country != 900022
+	) personCardNumberNoRussianChina,
+	('0'
+	) duWeiDistinguishedGuestBNumber,
+	('0'
+	) duWeiDistinguishedGuestBNumberInRussian,
+	('0'
+	) overseasMerchantsNumberNoHMT,
+	('0'
+	) HongkongMacaoTaiwanMerchantsNumber,
+	('0'
+	) overseasMerchantsNumber,
+	('0'
+	) merchantsNumberOutProvince,
+	('0'
+	) merchantsNumberInProvince,
+	(SELECT count(id) FROM ebs_companyinfo WHERE session = #{session} AND useable = 1 AND country != 0 AND country != 900000
+	) foreignExhibitorsNumber,
+	(SELECT count(id) FROM ebs_companyinfo WHERE session = #{session} AND useable = 1 AND country = 900000
+	) exhibitorsNumberInChina,
+	(SELECT count(id) FROM ebs_companyinfo WHERE session = #{session} AND useable = 1 AND (country = 900001 OR country = 900022)
+	) exhibitorsNumberInRussian,
+	(SELECT count(id) FROM ebs_companyinfo WHERE session = #{session} AND useable = 1 AND country = 900002
+	) exhibitorsNumberInKorea,
+	(SELECT count(id) FROM ebs_companyinfo WHERE session = #{session} AND useable = 1 AND country = 900233
+	) exhibitorsNumberInJapanese,
+	(SELECT count(id) FROM ebs_companyinfo WHERE session = #{session} AND useable = 1 AND province = 710000 AND province = 810000 AND province = 820000
+	) exhibitorsNumberInHMT,
+	(SELECT COUNT(a.id) FROM ebs_personnelcard a
+	LEFT JOIN cm_certificate_type b ON a.cardtype = b.id
+	WHERE a.session = #{session} AND b.session = #{session} AND b.useable = 1 AND b.type = 9
+	) reporterNumber,
+	(SELECT count(DISTINCT a.companyid) FROM ebs_personnelcard a
+	LEFT JOIN cm_certificate_type b ON a.cardtype = b.id
+	WHERE a.session = #{session} AND b.session = #{session} AND b.useable = 1 AND b.id = 9
+	) professionalAssociatedMediaNumber,
+	('0'
+	) professionalAudienceNumber,
+	('0'
+	) professionalAudienceNumberInChina,
+	('0'
+	) professionalAudienceNumberInHMT,
+	('0'
+	) foreignProfessionalAudienceNumber,
+	('0'
+	) professionalAudienceCountryNumber
+	FROM
+	DUAL
+  </select>
+</mapper>

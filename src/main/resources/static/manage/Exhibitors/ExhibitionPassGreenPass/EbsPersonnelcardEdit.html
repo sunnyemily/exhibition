@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>修改参展商管理-人员证件管理</title>
+		<meta content="webkit" name="renderer">
+		<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+		<meta content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" name="viewport"/>
+		<link rel="stylesheet" href="/manage/css/xadmin.css">
+		<link href="/manage/css/style.css?v=4.1.0" rel="stylesheet">
+		<link href="/manage/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="/manage/layui/css/layui.css"  media="all">
+	</head>
+	<body class="gray-bg">
+		<div class="modal inmodal" id="friendlink-model">
+			<div class="modal-content animated bounceInUp" id="vmUpdateEbsPersonnelcard">
+				<div class="ibox-content">
+					<fieldset class="layui-elem-field layui-field-title" style="border-top:0px">
+						<form class="layui-form layui-form-pane" lay-filter="test1" action="">
+							<table width="100%">
+								<tr>
+									<td width="50%">
+									<div class="layui-form-item">
+										<label class="layui-form-label" for="name" style="width:130px"><span style='color:red'>*</span>姓名</label>
+										<div class="layui-input-block">
+											<div class="layui-input-inline layui-show-xs-block" style="width:80%">
+												<input class="layui-input" lay-verify="required" autocomplete="off" id="name" name="name" type="text" v-model="ebsPersonnelcardx.name">
+											</div>
+										</div>
+									</div></td>
+									<td>
+									<div class="layui-form-item">
+										<label class="layui-form-label" for="sex" style="width:130px"><span style='color:red'>*</span>性别</label>
+										<div class="layui-input-block">
+											<div class="layui-input-inline layui-show-xs-block radioborder" style="width:80%">
+												<input type="radio" value="0" id="sex1" title="男" name="sex">
+												<input type="radio" value="1" name="sex" id="sex2" title="女">
+											</div>
+										</div>
+									</div></td>
+								</tr>
+								<tr>
+									<td colspan="2">
+									<div class="layui-form-item">
+										<label class="layui-form-label" for="name" style="width:130px"><span style='color:red'>*</span>国家/地区</label>
+										<div class="layui-input-block">
+											<div class="layui-input-inline layui-show-xs-block" style="width:80%">
+												<table width="80%">
+													<tr>
+														<td><select id="country" lay-reqText="必须选择国家" lay-verify="required"  lay-filter="country" name="country"></select></td>
+														<td><select id="province" lay-verify="required" lay-reqText="必须选择省份" lay-filter="province" name="province"></select></td>
+														<td><select id="city" name="city"></select></td>
+													</tr>
+												</table>
+											</div>
+										</div>
+									</div></td>
+								</tr>
+								<tr>
+									<td colspan="">
+									<div class="layui-form-item">
+										<label class="layui-form-label" for="companyname" style="width:130px"><span style='color:red'>*</span>企业名称</label>
+										<div class="layui-input-block">
+											<div class="layui-input-inline layui-show-xs-block" style="width:80%">
+												<input class="layui-input" autocomplete="off" id="companyname" readonly name="companyname" type="text" v-model="ebsPersonnelcardx.companyname">
+												<input type="hidden" id="companyid" lay-verify="required" name="companyid" v-model="ebsPersonnelcardx.companyid">
+											</div>
+										</div>
+									</div></td>
+									<td>
+									<div class="layui-form-item">
+										<label class="layui-form-label" for="sex" style="width:130px"><span style='color:red'>*</span>职务</label>
+										<div class="layui-input-block">
+											<div class="layui-input-inline layui-show-xs-block" style="width:80%">
+												<input autocomplete="off" class="layui-input" id="jobtitle" name="jobtitle" lay-verify="required" type="text" v-model="ebsPersonnelcardx.jobtitle">
+											</div>
+										</div>
+									</div></td>
+								</tr>
+								<tr>
+									<td>
+									<div class="layui-form-item">
+										<label class="layui-form-label" for="idcardpassport" style="width:130px"><span style='color:red'>*</span>身份证件类型</label>
+										<div class="layui-input-block">
+											<div class="layui-input-inline layui-show-xs-block radioborder" style="width:80%">
+												<input type="radio" value="0" lay-filter="idcardpassport" name="idcardpassport" id="idcardpassport1" title="身份证">
+												<input type="radio" value="1" lay-filter="idcardpassport" name="idcardpassport" id="idcardpassport2" title="护照">
+												<input type="radio" value="2" lay-filter="idcardpassport" name="idcardpassport" id="idcardpassport3" title="记者证">
+											</div>
+										</div>
+									</div></td>
+									<td>
+									<div class="layui-form-item">
+										<label class="layui-form-label" for="cardnumber" style="width:130px"><span style='color:red'>*</span>证件编号</label>
+										<div class="layui-input-block">
+											<div class="layui-input-inline layui-show-xs-block" style="width:80%">
+												<input class="layui-input" autocomplete="off" lay-verify="required" id="cardnumber" name="cardnumber" type="text" v-model="ebsPersonnelcardx.cardnumber">
+											</div>
+										</div>
+									</div></td>
+								</tr>
+								<tr>
+									<td colspan="2">
+									<div class="layui-form-item">
+										<label class="layui-form-label" for="postcode" style="width:130px"><span style='color:red'>*</span>手机号码</label>
+										<div class="layui-input-block">
+											<div class="layui-input-inline layui-show-xs-block" style="width:90%">
+												<input autocomplete="off" lay-verify="required" class="layui-input" id="phone" name="phone"  type="text" v-model="ebsPersonnelcardx.phone">
+											</div>
+										</div>
+									</div></td>
+								</tr>
+								<tr>
+									<td>
+									<div class="layui-form-item">
+										<label class="layui-form-label" for="postcode" style="width:130px">邮编</label>
+										<div class="layui-input-block">
+											<div class="layui-input-inline layui-show-xs-block" style="width:80%">
+												<input autocomplete="off" class="layui-input" id="postcode" name="postcode"  type="text" v-model="ebsPersonnelcardx.postcode">
+											</div>
+										</div>
+									</div></td>
+									<td>
+									<div class="layui-form-item">
+										<label class="layui-form-label" for="idcardpassport" style="width:130px">地址</label>
+										<div class="layui-input-block">
+											<div class="layui-input-inline layui-show-xs-block" style="width:80%">
+												<input autocomplete="off" class="layui-input" id="address" name="address" type="text" v-model="ebsPersonnelcardx.address">
+											</div>
+										</div>
+									</div></td>
+								</tr>
+								<tr>
+									<td>
+									<div class="layui-form-item">
+										<label class="layui-form-label" for="idcardpassport" style="width:130px">公司网址</label>
+										<div class="layui-input-block">
+											<div class="layui-input-inline layui-show-xs-block" style="width:80%">
+												<input autocomplete="off" class="layui-input" id="website" name="website"  type="text" v-model="ebsPersonnelcardx.website">
+											</div>
+										</div>
+									</div></td>
+									<td>
+									<div class="layui-form-item">
+										<label class="layui-form-label" for="cardnumber" style="width:130px">电子邮件</label>
+										<div class="layui-input-block">
+											<div class="layui-input-inline layui-show-xs-block" style="width:80%">
+												<input autocomplete="off" class="layui-input" id="email" name="email"  type="text" v-model="ebsPersonnelcardx.email">
+											</div>
+										</div>
+									</div></td>
+								</tr>
+								<tr>
+									<td>
+									<div class="layui-form-item">
+										<label class="layui-form-label" for="idcardpassport" style="width:130px">电话</label>
+										<div class="layui-input-block">
+											<div class="layui-input-inline layui-show-xs-block" style="width:80%">
+												<input autocomplete="off" class="layui-input" id="tel" name="tel"  type="text" v-model="ebsPersonnelcardx.tel">
+											</div>
+										</div>
+									</div></td>
+									<td>
+									<div class="layui-form-item">
+										<label class="layui-form-label" for="cardnumber" style="width:130px">传真</label>
+										<div class="layui-input-block">
+											<div class="layui-input-inline layui-show-xs-block" style="width:80%">
+												<input autocomplete="off" class="layui-input" id="fax" name="fax"  type="text" v-model="ebsPersonnelcardx.fax">
+											</div>
+										</div>
+									</div></td>
+								</tr>
+								<tr>
+									<td colspan="2">
+									<div class="layui-form-item">
+										<label class="layui-form-label" for="cardnumber" style="width:160px"><span style='color:red'>*</span>是否室外参展证</label>
+										<div class="layui-input-block">
+											<div class="layui-input-inline layui-show-xs-block radioborder" style="width:80%">
+												<input type="radio" value="1" id="isout1" title="是" name="isout">
+												<input type="radio" value="0" name="isout" id="isout2" title="否">
+											</div>
+										</div>
+									</div></td>
+								</tr>
+								<tr>
+									<td>
+									<div class="layui-form-item">
+										<label class="layui-form-label" for="jobtitle" style="width:130px"><span style='color:red'>*</span>业务领域</label>
+										<div class="layui-input-block">
+											<div class="layui-input-inline layui-show-xs-block" style="width:90%">
+												<select id="yewulingyu" name="yewulingyu" lay-verify="required">
+
+												</select>
+											</div>
+										</div>
+									</div></td>
+									<td>
+									<div class="layui-form-item">
+										<label class="layui-form-label" for="jobtitle" style="width:130px"><span style='color:red'>*</span>参会角色</label>
+										<div class="layui-input-block">
+											<div class="layui-input-inline layui-show-xs-block" style="width:90%">
+												<select id="canhuijuese" name="canhuijuese" lay-verify="required">
+
+												</select>
+											</div>
+										</div>
+									</div></td>
+								</tr>
+								<tr>
+									<td colspan="2">
+									<div class="layui-form-item">
+										<label class="layui-form-label" for="companyname" style="width:130px"><span style='color:red'>*</span>参会目的</label>
+										<div class="layui-input-block">
+											<div class="layui-input-inline layui-show-xs-block radioborder" id="canhuimudi" style="width:96%">
+
+											</div>
+										</div>
+									</div></td>
+								</tr>
+								<tr>
+									<td colspan="2">
+									<div class="layui-form-item">
+										<label class="layui-form-label" for="companyname" style="width:160px"><span style='color:red'>*</span>您想参观的展区</label>
+										<div class="layui-input-block">
+											<div class="layui-input-inline layui-show-xs-block" style="width:94%">
+												<select id="xcgdzq" name="xcgdzq" lay-verify="required">
+
+												</select>
+											</div>
+										</div>
+									</div></td>
+								</tr>
+								<tr>
+									<td colspan="2">
+									<div class="layui-form-item">
+										<label class="layui-form-label" for="companyname" style="width:160px"><span style='color:red'>*</span>您如何知道展会</label>
+										<div class="layui-input-block">
+											<div class="layui-input-inline layui-show-xs-block" id="ruhezhidaozhanhui"  style="width:94%;height:80px;border-left:1px solid #e8e8e8;border-bottom:1px solid #e8e8e8;border-right:1px solid #e8e8e8;border-top:1px solid #e8e8e8;border-radius: 0 2px 2px 0;">
+
+											</div>
+										</div>
+									</div></td>
+								</tr>
+								<tr>
+									<td colspan="2">
+									<div class="layui-form-item">
+										<label class="layui-form-label" for="companyname" style="width:130px"><span style='color:red'>*</span>业务性质</label>
+										<div class="layui-input-block">
+											<div class="layui-input-inline layui-show-xs-block"  style="height:80px;border-left:1px solid #e8e8e8;border-bottom:1px solid #e8e8e8;border-right:1px solid #e8e8e8;border-top:1px solid #e8e8e8;border-radius: 0 2px 2px 0;" id="yewuxingzhi">
+
+											</div>
+										</div>
+									</div></td>
+								</tr>
+								<tr>
+									<td valign="top" style="padding:0px">
+									<div class="layui-form-item">
+										<label class="layui-form-label" for="companyname" style="width:130px"><span style='color:red'>*</span>证件照片</label>
+										<div class="layui-input-inline layui-show-xs-block" style="width:80%">
+											<input class="layui-input" autocomplete="off" id="imagepath" name="imagepath" type="hidden" v-model="ebsPersonnelcardx.imagepath">
+											<button type="button" class="layui-btn" id="btnImagePath">
+												<i class="layui-icon">&#xe67c;</i>裁剪助手
+											</button>
+											<br>
+											<span style="color:red;font-size:16px">格式为jpg，上传文件小于2M。标准证件照尺寸600*749（宽*高）像素，证件照背景为红、白、蓝。</span>
+										</div>
+
+									</div></td>
+									<td style="padding:5px"><img onclick="SeeImage(this.src)" src="/images/1.jpg" width="260" id="preimagepath" height="320"></td>
+								</tr>
+								<tr>
+									<td valign="top">
+									<div class="layui-form-item">
+										<label class="layui-form-label" for="companyname" style="width:140px"><span style='color:red'>*</span><span id="spleixing">身份证（护照）</span></label>
+										<div class="layui-input-inline layui-show-xs-block" style="width:80%">
+											<input class="layui-input" autocomplete="off" id="idphotopath" name="idphotopath" type="hidden" v-model="ebsPersonnelcardx.idphotopath">
+											<button type="button" class="layui-btn" id="btnIdPhotoPath" onclick="uploadzjzp(693,472)">
+												<i class="layui-icon">&#xe67c;</i>裁剪助手
+											</button>
+											<br>
+											<span style="color:red;font-size:16px" id="sptext">格式为jpg，上传文件小于2M。身份证尺寸693*472（宽*高）像素。</span>
+										</div>
+
+									</div></td>
+									<td style="padding:5px"><img onclick="SeeImage(this.src)" src="/images/2.jpg" width="460" height="320" id="preidphotopath"></td>
+								</tr>
+							</table>
+							<div class="layui-form-item">
+								<div class="layui-input-block">
+									<button class="layui-btn" lay-filter="edit" lay-submit="">
+										确认修改
+									</button>
+									<input id="txtparticipants" type="hidden">
+									<input id="txtbussinessarea" type="hidden">
+									<input id="txtvisitexhibition" type="hidden">
+									<input id="txtpurpose" type="hidden">
+									<input id="txtknowexhibition" type="hidden">
+									<input id="txtbusinessnature" type="hidden">
+									<input id="txtsex" type="hidden">
+									<input id="txtisout" type="hidden">
+									<input id="txtidcardpassport" type="hidden">
+									<input id="txtcountry" type="hidden">
+									<input id="txtcity" type="hidden">
+									<input id="txtarea" type="hidden">
+								</div>
+							</div>
+						</form>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+		<script charset="utf-8" src="/manage/js/jquery.min.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/layui/layui.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/xadmin.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/vue.js" type="text/javascript"></script>
+		<script src="/manage/js/bootstrap.min.js?v=3.3.6"></script>
+		<script src="/script/validate.js?v=3.3.6"></script>
+		<script src="/manage/js/manage/common.js"></script>
+		<script charset="UTF-8" type="text/javascript">
+			var editEbsPersonnelcardId = sessionStorage.getItem("editEbsPersonnelcardId");
+			vm = new Vue({
+				el : "#vmUpdateEbsPersonnelcard",
+				data : {
+					ebsPersonnelcard : {}
+				},
+				methods : {},
+				created : function() {
+					var _this = this;
+					$.ajax({
+						url : "/manage/Exhibitors/ebsPersonnelcard/findById",
+						data : {
+							"id" : editEbsPersonnelcardId
+						},
+						dataType : "json",
+						type : "get",
+						async : false,
+						success : function(result) {
+							if (result.code === 1) {
+								_this.ebsPersonnelcard = result.data;
+								_this.ebsPersonnelcardx = JSON.parse( JSON.stringify(result.data) );
+								//console.log(result.data.idcardpassport);
+								var sex = result.data.sex;
+								$("#txtsex").val(result.data.sex);
+								$("#txtisout").val(result.data.isout);
+								$("#txtidcardpassport").val(result.data.idcardpassport);
+								$("#preimagepath").attr("src", result.data.imagepath=='' ? '/images/1.jpg' : result.data.imagepath);
+								$("#preidphotopath").attr("src", result.data.idphotopath=='' ? '/images/2.jpg' : result.data.idphotopath);
+								$("#txtparticipants").val(result.data.participants);
+								$("#txtbussinessarea").val(result.data.bussinessarea);
+								$("#txtvisitexhibition").val(result.data.visitexhibition);
+								$("#txtpurpose").val(result.data.purpose);
+								$("#txtknowexhibition").val(result.data.knowexhibition);
+								$("#txtbusinessnature").val(result.data.businessnature);
+								$("#txtcountry").val(result.data.country);
+								$("#txtarea").val(result.data.province);
+								$("#txtcity").val(result.data.city);
+
+								if (result.data.idcardpassport == 2) {//记者证
+									$("#spleixing").html("新闻记者证");
+									$("#sptext").html("新闻记者证：格式为jpg，上传文件小于2M，尺寸606*436（宽*高）像素。");
+									$("#btnIdPhotoPath").attr("onclick", "uploadzjzp(606,436)");
+								} else {
+									$("#spleixing").html("身份证/护照");
+									$("#sptext").html("二代身份证：格式为jpg，上传文件小于2M，身份证尺寸693*472（宽*高）像素。");
+									$("#btnIdPhotoPath").attr("onclick", "uploadzjzp(693,472)");
+								}
+
+							} else {
+								layer.alert("获取修改参展商管理-人员证件管理信息失败！");
+							}
+						}
+					});
+				}
+			});
+
+			layui.use(['form', 'layer', 'laydate'], function() {
+				var form = layui.form, layer = layui.layer, laydate = layui.laydate;
+				loadZiDianByParentID_Select(form, $("#txtparticipants").val(), 3, "canhuijuese");
+				loadZiDianByParentID_Select(form, $("#txtvisitexhibition").val(), 20, "xcgdzq");
+				loadIndustry(form, $("#txtbussinessarea").val(), "yewulingyu");
+				loadZiDianByParentID_Checkbox(form, $("#txtpurpose").val(), 4, "canhuimudi");
+				loadZiDianByParentID_Checkbox(form, $("#txtknowexhibition").val(), 6, "ruhezhidaozhanhui");
+				loadZiDianByParentID_Checkbox(form, $("#txtbusinessnature").val(), 8, "yewuxingzhi");
+
+				loadCountry(form, $("#txtcountry").val(), $("#txtarea").val(), $("#txtcity").val(), "country", "province", "city");
+
+				form.on('select(country)', function(data) {
+					loadProvinceChange(form, $("#country").val(), '', "province");
+					form.render(null, 'test1');
+				});
+				form.on('select(province)', function(data) {
+					loadCity(form, $("#province").val(), '', "city");
+					form.render(null, 'test1');
+				});
+
+				form.on('radio(idcardpassport)', function(data) {
+					if (data.value == 2) {//记者证
+						$("#spleixing").html("新闻记者证");
+						$("#sptext").html("新闻记者证：格式为jpg，上传文件小于2M，尺寸606*436（宽*高）像素。");
+						$("#btnIdPhotoPath").attr("onclick", "uploadzjzp(606,436)");
+					} else {
+						$("#spleixing").html("身份证/护照");
+						$("#sptext").html("二代身份证：格式为jpg，上传文件小于2M，身份证尺寸693*472（宽*高）像素。");
+						$("#btnIdPhotoPath").attr("onclick", "uploadzjzp(693,472)");
+					}
+				});
+
+				var radio = document.getElementsByName("sex");
+				var radioLength = radio.length;
+				for (var i = 0; i < radioLength; i++) {
+					//console.log(radio[i].value);
+					if ($("#txtsex").val() == radio[i].value) {
+						$(radio[i]).next().click();
+					}
+				}
+				var radio = document.getElementsByName("idcardpassport");
+				var radioLength = radio.length;
+				for (var i = 0; i < radioLength; i++) {
+					if ($("#txtidcardpassport").val() == radio[i].value) {
+						$(radio[i]).next().click();
+					}
+				}
+
+				var radio = document.getElementsByName("isout");
+				var radioLength = radio.length;
+				for (var i = 0; i < radioLength; i++) {
+					if ($("#txtisout").val() == radio[i].value) {
+						$(radio[i]).next().click();
+					}
+				}
+
+				form.render('', 'test1');
+				//监听提交
+				form.on('submit(edit)', function(data) {
+					var zjlx = $('input:radio[name="idcardpassport"]:checked').val();
+					if (zjlx == 0) {
+						console.log(checkID(data.field.cardnumber));
+						if (!checkID(data.field.cardnumber)) {
+							layer.msg("请输入正确的身份证号", {
+								icon : 2,
+								time : 1000
+							}, function() {
+								$("#cardnumber")[0].focus();
+							});
+							return false;
+						}
+					}
+
+					//组装数据
+					data.field.id = editEbsPersonnelcardId;
+					if ($("#imagepath").val() == '' || $("#idphotopath").val() == '') {
+						layer.msg("请上传人员证件", {
+							icon : 2,
+							time : 1000
+						});
+						return false;
+					}
+					var canhuimudi = "";
+					var ruhezhidaozhanhui = "";
+					var yewuxingzhi = "";
+					$('input[name=chkcanhuimudi]:checked').each(function() {
+						canhuimudi += $(this).val() + ",";
+					});
+					console.log(canhuimudi);
+					$('input[name=chkruhezhidaozhanhui]:checked').each(function() {
+						ruhezhidaozhanhui += $(this).val() + ",";
+					});
+					$('input[name=chkyewuxingzhi]:checked').each(function() {
+						yewuxingzhi += $(this).val() + ",";
+					});
+					canhuimudi = canhuimudi.length > 0 ? canhuimudi.substring(0, canhuimudi.length - 1) : "";
+
+					ruhezhidaozhanhui = ruhezhidaozhanhui.length > 0 ? ruhezhidaozhanhui.substring(0, ruhezhidaozhanhui.length - 1) : "";
+					yewuxingzhi = yewuxingzhi.length > 0 ? yewuxingzhi.substring(0, yewuxingzhi.length - 1) : "";
+					if (canhuimudi == '') {
+						layer.msg("请选择参会目的", {
+							icon : 2,
+							time : 1000
+						});
+						return false;
+					}
+					if (ruhezhidaozhanhui == '') {
+						layer.msg("请选择您如何知道展会", {
+							icon : 2,
+							time : 1000
+						});
+						return false;
+					}
+					if (yewuxingzhi == '') {
+						layer.msg("请选择业务性质", {
+							icon : 2,
+							time : 1000
+						});
+						return false;
+					}
+					data.field.name = $("#name").val();
+					data.field.cardnumber = $("#cardnumber").val();
+					data.field.bussinessarea = $("#yewulingyu").val();
+					data.field.participants = $("#canhuijuese").val();
+					data.field.visitexhibition = $("#xcgdzq").val();
+					data.field.imagepath = $("#imagepath").val();
+					data.field.idphotopath = $("#idphotopath").val();
+					data.field.companyid = $("#companyid").val();
+					data.field.companyname = $("#companyname").val();
+					data.field.purpose = canhuimudi;
+					data.field.knowexhibition = ruhezhidaozhanhui;
+					data.field.businessnature = yewuxingzhi;
+
+					//发异步，把数据提交给controller
+					$.ajax({
+						url : "/manage/Exhibitors/ebsPersonnelcard/update",
+						data : JSON.stringify(data.field),
+						dataType : "json",
+						contentType : "application/json",
+						type : "post",
+						success : function(result) {
+							if (result.code === 1) {
+								layer.msg("修改成功", {
+									icon : 6,
+									time : 500
+								}, function() {
+									//关闭当前frame
+									xadmin.close();
+									// 可以对父窗口进行刷新
+									xadmin.father_reload();
+								});
+							} else {
+								layer.alert(result.msg);
+							}
+						}
+					});
+					return false;
+				});
+			});
+		</script>
+		<script src="/manage/js/manage/crop.js"></script>
+	</body>
+</html>

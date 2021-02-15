@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>展厅类型管理</title>
+<link rel="shortcut icon" href="/favicon.ico">
+<link href="../../css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+<link href="../../css/font-awesome.css?v=4.4.0" rel="stylesheet">
+<link href="../../css/animate.css" rel="stylesheet">
+<link href="../../css/style.css?v=4.1.0" rel="stylesheet">
+<link href="../../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+<link rel="stylesheet" href="../../js/plugins/layui/css/layui.css"  media="all">
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content  animated fadeInRight">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5 id="ibox-title">展厅类型管理</h5>
+          <div class="ibox-tools"> <a class="collapse-link"> <i class="fa fa-chevron-up"></i> </a> <a class="close-link"> <i class="fa fa-times"></i> </a> </div>
+        </div>        
+        <div class="ibox-content">
+            <div class="fixed-table-toolbar" style="height:50px;">
+              <div class="bars pull-left">
+                <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
+                  <button type="button" class="btn btn-outline btn-default" title="新建" id="add"> <i class="glyphicon glyphicon-plus" aria-hidden="true"></i> </button>
+                  <button type="button" class="btn btn-outline btn-default" title="批量删除" id="delAll"> <i class="glyphicon glyphicon-trash" aria-hidden="true"></i> </button>
+                </div>
+              </div>
+              <div class="columns columns-right btn-group pull-right">
+                <button class="btn btn-default btn-outline" type="button" name="search" title="搜索" id="search"> <i class="glyphicon glyphicon-search"></i> </button>
+                <button class="btn btn-default btn-outline" type="button" name="refresh" title="刷新" id="refresh"> <i class="glyphicon glyphicon-repeat"></i> </button>
+              </div>
+              <div class="pull-right search">
+                <input name="keyword" class="form-control input-outline" type="text" placeholder="请输展厅类型" id="keyword">
+              </div>
+            </div>
+          <table id="list" lay-filter="test">
+          </table>
+        </div>
+      </div>
+    </div>    
+  </div>
+</div>
+<div class="modal inmodal" id="friendlink-model">
+	<div class="modal-content animated bounceInUp">
+      <div class="ibox-title">
+        <h5 id="edit-title">新增展厅类型</h5>
+        <div class="ibox-tools"><a class="close-link" data-dismiss="modal"> <i class="fa fa-times"></i> </a> </div>
+      </div>
+      <div class="ibox-content">
+        <fieldset class="layui-elem-field layui-field-title">
+          <form class="layui-form layui-form-pane" action="">
+          <input type="hidden" name="friendlinkId" value="0" />
+          <input type="hidden" name="menuId" value="0" />
+            <div class="layui-form-item">
+              <label class="layui-form-label">展厅类型</label>
+              <div class="layui-input-block">
+                <input type="text" id="friendlinkName" name="friendlinkName" autocomplete="off" placeholder="请输入名称" class="layui-input" lay-verify="required">
+              </div>
+            </div>
+            <div class="layui-form-item" pane>
+              <label class="layui-form-label">是否可用</label>
+              <div class="layui-input-block">
+                <input type="radio" name="sex" value="nan" title="是" checked>
+				<input type="radio" name="sex" value="nv" title="否">
+              </div>
+            </div>
+            <div class="layui-form-item" pane>
+              <label class="layui-form-label">收费方式</label>
+              <div class="layui-input-block">                
+                <input type="radio" name="type" value="nan" title="按个数" checked>
+				<input type="radio" name="type" value="nv" title="按面积">
+              </div>
+            </div>
+            <div class="layui-form-item" >
+              <label class="layui-form-label">展厅价格</label>
+              <div class="layui-inline">
+				<div class="layui-form-mid"> 一个展位</div>	
+				<div class="layui-input-inline" style="width: 100px;">
+				  <input type="text" name="price_min" placeholder="" autocomplete="off" class="layui-input">
+				</div>				
+				<div class="layui-form-mid">平方米，标准展位 </div>
+              </div>
+			  <div class="layui-inline">	
+				<div class="layui-input-inline" style="width: 100px;">
+				  <input type="text" name="price_min" placeholder="" autocomplete="off" class="layui-input">
+				</div>
+				<div class="layui-form-mid">元/个 ， 角位展位</div>
+              </div>
+			  <div class="layui-inline">	
+				<div class="layui-input-inline" style="width: 100px;">
+				  <input type="text" name="price_min" placeholder="" autocomplete="off" class="layui-input">
+				</div>
+				<div class="layui-form-mid">元/个，特装展位</div>
+              </div>
+			  <div class="layui-inline">	
+				<div class="layui-input-inline" style="width: 100px;">
+				  <input type="text" name="price_min" placeholder="" autocomplete="off" class="layui-input">
+				</div>
+				<div class="layui-form-mid">元/平方米。</div>
+              </div>
+            </div>
+            <div class="layui-form-item" pane>
+              <label class="layui-form-label">价格单位</label>
+              <div class="layui-input-block">              
+                <input type="radio" name="type" value="nan" title="￥" checked>
+				<input type="radio" name="type" value="nv" title="$">
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label">参展证数</label>
+              <div class="layui-input-block">
+                <input type="text" id="friendlinkOrder" name="friendlinkOrder" autocomplete="off" placeholder="每个展位可以办参展证的个数" class="layui-input" lay-verify="required|number">
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label">特装展位限制</label>
+              <div class="layui-input-block">
+                <input type="text" id="friendlinkOrder" name="friendlinkOrder" autocomplete="off" placeholder="请输入最低起租面积" class="layui-input" lay-verify="required|number">
+              </div>
+            </div>
+			<div class="layui-form-item layui-form-text">
+			  <label class="layui-form-label">填报说明</label>
+			  <div class="layui-input-block">
+				<textarea placeholder="请输入填报说明" class="layui-textarea"></textarea>
+			  </div>
+			</div>
+			<div class="layui-form-item layui-form-text">
+			  <label class="layui-form-label">备注</label>
+			  <div class="layui-input-block">
+				<textarea placeholder="请输入备注" class="layui-textarea"></textarea>
+			  </div>
+			</div>
+            <div class="layui-form-item">
+              <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="demo1">保存</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+              </div>
+            </div>
+          </form>
+        </fieldset>
+      </div>
+      </div>
+ </div>
+<!-- 全局js --> 
+<script src="../../js/plugins/layui/layui.all.js" charset="utf-8"></script> 
+<script src="../../js/jquery.min.js?v=2.1.4"></script> 
+<script src="../../js/bootstrap.min.js?v=3.3.6"></script> 
+
+<!-- 自定义js --> 
+<script src="../../js/content.js?v=1.0.0"></script> 
+<script src="../../js/W.js?v=3.3.6"></script> 
+<script src="list.js"></script> 
+<script type="text/html" id="toolBar">
+  <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+</body>
+</html>

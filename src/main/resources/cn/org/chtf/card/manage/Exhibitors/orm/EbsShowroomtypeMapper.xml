@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.Exhibitors.dao.EbsShowroomtypeMapper">
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsShowroomtype">
+        select a.id,a.session,a.name,a.tollmehod,a.area,a.price1,a.price2,a.price3,a.priceunit,a.exhibitorsnumber,a.withdrawalsnumber,a.boothlimit,a.explanation,a.remark,a.addtime,a.status,a.isoutdoor        from ebs_showroomtype as a
+        where a.id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsShowroomtype">
+        select a.id,a.session,a.name,a.tollmehod,a.area,a.price1,a.price2,a.price3,a.priceunit,a.exhibitorsnumber,a.withdrawalsnumber,a.boothlimit,a.explanation,a.remark,a.addtime,a.status,a.isoutdoor       from ebs_showroomtype as a
+        <where>
+                <if test="id != null and id != ''">
+                    and a.id = #{id}
+                </if>
+                <if test="session != null and session != ''">
+                    and a.session = #{session}
+                </if>
+                <if test="name != null and name != ''">
+                    and a.name = #{name}
+                </if>
+                <if test="tollmehod != null and tollmehod != ''">
+                    and a.tollmehod = #{tollmehod}
+                </if>
+                <if test="area != null and area != ''">
+                    and a.area = #{area}
+                </if>
+                <if test="price1 != null and price1 != ''">
+                    and a.price1 = #{price1}
+                </if>
+                <if test="price2 != null and price2 != ''">
+                    and a.price2 = #{price2}
+                </if>
+                <if test="price3 != null and price3 != ''">
+                    and a.price3 = #{price3}
+                </if>
+                <if test="priceunit != null and priceunit != ''">
+                    and a.priceunit = #{priceunit}
+                </if>
+    			<if test="exhibitorsnumber != null and exhibitorsnumber != ''">
+                    and a.exhibitorsnumber = #{exhibitorsnumber}
+                </if>
+                <if test="withdrawalsnumber != null and withdrawalsnumber != ''">
+                    and a.withdrawalsnumber = #{withdrawalsnumber}
+                </if>
+                <if test="boothlimit != null and boothlimit != ''">
+                    and a.boothlimit = #{boothlimit}
+                </if>
+                <if test="explanation != null and explanation != ''">
+                    and a.explanation = #{explanation}
+                </if>
+                <if test="remark != null and remark != ''">
+                    and a.remark = #{remark}
+                </if>
+                <if test="addtime != null and addtime != ''">
+                    and a.addtime = #{addtime}
+                </if>
+                <if test="status != null and status != ''">
+                    and a.status = #{status}
+                </if>
+                <if test="isoutdoor != null and isoutdoor != ''">
+                    and a.isoutdoor = #{isoutdoor}
+                </if>
+                    </where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsShowroomtype">
+        select a.id,a.session,a.name,a.tollmehod,a.area,a.price1,a.price2,a.price3,a.priceunit,a.exhibitorsnumber,
+        a.withdrawalsnumber,a.boothlimit,a.explanation,a.remark,a.addtime,a.status,a.isoutdoor,b.shuliang       
+        from ebs_showroomtype as a
+        left join (select type,count(*) as shuliang from ebs_showroom where session=#{session} group by type) as b on a.id=b.type
+        <where>
+                <if test="id != null and id != ''">and a.id = #{id}
+                </if>
+                <if test="session != null and session != ''">and a.session = #{session}
+                </if>
+                <if test="name != null and name != ''">and a.name like concat('%',#{name},'%')
+                </if>
+                <if test="tollmehod != null and tollmehod != ''">and a.tollmehod like concat('%',#{tollmehod},'%')
+                </if>
+                <if test="area != null and area != ''">and a.area =
+                    #{area}
+                </if>
+                <if test="price1 != null and price1 != ''">and a.price1 =
+                    #{price1}
+                </if>
+                <if test="price2 != null and price2 != ''">and a.price2 =
+                    #{price2}
+                </if>
+                <if test="price3 != null and price3 != ''">and a.price3 =
+                    #{price3}
+                </if>
+                <if test="priceunit != null and priceunit != ''">and a.priceunit =
+                    #{priceunit}
+                </if>
+                <if test="exhibitorsnumber != null and exhibitorsnumber != ''">and a.exhibitorsnumber =
+                    #{exhibitorsnumber}
+                </if>
+                <if test="withdrawalsnumber != null and withdrawalsnumber != ''">
+                    and a.withdrawalsnumber = #{withdrawalsnumber}
+                </if>
+                <if test="boothlimit != null and boothlimit != ''">and a.boothlimit =
+                    #{boothlimit}
+                </if>
+                <if test="explanation != null and explanation != ''">and a.explanation =
+                    #{explanation}
+                </if>
+                <if test="remark != null and remark != ''">and a.remark =
+                    #{remark}
+                </if>
+                <if test="addtime != null and addtime != ''">and a.addtime =
+                    #{addtime}
+                </if>
+                <if test="status != null and status != ''">and a.status =
+                    #{status}
+                </if>
+                <if test="isoutdoor != null and isoutdoor != ''">and a.isoutdoor =
+                    #{isoutdoor}
+                </if>
+                    </where>
+        order by a.id desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(id) 
+		FROM 
+		ebs_showroomtype
+		<where>
+                <if test="id != null and id != ''">and id = #{id}</if>
+                <if test="session != null and session != ''">and session = #{session}</if>
+                <if test="name != null and name != ''">and name like concat('%',#{name},'%')</if>
+                <if test="tollmehod != null and tollmehod != ''">and tollmehod like concat('%',#{tollmehod},'%')</if>
+                <if test="area != null and area != ''">and area =
+                    #{area}
+                </if>
+                <if test="price1 != null and price1 != ''">and price1 =
+                    #{price1}
+                </if>
+                <if test="price2 != null and price2 != ''">and price2 =
+                    #{price2}
+                </if>
+                <if test="price3 != null and price3 != ''">and price3 =
+                    #{price3}
+                </if>
+                <if test="priceunit != null and priceunit != ''">and priceunit =
+                    #{priceunit}
+                </if>
+                <if test="exhibitorsnumber != null and exhibitorsnumber != ''">and exhibitorsnumber =
+                    #{exhibitorsnumber}
+                </if>
+                <if test="withdrawalsnumber != null and withdrawalsnumber != ''">
+                    and a.withdrawalsnumber = #{withdrawalsnumber}
+                </if>
+                <if test="boothlimit != null and boothlimit != ''">and boothlimit =
+                    #{boothlimit}
+                </if>
+                <if test="explanation != null and explanation != ''">and explanation =
+                    #{explanation}
+                </if>
+                <if test="remark != null and remark != ''">and remark =
+                    #{remark}
+                </if>
+                <if test="addtime != null and addtime != ''">and addtime =
+                    #{addtime}
+                </if>
+                <if test="status != null and status != ''">and status =
+                    #{status}
+                </if>
+                <if test="isoutdoor != null and isoutdoor != ''">and a.isoutdoor =
+                    #{isoutdoor}
+                </if>
+                    </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.Exhibitors.model.EbsShowroomtype"            useGeneratedKeys="true" keyProperty="id">
+        insert into ebs_showroomtype(<trim suffixOverrides=",">
+     <if test="session != null">`session`,</if>
+                                    <if test="name != null">`name`,</if>
+                                    <if test="tollmehod != null">`tollmehod`,</if>
+                                    <if test="area != null">`area`,</if>
+                                    <if test="price1 != null">`price1`,</if>
+                                    <if test="price2 != null">`price2`,</if>
+                                    <if test="price3 != null">`price3`,</if>
+                                    <if test="priceunit != null">`priceunit`,</if>
+                                    <if test="exhibitorsnumber != null">`exhibitorsnumber`,</if>
+                                    <if test="withdrawalsnumber != null">`withdrawalsnumber`,</if>
+                                    <if test="boothlimit != null">`boothlimit`,</if>
+                                    <if test="explanation != null">`explanation`,</if>
+                                    <if test="remark != null">`remark`,</if>
+                                    <if test="addtime != null">`addtime`,</if>
+                                    <if test="isoutdoor != null">`isoutdoor`,</if>
+                                    <if test="status != null">`status`</if>
+                    </trim>)
+        values (<trim suffixOverrides=",">
+     								<if test="session != null">#{session},</if>
+                                    <if test="name != null">#{name},</if>
+                                    <if test="tollmehod != null">#{tollmehod},</if>
+                                    <if test="area != null">#{area},</if>
+                                    <if test="price1 != null">#{price1},</if>
+                                    <if test="price2 != null">#{price2},</if>
+                                    <if test="price3 != null">#{price3},</if>
+                                    <if test="priceunit != null">#{priceunit},</if>
+                                    <if test="exhibitorsnumber != null">#{exhibitorsnumber},</if>
+                                    <if test="withdrawalsnumber != null">#{withdrawalsnumber},</if>
+                                    <if test="boothlimit != null">#{boothlimit},</if>
+                                    <if test="explanation != null">#{explanation},</if>
+                                    <if test="remark != null">#{remark},</if>
+                                    <if test="addtime != null">#{addtime},</if>
+                                    <if test="isoutdoor != null">#{isoutdoor},</if>
+                                    <if test="status != null">#{status}</if>
+                    </trim>)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.Exhibitors.model.EbsShowroomtype">
+        update ebs_showroomtype
+        <set>
+             <if test="session != null">`session` = #{session},</if>
+             <if test="name != null">`name` = #{name},</if>
+             <if test="tollmehod != null">`tollmehod` = #{tollmehod},</if>
+             <if test="area != null">`area` = #{area},</if>
+             <if test="price1 != null">`price1` = #{price1},</if>
+             <if test="price2 != null">`price2` = #{price2},</if>
+             <if test="price3 != null">`price3` = #{price3},</if>
+             <if test="priceunit != null">`priceunit` = #{priceunit},</if>
+             <if test="exhibitorsnumber != null">`exhibitorsnumber` = #{exhibitorsnumber},</if>
+             <if test="withdrawalsnumber != null">`withdrawalsnumber` = #{withdrawalsnumber},</if>
+             <if test="boothlimit != null">`boothlimit` = #{boothlimit},</if>
+             <if test="explanation != null">`explanation` = #{explanation},</if>
+             <if test="remark != null">`remark` = #{remark},</if>
+             <if test="addtime != null">`addtime` = #{addtime},</if>
+             <if test="isoutdoor != null">`isoutdoor` = #{isoutdoor},</if>
+             <if test="status != null">`status` = #{status},</if>
+             <if test="isoutdoor != null">isoutdoor=#{isoutdoor}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from ebs_showroomtype
+        where id = #{id}
+    </delete>
+    
+    <select id="getList" resultType="map">
+        select `id`,`session`,`name`,`tollmehod`,`area`,`price1`,`price2`,`price3`,`priceunit`,`exhibitorsnumber`,withdrawalsnumber,`boothlimit`,`explanation`,`remark`,`addtime`,`status`,`isoutdoor`        from ebs_showroomtype
+        <where>
+                <if test="id != null and id != ''">
+                    and id = #{id}
+                </if>
+                <if test="session != null and session != ''">
+                    and session = #{session}
+                </if>
+                <if test="name != null and name != ''">
+                    and name = #{name}
+                </if>
+                <if test="tollmehod != null and tollmehod != ''">
+                    and tollmehod = #{tollmehod}
+                </if>
+                <if test="area != null and area != ''">
+                    and area = #{area}
+                </if>
+                <if test="price1 != null and price1 != ''">
+                    and price1 = #{price1}
+                </if>
+                <if test="price2 != null and price2 != ''">
+                    and price2 = #{price2}
+                </if>
+                <if test="price3 != null and price3 != ''">
+                    and price3 = #{price3}
+                </if>
+                <if test="priceunit != null and priceunit != ''">
+                    and priceunit = #{priceunit}
+                </if>
+                <if test="exhibitorsnumber != null and exhibitorsnumber != ''">
+                    and exhibitorsnumber = #{exhibitorsnumber}
+                </if>
+                <if test="withdrawalsnumber != null and withdrawalsnumber != ''">
+                    and withdrawalsnumber = #{withdrawalsnumber}
+                </if>
+                <if test="boothlimit != null and boothlimit != ''">
+                    and boothlimit = #{boothlimit}
+                </if>
+                <if test="explanation != null and explanation != ''">
+                    and explanation = #{explanation}
+                </if>
+                <if test="remark != null and remark != ''">
+                    and remark = #{remark}
+                </if>
+                <if test="addtime != null and addtime != ''">
+                    and addtime = #{addtime}
+                </if>
+                <if test="status != null and status != ''">
+                    and status = #{status}
+                </if>
+                <if test="isoutdoor != null and isoutdoor != ''">
+                    and isoutdoor = #{isoutdoor}
+                </if>
+                    </where>
+             order by addtime desc
+    </select>
+
+</mapper>

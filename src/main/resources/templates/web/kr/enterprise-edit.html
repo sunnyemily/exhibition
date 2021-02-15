@@ -1,0 +1,268 @@
+    <div class="modal inmodal" id="edit-model" style="display:none">
+		<div class="modal-content animated bounceInUp">
+			<div class="ibox-content">
+				<fieldset class="layui-elem-field layui-field-title" style="border-top:0px">
+					<form class="layui-form layui-form-pane" action="" id="editform">
+					    <input type="hidden" name="id" id="id" value="0"  />
+					    <input type="hidden" name="session" value="${exhibitionSessionId}"  />
+					    <input type="hidden" name="applyId" value="0"  />
+						<table width="100%"  class="layui-table form-content">
+							<tr class="papers-edit-bg"><td colspan="3" style="border-right: none;">전시회 에 참가 하 는 기업 을 추가 하 다.</td><td align="right"><a class="layui-icon layui-icon-close close"></a></td></tr>
+							  <tr>
+							    <td><span>*</span>업체명(중국어)</td>
+							    <td colspan="3">
+							      <input type="text" name="chinesename" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>업체명(영어)</td>
+							    <td colspan="3">
+							      <input type="text" name="engname" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>업체명(러시아어)</td>
+							    <td colspan="3">
+							      <input type="text" name="russianname" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>업체주소(중국어)</td>
+							    <td colspan="3">
+							      <input type="text" name="chineseaddress" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>업체주소(영어)</td>
+							    <td colspan="3">
+							      <input type="text" name="engaddress" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>우편번호</td>
+							    <td colspan="3">
+							      <input type="text" name="postcode" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>휴대전화</td>
+							    <td colspan="3">
+							      <input type="text" name="phone" required  lay-verify="required" placeholder="휴대전화 번호를 입력하세요." autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>전화번호</td>
+							    <td colspan="3">
+							      <input type="text" name="tel" required  lay-verify="required" placeholder="휴대전화 번호를 입력하세요." autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>팩스</td>
+							    <td colspan="3">
+							      <input type="text" name="fax" required  placeholder="팩스번호 입력" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>웹 사이트</td>
+							    <td colspan="3">
+							      <input type="text" name="website" required placeholder="웹 사이트를 입력하세요." autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>*이메일</td>
+							    <td colspan="3">
+							      <input type="text" name="email"  lay-verify="email" placeholder="이메일 주소를 입력하세요." autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>국가/지자체</td>
+							    <td colspan="3">
+								    <div class="layui-input-inline">
+								      <select name="country" lay-verify="required" lay-filter="country">
+										  <option value="">선택하세요</option>
+									  </select>   
+								    </div>
+								    <div class="layui-input-inline">
+								      <select name="province" lay-verify="required" lay-filter="province">
+										  <option value="">선택하세요</option>
+									  </select>   
+								    </div>
+								    <div class="layui-input-inline">
+								      <select name="city" lay-verify="required">
+										  <option value="">선택하세요</option>
+									  </select>   
+									 </div>
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>책임자</td>
+							    <td colspan="3">
+							      <input type="text" name="principal" required  lay-verify="required" placeholder="책임자 성함을 입력하세요." autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>담당자</td>
+							    <td colspan="3">
+							      <input type="text" name="contactperson" placeholder="담당자 성함을 입력하세요." autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>담당자 직무</td>
+							    <td colspan="3">
+							      <input type="text" name="jobtitle" placeholder="담당자 직무를 입력하세요." autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>업종분류</td>
+							    <td colspan="3">
+							      <select name="industryid" lay-verify="">
+							    	<#list industries as industry>
+							    	<option value="${industry.id}">${industry.chineseName}</option>
+							    	</#list>
+								  </select>
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>참가업체 성질</td>
+							    <td colspan="3">
+							    	<#list companytypes as type>
+							      <input type="radio" name="exhibitorsNatureId" value="${type.id}" title="${type.chineseName}">
+							      </#list>
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>경영범위</td>
+							    <td colspan="3">
+							      <textarea name="busscope" placeholder="업체 경영범위를 입력하세요." class="layui-textarea"></textarea>
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>바이어 매칭 요망</td>
+							    <td colspan="3">
+							      <textarea name="hopecustomers" placeholder="결실을 원하는 바이어 업종범위를 기입하세요." class="layui-textarea"></textarea>
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>업체소계</td>
+							    <td colspan="3">
+							      <textarea name="companyprofile" placeholder="업체소계를 상세히 기입하세요." class="layui-textarea"></textarea>
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>구매의향</td>
+							    <td colspan="3">
+							      <textarea name="purchaseintention" required  lay-verify="required" placeholder="구매의향을 입력하세요." class="layui-textarea"></textarea>
+							    </td>
+							  </tr>
+							<tr>
+								<td>회사LOGO</td>
+								<input type="hidden" name="companylogo" id="companylogo" value=""  />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnCompanylogo" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>이미지 업로드
+									</button>
+									<button type="button" class="layui-btn" id="btnCompanylogoCropper">
+									  <i class="layui-icon">&#xe67c;</i>재단조수
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />주의:포맷:jpg 파일크기< 100K LOGO 화소크기:200*200(가로*높이).</div>
+								</td>
+								<td colspan="2" class="prepic"><image src="" width="200" height="200" id="precompanylogo" /></td>
+							</tr>
+							<tr>
+								<td>*사업자등록증</td>
+								<input type="hidden" name="buslicensepath" id="buslicensepath" value=""  lay-verify="required" lay-reqText="사업자등록증을 반드시 업로드 하셔야 합니다."  />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="idpic" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>이미지 업로드
+									</button>
+									<button type="button" class="layui-btn" id="btnBuslicensepathCropper">
+									  <i class="layui-icon">&#xe67c;</i>재단조수
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />주의:포맷:jpg 파일크기<2M 화소크기:800*1060(가로*높이).</div>
+								</td>
+								<td colspan="2" class="prepic"><image src="" width="390" height="516" id="prebuslicensepath" /></td>
+							</tr>
+							<tr>
+								<td>*회사표지</td>
+								<input type="hidden" name="companypicture" id="companypicture" value=""  lay-verify="required" lay-reqText="회사 표지를 반드시 업로드 하셔야 합니다."  />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnCompanyPicture" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>이미지 업로드
+									</button>
+									<button type="button" class="layui-btn" id="btnCompanypictureCropper">
+									  <i class="layui-icon">&#xe67c;</i>재단조수
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />주의:포맷:jpg 파일크기< 2M 화소크기:750*422(가로*높이).</div>
+								</td>
+								<td colspan="2" class="prepic"><image src="" width="390" height="219" id="precompanypicture" /></td>
+							</tr>
+							<tr>
+								<td>홍보 동영상</td>
+								<input type="hidden" name="companyvideo" id="companyvideo" value="" />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnCompanyVideo">
+									  <i class="layui-icon">&#xe67c;</i>동영상 업로드 하세요.
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />주의:포맷:MP4 파일크기< 20M 파일 사이즈:750*422(가로*높이).</div>
+								</td>
+								<td colspan="2" class="prepic" id="videoContainer"><image src="" width="390" height="219" id="prebuslicensepath" /></td>
+							</tr>
+							<tr>
+								<td>*순환홍보 이미지</td>
+								<input type="hidden" name="companypictures" id="companypictures" value=""  />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnCompanyPictures" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>이미지 업로드
+									</button>
+									<button type="button" class="layui-btn" id="btnCompanypicturesCropper">
+									  <i class="layui-icon">&#xe67c;</i>재단조수
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />주의:포맷:jpg 파일크기< 2M 화소크기:750*422(가로*높이).업로드 파일은 3장이내 이어야 함.</div> 
+								</td>
+								<td colspan="2">
+									<div class="mutipic">
+									</div>
+								</td>
+							</tr>
+							<tr>
+							    <td>사이버전시장 사이트</td>
+							    <td colspan="3">
+							      <input type="text" name="url" placeholder="请输入虚拟展厅地址" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							<tr class="papers-edit-bg"><td colspan="3" style="border-right: none;">부스신청 및 배치</td><td align="right"></td></tr>
+							
+							  <tr>
+							    <td><span>*</span>전시품</td>
+							    <td colspan="3">
+							      <input type="text" name="exhibits" lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							<tr>
+								<td>*부스배치</td>
+							    <td colspan="3" id="roomAndBooth">
+							    </td>
+							</tr>
+							<tr class="papers-edit-bg">
+								<td colspan="4" align="center">
+									<button type="button" class="layui-btn layui-btn-primary close">취소</button>
+									<button type="reset" class="layui-btn layui-btn-primary" id="reset" style="display:none">재설정</button>
+									<button type="button"  lay-submit class="layui-btn"  lay-filter="update" id="submit">제출(submit)</button>
+								</td>
+							</tr>
+							
+						</table>
+					</form>
+				</fieldset>
+			</div>
+		</div>
+	</div>
+	<div id="mutiPictureTemplate" style="display:none">
+	<div class="item">
+		<img src="" />
+		<div class="fc-upload-cover">
+			<i class="ivu-icon fa fa-eye"></i>
+			<i class="ivu-icon fa fa-trash"></i>
+		</div>
+	</div>
+	</div>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>Document</title>
+		<link rel="stylesheet" href="/manage/css/xadmin.css">
+		<link href="/manage/css/style.css?v=4.1.0" rel="stylesheet">
+		<link href="/manage/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="/manage/layui/css/layui.css"  media="all">
+		<script charset="utf-8" src="/manage/js/jquery.min.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/layui/layui.js" type="text/javascript"></script>
+		<script src="/manage/js/manage/common.js"></script>
+		<script charset="utf-8" src="/manage/js/xadmin.js" type="text/javascript"></script>
+		<style>
+			#box {
+				width: 390px;
+				height: 117px;
+				position: absolute;
+				top: 10px;
+				left: 10px;
+				z-index: 1000;
+			}
+			#box1 {
+				width: 290px;
+				height: 378px;
+				position: absolute;
+				top: 140px;
+				left: 10px;
+				z-index: 1000;
+			}
+			#divcontent {
+
+				height: 100%;
+			}
+			img {
+				width: 100%;
+				height: 100%;
+				cursor: move;
+			}
+			table {
+				width: 100%;
+				height: 100%;
+				cursor: move;
+				border: 1px solid #e8e8e8;
+			}
+			th {
+				height: 37px;
+				width: 30%;
+				line-height: 37px;
+				border-left: 0px solid #d3dbde;
+				border-bottom: 0px solid #d3dbde;
+			}
+			td {
+				border-bottom: 0px solid #d3dbde;
+				border-left: 0px solid #d3dbde;
+				padding: 5px;
+				text-indent: 5px;
+				text-align: center;
+				vertical-align: middle;
+				text-align: left;
+				width: 200px
+			}
+			#scale {
+				width: 5px;
+				height: 5px;
+				overflow: hidden;
+				cursor: se-resize;
+				position: absolute;
+				right: 0;
+				bottom: 0;
+				
+			}
+			#scale1 {
+				width: 5px;
+				height: 5px;
+				overflow: hidden;
+				cursor: se-resize;
+				position: absolute;
+				right: 0;
+				bottom: 0;
+				
+			}
+		</style>
+
+	</head>
+	<body>
+		<div id="divcontent">
+
+		</div>
+		<input type="hidden" id="txtcardtypeid">
+		<input type="hidden" id="txtid">
+	</body>
+</html>
+<script>
+	var editSysPrintTemplateId = sessionStorage.getItem("editSysPrintTemplateId");
+	var editprintTemplate = sessionStorage.getItem("editprintTemplate");
+	var editCardTypeId = sessionStorage.getItem("editCardTypeId");
+	$("#divcontent").html(editprintTemplate);
+	$("#txtcardtypeid").val(editCardTypeId);
+	$("#txtid").val(editSysPrintTemplateId); 
+</script>

@@ -1,0 +1,195 @@
+    <div class="modal inmodal" id="edit-model" style="display:none">
+		<div class="modal-content animated bounceInUp">
+			<div class="ibox-content">
+				<fieldset class="layui-elem-field layui-field-title" style="border-top:0px">
+					<form class="layui-form layui-form-pane" action="" id="editform">
+					    <input type="hidden" name="id" value="0"  />
+					    <input type="hidden" name="session" value="${exhibitionSessionId}"  />
+					    <input type="hidden" name="cardnature" value="0"  />
+					    <input type="hidden" name="isback" value="1"  />
+						<table width="100%"  class="layui-table form-content">
+						<#if isOut??><input type="hidden" name="isout" value="${isOut}" /></#if>
+							<tr class="papers-edit-bg"><td colspan="3" style="border-right: none;">添加${certificateModal.chinesename}</td><td align="right"><a class="layui-icon layui-icon-close close"></a></td></tr>
+							<tr>
+								<td>*姓名</td>
+								<td width="40%"><input class="layui-input" autocomplete="off" id="name" name="name" type="text"  lay-verify="required"></td>
+								<td>*性别</td>
+								<td>
+									<input type="radio" name="sex" value="0" title="男" checked>
+      								<input type="radio" name="sex" value="1" title="女">
+      							</td>
+							</tr>
+							<tr>
+								<td>*国家/地区</td>
+								<td>
+									<div class="layui-input-inline" style="width:30%">
+								      <select name="country" lay-verify="required" lay-filter="country"  lay-reqText="必须选择国家" >
+										  <option value="">请选择</option>
+									  </select>   
+								    </div>
+								    <div class="layui-input-inline" style="width:30%">
+								      <select name="province" lay-verify="required" lay-filter="province"  lay-reqText="必须选择省份" >
+										  <option value="">请选择</option>
+									  </select>   
+								    </div>
+								    <div class="layui-input-inline" style="width:30%" >
+								      <select name="city" lay-verify="required"  lay-reqText="必须选择城市">
+										  <option value="">请选择</option>
+									  </select>   
+								    </div>
+								</td>
+								<td>*职务</td>
+								<td><input class="layui-input" autocomplete="off" id="jobtitle" name="jobtitle" type="text"  lay-verify="required"></td>
+							</tr>
+							<tr>
+								<td>*公司名称</td>
+								<td><#if isExhibitor!=0>
+							      <select name="companyid" id="companyid">
+							      	<#if companys??>
+							      	<#list companys as c>
+									<option value="${c.id}" <#if ((company.id)??&&c.id==company.id) >selected</#if> >${c.chinesename}</option>
+									</#list>
+									<#else>
+									<option value="${company.id!'0'}">${company.chinesename!''}</option>
+									</#if>
+								  </select>
+								  <#else>
+								  	<input class="layui-input" autocomplete="off" id="companyname" name="companyname" type="text"  lay-verify="required" value="<#if company??>${company.chinesename!''}</#if>" <#if company??>disabled</#if> />
+								  </#if>
+								</td>
+								<td>证件类型</td>
+								<td>
+							      <select name="cardtype" id="cardtype" lay-filter="cardtype">
+								  </select>
+								</td>
+							</tr>
+							<tr>
+								<td>*身份证/护照/记者证</td>
+								<td>
+									<input type="radio" value="0" checked id="idcardpassport1" title="身份证" name="idcardpassport">
+									<input type="radio" value="1" name="idcardpassport" id="idcardpassport2" title="护照">
+									<input type="radio" value="2" name="idcardpassport" id="idcardpassport3" title="记者证">
+									
+								</td>
+								<td>*证件编号</td>
+								<td><input class="layui-input" autocomplete="off" id="cardnumber" name="cardnumber" type="text"  lay-verify="required|checkID"></td>
+							</tr>
+							<tr>
+								<td>邮编</td>
+								<td><input class="layui-input" autocomplete="off" id="postcode" name="postcode" type="text"></td>
+								<td>地址</td>
+								<td><input class="layui-input" autocomplete="off" id="address" name="address" type="text"></td>
+							</tr>
+							<tr>
+								<td>公司网址</td>
+								<td colspan="3"><input class="layui-input" autocomplete="off" id="website" name="website" type="text"></td>
+							</tr>
+							<tr>
+								<td>*手机号码</td>
+								<td><input class="layui-input" autocomplete="off" id="phone" name="phone" type="text" lay-verify="required|phone"></td>
+								<td>邮件</td>
+								<td><input class="layui-input" autocomplete="off" id="email" name="email" type="text"></td>
+							</tr>
+							<tr>
+								<td>电话</td>
+								<td><input class="layui-input" autocomplete="off" id="tel" name="tel" type="text"></td>
+								<td>传真</td>
+								<td><input class="layui-input" autocomplete="off" id="fax" name="fax" type="text"></td>
+							</tr>
+							<#if certificateModal.issurvey==1>
+							<tr>
+								<td>*业务领域</td>
+								<td>	
+							      <select id="yewulingyu" name="bussinessarea" lay-verify="required">
+								  </select>
+								</td>
+								<td>*参会角色</td>
+								<td>	
+							      <select name="participants" id="canhuijuese" lay-verify="required">
+								  </select>
+								</td>
+							</tr>
+							<tr>
+								<td>*参会目的</td>
+								<td colspan="3" id="purpose">
+								</td>
+							</tr>
+							<tr>
+								<td>*您想参观的展区</td>
+								<td colspan="3">
+								<select id="xcgdzq" name="visitexhibition" lay-verify="required">
+								</select>
+								</td>
+							</tr>
+							<tr>
+								<td>*您如何知道展会</td>
+								<td colspan="3" id="knowexhibition">
+								</td>
+							</tr>
+							<tr>
+								<td>*业务性质</td>
+								<td colspan="3" id="businessnature">
+								</td>
+							</tr>
+							</#if>
+							<tr>
+								<td>*证件照片</td>
+								<input type="hidden" name="imagepath" id="imagepath" value=""  lay-verify="required" lay-reqText="必须上传证件照片" />
+								<td>
+									<button type="button" class="layui-btn" id="pic" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>上传图片
+									</button>
+									<button type="button" class="layui-btn" id="btnimagepathCropper">
+									  <i class="layui-icon">&#xe67c;</i>裁剪助手
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />格式为JPG，上传文件小于2M，尺寸390*487（宽*高）像素，证件照背景为红、白、蓝。
+								</td>
+								<td colspan="2" class="prepic"><image src="" width="195" height="243" id="preimagepath" /></td>
+							</tr>
+							<tr>
+								<td>*<#if certificateModal.chinesename=="记者证" >新闻记者证<#else>身份证（护照）</#if></td>
+								<input type="hidden" name="idphotopath" id="idphotopath" value=""  lay-verify="required" lay-reqText="必须上传身份证（护照）"  />
+								<td>
+									<button type="button" class="layui-btn" id="idpic" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>上传图片
+									</button>
+									<button type="button" class="layui-btn" id="btnidphotopathCropper">
+									  <i class="layui-icon">&#xe67c;</i>裁剪助手
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />格式为JPG，上传文件小于2M，尺寸<#if certificateModal.chinesename=="记者证" >606*436<#else>693*472</#if>（宽*高）像素。</div>
+								</td>
+								<td colspan="2" class="prepic"><image src="" width="195" height="132" id="preidphotopath" /></td>
+							</tr>
+							<#if certificateModal.chinesename=="采购商证">
+							<tr>
+								<td>*营业执照</td>
+								<input type="hidden" name="businesslicense" id="businesslicense" value=""  lay-verify="required" lay-reqText="必须上传营业执照"  />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnBusinesslicenseCropper">
+									  <i class="layui-icon">&#xe67c;</i>裁剪助手
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />格式为JPG，上传文件小于2M，尺寸800*1060（宽*高）像素。</div>
+								</td>
+								<td colspan="2" class="prepic"><image src="" width="195" height="258" id="prebusinesslicense" /></td>
+							</tr>
+							<tr>
+								<td>*采购意向</td>
+								<td colspan="3">
+									<textarea name="purchasingintention" required  lay-verify="required" placeholder="请输入采购意向" class="layui-textarea"></textarea>
+								</td>
+							</tr>
+							</#if>
+							<tr class="papers-edit-bg">
+								<td colspan="4" align="center">
+									<button type="button" class="layui-btn layui-btn-primary close">取消</button>
+									<button type="reset" class="layui-btn layui-btn-primary" id="reset" style="display:none">重置</button>
+									<button type="button"  lay-submit class="layui-btn"  lay-filter="update">提交</button>
+								</td>
+							</tr>
+							
+						</table>
+					</form>
+				</fieldset>
+			</div>
+		</div>
+	</div>

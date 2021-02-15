@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.Exhibitors.dao.EbsGuestbexhibitionMapper">
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsGuestbexhibition">
+        select a.id,a.session,a.loginname,a.username,a.loginpass,a.companyname,a.cardnumber,a.tel,a.type,a.addtime        from ebs_guestbexhibition as a
+        where a.id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsGuestbexhibition">
+        select a.id,a.session,a.loginname,a.username,a.loginpass,a.companyname,a.cardnumber,a.tel,a.type,a.addtime        from ebs_guestbexhibition as a
+        <where>
+                            <if test="id != null and id != ''">
+                    and a.id = #{id}
+                </if>
+                            <if test="session != null and session != ''">
+                    and a.session = #{session}
+                </if>
+                            <if test="loginname != null and loginname != ''">
+                    and a.loginname = #{loginname}
+                </if>
+                            <if test="username != null and username != ''">
+                    and a.username = #{username}
+                </if>
+                            <if test="loginpass != null and loginpass != ''">
+                    and a.loginpass = #{loginpass}
+                </if>
+                            <if test="companyname != null and companyname != ''">
+                    and a.companyname = #{companyname}
+                </if>
+                            <if test="cardnumber != null and cardnumber != ''">
+                    and a.cardnumber = #{cardnumber}
+                </if>
+                            <if test="tel != null and tel != ''">
+                    and a.tel = #{tel}
+                </if>
+                            <if test="type != null and type != ''">
+                    and a.type = #{type}
+                </if>
+                            <if test="addtime != null and addtime != ''">
+                    and a.addtime = #{addtime}
+                </if>
+                    </where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsGuestbexhibition">       
+        select c.id,a.member_id as memberid,b.id assession,a.member_username as loginname,a.member_company as username,a.member_password as loginpass,
+        c.chinesename as companyname,ifnull(d.cardNumber,0) as cardnumber,c.tel,c.addtime from web_member as a
+        inner join web_member_session as b on a.member_id=b.member_id
+        inner join ebs_companyinfo as c on c.id=b.orgnization_id
+        left join (
+			SELECT a.companyname,ifnull(a.personnelCardNumber, 0)+ifnull(b.vehicleCardNumber, 0) cardNumber FROM (
+				SELECT companyname,count(id) personnelCardNumber FROM ebs_personnelcard WHERE session = #{session} GROUP BY companyname
+			) a LEFT JOIN (
+				SELECT companyname,count(id) vehicleCardNumber FROM ebs_vehiclecard WHERE session = #{session} GROUP BY companyname
+			) b ON a.companyname = b.companyname
+		) d on c.chinesename = d.companyname
+        <where>        		
+        	a.member_status=0 
+                <if test="id != null and id != ''">and a.id =
+                    #{id}
+                </if>
+                <if test="session != null and session != ''">
+                	and b.id = #{session}
+                </if>
+                <if test="loginname != null and loginname != ''">and a.loginname =
+                    #{loginname}
+                </if>
+                <if test="username != null and username != ''">and a.username =
+                    #{username}
+                </if>
+                <if test="loginpass != null and loginpass != ''">and a.loginpass =
+                    #{loginpass}
+                </if>
+                <if test="companyname != null and companyname != ''">and c.chinesename like concat('%',#{companyname},'%')
+                </if>
+                <if test="cardnumber != null and cardnumber != ''">and a.cardnumber =
+                    #{cardnumber}
+                </if>
+                <if test="tel != null and tel != ''">and a.tel =
+                    #{tel}
+                </if>
+                <if test="type != null and type != ''">and a.member_type =
+                    #{type}
+                </if>
+                <if test="addtime != null and addtime != ''">and a.addtime =
+                    #{addtime}
+                </if>
+        	</where>
+        order by c.id desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+        select count(*) from web_member as a
+        inner join web_member_session as b on a.member_id=b.member_id
+        inner join ebs_companyinfo as c on c.id=b.orgnization_id
+		<where>			
+			and a.member_status=0 
+                            <if test="id != null and id != ''">and id =
+                    #{id}
+                </if>
+                            <if test="session != null and session != ''">and b.id =
+                    #{session}
+                </if>
+                            <if test="loginname != null and loginname != ''">and loginname =
+                    #{loginname}
+                </if>
+                            <if test="username != null and username != ''">and username =
+                    #{username}
+                </if>
+                            <if test="loginpass != null and loginpass != ''">and loginpass =
+                    #{loginpass}
+                </if>
+                            <if test="companyname != null and companyname != ''">and c.chinesename like concat('%',#{companyname},'%')
+                </if>
+                            <if test="cardnumber != null and cardnumber != ''">and cardnumber =
+                    #{cardnumber}
+                </if>
+                            <if test="tel != null and tel != ''">and tel =
+                    #{tel}
+                </if>
+                            <if test="type != null and type != ''">and a.member_type =
+                    #{type}
+                </if>
+                            <if test="addtime != null and addtime != ''">and addtime =
+                    #{addtime}
+                </if>
+                    </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.Exhibitors.model.EbsGuestbexhibition"            useGeneratedKeys="true" keyProperty="id">
+        insert into ebs_guestbexhibition(<trim suffixOverrides=",">
+                                                        <if test="session != null">`session`,</if>
+                                                <if test="loginname != null">`loginname`,</if>
+                                                <if test="username != null">`username`,</if>
+                                                <if test="loginpass != null">`loginpass`,</if>
+                                                <if test="companyname != null">`companyname`,</if>
+                                                <if test="cardnumber != null">`cardnumber`,</if>
+                                                <if test="tel != null">`tel`,</if>
+                                                <if test="type != null">`type`,</if>
+                                                <if test="addtime != null">`addtime`</if>
+                    </trim>)
+        values (<trim suffixOverrides=",">
+                                                        <if test="session != null">#{session},</if>
+                                                <if test="loginname != null">#{loginname},</if>
+                                                <if test="username != null">#{username},</if>
+                                                <if test="loginpass != null">#{loginpass},</if>
+                                                <if test="companyname != null">#{companyname},</if>
+                                                <if test="cardnumber != null">#{cardnumber},</if>
+                                                <if test="tel != null">#{tel},</if>
+                                                <if test="type != null">#{type},</if>
+                                                <if test="addtime != null">#{addtime}</if>
+                    </trim>)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.Exhibitors.model.EbsGuestbexhibition">
+        update ebs_guestbexhibition
+        <set>
+                                                                            <if test="session != null">`session` = #{session}
+                        ,</if>
+                                                                <if test="loginname != null">`loginname` = #{loginname}
+                        ,</if>
+                                                                <if test="username != null">`username` = #{username}
+                        ,</if>
+                                                                <if test="loginpass != null">`loginpass` = #{loginpass}
+                        ,</if>
+                                                                <if test="companyname != null">`companyname` = #{companyname}
+                        ,</if>
+                                                                <if test="cardnumber != null">`cardnumber` = #{cardnumber}
+                        ,</if>
+                                                                <if test="tel != null">`tel` = #{tel}
+                        ,</if>
+                                                                <if test="type != null">`type` = #{type}
+                        ,</if>
+                                                                <if test="addtime != null">`addtime` = #{addtime}
+                        </if>
+                                    </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from ebs_companyinfo
+        where id = #{id}
+    </delete>
+
+	<update id="ResetPassword" parameterType="cn.org.chtf.card.manage.Exhibitors.model.EbsGuestbexhibition">
+		update web_member set member_password= #{loginpass} where member_id=#{memberid}
+	</update>
+</mapper>

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>零散参展商展位审核</title>
+    <meta content="webkit" name="renderer">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" name="viewport"/>
+    <link rel="stylesheet" href="/manage/css/xadmin.css">
+    <link rel="stylesheet" href="/manage/css/font.css">
+    <link rel="stylesheet" href="/manage/css/bootstrap.min.css?v=3.3.6">
+	<link rel="stylesheet" href="/manage/css/font-awesome.css?v=4.4.0">
+	<link rel="stylesheet" href="/manage/css/animate.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<link rel="stylesheet" href="/manage/css/plugins/bootstrap-table/bootstrap-table.min.css">
+    <script type="text/javascript" charset="utf-8" src="/manage/js/jquery.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="/manage/layui/layui.js"></script>
+    <script type="text/javascript" charset="utf-8" src="/manage/js/xadmin.js"></script>
+    <script type="text/javascript" charset="utf-8" src="/manage/js/vue.js"></script>
+    <style type="text/css">
+    	.layui-checkbox-disbaled[lay-skin=primary] span {
+		    color: #009688;
+		}
+		.layui-disabled, .layui-disabled:hover {
+		    color: #009688!important;
+		}
+		.layui-radio-disbaled>i {
+		    color: #3c763d!important;
+		}
+    </style>
+</head>
+<body>
+<div class="wrapper wrapper-content  animated fadeInRight">
+  <div class="row" id="vmEbsCompanyinfo">
+    <div class="col-sm-12">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>零散参展商-展位审核</h5>
+          <div class="ibox-tools"> <a class="collapse-link"> <i class="fa fa-chevron-up"></i> </a> <a class="close-link"> <i class="fa fa-times"></i> </a> </div>
+        </div>        
+        <div class="ibox-content">
+            <div class="fixed-table-toolbar" style="height:100px;">
+              <div class="columns columns-right btn-group pull-right">
+              	<table class="searchStyle">
+              		<tr>
+              			<td>
+              				<table style="width: 100%;">
+			                	<tr>
+			                		<td style="width: 60px;">证件性质：</td>
+									<td>
+										<select class="form-control input-outline" id="cardNature" onchange="reloadTableData()">
+											<option value="" selected>全部</option>
+											<option value="0">绿色通道</option>
+											<option value="1">超出总数</option>
+										</select>
+									</td>
+			                	</tr>
+			                </table>
+              			</td>
+              			<td>
+              				<table style="width: 100%;">
+			                	<tr>
+			                		<td style="width: 95px;padding-left: 10px;">证件审核状态：</td>
+									<td>
+										<select class="form-control input-outline" id="cardAuditStatus" onchange="reloadTableData()">
+											<option value="" selected>全部</option>
+											<option value="0">待审核</option>
+											<option value="1">审核未通过</option>
+											<option value="2">全部审核通过</option>
+										</select>
+									</td>
+			                	</tr>
+			                </table>
+              			</td>
+              			<td>
+              				<table style="width: 100%;">
+			                	<tr>
+			                		<td style="width: 95px;padding-left: 10px;">证件填报数量：</td>
+									<td>
+										<select class="form-control input-outline" id="cardSubmitNumber" onchange="reloadTableData()">
+											<option value="" selected>全部</option>
+											<option value="0">总数与填报数相等</option>
+											<option value="1">总数与填报数不等</option>
+											<option value="2">填报数与打印数不等</option>
+										</select>
+									</td>
+			                	</tr>
+			                </table>
+              			</td>
+              			<td>
+              				<table style="width: 100%;">
+			                	<tr>
+			                		<td style="width: 95px;padding-left: 10px;">展位审核状态：</td>
+									<td>
+										<select class="form-control input-outline" id="boothAuditStatus" onchange="reloadTableData()">
+											<option value="" selected>全部</option>
+											<option value="0">未审核</option>
+											<option value="1">财务待审核</option>
+											<option value="2">已审核</option>
+										</select>
+									</td>
+			                	</tr>
+			                </table>
+                		</td>
+              		</tr>
+              		<tr>
+						<td colspan="2">
+              				<table>
+			                	<tr>
+			                		<td style="width: 60px;">专业展区：</td>
+									<td>
+										<select class="form-control input-outline" id="tradingGroupSelect" onchange="reloadTableData()"></select>
+									</td>
+			                	</tr>
+			                </table>
+              			</td>
+              			<td colspan="2">
+	              			<div class="layui-inline">
+	              				<input class="form-control input-outline" type="text" placeholder="请输入展位号，区分大小写" id="boothName">
+	              			</div>
+	              			<div class="layui-inline">
+	              				<input class="form-control input-outline" type="text" placeholder="请输入企业名称" id="companyName">
+	              			</div>
+	              			<div class="layui-inline">
+								<button style="margin-top: 6px;" class="btn btn-default btn-outline" type="button" name="search" title="搜索" onclick="reloadTableData()" id="search"> <i class="glyphicon glyphicon-search"></i> </button>
+	              			</div>
+              			</td>
+              		</tr>
+              	</table>                
+              </div>                                   
+            </div>
+            
+            <table class="layui-hide statisticsInfo" border="1px" style="text-align:center;" width="100%">
+		        <thead>
+			        <tr>
+			            <td colspan=11>展位申请</td>
+			            <td colspan=3>产品申请</td>
+			        </tr>
+			    </thead>
+		        <tfoot>
+			        <tr>
+			            <td>已分配展位填报企业数</td>
+			            <td>填报证件总数</td>
+			            <td>待审核数</td>
+			            <td>审核未通过数</td>
+			            <td>已审核证件数</td>
+			            <td>已打印</td>
+			            <td>未打印</td>
+			            <td>绿色通道证件数</td>
+			            <td>零散展位总数</td>
+			            <td>展位已分配</td>
+			            <td>展位未分配</td>
+			            <td>产品总数</td>
+			            <td>未审核产品数</td>
+			            <td>已审核产品数</td>
+			        </tr>
+			        <tr>
+			            <td id="EnterprisesNumber"></td>
+			            <td id="certificatesTotalNumber"></td>
+			            <td id="pendingAuditNumber"></td>
+			            <td id="failedAuditNumber"></td>
+			            <td id="ReviewedCertificatesNumber"></td>
+			            <td id="Printed"></td>
+			            <td id="noPrinted"></td>
+			            <td id="greenChannelCertificatesNumber"></td>
+			            <td id="boothsTotalNumber"></td>
+			            <td id="boothsAllocationedNumber"></td>
+			            <td id="boothsNotAllocationedNumber"></td>
+			            <td id="ProductsNumber"></td>
+			            <td id="waitAuditProductsNumber"></td>
+			            <td id="auditedProductsNumber"></td>
+			        </tr>
+		        </tfoot>
+            </table>
+            
+            <table id="test" lay-filter="test"></table>
+        </div>
+      </div>
+    </div>    
+  </div>
+</div>
+<script type="text/html" id="batchAuditPassBar">
+  	<div class="layui-btn-container">
+  		<button class="layui-btn layui-btn-sm layui-hide exhibitionOfficeAudit" type="button" onclick="batchExhibitionOfficeAuditPass()">规划展览部批量审核通过</button>
+  		<button class="layui-btn layui-btn-sm layui-hide financeOfficeAudit" type="button" onclick="batchFinanceOfficeAuditPass()">财务部批量审核通过</button>
+  	</div>
+</script>
+<script src="/manage/js/bootstrap.min.js?v=3.3.6"></script> 
+<script src="/manage/js/content.js?v=1.0.0"></script> 
+<script src="/manage/js/manage/common.js?v=1.0.0"></script> 
+</body>
+<script type="text/javascript">
+var table;
+layui.use(['table', 'form'], function(){
+    var $ = layui.jquery, table = layui.table, form = layui.form;
+	//加载展位数量统计和产品数量统计
+	window.loadCount = function(){
+		$.get("/manage/Exhibitors/ebsScatteredExhibitorsBoothAuditController/loadCount", {"tradingGroupId":$("#tradingGroupSelect").val()}, function(r){
+			if(r.code===1){
+				$("#EnterprisesNumber").html(r.data.EnterprisesNumber);
+				$("#certificatesTotalNumber").html(r.data.certificatesTotalNumber);
+				$("#pendingAuditNumber").html(r.data.pendingAuditNumber);
+				$("#failedAuditNumber").html(r.data.failedAuditNumber);
+				$("#ReviewedCertificatesNumber").html(r.data.ReviewedCertificatesNumber);
+				$("#Printed").html(r.data.Printed);
+				$("#noPrinted").html(r.data.noPrinted);
+				$("#boothsTotalNumber").html(r.data.boothsTotalNumber);
+				$("#boothsAllocationedNumber").html(r.data.boothsAllocationedNumber);
+				$("#boothsNotAllocationedNumber").html(r.data.boothsNotAllocationedNumber);
+				$("#greenChannelCertificatesNumber").html(r.data.greenChannelCertificatesNumber);
+				$("#ProductsNumber").html(r.data.ProductsNumber);
+				$("#waitAuditProductsNumber").html(r.data.waitAuditProductsNumber);
+				$("#auditedProductsNumber").html(r.data.auditedProductsNumber);
+				$(".statisticsInfo").removeClass("layui-hide");
+			}else if(r.status!=4){
+				layer.alert(r.msg);
+			}
+		})
+	}
+	loadCount();
+	//待审核零散参展商列表
+	table.render({
+		elem: '#test'
+		,url: '/manage/Exhibitors/ebsScatteredExhibitorsBoothAuditController/getScatteredExhibitorsList'	
+		,where:{
+			cardNature:$("#cardNature").val()
+			,cardAuditStatus:$("#cardAuditStatus").val()
+			,cardSubmitNumber:$("#cardSubmitNumber").val()
+			,boothAuditStatus:$("#boothAuditStatus").val()
+			,tradingGroupId:$("#tradingGroupSelect").val()
+			,boothName:$("#boothName").val()
+			,companyName:$("#companyName").val()
+		}	
+		,response: {
+			statusCode: 1 
+		}
+		,even: true
+		,page: true
+		,toolbar: '#batchAuditPassBar'
+	    ,defaultToolbar: []
+		,cols: [[ //表头
+			{type:'checkbox'}
+			,{type:'numbers',title:'序号'}
+			,{align:'center', field: 'chinesename', title: '企业名称', min_width: 290, templet:function (d) {
+				return '<a onclick="visitScatteredExhibitorInfo(\''+d.companyId+'\')">'+d.chinesename+"</a>";
+			}}			
+			,{align:'center', field: 'numbers', title: '参展人员证件统计', width: 150, templet:function (d) {
+				return '<a lay-event="personnelCardsAudit" title="填报数/未通过数/待审核数/总数/打印数">'+d.numbers+'</a>';
+			}}
+			,{align:'center', field: 'waitAuditProductNumber', title: '产品审核统计', width: 120, templet:function (d) {
+				return '<a lay-event="productsAudit" title="填报数/待审核数/已审核数/审核通过数/审核未通过数">'+d.productNumber+'/'+d.waitAuditProductNumber+'/'+d.auditedProductNumber+'/'+d.passProductNumber+'/'+d.noPassProductNumber+'</a>';
+			}}
+			,{align:'center', field: 'companyvideo', title: '视频数量', width: 100, templet:function (d) {
+				if(d.companyvideo==null || d.companyvideo==''){
+					return 0;
+				}else{
+					return 1;
+				}
+			}}
+			,{align:'center', field: 'boothNumber', title: '展位数', width: 80}
+			,{align:'center', field: 'booths', title: '展位', min_width: 280}
+			,{align:'center', field: 'addtime', title: '注册日期', width: 150}
+			,{align:'center', title: '操作', fixed: 'right', min_width:190, templet:function (d) {
+				var btn = '';
+				if(d.exhibitionOfficeAuditStatus == null || d.exhibitionOfficeAuditStatus == 0){
+					btn += '<a class="layui-btn layui-btn-primary layui-btn-xs layui-hide exhibitionOfficeAudit" lay-event="exhibitionOfficeAudit">规划展览部确认</a>';
+				}else if(d.exhibitionOfficeAuditStatus == 1 && (d.financeOfficeAuditStatus == null || d.financeOfficeAuditStatus == 0)){
+					btn += '<a class="layui-btn layui-btn-primary layui-btn-xs layui-hide financeOfficeAudit" lay-event="financeOfficeAudit">财务部确认</a>';
+					btn += '<a class="layui-btn layui-btn-primary layui-btn-xs layui-hide return" lay-event="return">撤回</a>';
+				}else{
+					btn += '<span>审核完毕</span>';
+				}
+				return btn;
+			}}
+		]]
+		,done: function (res, curr, count) {
+			res.data.forEach(function (item, index) {
+				if (item.waitAuditProductNumber != 0){
+					$('div[lay-id="test"]').
+					find('tr[data-index="' + index + '"]').
+					find('td[data-field="waitAuditProductNumber"]').
+					css('background-color', '#f3ae99');
+				}
+			});
+			var btnList = [];
+			btnList.push({className:"exhibitionOfficeAudit",url:"Exhibitors/ebsScatteredExhibitorsBoothAuditController/exhibitionOfficeAudit"});
+			btnList.push({className:"financeOfficeAudit",url:"Exhibitors/ebsScatteredExhibitorsBoothAuditController/financeOfficeAudit"});
+			btnList.push({className:"return",url:"Exhibitors/ebsScatteredExhibitorsBoothAuditController/returnInfo"});
+			getUserPermissions(btnList);
+		}
+	});
+	//加载专业展区
+	var tradingGroupList = loadTradingGroupByType(form, '', "tradingGroupSelect", 1);
+	//查看零散企业信息
+	window.visitScatteredExhibitorInfo = function(companyId) {
+		sessionStorage.setItem("editEbsCompanyinfoId", companyId);
+    	var tradingGroupIdList = [];
+    	tradingGroupList.forEach(function (item){
+			tradingGroupIdList.push(item.id);
+		});
+		sessionStorage.setItem("tradingGroupIdList", tradingGroupIdList);
+		xadmin.open('查看零散参展商信息','EbsScatteredExhibitorBoothAuditView.html?type=visit');
+	}
+	//监听工具条
+	table.on('tool(test)', function(obj){
+	    var data = obj.data;
+	    if(obj.event === 'exhibitionOfficeAudit'){//展览处审核
+	    	sessionStorage.setItem("editEbsCompanyinfoId", data.companyId);
+			xadmin.open('展览处审核','EbsScatteredExhibitorBoothAuditView.html?type=exhibitionOfficeAudit');
+	    }else if(obj.event === 'personnelCardsAudit'){//参展人员审核
+	    	sessionStorage.setItem("editEbsCompanyinfoId", data.companyId);
+			xadmin.open('参展人员审核','/manage/Exhibitors/EbsPersonnelcard/personnelCards.html');
+	    }else if(obj.event === 'financeOfficeAudit'){
+	    	sessionStorage.setItem("editEbsCompanyinfoId", data.companyId);
+			xadmin.open('财务部审核','EbsScatteredExhibitorBoothAuditView.html?type=financeOfficeAudit');
+	    }else if(obj.event === 'productsAudit'){
+	    	sessionStorage.setItem("editEbsCompanyinfoId", data.companyId);
+			xadmin.open('产品审核','/manage/product/WebProduct/products.html');
+	    }else if(obj.event === 'return'){
+	    	layer.confirm("确认撤回？", function(index){
+		    	$.ajax({
+	                url: "/manage/Exhibitors/ebsScatteredExhibitorsBoothAuditController/returnInfo",
+	                data: {
+	                    "id": data.companyId
+	                },
+	                dataType: "json",
+	                type: "get",
+	                success: function (result) {
+	                    if (result.code === 1) {
+	                        layui.layer.alert("撤回企业信息成功！");
+	                        layer.close(index);
+	                        reloadTableData();
+	                    } else {
+	                        layui.layer.alert("撤回企业信息失败！");
+	                    }
+	                }
+	            });
+	    	})
+	    }
+	});
+	//零散参展商,展览部批量审核通过
+    window.batchExhibitionOfficeAuditPass = function(){
+    	var url = "/manage/Exhibitors/ebsScatteredExhibitorsBoothAuditController/exhibitionOfficeAudit";
+    	var type = "exhibitionOfficeAudit";
+    	batchAuditPass(url, type);
+	}
+	//零散参展商,财务部批量审核通过
+    window.batchFinanceOfficeAuditPass = function(){
+    	var url = "/manage/Exhibitors/ebsScatteredExhibitorsBoothAuditController/financeOfficeAudit";
+    	var type = "financeOfficeAudit";
+    	batchAuditPass(url, type);
+	}
+	//零散参展商,批量审核通过
+    window.batchAuditPass = function(url, type){
+		layer.confirm("确认审核通过？", function(index){
+			var checkStatus = table.checkStatus('test');
+			if (checkStatus.data.length == 0) {
+				layer.msg('请先选择要批量审核通过的行', {
+					icon : 5
+				});
+				return;
+			}
+			var selectCount = checkStatus.data.length;
+			var isStr = "";
+			for (var i = 0; i < selectCount; i++) {
+				if(type == 'exhibitionOfficeAudit'){
+					if(checkStatus.data[i].exhibitionOfficeAuditStatus != null && checkStatus.data[i].exhibitionOfficeAuditStatus != 0){
+						layer.alert("已选中的行包含规划展览部已审核企业，请先取消勾选");
+						return;
+					}
+				}else if(type == 'financeOfficeAudit'){
+					if(checkStatus.data[i].exhibitionOfficeAuditStatus != 1 || checkStatus.data[i].financeOfficeAuditStatus != 0){
+						layer.alert("已选中的行包含规划展览部未审核通过企业或财务部已审核企业，请先取消勾选");
+						return;
+					}
+				}else{
+					layer.alert("批量审核类型出错");
+					return;
+				}
+			}
+			for (var i = 0; i < selectCount; i++) {
+				$.ajax({
+	                url: url,
+	                data: {
+						"companyId": checkStatus.data[i].companyId
+						,"status": 1
+						,"remark": ''
+						,"type": type
+						,"buslicensepath" : ''
+						,"relateddocumentspath" : ''
+					},
+	                dataType: "json",
+	                type: "get",
+	                async:false, 
+	                success: function (result) {
+	                    if (result.code!=1) layer.alert(result.msg);
+	                },
+					error:function(){
+						layer.alert(checkStatus.data[i].chinesename+"审核通过失败");
+					}
+	            });
+			}
+			reloadTableData();
+			layer.close(index);
+		});
+    }
+	//重新加载数据
+	window.reloadTableData = function() {
+		table.reload('test', {
+			page:true,
+			where : {
+				cardNature:$("#cardNature").val()
+				,cardAuditStatus:$("#cardAuditStatus").val()
+				,cardSubmitNumber:$("#cardSubmitNumber").val()
+				,boothAuditStatus:$("#boothAuditStatus").val()
+				,tradingGroupId:$("#tradingGroupSelect").val()
+				,boothName:$("#boothName").val()
+				,companyName:$("#companyName").val()
+			}
+		});
+		loadCount();
+	}
+});
+</script>
+</html>

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.org.chtf.card.manage.dictionaries.dao.DictionariesDAO">
+  <resultMap id="BaseResultMap" type="cn.org.chtf.card.manage.dictionaries.pojo.Dictionaries">
+    <id column="dic_id" jdbcType="INTEGER" property="dicId" />
+    <result column="dic_code" jdbcType="VARCHAR" property="dicCode" />
+    <result column="dic_name" jdbcType="VARCHAR" property="dicName" />
+    <result column="dic_parentcode" jdbcType="VARCHAR" property="dicParentcode" />
+    <result column="dic_type" jdbcType="INTEGER" property="dicType" />
+    <result column="dic_order" jdbcType="INTEGER" property="dicOrder" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="cn.org.chtf.card.manage.dictionaries.pojo.Dictionaries">
+    <result column="dic_description" jdbcType="LONGVARCHAR" property="dicDescription" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    dic_id, dic_code, dic_name, dic_parentcode, dic_type, dic_order
+  </sql>
+  <sql id="Blob_Column_List">
+    dic_description
+  </sql>
+  <insert id="insert" parameterType="cn.org.chtf.card.manage.dictionaries.pojo.Dictionaries">
+    insert into system_dictionaries
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="dicId != null">
+        dic_id,
+      </if>
+      <if test="dicCode != null">
+        dic_code,
+      </if>
+      <if test="dicName != null">
+        dic_name,
+      </if>
+      <if test="dicParentcode != null">
+        dic_parentcode,
+      </if>
+      <if test="dicType != null">
+        dic_type,
+      </if>
+      <if test="dicOrder != null">
+        dic_order,
+      </if>
+      <if test="dicDescription != null">
+        dic_description,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="dicId != null">
+        #{dicId,jdbcType=INTEGER},
+      </if>
+      <if test="dicCode != null">
+        #{dicCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dicName != null">
+        #{dicName,jdbcType=VARCHAR},
+      </if>
+      <if test="dicParentcode != null">
+        #{dicParentcode,jdbcType=VARCHAR},
+      </if>
+      <if test="dicType != null">
+        #{dicType,jdbcType=INTEGER},
+      </if>
+      <if test="dicOrder != null">
+        #{dicOrder,jdbcType=INTEGER},
+      </if>
+      <if test="dicDescription != null">
+        #{dicDescription,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <delete id="delete" parameterType="java.lang.Integer">
+    delete from system_dictionaries
+    where dic_id = #{dicId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deletes"  parameterType="java.util.List">
+    delete from system_dictionaries
+    where dic_id in  
+        <foreach collection="dicIdList" item="dic_id" index="index"
+            open="(" close=")" separator=",">
+            #{dic_id,jdbcType=INTEGER}
+        </foreach>;
+  </delete>
+  <update id="update" parameterType="cn.org.chtf.card.manage.dictionaries.pojo.Dictionaries">
+    update system_dictionaries
+    <set>
+      <if test="dicCode != null">
+        dic_code = #{dicCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dicName != null">
+        dic_name = #{dicName,jdbcType=VARCHAR},
+      </if>
+      <if test="dicParentcode != null">
+        dic_parentcode = #{dicParentcode,jdbcType=VARCHAR},
+      </if>
+      <if test="dicType != null">
+        dic_type = #{dicType,jdbcType=INTEGER},
+      </if>
+      <if test="dicOrder != null">
+        dic_order = #{dicOrder,jdbcType=INTEGER},
+      </if>
+      <if test="dicDescription != null">
+        dic_description = #{dicDescription,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where dic_id = #{dicId,jdbcType=INTEGER}
+  </update>
+  <select id="select" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from system_dictionaries
+    where dic_id = #{dicId,jdbcType=INTEGER}
+  </select>
+  <select id="getUnits"  parameterType="cn.org.chtf.card.support.util.PageModel"  resultMap="ResultMapWithBLOBs">
+  	SELECT
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+	FROM
+		system_dictionaries
+	WHERE dic_name LIKE '%${keywords}%' AND dic_type=0
+	ORDER BY ${field} ${order}
+	LIMIT #{start,jdbcType=INTEGER},
+	 #{limit,jdbcType=INTEGER};
+  </select>
+  <select id="getUnitsTotal"  parameterType="cn.org.chtf.card.support.util.PageModel"  resultType="java.lang.Integer">
+    select count(*) from system_dictionaries
+	WHERE dic_name LIKE '%${keywords}%' AND dic_type=0
+	ORDER BY ${field} ${order}
+  </select> 
+  <select id="getProjectType"  parameterType="cn.org.chtf.card.support.util.PageModel"  resultMap="ResultMapWithBLOBs">
+  	SELECT
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+	FROM
+		system_dictionaries
+	WHERE dic_name LIKE '%${keywords}%' AND dic_type=1
+	ORDER BY ${field} ${order}
+	LIMIT #{start,jdbcType=INTEGER},
+	 #{limit,jdbcType=INTEGER};
+  </select>
+  <select id="getProjectTypeTotal"  parameterType="cn.org.chtf.card.support.util.PageModel"  resultType="java.lang.Integer">
+    select count(*) from system_dictionaries
+	WHERE dic_name LIKE '%${keywords}%' AND dic_type=1
+	ORDER BY ${field} ${order}
+  </select> 
+  <select id="getResearchType"  parameterType="cn.org.chtf.card.support.util.PageModel"  resultMap="ResultMapWithBLOBs">
+  	SELECT
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+	FROM
+		system_dictionaries
+	WHERE dic_name LIKE '%${keywords}%' AND dic_type=2
+	ORDER BY ${field} ${order}
+	LIMIT #{start,jdbcType=INTEGER},
+	 #{limit,jdbcType=INTEGER};
+  </select>
+  <select id="getResearchTypeTotal"  parameterType="cn.org.chtf.card.support.util.PageModel"  resultType="java.lang.Integer">
+    select count(*) from system_dictionaries
+	WHERE dic_name LIKE '%${keywords}%' AND dic_type=2
+	ORDER BY ${field} ${order}
+  </select>
+</mapper>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>历届信息管理-代办员信息管理</title>
+		<meta content="webkit" name="renderer">
+		<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+		<meta content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" name="viewport"/>
+		<link rel="stylesheet" href="/manage/css/xadmin.css">
+		<link rel="stylesheet" href="/manage/css/font.css">
+		<link href="/manage/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="/manage/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+		<link href="/manage/css/animate.css" rel="stylesheet">
+		<link href="/manage/css/style.css?v=4.1.0" rel="stylesheet">
+		<link href="/manage/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<script charset="utf-8" src="/manage/js/jquery.min.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/layui/layui.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/xadmin.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/vue.js" type="text/javascript"></script>
+	</head>
+	<body>
+		<div class="wrapper wrapper-content  animated fadeInRight">
+			<div class="row" id="vmPimAgent">
+				<div class="col-sm-12">
+					<div class="ibox float-e-margins">
+						<div class="ibox-title">
+							<h5>历届代办员信息提取</h5>
+							<div class="ibox-tools">
+								<a class="collapse-link"> <i class="fa fa-chevron-up"></i> </a><a class="close-link"> <i class="fa fa-times"></i> </a>
+							</div>
+						</div>
+						<div class="ibox-content">
+							<div class="fixed-table-toolbar" style="height:50px;">
+								<div class="bars pull-left">
+									<div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
+										<button class="btn btn-default btn-outline" type="button" name="refresh" onclick="location.reload()" title="刷新" id="refresh">
+											刷新
+										</button>
+										<!--<button type="button" class="btn btn-outline btn-default" title="本届使用此代办员信息" id="useagent" onclick="UseAgent()">
+											本届使用此代办员信息
+										</button>
+										-->
+									</div>
+								</div>
+								<div class=" pull-right">
+									<table border=0>
+										<tr>
+											<td valign="top" style="padding-right:3px"><select id="session" class="form-control input-outline" onchange="reloadTableData()">
+
+											</select></td>
+											<td valign="top" style="padding-right:3px">
+											<input style="width: 140px;" name="keyword" class="form-control input-outline" type="text" placeholder="请输入单位名称" id="companyname">
+											</td>
+											<td valign="top" style="padding-right:3px">
+											<input style="width: 140px;" name="keyword" class="form-control input-outline" type="text" placeholder="请输入姓名" id="name">
+											</td>
+											<td valign="top" style="padding-right:3px">
+											<input style="width: 140px;" name="keyword" class="form-control input-outline" type="text" placeholder="请输入登录名" id="loginname">
+											</td>
+											<td>
+											<button class="btn btn-default btn-outline" type="button" name="search" title="搜索" onclick="reloadTableData()" id="search">
+												<i class="glyphicon glyphicon-search"></i>
+											</button></td>
+										</tr>
+									</table>
+								</div>
+							</div>
+							<table id="test" lay-filter="test"></table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/html" id="barDemo">
+			<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+		</script>
+		<script src="/manage/js/bootstrap.min.js?v=3.3.6"></script>
+		<script src="/manage/js/content.js?v=1.0.0"></script>
+		<script src="/manage/js/manage/common.js"></script>
+	</body>
+	<script type="text/javascript">
+		var table;
+		layui.use(['form', 'layer', 'table'], function() {
+			var layer = layui.layer;
+			table = layui.table;
+			var $ = layui.jquery;
+			var form = layui.form;
+			loadHistorySession(form, "session",'sesssion');
+			table.render({
+				elem : '#test',
+				url : '/manage/PreviousInformation/pimAgent/Previouslist',
+				where : {
+					loginname : $("#loginname").val(),
+					name : $("#name").val(),
+					companyname : $("#companyname").val(),
+					oldsession : $("#session").val(),
+					leixing:'dbytq'
+				},
+				response : {
+					statusCode : 1
+				},
+				page : true,
+				cols : [[//表头
+				{
+					type : 'checkbox'
+				}, {
+					type : 'numbers',
+					title : '序号'
+				}, {
+					align : 'center',
+					field : 'sessionname',
+					title : '届次'
+				}, {
+					align : 'center',
+					field : 'companyname',
+					title : '企业名称'
+				}, {
+					align : 'center',
+					field : 'name',
+					title : '姓名',width:150
+				}, {
+					align : 'center',
+					field : 'loginname',
+					title : '登录名',width:150
+				}, {
+					align : 'center',
+					field : 'cardtypenames',
+					title : '可办证件类型'
+				}, {
+					align : 'center',
+					field : 'makeevidencename',
+					title : '是否制证',width:80
+				}, {
+					fixed : 'right',
+					field : 'status',
+					title : '操作',
+					toolbar : '#barDemo'
+				}]],
+				parseData : function(res) {
+					if (res.status == 5) {
+						yanzheng(layer, res.msg);
+					}
+					if (res.data.length == 0) {
+						return {
+							'code' : '201',
+							'msg' : '暂无信息'
+						};
+					}
+				},
+				done : function(res, curr, count) {// 表格渲染完成之后的回调
+					var that = this.elem.next();
+					if (res.hasOwnProperty("data")) {
+						res.data.forEach(function(item, index) {
+							if (index % 2 != 0)
+								that.find(".layui-table-box tbody tr[data-index='" + index + "']").css("background-color", "#F5F5F5");
+						});
+					}
+				}
+			});
+			//监听工具条
+			table.on('tool(test)', function(obj) {
+				var data = obj.data;
+				if (obj.event === 'detail') {
+					sessionStorage.setItem("viewPimAgentId", data.id);
+					sessionStorage.setItem("viewPOldSession", data.session);
+					sessionStorage.setItem("viewMemberId", data.memberid);
+					xadmin.open('历届信息管理-代办员信息详情', 'PimAgentView.html');
+				}
+			});
+		});
+
+		//重新加载数据
+		function reloadTableData() {
+			table.reload('test', {
+				method : 'get',
+				page : {
+					curr:1
+				},
+				url : '/manage/PreviousInformation/pimAgent/Previouslist',
+				where : {
+					loginname : $("#loginname").val(),
+					name : $("#name").val(),
+					companyname : $("#companyname").val(),
+					oldsession : $("#session").val(),
+					leixing:'dbytq'
+				}
+			});
+		}
+		
+		function reloadTableDataCurrent() {
+			table.reload('test', {
+				method : 'get',
+				url : '/manage/PreviousInformation/pimAgent/Previouslist',
+				where : {
+					loginname : $("#loginname").val(),
+					name : $("#name").val(),
+					companyname : $("#companyname").val(),
+					session : $("#session").val()
+				}
+			});
+		}
+
+		function UseAgent() {
+			var checkStatus = table.checkStatus('test');
+			var ids = [];
+			if (checkStatus.data.length == 0) {
+				layer.msg('请选择要提取的代办员', {
+					icon : 5
+				});
+				return;
+			} else {
+				checkStatus.data.forEach(function(item, index, dataList) {
+					ids.push(item.id + "|" + item.memberid);
+				});
+			}
+			var selectCount = checkStatus.data.length;
+			var isStr = "";
+			for (var i = 0; i < selectCount; i++) {
+				isStr = isStr + "," + checkStatus.data[i].id + "|" + checkStatus.data[i].memberid;
+			}
+			var params = {};
+			params.isStr = isStr;
+			params.oldsession=$("#session").val();
+			$.ajax({
+				url : "/manage/PreviousInformation/pimAgent/UseAgent",
+				data : JSON.stringify(params),
+				type : "post",
+				async : false,
+				contentType : "application/json",
+				success : function(result) {
+					if (result.code === 1) {
+						layer.msg('操作成功', {
+							icon : 1,
+							time : 1000
+						});
+						setTimeout(function() {
+							window.location.reload();
+						}, 1000);
+					} else {
+						layer.alert(result.msg, {
+							icon : 5
+						});
+					}
+				}
+			});
+		}
+
+	</script>
+</html>

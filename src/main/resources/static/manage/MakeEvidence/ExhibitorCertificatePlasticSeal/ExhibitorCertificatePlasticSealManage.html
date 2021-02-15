@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta content="webkit" name="renderer">
+		<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+		<meta content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" name="viewport"/>
+		<link rel="stylesheet" href="/manage/css/xadmin.css">
+		<link rel="stylesheet" href="/manage/css/font.css">
+		<link href="/manage/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="/manage/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+		<link href="/manage/css/animate.css" rel="stylesheet">
+		<link href="/manage/css/style.css?v=4.1.0" rel="stylesheet">
+		<link href="/manage/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<script charset="utf-8" src="/manage/js/jquery.min.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/layui/layui.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/xadmin.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/vue.js" type="text/javascript"></script>
+		<style type="text/css">
+        .layui-table-cell {
+            height: auto;
+            line-height: 40px;
+        }
+    </style>
+	</head>
+	<body>
+		<div class="wrapper wrapper-content  animated fadeInRight">
+			<div class="row" id="vmEbsPersonnelcard">
+				<div class="col-sm-12">
+					<div class="ibox float-e-margins">
+						<div class="ibox-title">
+							<h5>参展商证塑封</h5>
+							<div class="ibox-tools">
+								<a class="collapse-link"> <i class="fa fa-chevron-up"></i> </a><a class="close-link"> <i class="fa fa-times"></i> </a>
+							</div>
+						</div>
+						<div class="ibox-content">
+							<div class="fixed-table-toolbar" style="height:80px;">
+								<table border=0>
+									<tr>
+										<td>
+											<table>
+												<tr>											
+													<td style="padding-right:10px">
+														<input type="radio" checked onchange="ChangeSelect(this.value)" name="leixing" value="0">交易团参展证
+														<input type="radio" onchange="ChangeSelect(this.value)" name="leixing" value="2">零散参展证
+													</td>
+												</tr>
+											</table>
+										</td>
+										<td>
+											<table id="tabjyt">
+												<tr>
+													<td style="font-size:16px">所属交易团：</td>
+													<td>
+													<select id="groupid"  class="form-control input-outline" >
+														<option value="">==请选择==</option>
+													</select></td>
+												</tr>
+											</table>
+										</td>										
+									<td style="padding-left:5px">
+											<table>
+												<tr>
+													<td style="font-size:16px">塑封状态：</td>
+													<td>
+														<input type="radio" class="isplastic" name="isplastic" value="" checked title="全部">全部
+												<input type="radio" class="isplastic" name="isplastic" value="1" title="已塑封">已塑封
+												<input type="radio" class="isplastic" name="isplastic" value="0" title="未塑封">未塑封
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="2" align="left">
+										<div class="pull-left search" id="xingming">
+											<input name="keywordname" autocomplete="off" class="form-control input-outline" type="text" placeholder="请输入参展人员姓名" id="keywordname">
+										</div>
+										
+										<div class="pull-left search" style="margin-right:3px" id="danwei">
+											<input name="keyword" autocomplete="off" class="form-control input-outline" type="text" placeholder="请输入单位名称" id="keyword">
+										</div>
+									</td>
+										<td>
+											<div class="columns columns-right btn-group pull-left">
+												<button class="btn btn-default btn-outline" type="button" name="search" title="搜索" onclick="reloadTableData()" id="search">
+													<i class="glyphicon glyphicon-search"></i>
+												</button>
+												<button class="btn btn-default btn-outline" type="button" name="refresh" onclick="location.reload()" title="刷新" id="refresh">
+														<i class="glyphicon glyphicon-repeat"></i>
+													</button>
+													<button class="btn btn-default btn-outline" type="button" name="print" onclick="markAll()" title="批量塑封" id="print">
+														批量塑封
+													</button>
+											</div>
+										</td>
+									</tr>
+								</table>
+								
+								
+								
+							</div>
+							<div id="jyt">
+								<table id="test" lay-filter="test"></table>
+							</div>
+							<div id="lsjyt" style="display:none">
+								<table id="test1" lay-filter="test1"></table>
+							</div>
+							<input type="hidden" id="hidcompanyid">
+							<input type="hidden" id="hidcompanyname">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<textarea style="display:none" id="txttmep"></textarea>
+		<script src="/manage/js/bootstrap.min.js?v=3.3.6"></script>
+		<script src="/manage/js/content.js?v=1.0.0"></script>
+		<script src="/manage/js/manage/common.js?v=1.0.0"></script>
+		<script src="/manage/js/manage/Lodop.js?v=1.0.0"></script>
+	</body>
+	<script type="text/html" id="barDemo">
+			{{# if(d.isplastic==0){ }}
+			<a class='layui-btn layui-btn-xs' lay-event='plastic'>证件塑封完成</a>
+			{{# } else{ }}
+			塑封已完成  <a class='layui-btn layui-btn-danger layui-btn-xs layui-hide huiche'  lay-event='backplastic'>回撤</a>
+			{{# } }}
+		</script>
+	<script type="text/javascript">
+		var table;
+		var userPermissions = loadUserPermissions();
+		layui.use(['form', 'layer', 'table'], function() {
+			var layer = layui.layer;
+			table = layui.table;
+			var $ = layui.jquery;
+			var form = layui.form;
+			
+			$(".isplastic").change(function(){reloadpage();});	
+			reloadpage();
+			function reloadpage(){
+				var isplastic = $("input[name='isplastic']:checked").val();
+				loadZhengJianZhiZuoTradingGroup(form, 'groupid', '', 0, 1, 1, '', isplastic);
+			}			
+			table.render({
+				elem : '#test',
+				url : '/manage/Exhibitors/ebsPersonnelcard/ExhibitorBadgePlasticlist',
+				loading : true,
+				where : {
+					status : 1,
+					printstatus:2,
+					leixing : $("input[name='leixing']:checked").val(),
+					isplastic : $("input[name='isplastic']:checked").val(),
+					isexhibitor : 1
+				},
+				response : {
+					statusCode : 1
+				},
+				page : true,
+				cols : [[//表头
+				{
+					type : 'checkbox'
+				}, {
+					type : 'numbers',
+					title : '序号'
+				}, {
+					align : 'center',
+					field : 'companyname',
+					title : '公司名称'
+				}, {
+					align : 'center',
+					field : 'middleid',
+					title : '企业ID'
+				}, {
+					align : 'center',
+					field : 'name',
+					title : '姓名',
+					templet : function(d) {
+						return getUrlName(d.name);
+					}
+				}, {
+					align : 'center',
+					field : 'imagepath',
+					title : '证件照 ',
+					width : 145,
+					templet : function(d) {
+						return getImg(d.imagepath);
+					}
+				}, {
+					fixed : 'right',
+					field : 'printstatus',
+					title : '打印状态',
+					templet : function(d) {
+						switch(d.printstatus){
+							case 0:
+							return '未打印';
+							break;
+							case 1:
+							return '打印中';
+							break;
+							case 2:
+							return '<span style="color:green">打印完成</span>';
+							break;
+						}
+					}
+				}, {
+					fixed : 'right',
+					field : 'status',
+					title : '操作',
+					toolbar: '#barDemo'
+				}]],
+				parseData : function(res) {
+					if (res.status == 5) {
+						yanzheng(layer, res.msg);
+					}
+					if (res.data.length == 0) {
+						return {
+							'code' : '201',
+							'msg' : '暂无信息'
+						};
+					}
+				},
+				done : function(res, curr, count) {// 表格渲染完成之后的回调
+					userPermissions.forEach(function (item, index) {
+			        	if (item == 'Exhibitors/ebsPersonnelcard/PersonnelCardPlasticPackageUpdateBack_CZZ'){		        		
+			        		$('.huiche').removeClass("layui-hide");
+			        	}
+			        });
+				}
+			});
+
+			//监听工具条
+			table.on('tool(test)', function(obj) {
+				var data = obj.data;
+				if (obj.event === 'detail') {
+					sessionStorage.setItem("viewExhibitorBadgePrintingStatusId", data.id);
+					xadmin.open('人员证件详情', 'ExhibitorCertificatePlasticSealView.html');
+				} else if(obj.event==='backplastic'){
+					layer.confirm('确认要回撤证件塑封吗？', function() {
+					updatePlasticPackageback(data.id);
+					layer.msg('回撤成功', {
+						icon : 1,
+						time : 1000
+						});
+						setTimeout(function() {
+							loadZhengJianZhiZuoTradingGroup(form, 'groupid', '', 0, 1,1);
+							reloadTableDataCurrent();
+						}, 1000);
+						});
+				} else if (obj.event === 'plastic') {
+					layer.confirm('确认要标记证件塑封吗？', function() {
+						updatePlasticPackage(data.id);
+						
+						layer.msg('标记成功', {
+						icon : 1,
+						time : 1000
+						});
+						setTimeout(function() {
+							loadZhengJianZhiZuoTradingGroup(form, 'groupid', '', 0, 1,1);
+							reloadTableDataCurrent();
+						}, 1000);
+					});
+				}
+			});
+		});		
+
+		function ChangeSelect(val) {
+			if (val == 0) {
+				//$("#xingming").val();
+				//$("#danwei").val();
+				$("#groupid").show();
+				$("#tabjyt").show();
+				//$("#xingming").hide();
+				//$("#danwei").hide();
+			} else if (val == 2) {
+				$("#groupid").val("");
+				$("#groupid").hide();
+				$("#tabjyt").hide();
+				//$("#xingming").show();
+				//$("#danwei").show();
+			}
+			reloadTableData();
+		}
+
+		//重新加载数据
+		function reloadTableData() {
+			var groupid = "";
+			var name = "";
+			var companyname = "";
+			if ($("input[name='leixing']:checked").val() == 0) {
+				groupid = $("#groupid").val();
+			} else {
+				
+			}
+			name = $("#keywordname").val();
+			companyname = $("#keyword").val();
+
+			table.reload('test', {
+				method : 'get',
+				page : {
+					curr : 1
+				},
+				url : '/manage/Exhibitors/ebsPersonnelcard/ExhibitorBadgePlasticlist',
+				where : {
+					status : 1,
+					printstatus:2,
+					leixing : $("input[name='leixing']:checked").val(),
+					groupid : groupid,
+					isplastic : $("input[name='isplastic']:checked").val(),
+					companyname : companyname,
+					name : name,
+					isexhibitor : 1
+				}
+			});
+		}
+
+		function reloadTableDataCurrent() {
+			
+			var groupid = "";
+			var name = "";
+			var companyname = "";
+			if ($("input[name='leixing']:checked").val() == 0) {
+				groupid = $("#groupid").val();
+			} else {
+				name = $("#keywordname").val();
+				companyname = $("#keyword").val();
+			}
+
+			table.reload('test', {
+				method : 'get',
+				page : {
+					curr : 1
+				},
+				url : '/manage/Exhibitors/ebsPersonnelcard/ExhibitorBadgePlasticlist',
+				where : {
+					status : 1,
+					leixing : $("input[name='leixing']:checked").val(),
+					groupid : groupid,
+					isplastic : $("input[name='isplastic']:checked").val(),
+					companyname : companyname,
+					name : name,
+					isexhibitor : 1
+				}
+			});
+		}
+
+		function updatePlasticPackage(id) {			
+			var params = {};
+			params.id = id;
+			params.isplastic = 1;
+			$.ajax({
+				url : "/manage/Exhibitors/ebsPersonnelcard/PersonnelCardPlasticPackageUpdate_CZZ",
+				data : JSON.stringify(params),
+				type : "post",
+				async:false,
+				contentType : "application/json",
+				success : function(result) {
+					
+				}
+			});			
+		}
+		
+		function updatePlasticPackageback(id) {			
+			var params = {};
+			params.id = id;
+			params.isplastic = 0;
+			$.ajax({
+				url : "/manage/Exhibitors/ebsPersonnelcard/PersonnelCardPlasticPackageUpdateBack_CZZ",
+				data : JSON.stringify(params),
+				type : "post",
+				contentType : "application/json",
+				success : function(result) {
+					
+				}
+			});			
+		}
+		
+		function markAll() {
+			layer.confirm('确定要批量标记塑封？', function() {
+				var checkStatus = table.checkStatus('test');
+				var ids = [];
+				if (checkStatus.data.length == 0) {
+					layer.msg('请先选择要标记塑封的行', {
+						icon : 5
+					});
+					return;
+				} else {
+					checkStatus.data.forEach(function(item, index, dataList) {
+						ids.push(item.id);
+					});
+				}
+				var selectCount = checkStatus.data.length;
+				var isStr = "";
+				for (var i = 0; i < selectCount; i++) {
+					updatePlasticPackage(checkStatus.data[i].id);
+				}		
+				layer.msg('标记成功', {
+						icon : 1,
+						time : 1000
+					});
+					setTimeout(function() {
+						reloadTableDataCurrent();
+					}, 1000);		
+			});
+		}
+	</script>
+</html>

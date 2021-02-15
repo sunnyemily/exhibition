@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>查看零散企业信息</title>
+    <meta content="webkit" name="renderer">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" name="viewport"/>
+    <link rel="stylesheet" href="/manage/css/xadmin.css">
+	<link href="/manage/css/style.css?v=4.1.0" rel="stylesheet">
+	<link href="/manage/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="/manage/layui/css/layui.css"  media="all">
+	<link href="/css/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+	<style type="text/css">
+		.layui-form-pane .layui-form-label {width:150px;}
+		.layui-form-pane .layui-input-block {margin-left:150px;}
+		.layui-disabled, .layui-disabled:hover {
+		    color: black!important;
+		    cursor: not-allowed!important;
+		}
+		.layui-table, .layui-table-view {
+		    margin: 0px 0;
+		}
+		.layui-checkbox-disbaled[lay-skin=primary] span {
+		    background: 0 0!important;
+		    color: #2f4050;
+		}
+	</style> 
+	<style type="text/css">
+        .layui-table-cell {
+            height: auto;
+            line-height: 40px;
+        }
+    </style>
+</head>
+<body class="gray-bg">
+    <div class="modal inmodal" id="friendlink-model">
+		<div class="modal-content animated bounceInUp" id="vmUpdateEbsCompanyinfo">
+			<div class="ibox-content">
+				<fieldset class="layui-elem-field layui-field-title" style="border-top:0px">
+					<form class="layui-form layui-form-pane" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">*用户名</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block">
+                					<input autocomplete="off" disabled="disabled" class="layui-input" id="memberUsername" type="text" v-model="ebsCompanyinfo.memberUsername">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="chinesename">*社会统一信用代码</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block">
+                					<input autocomplete="off" class="layui-input" id="organizationcode" name="organizationcode" lay-verify="required" type="text" v-model="ebsCompanyinfo.organizationcode">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="chinesename">*单位名称（中文）</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block">
+                					<input autocomplete="off" class="layui-input" id="chinesename" name="chinesename" lay-verify="required" type="text" v-model="ebsCompanyinfo.chinesename">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="engname">*单位名称（英文）</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block">
+                					<input autocomplete="off" class="layui-input" id="engname" name="engname" lay-verify="required" type="text" v-model="ebsCompanyinfo.engname">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="russianname">单位名称（俄文）</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block">
+                					<input autocomplete="off" class="layui-input" id="russianname" name="russianname" type="text" v-model="ebsCompanyinfo.russianname">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="chineseaddress">*单位地址（中文）</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block">
+                					<input autocomplete="off" class="layui-input" id="chineseaddress" name="chineseaddress" lay-verify="required" type="text" v-model="ebsCompanyinfo.chineseaddress">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="engaddress">*单位地址（英文）</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block">
+                					<input autocomplete="off" class="layui-input" id="engaddress" name="engaddress" lay-verify="required" type="text" v-model="ebsCompanyinfo.engaddress">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="postcode">*邮编</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block">
+                					<input autocomplete="off" class="layui-input" id="postcode" name="postcode" lay-verify="required" type="text" v-model="ebsCompanyinfo.postcode">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="phone">*手机</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block">
+                					<input autocomplete="off" class="layui-input" id="phone" name="phone" lay-verify="required" type="text" v-model="ebsCompanyinfo.phone">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="tel">*电话</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block">
+                					<input autocomplete="off" class="layui-input" id="tel" name="tel" lay-verify="required" type="text" v-model="ebsCompanyinfo.tel">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="fax">*传真</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block">
+                					<input autocomplete="off" class="layui-input" id="fax" name="fax" lay-verify="required" type="text" v-model="ebsCompanyinfo.fax">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="website">网址</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block">
+                					<input autocomplete="off" class="layui-input" id="website" name="website" type="text" v-model="ebsCompanyinfo.website">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="email">*电子邮箱</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block">
+                					<input autocomplete="off" class="layui-input" id="email" name="email" lay-verify="required" type="text" v-model="ebsCompanyinfo.email">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="country">*国家</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block" id="countryDiv">
+                                	<select id="country" name="country" lay-verify="required" lay-filter="country" lay-search=""></select>
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="province">*省份</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block" id="provinceDiv">
+                                	<select id="province" name="province" lay-verify="required" lay-filter="province" lay-search=""></select>
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="city">城市</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block" id="cityDiv">
+                                	<select id="city" name="city" lay-search=""></select>
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="principal">*负责人</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block">
+                					<input autocomplete="off" class="layui-input" id="principal" name="principal" lay-verify="required" type="text" v-model="ebsCompanyinfo.principal">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="contactperson">*联系人</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block">
+                					<input autocomplete="off" class="layui-input" id="contactperson" name="contactperson" lay-verify="required" type="text" v-model="ebsCompanyinfo.contactperson">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="jobtitle">联系人职务</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block">
+                					<input autocomplete="off" class="layui-input" id="jobtitle" name="jobtitle" type="text" v-model="ebsCompanyinfo.jobtitle">
+	                            </div>
+	                        </div>
+	                    </div>
+						<div class="layui-form-item">
+							<label class="layui-form-label" for="website">虚拟展厅地址</label>
+							<div class="layui-input-block">
+								<div class="layui-input-inline layui-show-xs-block">
+									<input autocomplete="off" class="layui-input" id="url" name="url" type="text" v-model="ebsCompanyinfo.url">
+								</div>
+							</div>
+						</div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="industryid">*行业分类</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block" id="industryDiv">
+                                	<select id="industry" name="industry" lay-verify="required" lay-search=""></select>
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="exhibitorsNatureId">*参展企业性质</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block" id="companyNatureDiv">
+                                	<select id="companyNature" name="companyNature" lay-verify="required" lay-search=""></select>
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="height: 100px;line-height: 70px;">*经营范围</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block">
+                 					<textarea class="layui-textarea" id="busscope" name="busscope" lay-verify="required" rows="4" v-model="ebsCompanyinfo.busscope"></textarea>
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="height: 100px;line-height: 70px;">希望结识客户</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block">
+                 					<textarea class="layui-textarea" id="hopecustomers" name="hopecustomers" rows="4" v-model="ebsCompanyinfo.hopecustomers"></textarea>
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="height: 100px;line-height: 70px;">*企业简介</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block">
+                 					<textarea class="layui-textarea" id="companyprofile" name="companyprofile" lay-verify="required" rows="4" v-model="ebsCompanyinfo.companyprofile"></textarea>
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="height: 100px;line-height: 70px;">*采购意向</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block">
+                 					<textarea class="layui-textarea" id="purchaseintention" name="purchaseintention" lay-verify="required" rows="4" v-model="ebsCompanyinfo.purchaseintention"></textarea>
+	                            </div>
+	                        </div>
+	                    </div>
+						<div class="layui-form-item">
+							<table>
+								<tr>
+									<td valign="top">
+										<label class="layui-form-label" for="companyname"><span style='color:red'>*</span>企业Logo</label>
+										<div class="layui-input-inline layui-show-xs-block" style="width:70%" id="companylogoDiv">
+											<input class="layui-input" autocomplete="off" id="companylogo" name="companylogo" type="hidden">
+											<button type="button" class="layui-btn" id="btncompanylogo">
+											  <i class="layui-icon">&#xe67c;</i>裁剪助手
+											</button>
+							                <br>
+							                <span style="color:red;font-size:16px">格式为jpg，上传文件小于100K。logo尺寸200*200（宽*高）像素。</span>
+										</div>
+									</td>
+									<td style="padding:5px">
+										<img src="/images/null200x200.jpg" onclick="SeeImage(this.src)" width="200" id="precompanylogo">
+									</td>
+								</tr>
+							</table>								
+						</div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="buslicensepath">营业执照</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block" id="buslicensepath">
+                                	<img onclick="SeeImage(this.src)" :src="ebsCompanyinfo.buslicensepath" style="max-width:400px;margin-left: 2px;" border="1px solid #e6e6e6">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="relateddocumentspath">相关文件</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block" id="relateddocumentspath">
+                					<button type="button" style="margin-left: 2px;height: 40px;" class="layui-btn layui-btn-primary" onclick="vm.downLoadRelatedDocuments()"><i class="layui-icon layui-icon-link"></i>下载文件</button>
+	                            </div>
+	                        </div>
+	                    </div>
+						<div class="layui-form-item">
+							<table>
+								<tr>
+								<td valign="top">
+									<label class="layui-form-label" for="companyname"><span style='color:red'>*</span>企业封面</label>
+									<div class="layui-input-inline layui-show-xs-block" style="width:70%">
+										<input class="layui-input" lay-verify="required" autocomplete="off" id="companypicture" name="companypicture" type="hidden">
+										<button type="button" class="layui-btn" id="btncompanypicture">
+										  <i class="layui-icon">&#xe67c;</i>裁剪助手
+										</button>
+						                <br>
+						                <span style="color:red;font-size:16px">格式为JPG，上传文件小于2M，尺寸750*422（宽*高）像素，用于企业详情页面企业形象展示。</span>
+									</div>
+								</td>
+								<td style="padding:5px">
+									<img src="/images/null200x200.jpg" width="390" onclick="SeeImage(this.src)" id="precompanypicture">
+								</td>
+							</tr>
+							</table>								
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label" for="companyvideo">宣传短片</label>
+							<div class="layui-input-block">
+								<div class="layui-input-inline layui-show-xs-block">
+									<input autocomplete="off" style="display:none" class="layui-input" id="companyvideo" name="companyvideo" type="text" v-model="ebsCompanyinfo.companyvideo">
+								</div>
+								<div class="layui-input-inline radioborder" style="padding-left:5px;height:70px">
+									<button type="button" class="layui-btn" id="uploadPictrue2">
+										<i class="layui-icon">&#xe67c;</i>上传视频
+									</button>
+									<button type="button" class="layui-btn layui-btn-primary" style="display:none" id="yulan2">
+										预览
+									</button>
+									<br>
+									<span style="color:red;font-size:16px">格式为MP4、FLV、MPG，视频分辨率>=640*360，视频码率>=800kbps。</span>
+								</div>
+							</div>
+						</div><br>
+						<table>
+							<tr>
+								<td valign="top">
+									<label class="layui-form-label" for="companyname">轮播图片</label>
+									<div class="layui-input-inline layui-show-xs-block" style="width:70%">
+										<input class="layui-input" autocomplete="off" id="companypictures" name="companypictures" type="hidden">
+										<button type="button" class="layui-btn" id="btncompanypictures">
+										  <i class="layui-icon">&#xe67c;</i>裁剪助手
+										</button>
+						                <br>
+						                <span style="color:red;font-size:16px">格式为jpg，上传文件小于2M。logo尺寸750*422（宽*高）像素。</span>
+									</div>
+								</td>
+								<td style="padding:5px">
+									<div class="mutipic">
+									</div>
+								</td>
+							</tr>
+						</table>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="principal">参展展品</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block">
+                					<input class="layui-input" id="applyProducts" type="text">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item" id="applyBoothInfo"></div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="height: 51px;padding-top: 13px;" for="relateddocumentspath">参展人员</label>
+                            <div class="layui-input-block">
+			                    <table id="test" lay-filter="test" style="margin-top: 0px;"></table>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="height: 51px;padding-top: 13px;">产品</label>
+                            <div class="layui-input-block">
+			                    <table id="productTable" lay-filter="productTable" style="margin-top: 0px;"></table>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="principal" style="height: 80px;padding-top: 25px;">审核情况</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block" style="width: 100%">
+                					<input class="layui-input" disabled="disabled" id="auditInfo1" type="text">
+                					<input class="layui-input" disabled="disabled" id="auditInfo2" type="text">
+	                            </div>
+	                        </div>
+	                    </div>
+						<div class="layui-form-item"> 
+							<div class="layui-input-block">
+								<button class="layui-btn layui-hide updateCompanyInfo" type="button" lay-filter="saveCompanyInfo" lay-submit="" id="saveCompanyInfoBtn">保存企业信息</button>
+								<button class="layui-btn" type="button" id="saveBoothAllocationInfoBtn" onclick="saveBoothAllocationInfo()">保存分配</button>
+								<button class="layui-btn" type="button" id="auditPassBtn" onclick="auditPass()">审核通过</button>
+								<button class="layui-btn" type="button" id="auditNotPassBtn" onclick="auditNotPass()">审核未通过</button>
+							</div>
+						</div>
+						<div class="layui-form-item"> 
+							<div class="layui-input-block">
+							</div>
+						</div>
+					</form>
+ 				</fieldset>
+			</div>
+		</div>
+	</div>
+	<div id="mutiPictureTemplate" style="display:none">
+		<div class="item" style="width: 150px;margin: 0px 5px 0px 0px;">
+			<img style="width:150px" src="" onclick="SeeImage(this.src)"/>
+			<div class="fc-upload-cover" style="height:15px;">
+				<i class="ivu-icon fa fa-eye"></i>
+				<i class="ivu-icon fa fa-trash"></i>
+			</div>
+		</div>
+	</div>
+	<script type="text/html" id="batchAuditPersonnelCardBar">
+  		<div class="layui-btn-container">
+    		<button class="layui-btn layui-btn-sm layui-hide batchAuditPassPersonnelCard" type="button" onclick="batchAuditPass()">批量审核通过</button>
+    		<button class="layui-btn layui-btn-sm layui-hide batchAgainAuditPersonnelCard layui-btn-primary" type="button" onclick="batchAgainAudit()">批量重审</button>
+  		</div>
+	</script>
+	<script type="text/html" id="batchAuditProductBar">
+  		<div class="layui-btn-container">
+    		<button class="layui-btn layui-btn-sm layui-hide againAuditProduct" type="button" onclick="batchAgainAuditProduct()">批量重审</button>
+  		</div>
+	</script>
+	<script charset="utf-8" src="/manage/js/jquery.min.js" type="text/javascript"></script>
+	<script charset="utf-8" src="/manage/layui/layui.js" type="text/javascript"></script>
+	<script charset="utf-8" src="/manage/js/xadmin.js" type="text/javascript"></script>
+	<script charset="utf-8" src="/manage/js/vue.js" type="text/javascript"></script>
+	<script src="/manage/js/bootstrap.min.js?v=3.3.6"></script>		
+	<script src="/manage/js/manage/common.js"></script>		
+	<script src="/manage/js/content.js?v=1.0.0"></script>
+	<script src="/manage/js/manage/product/WebProduct/product.js"></script>
+	<script src="/manage/js/manage/Exhibitors/EbsPersonnelcard/EbsPersonnelcard.js"></script>
+	<script charset="UTF-8" type="text/javascript">
+		var type = location.search.substring(6);
+		var auditUrl;
+		if(type == 'financeOfficeAudit'){
+			auditUrl = '/manage/Exhibitors/ebsScatteredExhibitorsBoothAuditController/financeOfficeAudit';
+			$("#saveBoothAllocationInfoBtn").hide();
+			$("#auditNotPassBtn").hide();
+		}else if(type == 'exhibitionOfficeAudit'){
+			auditUrl = '/manage/Exhibitors/ebsScatteredExhibitorsBoothAuditController/exhibitionOfficeAudit';
+		}else{
+			$("#saveBoothAllocationInfoBtn").hide();
+			$("#auditPassBtn").hide();
+			$("#auditNotPassBtn").hide();
+		}
+		var boothTypeCount = 0;
+		var editEbsCompanyinfoId = sessionStorage.getItem("editEbsCompanyinfoId");
+		var tradingGroupIdList = sessionStorage.getItem("tradingGroupIdList");
+    	vm = new Vue({
+	        el: "#vmUpdateEbsCompanyinfo",
+	        data: {
+	            ebsCompanyinfo: {}
+	        },
+	        methods: {
+	        	//查看图片
+	    		downLoadRelatedDocuments: function(){
+	    			if(vm.ebsCompanyinfo.relateddocumentspath==null || vm.ebsCompanyinfo.relateddocumentspath==''){
+	    				layer.alert("企业未上传相关文件");
+	    			}else{
+	    				window.open(vm.ebsCompanyinfo.relateddocumentspath);
+	    			}
+	    		},
+	        },
+	        created: function () {
+	            var _this = this;
+	            var btnList1 = [];
+    			btnList1.push({className:"updateCompanyInfo",url:"Exhibitors/ebsCompanyinfo/update"});
+    			getUserPermissions(btnList1);
+	            layui.use(['form', 'layer', 'laydate', 'table', 'upload'], function () {
+	    			var layer = layui.layer, form = layui.form, table = layui.table, upload = layui.upload, laydate = layui.laydate;
+	        		//加载行业分类
+	        		window.loadIndustry = function(selectIndustry){
+	        			$.get("/manage/system/sysIndustry/list", {'page':1,'limit':10000}, function(r){
+	        				if(r.code == 1){
+	        					var industryStr = '<option value="">请选择行业分类</option>';
+	        					r.data.forEach(function (item, index){
+	        			    		if(selectIndustry != item.id){
+	        			    			industryStr += '<option value="'+item.id+'">'+item.chineseName+'</option>';
+	        			    		}else{
+	        			    			industryStr += '<option value="'+item.id+'" selected>'+item.chineseName+'</option>';
+	        			    		}
+	        					})
+	        					$("#industry").html(industryStr);
+	        	                form.render('select');
+	        				}else if(r.code == 5){
+	        					layer.confirm(r.msg, {icon: 3, title:'提示'}, function(index){
+	        						window.location.href="/manage/login.html";
+	        					});
+	        				}else{
+	        					layer.alert(r.msg);
+	        				}
+	        			})
+	        		}
+	    			//上传视频
+	    			var uploadPictrue = upload.render({
+	    				accept:'video'
+	    				,exts:'mp4|flv|mpg'
+	    				,elem: '#uploadPictrue2'
+	    				,url: '/manage/uploadFile'
+	    				,before: function(obj){
+	    					layer.load(); //上传loading
+	    				}
+	    				,done: function(res){
+	    					layer.closeAll('loading');
+	    					if(res.status==1){
+	    						$("#companyvideo").val(res.result);
+	    						$("#yulan2").attr("onclick","window.open('"+res.result+"')");
+	    						layer.msg('上传成功', {icon: 6});
+	    					}				
+	    				    else{
+	    					 layer.msg(res.msg, {shift: 6});
+	    				    }
+	    				},
+	    				error: function(){
+	    				  //请求异常回调
+	    				  	layer.msg('接口异常', {shift: 6});
+	    					layer.closeAll('loading');
+	    				}
+	    			});
+	           		//保存企业信息
+	                form.on('submit(saveCompanyInfo)', function (data) {
+	                	//组装数据
+	                    data.field.id = editEbsCompanyinfoId;
+	                    var images = $(".mutipic img");
+	                	var arrImages =new Array();
+	                	for(let i = 0;i<images.length;i++){
+	                		let url = images[i].src;
+	                		url = "/upload" + url.split("upload")[1];
+	                		arrImages.push(url);
+	                	}
+	                	if(arrImages.length>3){
+	                		alert("最多上传3张轮播图！");
+	                		return false;
+	                	}
+	                	data.field.companypictures = JSON.stringify(arrImages);
+	                    $.ajax({
+	                        url: "/manage/Exhibitors/ebsCompanyinfo/update",
+	                        data: JSON.stringify(data.field),
+	                        dataType: "json",
+	                        contentType: "application/json",
+	                        type: "post",
+	                        success: function (result) {
+	                            if (result.code === 1) {
+	                                layer.alert("保存成功");
+	                            } else {
+	                                layer.alert(result.msg);
+	                            }
+	                        }
+	                    });
+	                })
+	        		//加载企业性质
+	        		window.loadCompanyNature = function(selectcompanyNature){
+	        			$.get("/manage/system/sysCompanyType/list", {'page':1,'limit':10000}, function(r){
+	        				if(r.code == 1){
+	        					var companyNatureStr = '<option value="">请选择企业性质</option>';
+	        					r.data.forEach(function (item, index){
+	        			    		if(selectcompanyNature != item.id){
+	        			    			companyNatureStr += '<option value="'+item.id+'">'+item.chineseName+'</option>';
+	        			    		}else{
+	        			    			companyNatureStr += '<option value="'+item.id+'" selected>'+item.chineseName+'</option>';
+	        			    		}
+	        					})
+	        					$("#companyNature").html(companyNatureStr);
+	        	                form.render('select');
+	        				}else if(r.code == 5){
+	        					layer.confirm(r.msg, {icon: 3, title:'提示'}, function(index){
+	        						window.location.href="/manage/login.html";
+	        					});
+	        				}else{
+	        					layer.alert(r.msg);
+	        				}
+	        			})
+	        		}
+	           		//加载企业基本信息
+	           		$.ajax({
+		                url: "/manage/Exhibitors/ebsScatteredExhibitorsManage/selectCompanyInfo",
+		                data: {
+		                    "id": editEbsCompanyinfoId
+		                },
+		                dataType: "json",
+		                type: "get",
+		                success: function (result) {
+		                    if (result.code === 1) {
+		                        _this.ebsCompanyinfo = result.data;
+		                        loadCountry(form, result.data.country, result.data.province, result.data.city, "country", "province", "city");
+		                        loadProvince(form, result.data.country, result.data.province, result.data.city, "province", "city");
+		                        loadCity(form, result.data.province, result.data.city, "city");
+		                        loadIndustry(result.data.industryid);
+		                        loadCompanyNature(result.data.exhibitors_nature_id);
+		                        if(result.data.buslicensepath == null || result.data.buslicensepath == ''){
+		                        	$("#buslicensepath").html("<input disabled=\"disabled\" class=\"layui-input\" type=\"text\" value=\"企业未上传营业执照\">");
+		                        }
+		                        if(result.data.relateddocumentspath == null || result.data.relateddocumentspath == ''){
+		                        	$("#relateddocumentspath").html("<input disabled=\"disabled\" class=\"layui-input\" type=\"text\" value=\"企业未上传相关文件\">");
+		                        }
+		                        var companyPictures = eval(result.data.companypictures);
+								if(typeof companyPictures!="undefined")
+								for(var i = 0;i<companyPictures.length;i++){
+									$("#mutiPictureTemplate img").attr("src",companyPictures[i]);
+									var templateHtml = $("#mutiPictureTemplate").html();
+									var item = $(templateHtml);
+									$(".mutipic").append(item);
+								}
+								if(companyPictures.length>0) addLisenter();
+								if (result.data.companypicture != null && result.data.companypicture != ''){
+									$("#precompanypicture").attr("src", result.data.companypicture);
+									$("#companypicture").val(result.data.companypicture);
+								}
+								if (result.data.companyvideo != '') {
+									$("#yulan2").show();
+									$("#yulan2").attr("onclick", "window.open('" + result.data.companyvideo + "')");
+								}								
+								if (result.data.companylogo != null && result.data.companylogo != ''){
+									$("#precompanylogo").attr("src", result.data.companylogo);
+									$("#companylogo").val(result.data.companylogo);
+								}
+							} else {
+		                        layui.layer.alert("获取企业信息失败！");
+		                    }
+		                }
+		            });
+	           		//重新加载参展人员和产品列表,供弹出层调用,刷新父页面表格数据
+	        		window.reloadTableDataCurrent = function(){
+	        			reoladPersonnelCardTable();
+	        			reoladProductTable();
+	        		}
+	    			//加载零散参展商审核信息
+	    			$.get("/manage/Exhibitors/ebsScatteredExhibitorsBoothAuditController/getAuditInfo", {"companyId": editEbsCompanyinfoId}, function(r){
+	    				if(r.code===1){
+	    					if(r.data==null){
+	    						$("#auditInfo1").val("规划展览部确认：未审核");
+	    						$("#auditInfo2").val("财务部确认：未审核");
+	    					}else{
+	    						var str1 = "无审核信息";
+	    						if(r.data.exhibitionOfficeAuditStatus == 0){
+	    							str1="规划展览部确认：待审核";
+	    						}
+	    						if(r.data.exhibitionOfficeAuditStatus == 1){
+	    							if(type=="exhibitionOfficeAudit"){
+	    								$("#auditPassBtn").hide();
+	    								$("#auditNotPassBtn").hide();
+	    							}
+	    							str1="规划展览部确认：审核通过；    审核时间："+layui.util.toDateString(r.data.exhibitionOfficeAuditTime, 'yyyy年MM月dd日')+"；审核人："+r.data.exhibitionOfficeAuditorName+"；";
+	    						}
+	    						if(r.data.exhibitionOfficeAuditStatus == 2){
+	    							if(type=="exhibitionOfficeAudit"){
+	    								$("#auditPassBtn").hide();
+	    								$("#auditNotPassBtn").hide();
+	    							}
+	    							str1="规划展览部确认：审核未通过；审核时间："+layui.util.toDateString(r.data.exhibitionOfficeAuditTime, 'yyyy年MM月dd日')+"；审核人："+r.data.exhibitionOfficeAuditorName+"；未通过原因："+r.data.exhibitionOfficeAuditRemark;
+	    						}
+	    						$("#auditInfo1").val(str1);
+	    						var str2 = "无审核信息";
+	    						if(r.data.financeOfficeAuditStatus == 0){
+	    							str2="财务部确认：待审核";
+	    						}
+	    						if(r.data.financeOfficeAuditStatus == 1){
+	    							if(type=="financeOfficeAudit"){
+	    								$("#auditPassBtn").hide();
+	    								$("#auditNotPassBtn").hide();
+	    							}
+	    							str2="财务部确认：审核通过；    审核时间："+layui.util.toDateString(r.data.financeOfficeAuditTime, 'yyyy年MM月dd日')+"；审核人："+r.data.financeOfficeAuditorName+"；";
+	    						}
+	    						$("#auditInfo2").val(str2);
+	    					}
+	    				}else{
+	    					layer.alert(r.msg);
+	    				}
+	    			})
+	    			//加载展位申请信息
+	    			$.get("/manage/Exhibitors/ebsScatteredExhibitorsboothallocationController/getApplyBoothInfo", {"companyId": editEbsCompanyinfoId, "tradingGroupType":1}, function(r){
+	    				if(r.code===1){
+	    					if(r.data.length<=0){
+	    						layer.alert("未查询到该企业的申请信息");
+	    						return;
+	    					};
+	    					boothTypeCount = r.data.length;
+	    					var tradingGroupId = 0;
+	    					$("#companyId").val(editEbsCompanyinfoId);
+	    					$("#applyProducts").val(r.data[0].applyProducts);
+	    					var htmlStr = '<label class="layui-form-label" style="height: 52px;padding-top: 13px;">展位分配</label><div class="layui-input-block" style="margin-left: 150px;">';
+	    					r.data.forEach(function(item,index,dataList){
+	    						var flag = false;
+	    						tradingGroupIdList.split(",").forEach(function(item2,index2){
+	    							if(item.tradingGroupId == item2) flag = true;
+	    						})
+	    						if(!flag) return;
+	    				  if(item.showRoomTypeId != null && item.showRoomTypeId != '' && item.showRoomTypeId != 0){
+	    					if(tradingGroupId != item.tradingGroupId){
+	    						tradingGroupId = item.tradingGroupId;
+	    						htmlStr += '<blockquote style="margin: 0px;" class="layui-elem-quote layui-text">'+item.tradingGroupName+'</blockquote><div>';
+	    					  }else{
+	    						htmlStr += '<blockquote style="margin: 0px;" class="layui-elem-quote layui-text layui-hide">'+item.tradingGroupName+'</blockquote><div>';
+	    					  }
+	    						htmlStr += '<div>';
+	    						htmlStr += '	<div>';
+	    						htmlStr += '		<input type="checkbox" title="'+item.showRoomTypeName+'" lay-skin="primary" '+((item.applyId!=null && item.applyId != 0)?'checked':'')+' disabled>';
+	    						htmlStr += '	</div>';
+	    						htmlStr += '	<hr style="margin: 6px;"/>';
+	    						htmlStr += '	<div class="layui-form-item" style="padding-top: 15px;">';
+	    						htmlStr += '		<div class="layui-inline" style="margin-right: 0px;">';
+	    						htmlStr += '			<label class="layui-form-label" style="width: 60px;padding: 8px 0px;margin-left: 1px;border: 0px;">申请：</label>';
+	    						htmlStr += '			<div class="layui-input-inline" style="width: 60px;margin-right: 0px;">';
+	    					if(item.applyArea != null && item.applyArea != ''){
+	    						htmlStr += '				<input type="text" class="layui-input" value="'+item.applyArea+'" style="height: 30px;" disabled>';
+	    					}else{
+	    						htmlStr += '				<input type="text" class="layui-input" value="'+item.applyCount+'" style="height: 30px;" disabled>';
+	    					}
+	    						htmlStr += '			</div>';
+	    						htmlStr += '		</div>';
+	    						htmlStr += '		<div class="layui-inline" style="margin: 8px 0px;width: 45px;padding-bottom: 8px;">';
+	    					if(item.applyArea != null && item.applyArea != ''){
+	    						htmlStr += '			<span style="font-size: 14px;font-weight: bold;padding: 5px 0px;">平方米</span>';
+	    					}else{
+	    						htmlStr += '			<span style="font-size: 14px;font-weight: bold;padding: 5px 0px;">个</span>';
+	    					}
+	    						htmlStr += '		</div>';
+	    					if(item.applyArea == null || item.applyArea == ''){
+	    						htmlStr += '		<div class="layui-inline" style="margin-left: 10px;">';
+	    						htmlStr += '			<label class="layui-form-label" style="width: 90px;padding-right: 0px;border: 0px;">展位搭建：</label>';
+	    						htmlStr += '			<div class="layui-input-inline" style="width: 220px;">';
+	    					  if(item.applyBuildType == 1){
+	    						htmlStr += '				<input type="radio" title="特装展位" disabled>';
+	    						htmlStr += '				<input type="radio" title="标准展位" disabled checked>';
+	    					  }else{
+	    						htmlStr += '				<input type="radio" title="特装展位" disabled checked>';
+	    						htmlStr += '				<input type="radio" title="标准展位" disabled>';
+	    					  }
+	    						htmlStr += '			</div>';
+	    						htmlStr += '		</div>';
+	    						htmlStr += '		<div class="layui-inline" style="margin-left: 10px;">';
+	    						htmlStr += '			<label class="layui-form-label" style="width: 160px;padding-right: 0px;border: 0px;">标准展位间隔板拆除：</label>';
+	    						htmlStr += '			<div class="layui-input-inline" style="width: 220px;">';
+	    					  if(item.applyRemoveSeparator == 0){
+	    						htmlStr += '				<input type="radio" title="是" disabled>';
+	    						htmlStr += '				<input type="radio" title="否" disabled checked>';
+	    					  }else{
+	    						htmlStr += '				<input type="radio" title="是" disabled>';
+	    						htmlStr += '				<input type="radio" title="否" disabled checked>';
+	    					  }
+	    						htmlStr += '			</div>';
+	    						htmlStr += '		</div>';
+	    					}
+	    						htmlStr += '	</div>';
+	    						htmlStr += '	<div class="layui-form-item">';
+	    						htmlStr += '		<div class="layui-inline" style="margin-right: 0px;">';
+	    						htmlStr += '			<label class="layui-form-label" style="width: 85px;padding: 8px 0px;margin-left: 1px;border: 0px;">设备 : 长：</label>';
+	    						htmlStr += '			<div class="layui-input-inline" style="width: 60px;margin-right: 0px;">';
+	    						htmlStr += '			  <input type="text" class="layui-input" value="'+item.applyDeviceLength+'" style="height: 30px;" disabled>';
+	    						htmlStr += '			</div>';
+	    						htmlStr += '		</div>';
+	    						htmlStr += '		<div class="layui-inline" style="margin: 8px 0px;width: 45px;padding-bottom: 8px;">';
+	    						htmlStr += '			<span style="font-size: 14px;font-weight: bold;padding: 5px 0px;">米</span>';
+	    						htmlStr += '		</div>';
+	    						htmlStr += '		<div class="layui-inline" style="margin-right: 0px;">';
+	    						htmlStr += '			<label class="layui-form-label" style="width: 70px;padding: 8px 0px;border: 0px;">宽：</label>';
+	    						htmlStr += '			<div class="layui-input-inline" style="width: 60px;margin-right: 0px;">';
+	    						htmlStr += '			  <input type="text" class="layui-input" value="'+item.applyDeviceWidth+'" style="height: 30px;" disabled>';
+	    						htmlStr += '			</div>';
+	    						htmlStr += '		</div>';
+	    						htmlStr += '		<div class="layui-inline" style="margin: 8px 0px;width: 45px;padding-bottom: 8px;">';
+	    						htmlStr += '			<span style="font-size: 14px;font-weight: bold;padding: 5px 0px;">米</span>';
+	    						htmlStr += '		</div>';
+	    						htmlStr += '		<div class="layui-inline" style="margin-right: 0px;">';
+	    						htmlStr += '			<label class="layui-form-label" style="width: 70px;padding: 8px 0px;border: 0px;">高：</label>';
+	    						htmlStr += '			<div class="layui-input-inline" style="width: 60px;margin-right: 0px;">';
+	    						htmlStr += '			  <input type="text" class="layui-input" value="'+item.applyDeviceHigh+'" style="height: 30px;" disabled>';
+	    						htmlStr += '			</div>';
+	    						htmlStr += '		</div>';
+	    						htmlStr += '		<div class="layui-inline" style="margin: 8px 0px;width: 45px;padding-bottom: 8px;">';
+	    						htmlStr += '			<span style="font-size: 14px;font-weight: bold;padding: 5px 0px;">米</span>';
+	    						htmlStr += '		</div>';
+	    						htmlStr += '		<div class="layui-inline" style="margin-right: 0px;">';
+	    						htmlStr += '			<label class="layui-form-label" style="width: 95px;padding: 8px 0px;border: 0px;">用电量：</label>';
+	    						htmlStr += '			<div class="layui-input-inline" style="width: 60px;margin-right: 0px;">';
+	    						htmlStr += '			  <input type="text" class="layui-input" value="'+item.applyElectricityAmount+'" style="height: 30px;" disabled>';
+	    						htmlStr += '			</div>';
+	    						htmlStr += '		</div>';
+	    						htmlStr += '		<div class="layui-inline" style="margin: 8px 0px;width: 45px;padding-bottom: 8px;">';
+	    						htmlStr += '			<span style="font-size: 14px;font-weight: bold;padding: 5px 0px;">KW</span>';
+	    						htmlStr += '		</div>';
+	    						htmlStr += '		<div class="layui-inline" style="margin-left: 10px;">';
+	    						htmlStr += '			<label class="layui-form-label" style="width: 90px;padding-right: 0px;border: 0px;">电源电压：</label>';
+	    						htmlStr += '			<div class="layui-input-inline" style="width: 220px;">';
+	    					if(item.applyVoltage == '380'){
+	    						htmlStr += '				<input type="radio" title="220V" disabled>';
+	    						htmlStr += '				<input type="radio" title="380V" disabled checked>';
+	    					}else{
+	    						htmlStr += '				<input type="radio" title="220V" disabled checked>';
+	    						htmlStr += '				<input type="radio" title="380V" disabled>';
+	    					}
+	    						htmlStr += '			</div>';
+	    						htmlStr += '		</div>';
+	    						htmlStr += '	</div>';
+	    						htmlStr += '	<hr style="margin: 6px;"/>';
+	    						htmlStr += '	<div class="layui-form-item">';
+	    						htmlStr += '		<div id="boothList'+index+'" area="'+item.applyArea+'" count="'+item.applyCount+'" singleArea="'+item.singleArea+'" tradingGroupName="'+item.tradingGroupName+'">';
+	    					if(item.boothIdName != null && item.boothIdName != ''){
+	    					  var boothIdName = item.boothIdName.split(',');
+	    					  boothIdName.forEach(function(i){
+	    				  		htmlStr += '			<input type="checkbox" name="booth'+index+'" value="'+i.substring(0,i.indexOf('|'))+'" title="'+i.substring(i.indexOf('|')+1,i.lastIndexOf('|'))+'" lay-skin="primary" '+((i.substring(i.lastIndexOf('|')+1)==null||i.substring(i.lastIndexOf('|')+1)==0)?'':'checked')+'>';
+	    					  })
+	    					}
+	    						htmlStr += '		</div>';
+	    						htmlStr += '	</div>';
+	    						htmlStr += '</div>';
+	    				  }
+	    					})
+	    					htmlStr += "</div>";
+	    					$("#applyBoothInfo").html(htmlStr);
+	    					form.render();
+	    				}else{
+	    					layer.alert(r.msg);
+	    				}
+	    			})
+	        		//保存展位分配信息
+	        		window.saveBoothAllocationInfo = function(){
+	        			var selectBoothId = "";
+	        			for(var i=0;i<boothTypeCount;i++){
+	        				var area = $("#boothList"+i).attr("area");
+	        				var count = $("#boothList"+i).attr("count");
+	        				var tradingGroupName = $("#boothList"+i).attr("tradingGroupName");
+	        				var selectCount = $('input[type=checkbox][name=booth'+i+']:checked').length;
+	        				if((area == null || area == '') && count !=null && count != ''){
+	        					if(selectCount != count){
+	        						layer.alert("【"+tradingGroupName+"】申请数（"+count+"个）与选中数（"+selectCount+"个）不符");
+	        						return;
+	        					}
+	        				}else if((count == null || count == '') && area !=null && area != ''){
+	        					var singleArea = $("#boothList"+i).attr("singleArea");
+	        					var selectArea = selectCount*singleArea;
+	        					if(selectArea != area){
+	        						layer.alert("【"+tradingGroupName+"】申请面积（"+area+"平方米）与选中面积（"+selectArea+"平方米）不符");
+	        						return;
+	        					}
+	        				}
+	        				$('input[type=checkbox][name=booth'+i+']:checked').each(function() {
+	        					selectBoothId += $(this).val()+",";
+	        			    });
+	        			}
+	        			selectBoothId = selectBoothId.substring(0,selectBoothId.length-1);
+	        			$.get("/manage/Exhibitors/ebsScatteredExhibitorsboothallocationController/allocationBooth", {"selectBoothId":selectBoothId, "companyId":editEbsCompanyinfoId}, function(r){
+	        				if(r.code===1){
+	        					layer.alert("分配成功");
+	        				}else{
+	        					layer.alert(r.msg);
+	        				}
+	        			})
+	        		}
+	           		//零散参展商审核通过
+	                window.auditPass = function(){
+	    				layer.confirm("确认审核通过？", function(index){
+	    					$.get(auditUrl,{
+	    						"companyId": editEbsCompanyinfoId
+	    						,"status": 1
+	    						,"remark": ''
+	    						,"type": type
+	    						,"buslicensepath" : vm.ebsCompanyinfo.buslicensepath
+	    						,"relateddocumentspath" : vm.ebsCompanyinfo.relateddocumentspath
+	    					}, function(result){
+	    						if (result.code === 1) {
+	    							layer.alert("操作成功");
+	    							layer.close(index);
+	    							parent.location.reload();
+	    						}else{
+	    							layer.alert(result.msg);
+	    						}
+	    					});
+	    				});
+	                }
+	           		//零散参展商审核未通过
+	                window.auditNotPass = function(){
+	                	layer.prompt({
+	              		  	formType: 2,
+	              		  	value: '',
+	              		  	title: '请输入未通过原因',
+	              		  	area: ['800px', '350px']
+	               		}, function(value, index, elem){
+	               			if(value == ''){
+	               				layer.msg("请输入未通过原因");
+	               			}else{
+	               				$.get(auditUrl,{
+	        						"companyId": editEbsCompanyinfoId
+	        						,"status": 2
+	        						,"remark": value
+	        						,"type": type
+	        					}, function(result){
+	        						if (result.code === 1) {
+	        							layer.alert("操作成功");
+	        							layer.close(index);
+	        							parent.location.reload();
+	        						}else{
+	        							layer.alert(result.msg);
+	        						}
+	        					})
+	               			}
+	               		});
+	                }
+	           		//监控省份下拉框
+	                form.on('select(country)', function(data){
+	                	loadProvince(form, data.value, 0, 0, "province", "city");
+	                });
+	                form.on('select(province)', function(data){
+                        loadCity(form, data.value, 0, "city");
+	                });
+	    		});
+	        }
+	    });
+    </script>
+	<script src="/manage/js/manage/crop.js"></script>
+</body>
+</html>

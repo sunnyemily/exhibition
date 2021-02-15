@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网上证件申报管理系统 - 登录</title>
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link href="css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css?v=4.1.0" rel="stylesheet">
+    <link href="css/login.css?v=4.1.0" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+    <script>if(window.top !== window.self){ window.top.location = window.location;}</script>
+</head>
+
+<body class="signin">
+
+    <div class="loginscreen  animated fadeInDown">
+ 		<div class="logo"><img src="img/logo.jpg" /></div>
+        <div class="middle-box ">
+            <div class="welcome">
+            	<div class="welcome-left"><img src="img/login-left.jpg" /></div>
+            	<div class="welcome-title">欢迎使用网上证件<br />申报管理系统</div>
+            	<div class="welcome-right"><img src="img/login-right.jpg" /></div>
+            </div>
+            <form class="m-t" role="form">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="用户名" id="username" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" placeholder="密码" id="password" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" style="width:60%;float:left;" placeholder="验证码" id="vCode" required>&nbsp;<button id="btnActivation" type="button" class="btn m-b btn-login">获取验证码</button>
+                    <div style="clear:both;"></div>
+                </div>
+                <button type="submit" class="btn block full-width m-b btn-login" id="login">登 录</button>
+            </form>
+            <div class="login-copyright">黑龙江省国际博览发展促进中心</div>
+        </div>
+    </div>
+    <!-- 全局js -->
+    <script src="js/plugins/layui/layui.all.js" charset="utf-8"></script> 
+    
+    <script src="js/jquery.min.js?v=2.1.4"></script>
+    <script src="js/bootstrap.min.js?v=3.3.6"></script>
+    <script src="js/login.js"></script>
+    
+	<div class="layer" ondblclick="hiddenLoading()"></div>
+	<div class="loading">
+	  <div class="sk-spinner sk-spinner-wave">
+	    <div class="sk-rect1"></div>
+	    <div class="sk-rect2"></div>
+	    <div class="sk-rect3"></div>
+	    <div class="sk-rect4"></div>
+	    <div class="sk-rect5"></div>
+	  </div>正在登陆
+	</div>
+</body>
+</html>

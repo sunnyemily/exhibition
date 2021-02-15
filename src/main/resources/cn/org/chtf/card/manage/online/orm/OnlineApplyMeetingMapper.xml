@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.online.dao.OnlineApplyMeetingMapper">
+
+	<select id="GetZhuChiRenShouJiHao" resultType="String">
+		select mobilephone from online_apply_meeting_details where meetingid=#{iMeetid} and ishost=1
+	</select>
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.online.model.OnlineApplyMeeting">
+        select
+			a.id as id,
+			a.meetingstart as meetingstart,
+			a.meetingend as meetingend,
+			a.contactperson as contactperson,
+			a.contacttel as contacttel,
+			a.companyname as companyname,
+			a.meetingtype as meetingtype,
+			a.phones as phones,
+			a.createby as createby,
+			a.addtime as addtime,
+			a.meetingnumber as meetingnumber,
+			a.status as status,
+			a.remark as remark,
+			a.audittime as audittime,
+			a.audituser as audituser
+        from online_apply_meeting as a
+        where a.id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.online.model.OnlineApplyMeeting">
+        select
+			a.id as id,
+			a.meetingstart as meetingstart,
+			a.meetingend as meetingend,
+			a.contactperson as contactperson,
+			a.contacttel as contacttel,
+			a.companyname as companyname,
+			a.meetingtype as meetingtype,
+			a.phones as phones,
+			a.createby as createby,
+			a.addtime as addtime,
+			a.meetingnumber as meetingnumber,
+			a.status as status,
+			a.remark as remark,
+			a.audittime as audittime,
+			a.audituser as audituser
+        from online_apply_meeting as a
+        <where>
+			<if test="id != null and id != ''">
+				and a.id = #{id}
+			</if>
+			<if test="meetingstart != null and meetingstart != ''">
+				and a.meetingstart = #{meetingstart}
+			</if>
+			<if test="meetingend != null and meetingend != ''">
+				and a.meetingend = #{meetingend}
+			</if>
+			<if test="contactperson != null and contactperson != ''">
+				and a.contactperson = #{contactperson}
+			</if>
+			<if test="contacttel != null and contacttel != ''">
+				and a.contacttel = #{contacttel}
+			</if>
+			<if test="companyname != null and companyname != ''">
+				and a.companyname = #{companyname}
+			</if>
+			<if test="meetingtype != null and meetingtype != ''">
+				and a.meetingtype = #{meetingtype}
+			</if>
+			<if test="phones != null and phones != ''">
+				and a.phones = #{phones}
+			</if>
+			<if test="createby != null and createby != ''">
+				and a.createby = #{createby}
+			</if>
+			<if test="addtime != null and addtime != ''">
+				and a.addtime = #{addtime}
+			</if>
+			<if test="meetingnumber != null and meetingnumber != ''">
+				and a.meetingnumber = #{meetingnumber}
+			</if>
+			<if test="status != null and status != ''">
+				and a.status = #{status}
+			</if>
+			<if test="remark != null and remark != ''">
+				and a.remark = #{remark}
+			</if>
+			<if test="audittime != null and audittime != ''">
+				and a.audittime = #{audittime}
+			</if>
+			<if test="audituser != null and audituser != ''">
+				and a.audituser = #{audituser}
+			</if>
+        </where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.online.model.OnlineApplyMeeting">
+        select
+			a.id as id,
+			a.meetingstart as meetingstart,
+			a.meetingend as meetingend,
+			a.contactperson as contactperson,
+			a.contacttel as contacttel,
+			a.companyname as companyname,
+			a.meetingtype as meetingtype,
+			a.phones as phones,
+			a.createby as createby,
+			a.addtime as addtime,
+			a.meetingnumber as meetingnumber,
+			a.status as status,
+			a.remark as remark,
+			a.audittime as audittime,
+			a.audituser as audituser
+        from online_apply_meeting as a
+        <where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="meetingstart != null and meetingstart != ''">
+                and a.meetingstart = #{meetingstart}
+            </if>
+            <if test="meetingend != null and meetingend != ''">
+                and a.meetingend = #{meetingend}
+            </if>
+            <if test="contactperson != null and contactperson != ''">
+                and a.contactperson = #{contactperson}
+            </if>
+            <if test="contacttel != null and contacttel != ''">
+                and a.contacttel = #{contacttel}
+            </if>
+            <if test="companyname != null and companyname != ''">
+                and a.companyname = #{companyname}
+            </if>
+            <if test="meetingtype != null and meetingtype != ''">
+                and a.meetingtype = #{meetingtype}
+            </if>
+            <if test="phones != null and phones != ''">
+                and a.phones = #{phones}
+            </if>
+            <if test="createby != null and createby != ''">
+                and a.createby = #{createby}
+            </if>
+            <if test="addtime != null and addtime != ''">
+                and a.addtime = #{addtime}
+            </if>
+            <if test="meetingnumber != null and meetingnumber != ''">
+                and a.meetingnumber = #{meetingnumber}
+            </if>
+            <if test="status != null and status != ''">
+                and a.status = #{status}
+            </if>
+            <if test="remark != null and remark != ''">
+                and a.remark = #{remark}
+            </if>
+            <if test="audittime != null and audittime != ''">
+                and a.audittime = #{audittime}
+            </if>
+            <if test="audituser != null and audituser != ''">
+                and a.audituser = #{audituser}
+            </if>
+        </where>
+        order by a.id desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(*) FROM online_apply_meeting a
+		<where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="meetingstart != null and meetingstart != ''">
+                and a.meetingstart = #{meetingstart}
+            </if>
+            <if test="meetingend != null and meetingend != ''">
+                and a.meetingend = #{meetingend}
+            </if>
+            <if test="contactperson != null and contactperson != ''">
+                and a.contactperson = #{contactperson}
+            </if>
+            <if test="contacttel != null and contacttel != ''">
+                and a.contacttel = #{contacttel}
+            </if>
+            <if test="companyname != null and companyname != ''">
+                and a.companyname = #{companyname}
+            </if>
+            <if test="meetingtype != null and meetingtype != ''">
+                and a.meetingtype = #{meetingtype}
+            </if>
+            <if test="phones != null and phones != ''">
+                and a.phones = #{phones}
+            </if>
+            <if test="createby != null and createby != ''">
+                and a.createby = #{createby}
+            </if>
+            <if test="addtime != null and addtime != ''">
+                and a.addtime = #{addtime}
+            </if>
+            <if test="meetingnumber != null and meetingnumber != ''">
+                and a.meetingnumber = #{meetingnumber}
+            </if>
+            <if test="status != null and status != ''">
+                and a.status = #{status}
+            </if>
+            <if test="remark != null and remark != ''">
+                and a.remark = #{remark}
+            </if>
+            <if test="audittime != null and audittime != ''">
+                and a.audittime = #{audittime}
+            </if>
+            <if test="audituser != null and audituser != ''">
+                and a.audituser = #{audituser}
+            </if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.online.model.OnlineApplyMeeting" useGeneratedKeys="true" keyProperty="id">
+        insert into online_apply_meeting(
+        	<trim suffixOverrides=",">
+        		<if test="session != null">`session`,</if>
+                <if test="meetingstart != null">`meetingstart`,</if>
+                <if test="meetingend != null">`meetingend`,</if>
+                <if test="contactperson != null">`contactperson`,</if>
+                <if test="contacttel != null">`contacttel`,</if>
+                <if test="companyname != null">`companyname`,</if>
+                <if test="meetingtype != null">`meetingtype`,</if>
+                <if test="phones != null">`phones`,</if>
+                <if test="createby != null">`createby`,</if>
+                <if test="addtime != null">`addtime`,</if>
+                <if test="meetingnumber != null">`meetingnumber`,</if>
+                <if test="status != null">`status`,</if>
+                <if test="remark != null">`remark`,</if>
+                <if test="audittime != null">`audittime`,</if>
+                <if test="audituser != null">`audituser`</if>
+			</trim>
+		) values (
+        	<trim suffixOverrides=",">
+        		<if test="session != null">#{session},</if>
+                <if test="meetingstart != null">#{meetingstart},</if>
+                <if test="meetingend != null">#{meetingend},</if>
+                <if test="contactperson != null">#{contactperson},</if>
+                <if test="contacttel != null">#{contacttel},</if>
+                <if test="companyname != null">#{companyname},</if>
+                <if test="meetingtype != null">#{meetingtype},</if>
+                <if test="phones != null">#{phones},</if>
+                <if test="createby != null">#{createby},</if>
+                <if test="addtime != null">#{addtime},</if>
+                <if test="meetingnumber != null">#{meetingnumber},</if>
+                <if test="status != null">#{status},</if>
+                <if test="remark != null">#{remark},</if>
+                <if test="audittime != null">#{audittime},</if>
+                <if test="audituser != null">#{audituser}</if>
+			</trim>
+		)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.online.model.OnlineApplyMeeting">
+        update online_apply_meeting
+        <set>
+			<if test="meetingstart != null">`meetingstart` = #{meetingstart},</if>
+			<if test="meetingend != null">`meetingend` = #{meetingend},</if>
+			<if test="contactperson != null">`contactperson` = #{contactperson},</if>
+			<if test="contacttel != null">`contacttel` = #{contacttel},</if>
+			<if test="companyname != null">`companyname` = #{companyname},</if>
+			<if test="meetingtype != null">`meetingtype` = #{meetingtype},</if>
+			<if test="phones != null">`phones` = #{phones},</if>
+			<if test="createby != null">`createby` = #{createby},</if>
+			<if test="addtime != null">`addtime` = #{addtime},</if>
+			<if test="meetingnumber != null">`meetingnumber` = #{meetingnumber},</if>
+			<if test="status != null">`status` = #{status},</if>
+			<if test="remark != null">`remark` = #{remark},</if>
+			<if test="audittime != null">`audittime` = #{audittime},</if>
+			<if test="audituser != null">`audituser` = #{audituser}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+    	delete from online_apply_meeting_details where meetingid=#{id};
+        delete from online_apply_meeting where id = #{id}
+    </delete>
+    
+    <insert id="addmeetingdetails" parameterType="java.util.List">    	
+    	insert into online_apply_meeting_details (meetingid,mobilephone,pass,ishost) values
+    	<foreach collection="list" item="item" index="index" separator=",">
+		(
+			#{item.meetingid},
+			#{item.mobilephone},
+			#{item.pass},
+			#{item.ishost}
+		)
+		</foreach>
+    </insert>
+    
+    <delete id="deleteMeetingdetailsID">    	
+    	delete from online_apply_meeting_details where meetingid=#{id};
+    </delete>
+</mapper>

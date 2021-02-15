@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.org.chtf.card.manage.member.dao.MemberDAO">
+  <resultMap id="BaseResultMap" type="cn.org.chtf.card.manage.member.pojo.Member">
+    <id column="member_id" jdbcType="INTEGER" property="memberId" />
+    <result column="member_username" jdbcType="VARCHAR" property="memberUsername" />
+    <result column="member_password" jdbcType="VARCHAR" property="memberPassword" />
+    <result column="member_company" jdbcType="VARCHAR" property="memberCompany" />
+    <result column="member_regist_date" jdbcType="TIMESTAMP" property="memberRegistDate" />
+    <result column="member_status" jdbcType="INTEGER" property="memberStatus" />
+    <result column="member_type" jdbcType="INTEGER" property="memberType" />
+    <result column="id" jdbcType="INTEGER" property="memberSessionId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    member_id, member_username, member_password,member_company,member_regist_date, member_status,member_type
+  </sql>
+  <insert id="insert" parameterType="cn.org.chtf.card.manage.member.pojo.Member" useGeneratedKeys="true" keyProperty="memberId">
+    insert into web_member
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="memberId != null">
+        member_id,
+      </if>
+      <if test="memberUsername != null">
+        member_username,
+      </if>
+      <if test="memberPassword != null">
+        member_password,
+      </if>
+      <if test="memberCompany != null">
+        member_company,
+      </if>
+      <if test="memberRegistDate != null">
+        member_regist_date,
+      </if>
+      <if test="memberStatus != null">
+        member_status,
+      </if>
+      <if test="memberType != null">
+        member_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="memberId != null">
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="memberUsername != null">
+        #{memberUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="memberPassword != null">
+        #{memberPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="memberCompany != null">
+        #{memberCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="memberRegistDate != null">
+        #{memberRegistDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="memberStatus != null">
+        #{memberStatus,jdbcType=BIT},
+      </if>
+      <if test="memberType != null">
+        #{memberType,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <delete id="delete" parameterType="java.lang.Integer">
+    delete from web_member
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deletes"  parameterType="java.util.List">
+    delete from web_member
+    where member_id in  
+        <foreach collection="memberIdList" item="memberId" index="index"
+            open="(" close=")" separator=",">
+            #{memberId,jdbcType=INTEGER}
+        </foreach>;
+  </delete> 
+  
+  <update id="updateMemberByLoginname" parameterType="cn.org.chtf.card.manage.member.pojo.Member">
+  	update web_member
+  	<set>
+  		<if test="memberPassword != null and memberPassword != ''">
+  			member_password=#{memberPassword,jdbcType=VARCHAR},
+  		</if>
+  		<if test="memberCompany != null and memberCompany != ''">
+  			member_company = #{memberCompany,jdbcType=VARCHAR},
+  		</if>
+      	<if test="memberType != null">
+  			member_type = #{memberType},
+  		</if>
+  		<if test="memberStatus != null">
+  			member_status = #{memberStatus},
+  		</if>
+  	</set>
+  	where member_username = #{memberUsername,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="update" parameterType="cn.org.chtf.card.manage.member.pojo.Member">
+    update web_member
+    <set>
+      <if test="memberUsername != null">
+        member_username = #{memberUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="memberPassword != null">
+        member_password = #{memberPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="memberCompany != null">
+        member_company = #{memberCompany,jdbcType=VARCHAR},
+      </if>
+      <if test="memberRegistDate != null">
+        member_regist_date = #{memberRegistDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="memberStatus != null">
+        member_status = #{memberStatus,jdbcType=INTEGER},
+      </if>
+      <if test="memberType != null">
+        member_type = #{memberType,jdbcType=INTEGER},
+      </if>
+    </set>
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </update>
+  <select id="select" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from web_member
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </select>
+  <select id="exist" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select 
+    COUNT(*)
+    from web_member
+    where member_username = #{memberUsername,jdbcType=VARCHAR}
+  </select>
+  <select id="login" parameterType="cn.org.chtf.card.manage.member.pojo.Member" resultMap="BaseResultMap">
+    select 
+    web_member.*,web_member_session.id
+    	from
+    		web_member 
+    left join 
+    		web_member_session
+    on
+    		web_member.member_id=web_member_session.member_id
+    where 
+    		member_username = #{memberUsername,jdbcType=VARCHAR} 
+    		and member_type=#{memberType,jdbcType=INTEGER} 
+    		and web_member_session.id=#{memberSessionId,jdbcType=INTEGER}
+    	order by 
+    		addtime Desc 
+    	LIMIT 
+    		1;
+  </select>
+  <select id="historyAccount" parameterType="cn.org.chtf.card.manage.member.pojo.Member" resultMap="BaseResultMap">
+    select 
+    web_member.*,web_member_session.id
+    	from
+    		web_member 
+    left join 
+    		web_member_session
+    on
+    		web_member.member_id=web_member_session.member_id
+    where 
+    		member_username = #{memberUsername,jdbcType=VARCHAR} 
+    		and member_type=#{memberType,jdbcType=INTEGER} 
+    	order by 
+    		addtime Desc 
+    	LIMIT 
+    		1;
+  </select>
+  <select id="getForgotMember" resultMap="BaseResultMap">
+	SELECT
+		web_member.*
+	FROM
+		web_member
+	left JOIN web_member_session ON web_member.member_id = web_member_session.member_id
+	LEFT JOIN ebs_companyinfo ON ebs_companyinfo.id = web_member_session.orgnization_id
+	WHERE
+		chinesename = #{companyName}
+		
+  	<if test="email != null">
+	AND email = #{email}
+	</if>		
+  	<if test="phone != null">
+	AND phone = #{phone}
+	</if>
+	AND web_member_session.id = #{sessionId}
+  </select>
+  <select id="getMembers"  parameterType="cn.org.chtf.card.support.util.PageModel"  resultMap="BaseResultMap">
+  	SELECT
+    <include refid="Base_Column_List" />
+    from web_member
+      <if test="keywords != null and keywords != ''">
+	WHERE member_name like concat('%',#{keywords,jdbcType=VARCHAR},'%') 
+      </if>
+	ORDER BY ${field} ${order} ,member_regist_date DESC
+	LIMIT #{start,jdbcType=INTEGER},
+	 #{limit,jdbcType=INTEGER};
+  </select>
+  <select id="getRegistedMembers"  resultMap="BaseResultMap">
+  	SELECT
+		web_member.*
+	FROM
+		web_member_session
+	LEFT JOIN web_member ON web_member_session.member_id = web_member.member_id
+	WHERE
+		web_member_session.orgnization_id = #{companyId}
+	AND web_member_session.id = #{sessionId}
+	AND web_member.member_type!=0
+	AND web_member.member_type!=1
+  </select>
+  <select id="getHistoryRegistedMembers"  resultMap="BaseResultMap">
+  	SELECT
+		web_member.*
+	FROM
+		web_member_session
+	LEFT JOIN web_member ON web_member_session.member_id = web_member.member_id
+	WHERE
+		web_member_session.orgnization_id = #{companyId}
+	AND web_member_session.id != #{sessionId}
+	AND web_member.member_type!=0
+	AND web_member.member_type!=1
+  </select>
+  <select id="getTotal"  parameterType="cn.org.chtf.card.support.util.PageModel"  resultType="java.lang.Integer">
+    select count(*) from web_member
+      <if test="keywords != null and keywords != ''">
+	WHERE member_name like concat('%',#{keywords,jdbcType=VARCHAR},'%')
+      </if>
+  </select>
+  <select id="getBoothProcess" resultType="map">
+	SELECT
+		addtime AS registerTime,
+		member_id AS memberId,
+		web_member_session.id AS sessionId,
+		orgnization_id AS companyId,
+	exhibition_office_audit_status AS exhibitionAuditStatus,
+	exhibition_office_audit_time AS exhibitionAuditTime,
+	finance_office_audit_status AS financeAuditStatus,
+	finance_office_audit_time AS financeAuditTime
+	FROM
+		web_member_session
+	LEFT JOIN ebs_booth_audit ON web_member_session.orgnization_id = ebs_booth_audit.company_id
+	AND ebs_booth_audit.session_id = web_member_session.id
+	WHERE
+		member_id = #{memberId}
+	AND web_member_session.id =#{sessionId}
+	ORDER BY addtime DESC
+	limit 1
+  </select>
+  <select id="getCardProcess" resultType="map">
+	  SELECT
+			a.isexhibitor,
+			a.id AS cardTypeId,
+			a.chinesename,
+			a.engname,
+			a.japanname,
+			a.russianame,
+			a.koreaname,
+			a.istoll,
+			ifnull(b.shuliang, 0) AS cardCount
+		FROM
+			cm_certificate_type AS a
+		LEFT JOIN (
+			SELECT
+				cardtype,
+				count(*) AS shuliang
+			FROM
+				ebs_personnelcard
+			WHERE
+			  	<if test="memberId != null and memberId != 0">
+					agent=#{memberId}
+				</if>
+			  	<if test="status != null">
+				AND STATUS=#{status}
+				</if>
+			  	<if test="printstatus != null">
+				AND printstatus=#{printstatus}
+				</if>
+			  	<if test="isplastic != null">
+				AND isplastic=#{isplastic}
+				</if>
+			  	<if test="sessionId != null">
+				AND SESSION=#{sessionId}
+				</if>
+			GROUP BY
+				cardtype
+			UNION
+				SELECT
+					cardtype,
+					count(*) AS shuliang
+				FROM
+					ebs_vehiclecard
+				WHERE
+			  	<if test="memberId != null and memberId != 0">
+					agent=#{memberId}
+				</if>
+			  	<if test="status != null">
+				AND STATUS=#{status}
+				</if>
+			  	<if test="printstatus != null">
+				AND printstatus=#{printstatus}
+				</if>
+			  	<if test="isplastic != null">
+				AND isplastic=#{isplastic}
+				</if>
+			  	<if test="sessionId != null">
+				AND SESSION=#{sessionId}
+				</if>
+				GROUP BY
+					cardtype
+		) AS b ON a.id = b.cardtype
+		WHERE
+  	<if test="sessionId != null">
+	a. SESSION=#{sessionId}
+	</if>
+  	<if test="ids != null and ids.size > 0">	
+		AND a.id IN <foreach collection="ids" item="id" index="index"
+            open="(" close=")" separator=",">
+            #{id,jdbcType=INTEGER}
+        </foreach>
+	</if>
+  </select>
+  
+  <select id="findByMap" resultType="cn.org.chtf.card.manage.member.pojo.Member">
+  	  select member_id as memberId, member_username as memberUsername, member_password as memberPassword,member_company as memberCompany,
+  	  member_regist_date as memberRegistDate, member_status as memberStatus,member_type as memberType from web_member where member_username=#{loginname}
+  </select>
+  <select id="getExhibitorCertificationCount" resultType="map">
+  SELECT
+		SUM(
+			ebs_showroomtype.exhibitorsnumber
+		) AS exhibitionCount,
+		SUM(
+			ebs_showroomtype.withdrawalsnumber
+		) AS decoratorCount
+	FROM
+		ebs_booth
+	LEFT JOIN ebs_booth_audit ON ebs_booth.company_id = ebs_booth_audit.company_id
+	LEFT JOIN ebs_showroom ON ebs_booth.show_room_id = ebs_showroom.id
+	LEFT JOIN ebs_showroomtype ON ebs_showroom.type = ebs_showroomtype.id
+	WHERE
+		ebs_booth.`session` = #{sessionId}
+	AND ebs_booth.company_id = (
+		SELECT
+			orgnization_id
+		FROM
+			web_member_session
+		WHERE
+			member_id = #{memberId}
+		AND id = #{sessionId}
+	LIMIT 1
+	)
+	AND ebs_booth_audit.exhibition_office_audit_status = 1
+  </select>
+  <select id="getTraddingGroupExhibitionCount" resultType="java.lang.Integer">
+  SELECT
+	Sum(exhibitorsnumber) AS count
+	FROM
+		ebs_tradinggroupboothallocation
+	LEFT JOIN ebs_showroom ON ebs_tradinggroupboothallocation.showroomid = ebs_showroom.id
+	LEFT JOIN ebs_showroomtype ON ebs_showroomtype.id = ebs_showroom.type
+	WHERE
+		tradinggroupid = (
+			SELECT
+				pim_agent.tradinggroupid
+			FROM
+				web_member
+			LEFT JOIN web_member_session ON web_member_session.member_id =#{memberId}
+			AND web_member_session.id =#{sessionId}
+			LEFT JOIN pim_agent ON web_member_session.orgnization_id = pim_agent.id
+			WHERE
+				web_member.member_id=#{memberId}
+		)
+	AND ebs_tradinggroupboothallocation.`session`=#{sessionId}
+  </select>
+  <select id="getScatterExhibition" resultType="map">
+  	SELECT
+		web_member.member_id memberId,
+		web_member.member_username memberUsername,
+		web_member.member_password memberPassword,
+		web_member.member_company memberCompany,
+		web_member.member_regist_date memberRegistDate,
+		web_member.member_status memberStatus
+	FROM
+		web_member_session
+	LEFT JOIN web_member ON web_member_session.member_id = web_member.member_id
+	WHERE
+		web_member_session.orgnization_id = #{companyId}
+	AND web_member_session.id = #{sessionId}
+	AND web_member.member_type=2 order by web_member_session.addtime desc limit 1
+  </select>
+  
+  <select id="getMemberByTradingGroupId" resultType="map">
+  	select distinct web_member_session.member_id memberId from pim_agent
+  	inner join web_member_session on pim_agent.id = web_member_session.orgnization_id and pim_agent.type = 0 and web_member_session.id = #{session}
+	INNER JOIN ebs_tradinggroup on pim_agent.tradinggroupid = ebs_tradinggroup.id and ebs_tradinggroup.type = 0 and ebs_tradinggroup.id = #{tradingGroupId}
+  </select>
+</mapper>

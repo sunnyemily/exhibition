@@ -1,0 +1,536 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.MakeEvidence.dao.CmCertificateTypeMapper">
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.MakeEvidence.model.CmCertificateType">
+        select a.id as id,a.session as session,a.chinesename as chinesename,
+        a.engname as engname,a.japanname as japanname,a.russianame as russianame,
+        a.koreaname as koreaname,a.type as type,a.isexhibitor as isexhibitor,
+        a.useable as useable,a.issurvey as issurvey,a.orders as orders,a.printsnum as printsnum,a.addtime as addtime,a.istoll
+        from cm_certificate_type as a
+        where a.id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.MakeEvidence.model.CmCertificateType">
+        select a.id as id,a.session as session,a.chinesename as chinesename,a.engname as engname,a.japanname as japanname,
+        a.russianame as russianame,a.koreaname as koreaname,a.type as type,a.isexhibitor as isexhibitor,
+        a.useable as useable,a.issurvey as issurvey,a.orders as orders,a.printsnum as printsnum,a.addtime as addtime,a.istoll        from cm_certificate_type as a
+        <where>
+                    <if test="id != null and id != ''">
+	                    and a.id = #{id}
+	                </if>
+	                <if test="session != null and session != ''">
+	                    and a.session = #{session}
+	                </if>
+	            	<if test="chinesename != null and chinesename != ''">
+	                    and a.chinesename = #{chinesename}
+	                </if>
+	            	<if test="engname != null and engname != ''">
+	                    and a.engname like concat('%',#{engname},'%')
+	                </if>
+	            	<if test="japanname != null and japanname != ''">
+	                    and a.japanname like concat('%',#{japanname},'%')
+	                </if>
+	            	<if test="russianame != null and russianame != ''">
+	                    and a.russianame like concat('%',#{russianame},'%')
+	                </if>
+	            	<if test="koreaname != null and koreaname != ''">
+	                    and a.koreaname like concat('%',#{koreaname},'%')
+	                </if>
+	            	<if test="type != null and type != ''">
+	                    and a.type = #{type}
+	                </if>
+	                <if test="isexhibitor != null and isexhibitor != ''">
+	                    and a.isexhibitor = #{isexhibitor}
+	                </if>
+	            	<if test="useable != null and useable != ''">
+	                    and a.useable = #{useable}
+	                </if>
+	                <if test="issurvey != null and issurvey != ''">
+	                    and a.issurvey = #{issurvey}
+	                </if>
+	                <if test="orders != null and orders != ''">
+	                    and a.orders = #{orders}
+	                </if>
+	                <if test="printsnum != null and printsnum != ''">
+	                    and a.printsnum = #{printsnum}
+	                </if>
+	                <if test="istoll != null and istoll != ''">
+	                    and a.istoll = #{istoll}
+	                </if>
+	                <if test="addtime != null and addtime != ''">
+	                    and a.addtime like concat('%',#{addtime},'%')
+	                </if>
+	      </where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.MakeEvidence.model.CmCertificateType">
+        select a.id as id,a.session as session,a.chinesename as chinesename,a.engname as engname,a.japanname as japanname,a.russianame as russianame,a.koreaname as koreaname,a.type as type,a.isexhibitor as isexhibitor,a.useable as useable,a.issurvey as issurvey,a.orders as orders,a.printsnum as printsnum,a.addtime as addtime        from cm_certificate_type as a
+        <where>
+                            	            	                <if test="id != null and id != ''">
+	                    and a.id = #{id}
+	                </if>
+	                                        	                <if test="session != null and session != ''">
+	                    and a.session = #{session}
+	                </if>
+	            	                                        	                <if test="chinesename != null and chinesename != ''">
+	                    and a.chinesename like concat('%',#{chinesename},'%')
+	                </if>
+	            	                                        	                <if test="engname != null and engname != ''">
+	                    and a.engname like concat('%',#{engname},'%')
+	                </if>
+	            	                                        	                <if test="japanname != null and japanname != ''">
+	                    and a.japanname like concat('%',#{japanname},'%')
+	                </if>
+	            	                                        	                <if test="russianame != null and russianame != ''">
+	                    and a.russianame like concat('%',#{russianame},'%')
+	                </if>
+	            	                                        	                <if test="koreaname != null and koreaname != ''">
+	                    and a.koreaname like concat('%',#{koreaname},'%')
+	                </if>
+	            	                                        	            	                <if test="type != null and type != ''">
+	                    and a.type = #{type}
+	                </if>
+	                                        	                <if test="isexhibitor != null and isexhibitor != ''">
+	                    and a.isexhibitor = #{isexhibitor}
+	                </if>
+	            	                                        	            	                <if test="useable != null and useable != ''">
+	                    and a.useable = #{useable}
+	                </if>
+	                                        	            	                <if test="issurvey != null and issurvey != ''">
+	                    and a.issurvey = #{issurvey}
+	                </if>
+	                                        	            	                <if test="orders != null and orders != ''">
+	                    and a.orders = #{orders}
+	                </if>
+	                <if test="printsnum != null and printsnum != ''">
+	                    and a.printsnum = #{printsnum}
+	                </if>
+	                <if test="istoll != null and istoll != ''">
+	                    and a.istoll = #{istoll}
+	                </if>
+	                                        	                <if test="addtime != null and addtime != ''">
+	                    and a.addtime like concat('%',#{addtime},'%')
+	                </if>
+	            	                                </where>
+        order by a.orders,a.id desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(id) 
+		FROM 
+		cm_certificate_type as a
+		<where>
+                            	            	                <if test="id != null and id != ''">
+	                    and a.id = #{id}
+	                </if>
+	                                        	                <if test="session != null and session != ''">
+	                    and a.session = #{session}
+	                </if>
+	            	                                        	                <if test="chinesename != null and chinesename != ''">
+	                    and a.chinesename like concat('%',#{chinesename},'%')
+	                </if>
+	            	                                        	                <if test="engname != null and engname != ''">
+	                    and a.engname like concat('%',#{engname},'%')
+	                </if>
+	            	                                        	                <if test="japanname != null and japanname != ''">
+	                    and a.japanname like concat('%',#{japanname},'%')
+	                </if>
+	            	                                        	                <if test="russianame != null and russianame != ''">
+	                    and a.russianame like concat('%',#{russianame},'%')
+	                </if>
+	            	                                        	                <if test="koreaname != null and koreaname != ''">
+	                    and a.koreaname like concat('%',#{koreaname},'%')
+	                </if>
+	            	                                        	            	                <if test="type != null and type != ''">
+	                    and a.type = #{type}
+	                </if>
+	                                        	                <if test="isexhibitor != null and isexhibitor != ''">
+	                    and a.isexhibitor = #{isexhibitor}
+	                </if>
+	            	                                        	            	                <if test="useable != null and useable != ''">
+	                    and a.useable = #{useable}
+	                </if>
+	                                        	            	                <if test="issurvey != null and issurvey != ''">
+	                    and a.issurvey = #{issurvey}
+	                </if>
+	                                        	            	                <if test="orders != null and orders != ''">
+	                    and a.orders = #{orders}
+	                </if>
+	                                        	            	                <if test="printsnum != null and printsnum != ''">
+	                    and a.printsnum = #{printsnum}
+	                </if>
+	                <if test="istoll != null and istoll != ''">
+	                    and a.istoll = #{istoll}
+	                </if>
+	                                        	                <if test="addtime != null and addtime != ''">
+	                    and a.addtime like concat('%',#{addtime},'%')
+	                </if>
+	            	                                </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.MakeEvidence.model.CmCertificateType"            useGeneratedKeys="true" keyProperty="id">
+        insert into cm_certificate_type(<trim suffixOverrides=",">
+                                                        <if test="session != null">`session`,</if>
+                                                <if test="chinesename != null">`chinesename`,</if>
+                                                <if test="engname != null">`engname`,</if>
+                                                <if test="japanname != null">`japanname`,</if>
+                                                <if test="russianame != null">`russianame`,</if>
+                                                <if test="koreaname != null">`koreaname`,</if>
+                                                <if test="type != null">`type`,</if>
+                                                <if test="isexhibitor != null">`isexhibitor`,</if>
+                                                <if test="useable != null">`useable`,</if>
+                                                <if test="issurvey != null">`issurvey`,</if>
+                                                <if test="orders != null">`orders`,</if>
+                                                <if test="printsnum != null">`printsnum`,</if>
+                                                <if test="istoll != null">`istoll`,</if>
+                                                <if test="addtime != null">`addtime`</if>
+                    </trim>)
+        values (<trim suffixOverrides=",">
+                                                        <if test="session != null">#{session},</if>
+                                                <if test="chinesename != null">#{chinesename},</if>
+                                                <if test="engname != null">#{engname},</if>
+                                                <if test="japanname != null">#{japanname},</if>
+                                                <if test="russianame != null">#{russianame},</if>
+                                                <if test="koreaname != null">#{koreaname},</if>
+                                                <if test="type != null">#{type},</if>
+                                                <if test="isexhibitor != null">#{isexhibitor},</if>
+                                                <if test="useable != null">#{useable},</if>
+                                                <if test="issurvey != null">#{issurvey},</if>
+                                                <if test="orders != null">#{orders},</if>
+                                                <if test="printsnum != null">#{printsnum},</if>
+                                                <if test="istoll != null">#{istoll},</if>
+                                                <if test="addtime != null">#{addtime}</if>
+                    </trim>)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.MakeEvidence.model.CmCertificateType">
+        update cm_certificate_type
+        <set>
+                                                                            <if test="session != null">`session` = #{session}
+                        ,</if>
+                                                                <if test="chinesename != null">`chinesename` = #{chinesename}
+                        ,</if>
+                                                                <if test="engname != null">`engname` = #{engname}
+                        ,</if>
+                                                                <if test="japanname != null">`japanname` = #{japanname}
+                        ,</if>
+                                                                <if test="russianame != null">`russianame` = #{russianame}
+                        ,</if>
+                                                                <if test="koreaname != null">`koreaname` = #{koreaname}
+                        ,</if>
+                                                                <if test="type != null">`type` = #{type}
+                        ,</if>
+                                                                <if test="isexhibitor != null">`isexhibitor` = #{isexhibitor}
+                        ,</if>
+                                                                <if test="useable != null">`useable` = #{useable}
+                        ,</if>
+                                                                <if test="issurvey != null">`issurvey` = #{issurvey}
+                        ,</if>
+                                                                <if test="orders != null">`orders` = #{orders}
+                        ,</if>
+                        <if test="printsnum != null">`printsnum` = #{printsnum},</if>
+                        <if test="istoll != null">`istoll` = #{istoll},</if>
+                                                                <if test="addtime != null">`addtime` = #{addtime}
+                        </if>
+                                    </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from cm_certificate_type
+        where id = #{id}
+    </delete>
+
+	<select id="getList" resultType="map">
+        select a.id as id,a.session as session,a.chinesename as chinesename,a.engname as engname,
+        a.japanname as japanname,a.russianame as russianame,a.koreaname as koreaname,
+        a.type as type,a.isexhibitor as isexhibitor,a.useable as useable,a.issurvey as issurvey,
+        a.orders as orders,a.printsnum as printsnum,a.addtime as addtime,a.istoll        from cm_certificate_type as a
+        <where>
+                    <if test="id != null and id != ''">
+	                    and a.id = #{id}
+	                </if>
+	                <if test="session != null and session != ''">
+	                    and a.session = #{session}
+	                </if>
+	            	<if test="chinesename != null and chinesename != ''">
+	                    and a.chinesename like concat('%',#{chinesename},'%')
+	                </if>
+	            	<if test="engname != null and engname != ''">
+	                    and a.engname like concat('%',#{engname},'%')
+	                </if>
+	            	<if test="japanname != null and japanname != ''">
+	                    and a.japanname like concat('%',#{japanname},'%')
+	                </if>
+	            	<if test="russianame != null and russianame != ''">
+	                    and a.russianame like concat('%',#{russianame},'%')
+	                </if>
+	            	<if test="koreaname != null and koreaname != ''">
+	                    and a.koreaname like concat('%',#{koreaname},'%')
+	                </if>
+	            	<if test="type != null and type != ''">
+	                    and a.type = #{type}
+	                </if>
+	                <if test="isexhibitor != null and isexhibitor != ''">
+	                    and a.isexhibitor like concat('%',#{isexhibitor},'%')
+	                </if>
+	            	<if test="useable != null and useable != ''">
+	                    and a.useable = #{useable}
+	                </if>
+	                <if test="issurvey != null and issurvey != ''">
+	                    and a.issurvey = #{issurvey}
+	                </if>
+	                <if test="orders != null and orders != ''">
+	                    and a.orders = #{orders}
+	                </if>
+	                <if test="printsnum != null and printsnum != ''">
+	                    and a.printsnum = #{printsnum}
+	                </if>
+	                 <if test="istoll != null and istoll != ''">
+	                    and a.istoll = #{istoll}
+	                </if>
+	                <if test="addtime != null and addtime != ''">
+	                    and a.addtime like concat('%',#{addtime},'%')
+	                </if>
+	    </where>
+    </select>
+	<select id="getCertificateTypesByMemberId" resultType="cn.org.chtf.card.manage.MakeEvidence.model.CmCertificateType">
+	SELECT
+		certificate_type.*
+	FROM
+		web_member_session AS  member_session
+	LEFT JOIN pim_agent AS agent ON member_session.orgnization_id = agent.id
+	LEFT JOIN pim_agenttype AS agenttype ON agent.id = agenttype.agentid
+	LEFT JOIN cm_certificate_type AS certificate_type ON certificate_type.id = agenttype.cardtype
+	WHERE
+		member_session.member_id = #{memberId}
+	AND  member_session.id=#{sessionId}
+	AND certificate_type.`session` = #{sessionId}
+	AND certificate_type.`useable` = 1
+    order by orders ASC
+    </select>
+	<select id="getCertificateTypesByMemberType" resultType="cn.org.chtf.card.manage.MakeEvidence.model.CmCertificateType">
+	SELECT
+	certificate_type.*
+	FROM
+		web_member_certificate_type
+	LEFT JOIN cm_certificate_type AS certificate_type ON card_type_id=certificate_type.id
+	WHERE
+		session_id = #{sessionId}
+	AND member_type = #{memberType}
+	AND certificate_type.`useable` = 1
+    order by orders ASC
+    </select>
+    
+    <select id="DailyIDSummaryTableList" resultType="map">
+    	select a.id,chinesename as name,printsnum as printsnum,a.id as cardid from cm_certificate_type as a
+		where a.session=#{session} and a.useable=1
+		<if test="cardtype != null and cardtype != ''">
+			and a.type=#{cardtype}
+		</if>
+		order by a.id
+    </select>
+    
+    <select id="DailyIDSummaryTableListRiQi" resultType="map">
+    	select riqi from (
+			select a.id,'ry' as lx,DATE_FORMAT(printtime,'%Y-%m-%d') as riqi,cardtype from ebs_personnelcard as a
+			inner join cm_certificate_type as b on a.cardtype=b.id
+			where a.session=#{session} and a.status=1 and a.printstatus=2 
+			<if test="cardtype != null and cardtype != ''">
+				and b.type=#{cardtype}
+			</if>
+			union
+			select a.id,'cl' as lx,DATE_FORMAT(printtime,'%Y-%m-%d') as riqi,cardtype from ebs_vehiclecard as a
+			inner join cm_certificate_type as b on a.cardtype=b.id
+			where a.session=#{session} and a.status=1 and a.printstatus=2 
+			<if test="cardtype != null and cardtype != ''">
+				and b.type=#{cardtype}
+			</if>
+		) as a group by riqi order by riqi desc
+    </select>
+    
+    <select id="DailyIDSummaryTableListDataByRiQi" resultType="map">
+    	select a.id,a.shuliang,ifnull(cwshuliang,0) as cwshuliang,(a.shuliang+ifnull(cwshuliang,0)) as shijishu from (
+			select a.id,ifnull(shuliang,0) as shuliang from cm_certificate_type as a
+			left join (
+					select riqi,cardtype,count(*) as shuliang from (
+					select id,'ry' as lx,DATE_FORMAT(printtime,'%Y-%m-%d') as riqi,cardtype from ebs_personnelcard as a
+					where a.session=#{session} and a.status=1 and a.printstatus=2 
+					union
+					select id,'cl' as lx,DATE_FORMAT(printtime,'%Y-%m-%d') as riqi,cardtype from ebs_vehiclecard as a
+					where a.session=#{session} and a.status=1 and a.printstatus=2 
+			) as a where riqi=#{riqi} group by riqi,cardtype
+			) as b on a.id=b.cardtype
+			where a.useable=1 and a.session=#{session}
+			<if test="cardtype != null and cardtype != ''">
+				and a.type=#{cardtype}
+			</if>
+			group by a.id
+		) as a
+		left join (
+			select cardtype,sum(quantity) as cwshuliang from cm_wrong_document where session=#{session} and DATE_FORMAT(controltime,'%Y-%m-%d')=#{riqi} group by cardtype
+		) as b on a.id=b.cardtype		
+		order by a.id
+    </select>
+    
+    <select id="DailyIDSummaryTableListHeJi" resultType="map">
+    	select a.id,ifnull(shuliang,0) as shuliang,ifnull(cwshuliang,0) as cwshuliang,(ifnull(shuliang,0)+ifnull(cwshuliang,0)) as shijishu,a.printsnum-(ifnull(shuliang,0)+ifnull(cwshuliang,0)) as shengyushu from cm_certificate_type as a
+		left join (
+			select cardtype,count(1) as shuliang from (
+					select a.id,'ry' as lx,DATE_FORMAT(printtime,'%Y-%m-%d') as riqi,cardtype from ebs_personnelcard as a
+					inner join cm_certificate_type as b on a.cardtype=b.id
+					where a.session=#{session} and a.status=1 and a.printstatus=2 			
+					<if test="cardtype != null and cardtype != ''">
+						and b.type=#{cardtype}
+					</if>			
+					union
+					select a.id,'cl' as lx,DATE_FORMAT(printtime,'%Y-%m-%d') as riqi,cardtype from ebs_vehiclecard as a
+					inner join cm_certificate_type as b on a.cardtype=b.id
+					where a.session=#{session} and a.status=1 and a.printstatus=2 			
+					<if test="cardtype != null and cardtype != ''">
+						and b.type=#{cardtype}
+					</if>
+			) as a group by a.cardtype
+		) as b on a.id=b.cardtype
+		left join (
+			select cardtype,sum(quantity) as cwshuliang from cm_wrong_document where session=#{session} group by cardtype
+		) as c on a.id=c.cardtype		
+		where a.session=#{session} and a.useable=1
+		<if test="cardtype != null and cardtype != ''">
+			and a.type=#{cardtype}
+		</if>
+		order by a.id
+    </select>
+    
+    <select id="CertificateSummaryFormList" resultType="map">
+    	select '' uid,'' uname,'' isback,'' department,'' jytname,0 companycount,0 boothcount from dual
+    	<if test='orgLeixing == ""'>
+    		union
+	    	select ifnull(a.uid,'') uid,ifnull(a.uname,'') uname,0 isback,ifnull(b.department,'') department,'' jytname,0 companycount,0 boothcount
+	    	from vw_Frontend_user_integration as a
+			inner join system_user as b on a.uid=b.id
+			where a.isback=0
+    	</if>
+    	<if test='orgLeixing == "" or (orgLeixing != "0" and orgLeixing != "1")'>
+			union
+			select ifnull(a.uid,'') uid,'' uname,1 isback,ifnull(d.chinesename,'') department,'' as jytname,1 companycount,ifnull(boothcount,0) boothcount
+			from vw_Frontend_user_integration as a
+			inner join web_member as b on a.uid=b.member_id
+			inner join web_member_session as c on b.member_id=c.member_id
+			inner join ebs_companyinfo as d on d.id=c.orgnization_id
+			left join (
+				select a.id,count(1) as boothcount from ebs_companyinfo as a
+				left join ebs_booth as b on a.id=b.company_id
+				where a.session=#{session} and ifnull(b.id,'')!='' group by a.id
+			) as e on e.id=d.id
+			where isback=1 and c.id=#{session}
+			<if test='orgLeixing == ""'>
+				and b.member_type!=0 and b.member_type!=1
+			</if>
+			<if test='orgLeixing != ""'>
+				and b.member_type = #{orgLeixing}
+			</if>
+    	</if>
+    	<if test='orgLeixing=="" or orgLeixing == "0" or orgLeixing == "1"'>
+			union
+			select ifnull(a.uid,'') uid,ifnull(a.uname,'') uname,1 isback,ifnull(d.companyname,'') department,ifnull(e.name,'') jytname,ifnull(e.companycount,0) companycount,ifnull(e.boothcount,0) boothcount
+			from vw_Frontend_user_integration as a
+			inner join web_member as b on a.uid=b.member_id
+			inner join web_member_session as c on b.member_id=c.member_id
+			inner join pim_agent as d on d.id=c.orgnization_id
+			left join (
+				select a.id,a.name,ifnull(companycount,0) as companycount,ifnull(boothcount,0) as boothcount from ebs_tradinggroup as a
+				left join (
+					select tradinggroupid,count(*) as boothcount from ebs_booth
+					where session=#{session} and company_id!=0 and useable=1
+					group by tradinggroupid
+				) as b on a.id=b.tradinggroupid
+				left join (
+					select tradinggroupid,count(*) as companycount from ebs_companyinfo 
+					where session=#{session}
+					group by tradinggroupid
+				) as c on a.id=c.tradinggroupid
+				where a.session=#{session}
+			) as e on e.id=d.tradinggroupid
+			where isback=1 and c.id=#{session}
+			<if test='orgLeixing == ""'>
+				and b.member_type in (0,1)
+			</if>
+			<if test='orgLeixing != ""'>
+				and b.member_type = #{orgLeixing}
+			</if>
+    	</if>
+    </select>
+    
+    <select id="CertificateSummaryFormDaiBanYuanZhengJianList" resultType="map">
+    	select a.id,a.chinesename,b.agent,b.isback,ifnull(b.dayin,0) as dayin,ifnull(b.tianbiao,0) as tianbao,ifnull(b.xiaozhun,0) as xiaozhun
+		from cm_certificate_type as a 
+		left join (
+			select cardtype,isback,agent,count(id) as tianbiao,sum(case when printstatus=2 then 1 else 0 end) as dayin,
+			ifnull(quantity, 0) xiaozhun from (
+				<if test="orgLeixing==0 or orgLeixing==1">
+					select ebs_personnelcard.id,'renyuan' as leixing,pim_agenttype.cardtype,isback,web_member.member_id agent,printstatus,quantity from pim_agenttype
+					INNER JOIN web_member_session ON web_member_session.orgnization_id = pim_agenttype.agentid AND web_member_session.id = pim_agenttype.rounds and pim_agenttype.rounds = 1
+					INNER JOIN web_member ON web_member.member_id = web_member_session.member_id and web_member.member_id = #{agent}
+					INNER JOIN cm_certificate_type ON pim_agenttype.cardtype = cm_certificate_type.id and cm_certificate_type.type = 0
+					LEFT JOIN ebs_personnelcard on pim_agenttype.cardtype = ebs_personnelcard.cardtype and ebs_personnelcard.session = pim_agenttype.rounds and ebs_personnelcard.isback=#{isback} and ebs_personnelcard.agent=web_member.member_id
+					union
+					select ebs_vehiclecard.id,'cheliang' as leixing,pim_agenttype.cardtype,isback,web_member.member_id agent,printstatus,quantity from pim_agenttype
+					INNER JOIN web_member_session ON web_member_session.orgnization_id = pim_agenttype.agentid AND web_member_session.id = pim_agenttype.rounds and pim_agenttype.rounds = 1
+					INNER JOIN web_member ON web_member.member_id = web_member_session.member_id and web_member.member_id = #{agent}
+					INNER JOIN cm_certificate_type ON pim_agenttype.cardtype = cm_certificate_type.id and cm_certificate_type.type = 1
+					LEFT JOIN ebs_vehiclecard on pim_agenttype.cardtype = ebs_vehiclecard.cardtype and ebs_vehiclecard.session = pim_agenttype.rounds and ebs_vehiclecard.isback=#{isback} and ebs_vehiclecard.agent=web_member.member_id
+				</if>
+				<if test="orgLeixing!=0 and orgLeixing!=1">
+					select ebs_personnelcard.id,'renyuan' as leixing,ebs_personnelcard.cardtype,isback,web_member.member_id agent,printstatus,0 quantity from web_member
+					INNER JOIN web_member_session on web_member.member_id = web_member_session.member_id and web_member_session.id = #{session} and web_member.member_id = #{agent}
+					INNER JOIN ebs_companyinfo on web_member_session.orgnization_id = ebs_companyinfo.id and ebs_companyinfo.useable = 1
+					LEFT JOIN ebs_personnelcard on ebs_companyinfo.chinesename = ebs_personnelcard.companyname and ebs_personnelcard.session = web_member_session.id and ebs_personnelcard.isback = #{isback}
+					LEFT JOIN cm_certificate_type ON ebs_personnelcard.cardtype = cm_certificate_type.id
+					where cm_certificate_type.type = 0
+					union
+					select ebs_vehiclecard.id,'cheliang' as leixing,ebs_vehiclecard.cardtype,isback,web_member.member_id agent,printstatus,0 quantity from web_member
+					INNER JOIN web_member_session on web_member.member_id = web_member_session.member_id and web_member_session.id = #{session} and web_member.member_id = #{agent}
+					INNER JOIN ebs_companyinfo on web_member_session.orgnization_id = ebs_companyinfo.id and ebs_companyinfo.useable = 1
+					LEFT JOIN ebs_vehiclecard on ebs_companyinfo.chinesename = ebs_vehiclecard.companyname and ebs_vehiclecard.session = web_member_session.id and ebs_vehiclecard.isback = #{isback}
+					LEFT JOIN cm_certificate_type ON ebs_vehiclecard.cardtype = cm_certificate_type.id
+					where cm_certificate_type.type = 1
+				</if>
+			) as a group by cardtype
+		) as b on a.id=b.cardtype
+		where a.session=#{session} and a.useable=1
+		<if test="cardtype != null and cardtype != ''">
+			and a.type=#{cardtype}
+		</if>		
+		order by a.id
+    </select>
+    
+    
+    <select id="getAgentCardLimit" resultType="java.lang.Integer">
+    SELECT
+		quantity
+	FROM
+		pim_agenttype
+	WHERE
+		rounds = #{sessionId}
+	AND agentid = (
+		SELECT
+			orgnization_id
+		FROM
+			web_member_session
+		LEFT JOIN web_member ON web_member.member_id = web_member_session.member_id
+		WHERE
+			web_member.member_id = #{memberId}
+		AND id = #{sessionId}
+		AND (
+			member_type = 0
+			OR member_type = 1
+		)
+	)
+	AND cardtype = #{cardId}
+	</select>
+</mapper>

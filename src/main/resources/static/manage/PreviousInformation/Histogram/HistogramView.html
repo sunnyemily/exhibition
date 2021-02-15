@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>届次柱状图</title>
+		<meta content="webkit" name="renderer">
+		<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+		<meta content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" name="viewport"/>
+		<link rel="stylesheet" href="/manage/css/xadmin.css">
+		<link href="/manage/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="/manage/css/style.css?v=4.1.0" rel="stylesheet">
+		<script charset="utf-8" src="/manage/js/jquery.min.js" type="text/javascript"></script>		
+		<script charset="utf-8" src="/manage/layui/layui.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/xadmin.js" type="text/javascript"></script>
+	</head>
+
+	<body>
+		<div class="wrapper wrapper-content  animated fadeInRight">
+			<div class="row" id="vmEbsShowroom">
+				<div class="col-sm-12">
+					<div class="ibox float-e-margins">
+						<div class="ibox-content">
+							<div class="fixed-table-toolbar" style="height:50px;">
+								<div class="bars pull-left">
+									<div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">										
+										<button class="btn btn-default btn-outline" type="button" name="refresh" onclick="location.reload()" title="刷新" id="refresh">
+											<i class="glyphicon glyphicon-repeat"></i>
+										</button>
+									</div>
+								</div>
+							</div>	
+							<div class="layui-tab">
+							  <ul class="layui-tab-title">
+							    <li class="layui-this">每届：总国家数</li>
+							    <li>每届：参展国家</li>
+							    <li>每届：参展企业</li>
+							  </ul>
+							  <div class="layui-tab-content">
+							    <div class="layui-tab-item layui-show">
+							      <div id="divBasic" style="height: 500px"></div>
+							    </div>
+							    <div class="layui-tab-item">
+									<div id="divLine" style="height: 500px"></div>
+								</div>
+							    <div class="layui-tab-item">
+									<div id="divDouble" style="height: 500px"></div>
+								</div>
+							  </div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>			
+	</body>
+	<script type="text/javascript">	
+		function loadDouble(){	
+			
+			var dom = document.getElementById("divDouble");     
+			//用于使chart自适应高度和宽度,通过窗体高宽计算容器高宽
+            var resizeMainContainer = function () {
+           		dom.style.width = window.innerWidth+'px';
+           		dom.style.height = window.innerHeight*0.65+'px';
+            };
+			          
+			//设置div容器高宽
+            resizeMainContainer();
+			          
+		    var myChart = echarts.init(dom);
+		    
+		    $(window).on('resize',function(){
+                resizeMainContainer();
+                myChart.resize();
+            });       
+			var app = {};	
+			
+			var title = "";
+			var val = new Array();
+			var shuliang="";
+			var params = {};
+			$.ajax({
+				url : "/common/getHistoryCompanyCount",
+				data : JSON.stringify(params),
+				type : "post",
+				async:false,
+				contentType : "application/json",
+				success : function(result) {
+					if (result.code === 1) {
+						
+						var para = new Array();	
+						para[0]="product";
+						para[1]='国内企业';
+						para[2]='国外企业';
+						val.push(para);			
+						shuliang = result.data;
+						for(var j=0;j<result.total;j++){
+							var par = new Array();	
+							par[0]=result.data[j].sessionid;
+							par[1]=result.data[j].gn;
+							par[2]=result.data[j].gw;						
+							val.push(par);							
+						}
+					} else {
+						layer.alert(result.msg, {
+							icon : 5
+						});
+					}
+				}
+			});
+			
+					
+			option = {
+				legend: {bottom:0},
+				title: {
+			        text: '每届：参展企业情况',
+			        x:'center',
+			    },			    
+			    tooltip: {
+			        
+			    },
+			    dataset: {
+			        source:val
+			    },
+			    xAxis: {type: 'category'},
+			    yAxis: {
+			    	name:'（单位：个）',
+			    	minInterval:1,
+			            max: function(value) {
+						    return value.max + 3;
+						}
+			    },
+			    // Declare several bar series, each will be mapped
+			    // to a column of dataset.source by default.
+			    series: [
+			        {type: 'bar',barWidth:30},
+			        {type: 'bar',barWidth:30}
+			    ]
+			};    
+		    if (option && typeof option === "object") {
+			    myChart.setOption(option, true);
+			}
+		}
+	
+		function loadLine(){
+			var title = new Array();
+			var val = new Array();
+			var shuliang = 0;
+			var params = {};
+			$.ajax({
+				url : "/common/getHistoryCountryCount",
+				data : JSON.stringify(params),
+				type : "post",
+				async:false,
+				contentType : "application/json",
+				success : function(result) {
+					if (result.code === 1) {
+						shuliang = result.total;
+						for(var j=0;j<result.total;j++){
+							title[j]=result.data[j].sessionid;
+							val[j]=result.data[j].icount;
+						}
+					} else {
+						layer.alert(result.msg, {
+							icon : 5
+						});
+					}
+				}
+			});		
+			
+			var dom = document.getElementById("divLine");  
+			
+			//用于使chart自适应高度和宽度,通过窗体高宽计算容器高宽
+            var resizeMainContainer = function () {
+           		dom.style.width = window.innerWidth+'px';
+           		dom.style.height = window.innerHeight*0.65+'px';
+            };
+			          
+			//设置div容器高宽
+            resizeMainContainer();
+			          
+		    var myChart = echarts.init(dom);
+		    
+		    $(window).on('resize',function(){
+                resizeMainContainer();
+                myChart.resize();
+            });
+		    
+			var app = {};			
+			option = {
+				title: {
+			        text: '每届：总国家数情况',
+			        x:'center',
+			    },
+			    color: ['#3398DB'],
+			    tooltip: {
+			        trigger: 'axis',
+			        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+			            type: 'line'        // 默认为直线，可选为：'line' | 'shadow'
+			        }
+			    },
+			    grid: {
+			        left: '3%',
+			        right: '4%',
+			        bottom: '3%',
+			        containLabel: true
+			    },
+			    xAxis: {
+			        type: 'category',
+			        data: title
+			    },
+			    yAxis: {
+			        type: 'value',
+			        name:'（单位：个）',
+			        minInterval:1,
+			            max: function(value) {
+						    return value.max + 10;
+						}
+			    },
+			    series: [{
+			    	name: '国家数量',
+			        data: val,
+			        type: 'line'
+			    }]
+			};    
+		    if (option && typeof option === "object") {
+			    myChart.setOption(option, true);
+			}
+		}
+		
+		function loadBasic(){
+			var title = new Array();
+			var val = new Array();
+			var shuliang = 0;
+			var params = {};
+			$.ajax({
+				url : "/common/getHistoryCountryCount",
+				data : JSON.stringify(params),
+				type : "post",
+				async:false,
+				contentType : "application/json",
+				success : function(result) {
+					if (result.code === 1) {
+						shuliang = result.total;
+						for(var j=0;j<result.total;j++){
+							title[j]=result.data[j].sessionid;
+							val[j]=result.data[j].icount;
+						}
+					} else {
+						layer.alert(result.msg, {
+							icon : 5
+						});
+					}
+				}
+			});
+			
+			var dom = document.getElementById("divBasic");            
+		    var myChart = echarts.init(dom);
+			var app = {};			
+			option = {
+				title: {
+			        text: '每届：参展国家情况',
+			        x:'center',
+			    },
+			    color: ['#3398DB'],
+			    tooltip: {
+			        trigger: 'axis',
+			        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+			            type: 'line'        // 默认为直线，可选为：'line' | 'shadow'
+			        }
+			    },
+			    grid: {
+			        left: '3%',
+			        right: '4%',
+			        bottom: '3%',
+			        containLabel: true
+			    },
+			    xAxis: [
+			        {
+			            type: 'category',
+			            data: title,
+			            axisTick: {
+			                alignWithLabel: true
+			            }
+			        }
+			    ],
+			    yAxis: [
+			        {
+			            type: 'value',
+			            name:'（单位：个）',
+			            minInterval:1,
+			            max: function(value) {
+						    return value.max + 10;
+						}
+			        }
+			    ],
+			    series: [
+			        {
+			            name: '国家数量',
+			            type: 'bar',
+			            barWidth: 40,
+			            data: val
+			        }
+			    ]
+			};    
+		    if (option && typeof option === "object") {
+			    myChart.setOption(option, true);
+			}
+		}
+	
+		$(document).ready(function(){
+			loadBasic();
+		});
+		
+		layui.use('element', function(){
+		    var $ = jQuery = layui.jquery;
+		    var element = layui.element;
+		 
+		    $('.layui-tab-title').on('click', function(title) {
+			        if(title.toElement.textContent=="每届：总国家数"){
+			            loadBasic();
+			        }else if(title.toElement.textContent=="每届：参展国家"){
+			        	$("#divLine").attr("style","height:500px");
+			            loadLine();
+			        }else if(title.toElement.textContent=="每届：参展企业"){
+			            loadDouble();
+			        }
+			});
+		});
+		
+	</script>
+	<script type="text/javascript" src="/manage/plugins/echarts/echarts.min.js"></script>
+    <script type="text/javascript" src="/manage/plugins/echarts/echarts-gl/dist/echarts-gl.min.js"></script>
+    <script type="text/javascript" src="/manage/plugins/echarts/echarts-stat/dist/ecStat.min.js"></script>
+    <script type="text/javascript" src="/manage/plugins/echarts/dist/extension/dataTool.min.js"></script>
+</html>

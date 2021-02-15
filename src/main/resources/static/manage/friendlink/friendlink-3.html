@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>友情连接管理</title>
+<link rel="shortcut icon" href="/favicon.ico">
+<link href="../css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+<link href="../css/font-awesome.css?v=4.4.0" rel="stylesheet">
+<link href="../css/animate.css" rel="stylesheet">
+<link href="../css/style.css?v=4.1.0" rel="stylesheet">
+<link href="../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+<link rel="stylesheet" href="../js/plugins/layui/css/layui.css"  media="all">
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content  animated fadeInRight">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5 id="ibox-title">新闻管理</h5>
+          <div class="ibox-tools"> <a class="collapse-link"> <i class="fa fa-chevron-up"></i> </a> <a class="close-link"> <i class="fa fa-times"></i> </a> </div>
+        </div>        
+        <div class="ibox-content">
+            <div class="fixed-table-toolbar" style="height:50px;">
+              <div class="bars pull-left">
+                <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
+                  <button type="button" class="btn btn-outline btn-default" title="新建连接" id="addFriendlink"> <i class="glyphicon glyphicon-plus" aria-hidden="true"></i> </button>
+                  <button type="button" class="btn btn-outline btn-default" title="批量删除" id="delAll"> <i class="glyphicon glyphicon-trash" aria-hidden="true"></i> </button>
+                  <button type="button" class="btn btn-outline btn-default" title="转移" id="alterMenu"> <i  class="glyphicon glyphicon-share" aria-hidden="true"></i> </button>
+                </div>
+              </div>
+              <div class="columns columns-right btn-group pull-right">
+                <button class="btn btn-default btn-outline" type="button" name="search" title="搜索" id="search"> <i class="glyphicon glyphicon-search"></i> </button>
+                <button class="btn btn-default btn-outline" type="button" name="refresh" title="刷新" id="refresh"> <i class="glyphicon glyphicon-repeat"></i> </button>
+              </div>
+              <div class="pull-right search">
+                <input name="keyword" class="form-control input-outline" type="text" placeholder="请输标题" id="keyword">
+              </div>
+            </div>
+          <table id="friendlink-list" lay-filter="test">
+          </table>
+        </div>
+      </div>
+    </div>    
+  </div>
+</div>
+<div class="modal inmodal" id="friendlink-model">
+	<div class="modal-content animated bounceInUp">
+      <div class="ibox-title">
+        <h5 id="edit-title">新增新闻</h5>
+        <div class="ibox-tools"><a class="close-link" data-dismiss="modal"> <i class="fa fa-times"></i> </a> </div>
+      </div>
+      <div class="ibox-content">
+        <fieldset class="layui-elem-field layui-field-title">
+          <form class="layui-form layui-form-pane" action="">
+          <input type="hidden" name="friendlinkId" value="0" />
+          <input type="hidden" name="menuId" value="0" />
+            <div class="layui-form-item">
+              <label class="layui-form-label">标题</label>
+              <div class="layui-input-block">
+                <input type="text" id="friendlinkName" name="friendlinkName" autocomplete="off" placeholder="请输入名称" class="layui-input" lay-verify="required">
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label">排序</label>
+              <div class="layui-input-block">
+                <input type="text" id="friendlinkOrder" name="friendlinkOrder" autocomplete="off" placeholder="请输入排序序号" class="layui-input" lay-verify="required|number">
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label">图片</label>
+              <div class="layui-input-inline">
+                <input id="friendlinkPicture" name="friendlinkPicture" type="text" class="layui-input" >    
+                <span id="tpcc" style="color:red">图片尺寸：750*413</span>     
+              </div>
+              <div class="layui-input-inline">
+                <button type="button" class="layui-btn" id="uploadPictrue">
+                  <i class="layui-icon">&#xe67c;</i>上传图片
+                </button>                   
+              </div>
+            </div>  
+            <div class="layui-form-item">
+              <label class="layui-form-label">视频文件</label>
+              <div class="layui-input-inline">
+                <input id="friendlinkPicture2" name="friendlinkPicture2" type="text" class="layui-input" > 
+              </div>
+              <div class="layui-input-inline">
+                <button type="button" class="layui-btn" id="uploadPictrue2">
+                  <i class="layui-icon">&#xe67c;</i>上传视频
+                </button>                   
+              </div>
+            </div>            
+            <div class="layui-form-item">
+              <label class="layui-form-label">链接地址</label>
+              <div class="layui-input-block">
+                <input id="friendlinkAddress" name="friendlinkAddress" placeholder="如需打开链接，请输入链接地址，外网地址请输入全网址" type="text" class="layui-input" >
+              </div>
+            </div>    
+            <div id="divneirong" class="layui-form-item" pane>
+              <label class="layui-form-label">内容</label>
+              <div class="layui-input-block" id="role-list">
+              <textarea name="firendcontent" id="firendcontent" rows="10" cols="80"  class="layui-input"></textarea>
+              </div>
+            </div>        
+             <div class="layui-form-item">
+              <label class="layui-form-label">状态</label>
+              <div class="layui-input-block">
+                <input type="radio" name="status" id="status1" value="1" title="可用">
+                <input type="radio" name="status" id="status0" value="0" title="不可用"> 
+              </div>
+            </div>            
+            <div class="layui-form-item">
+              <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="demo1">保存</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+              </div>
+            </div>
+          </form>
+        </fieldset>
+      </div>
+      </div>
+ </div>
+<!-- 全局js --> 
+<script src="../js/plugins/layui/layui.all.js" charset="utf-8"></script> 
+<script src="../js/jquery.min.js?v=2.1.4"></script> 
+<script src="../js/bootstrap.min.js?v=3.3.6"></script> 
+<script src="../plugins/ckeditor/ckeditor.js" charset="utf-8"></script>
+<!-- 自定义js --> 
+<script src="../js/content.js?v=1.0.0"></script> 
+<script src="../js/W.js?v=3.3.6"></script> 
+<script>
+	var cid,menuName;
+	var table = layui.table;
+
+		var functionList;
+        $(document).ready(function () {
+			menuName = $.trim($(".page-tabs-content",window.parent.document).children(".active").text());
+			cid = $(".page-tabs-content",window.parent.document).children(".active").data("cid");
+			if(cid!="11"){
+				$("#indexPicContainer").css("display","none");
+			}
+			$("#ibox-title").text(menuName+'管理');
+			$("input[name='menuId']").val(cid);
+			CKEDITOR.replace('firendcontent');
+			renderTable();
+		 });	
+ 	function renderTable(){
+		//执行渲染
+		table.render({
+		  even:true//隔行背景
+		  ,elem: '#friendlink-list' //指定原始表格元素选择器（推荐id选择器）
+		  ,height: 'full-220' //容器高度
+		  ,cols: [[{checkbox: true}
+    			,{field: 'friendlinkId', title: 'ID',sort:false,width:50}
+    			,{field: 'friendlinkName', title: '标题',sort:true,width:400}
+    			,{field: 'friendlinkAddress', title: '链接地址',sort:true,width:200}
+    			//,{field: 'friendlinkUpdatetime', title: '更新时间',sort:true,width:100,templet:'<div>{{(new Date(d.friendlinkUpdatetime)).toLocaleDateString()}}</div>'}
+    			,{field: 'friendlinkOrder', title: '排序',sort:true,width:100}
+    			,{field: 'targets', title: '跳转方式',sort:true,width:140,toolbar:'#GetTargets'}
+    			,{field: 'friendlinkPicture', title: '链接图片',sort:true,width:140,toolbar:'#SeePic'}
+    			,{field: 'status', title: '状态',width:100,toolbar: '#GetStatus'}
+				,{fixed: 'right', width:200, align:'center', toolbar: '#toolBar',title:'操作'} //这里的toolbar值是模板元素的选择器
+
+				]] //设置表头
+			  ,url: '/manage/friendlink/getFriendlinks/'+cid
+			  ,where: {
+				  keywords:$("#keyword").val(),
+				  field:'friendlinkOrder',
+				  order:'DESC'
+			  }
+			  ,method: 'post' //如果无需自定义HTTP类型，可不加该参数
+			  //request: {} //如果无需自定义请求参数，可不加该参数
+			  ,response: {			  
+				  statusName: 'status' //数据状态的字段名称，默认：code
+				  ,statusCode: 1 //成功的状态码，默认：0
+				  ,dataName: 'result' //数据列表的字段名称，默认：data			  
+				  } //如果无需自定义数据响应名称，可不加该参数
+			  ,page:true
+			  ,limits:[10,20,30,40,50,60,70,80,90,100]
+			  ,limit:10
+			  ,loading:true
+			  ,id:'id'
+				  //,…… //更多参数参考右侧目录：基本参数选项
+		});
+		//监听工具条
+		table.on('tool(test)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+		  var data = obj.data; //获得当前行数据
+		  var layEvent = obj.event; //获得 lay-event 对应的值
+		  var tr = obj.tr; //获得当前行 tr 的DOM对象
+		 
+		  if(layEvent === 'del'){ //删除
+		  	deleteFriendlinks(obj);
+		  } else if(layEvent === 'edit'){ //编辑
+			openEditFriendlink(obj);
+		  }
+		});
+		table.on('sort(test)', function(obj){ //注：sort是排序事件名，test是table原始容器的属性 lay-filter="对应的值"
+		  console.log(obj.field); //当前排序的字段名
+		  console.log(obj.type); //当前排序类型：desc（降序）、asc（升序）、null（空对象，默认排序）
+		  console.log(this); //当前排序的 th 对象
+		  
+		  //尽管我们的 table 自带排序功能，但并没有请求服务端。
+		  //有些时候，你可能需要根据当前排序的字段，重新向服务端发送请求，如：
+		  table.reload('id', {
+			initSort: obj //记录初始排序，如果不设的话，将无法标记表头的排序状态。 layui 2.1.1 新增参数
+			,where: { //请求参数
+			  field: obj.field //排序字段
+			  ,order: obj.type //排序方式
+			}
+		  });
+		});
+ 	}
+		//重新加载数据
+		function reloadTableData(){
+			table.reload('id',{
+			  method:'post'
+			  ,url: '/manage/friendlink/getFriendlinks/'+cid
+			  ,where: {
+				  keywords:$("#keyword").val(),
+				  field:'friendlinkOrder',
+				  order:'DESC'
+				  }			  
+			});
+		}
+		var form;
+		layui.use(['form'], function(){
+		  form = layui.form;		 
+		  //自定义验证规则
+		  form.verify({
+			title: function(value){
+			  if(value.length < 2){
+				return '标题至少得2个字符啊';
+			  }
+			}
+		  });
+  
+		  //监听提交
+		  form.on('submit(demo1)', function(data){
+		  		data.field.firendcontent = CKEDITOR.instances.firendcontent.getData();
+			  	var url = "/manage/friendlink/updateFriendlink";
+				displayLoading(true);
+				$.post(url,data.field,
+				function(data){
+					if(data.status==1){						
+						layer.msg('保存成功', {icon: 6});
+						$("#friendlink-model").modal('hide');
+						reloadTableData();
+					}
+					else if(data.status==4){
+						window.location.href="/manage/nopermission.html";
+					}
+					else if(data.status==5){
+						layer.confirm(data.msg, {icon: 3, title:'提示'}, function(index){
+							  window.location.href="/manage/login.html";
+							  layer.close(index);
+							});
+					}
+					else{
+						layer.msg(data.msg, {icon: 6});
+					}
+					hiddenLoading(true);
+				});
+			return false;
+		  });  
+		});
+		function openAddFriendlink(){
+			$("#edit-title").text('新增'+menuName);
+			$(":reset").click();//重置所有表单元素
+			$("input[name='friendlinkId']").val(0);
+			$('#friendlinkOrder').val(9999);//默认排后面
+			$(":radio[name='status'][value='1']").prop("checked", "checked");
+			CKEDITOR.instances.firendcontent.setData($('#firendcontent').val());
+			
+			if(cid==262){
+				$("#tpcc").html("图片尺寸：855*570");
+				$("#divneirong").hide();
+				$("#divtiaozhuan").hide();
+			}
+			
+			$("#friendlink-model").modal({
+				keyboard: true
+			});
+		}
+		function openEditFriendlink(obj){
+			if(cid==262){
+				$("#tpcc").html("图片尺寸：855*570");
+				$("#divneirong").hide();
+				$("#divtiaozhuan").hide();
+			}
+			
+			$("#edit-title").text('编辑'+menuName);	
+			$.post('/manage/friendlink/getFriendlink',{friendlinkId:obj.data.friendlinkId},
+			function(data){
+				if(data.status==1){									
+					$(":reset").click();//重置所有表单元素
+					$("input[name='friendlinkId']").val(data.result.friendlinkId);
+					$('#friendlinkName').val(data.result.friendlinkName);
+					$('#friendlinkAddress').val(data.result.friendlinkAddress);
+					$('#friendlinkOrder').val(data.result.friendlinkOrder);
+					$('#friendlinkPicture').val(data.result.friendlinkPicture);
+					$('#friendlinkPicture2').val(data.result.friendlinkPicture2);
+					$("#targets").val(data.result.targets);
+					$(":radio[name='status'][value='" + data.result.status + "']").prop("checked", "checked");
+					$('#firendcontent').val(data.result.firendcontent);	
+				}
+				else if(data.status==4){
+					window.location.href="/manage/nopermission.html";
+				}
+				else if(data.status==5){
+					layer.confirm(data.msg, {icon: 3, title:'提示'}, function(index){
+						  window.location.href="/manage/login.html";
+						  layer.close(index);
+						});
+				}
+				else{
+					layer.msg(data.msg, {icon: 6});
+				}
+				CKEDITOR.instances.firendcontent.setData($('#firendcontent').val());
+			});
+			
+			$("#friendlink-model").modal({
+				keyboard: true
+			});
+		}
+		function deleteFriendlinks(obj){		
+			layer.confirm('确认要删除此数据吗？', function(index){
+				layer.close(index);
+				var friendlinkIdList = new Array();
+				if(obj){//删除单行
+					friendlinkIdList.push(obj.data.friendlinkId);
+				}
+				else{//删除选中行
+					var checkStatus = table.checkStatus('id');
+					if(checkStatus.data.length==0){
+						layer.msg('请先选择要删除的行',{icon:5});
+						return;
+					}
+					else{
+						checkStatus.data.forEach(function(item,index,dataList){
+							friendlinkIdList.push(item.friendlinkId);
+						});
+					}
+				}
+				displayLoading(true);
+				$.post("/manage/friendlink/deleteFriendlinks",{friendlinkIdList:friendlinkIdList},
+					function(data){
+						if(data.status==1){						
+							//先更新本地数据
+							layer.msg('删除成功', {icon: 6});
+						}
+						else if(data.status==4){
+							window.location.href="/manage/nopermission.html";
+						}
+						else if(data.status==5){
+							layer.confirm(data.msg, {icon: 3, title:'提示'}, function(index){
+								  window.location.href="/manage/login.html";
+								  layer.close(index);
+								});
+						}
+						else{
+							layer.msg(data.msg, {icon: 6});
+						}
+						hiddenLoading(true);
+						$("#friendlink-model").modal('hide');
+						reloadTableData();
+				});
+			});			
+		}
+		layui.use('upload', function(){
+  		var upload = layui.upload;
+   
+  		//上传图片
+		var uploadPictrue = upload.render({
+			accept:'images'
+			,size:1024
+			,exts:'jpg|jpeg|png|gif|bmp'
+			,elem: '#uploadPictrue' //绑定元素
+			,url: '/manage/uploadPicture' //上传接
+			,before: function(obj){
+				layer.load(); //上传loading
+			}
+			,done: function(res){
+				layer.closeAll('loading');
+				if(res.status==1){
+					$("#friendlinkPicture").val(res.result);
+					layer.msg('上传成功', {icon: 6});
+				}
+				else if(res.status==4){
+					window.location.href="/manage/nopermission.html";
+				}
+				else if(res.status==5){
+					layer.confirm(res.msg, {icon: 3, title:'提示'}, function(index){
+						  window.location.href="/manage/login.html";
+						  layer.close(index);
+						});
+				}
+			    else{
+				 layer.msg(res.msg, {shift: 6});
+			    }
+			}
+			,error: function(){
+			  //请求异常回调
+			  	layer.msg('接口异常', {shift: 6});
+				layer.closeAll('loading');
+			}
+		  });
+   
+  		//上传图片
+		var uploadPictrue2 = upload.render({
+			accept:'file'
+			,size:1024000
+			,exts:'mp4|flv|mpg'
+			,elem: '#uploadPictrue2' //绑定元素
+			,url: '/manage/uploadFile' //上传接
+			,before: function(obj){
+				layer.load(); //上传loading
+			}
+			,done: function(res){
+				layer.closeAll('loading');
+				if(res.status==1){
+					$("#friendlinkPicture2").val(res.result);
+					layer.msg('上传成功', {icon: 6});
+				}
+				else if(res.status==4){
+					window.location.href="/manage/nopermission.html";
+				}
+				else if(res.status==5){
+					layer.confirm(res.msg, {icon: 3, title:'提示'}, function(index){
+						  window.location.href="/manage/login.html";
+						  layer.close(index);
+						});
+				}
+			    else{
+				 layer.msg(res.msg, {shift: 6});
+			    }
+			}
+			,error: function(){
+			  //请求异常回调
+			  	layer.msg('接口异常', {shift: 6});
+				layer.closeAll('loading');
+			}
+		  });
+		});
+		$("#addFriendlink").on('click',openAddFriendlink);
+		$("#refresh,#search").on("click",reloadTableData);
+		$("#delAll").on('click',function(){deleteFriendlinks()});
+		$("#friendlinkPicture,#friendlinkPicture2").on("dblclick",function(){
+			layer.open({
+			  title:'图片预览',
+			  type: 1, 
+			  content: '<img src="'+$(this).val()+'" width="300" />' //这里content是一个普通的String
+			});
+		});
+    </script> 
+	<script type="text/html" id="toolBar">
+	  <a class="layui-btn layui-btn-mini" lay-event="edit">编辑</a>
+	  <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
+	</script>
+	<script type="text/html" id="GetStatus">
+		{{# if(d.status==1){ }}
+		可用
+		{{# }else{ }}
+		不可用
+		{{# } }}
+	</script>
+	<script type="text/html" id="GetTargets">
+		{{# if(d.targets=='page'){ }}
+		小程序
+		{{# }else if(d.targets=='web'){ }}
+		网页
+		{{# }else if(d.targets=='tabbar'){ }}
+		底部标签
+		{{# } }}
+	</script>
+	<script type="text/html" id="SeePic">
+	  <a href="{{ d.friendlinkPicture }}" target="_blank">预览</a>	 
+	</script>
+</body>
+</html>

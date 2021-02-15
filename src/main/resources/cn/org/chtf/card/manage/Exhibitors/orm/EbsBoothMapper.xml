@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.Exhibitors.dao.EbsBoothMapper">
+
+	<update id="releaseById">
+		update ebs_booth set tradinggroupid=0 where id = #{id} and company_id = 0;
+		delete from ebs_tradinggroupboothallocation where boothid = #{id}
+	</update>
+	
+	<select id="queryAllBooth" resultType="string">
+		select distinct name from ebs_booth where session = #{session}
+	</select>
+
+	<select id="queryAllShowRoom" resultType="string">
+		select distinct name from ebs_showroom where useable = 1 and session = #{session}
+	</select>
+
+	<select id="queryAllCompany" resultType="string">
+		select distinct b.chinesename from ebs_booth a
+		left join ebs_companyinfo b on a.company_id = b.id
+		where a.session = #{session} and !ISNULL(b.id)
+	</select>
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsBooth">
+        select
+			a.id as id,
+			a.session as session,
+			a.name as name,
+			a.price as price,
+			a.useable as useable,
+			a.angular as angular,
+			a.tradinggroupid as tradinggroupid,
+			a.company_id as companyId,
+			a.show_room_id as showRoomId,
+			a.addtime as addtime
+        from ebs_booth as a
+        where a.id = #{id}
+    </select>
+    
+    <select id="getBoothList" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsBooth">
+    	select
+			a.id as id,
+			a.session as session,
+			a.name as name,
+			a.price as price,
+			a.useable as useable,
+			a.angular as angular,
+			a.tradinggroupid as tradinggroupid,
+			a.company_id as companyId,
+			a.show_room_id as showRoomId,
+			a.addtime as addtime
+        from ebs_booth as a
+        where a.show_room_id=#{id}
+	</select>
+	
+	<select id="GetBoothListByTradingGrounIdAndSession" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsBooth">
+    	select
+			a.id as id,
+			a.session as session,
+			a.name as name,
+			a.price as price,
+			a.useable as useable,
+			a.angular as angular,
+			a.tradinggroupid as tradinggroupid,
+			a.company_id as companyId,
+			a.show_room_id as showRoomId,
+			a.addtime as addtime
+        from ebs_booth as a
+        where a.session=#{session} and a.tradinggroupid = #{tradinggroupid}
+	</select>
+	
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsBooth">
+        select
+			a.id as id,
+			a.session as session,
+			a.name as name,
+			a.price as price,
+			a.useable as useable,
+			a.angular as angular,
+			a.tradinggroupid as tradinggroupid,
+			a.company_id as companyId,
+			a.show_room_id as showRoomId,
+			a.addtime as addtime
+        from ebs_booth as a
+        <where>
+			<if test="id != null and id != ''">
+				and a.id = #{id}
+			</if>
+			<if test="session != null and session != ''">
+				and a.session = #{session}
+			</if>
+			<if test="name != null and name != ''">
+				and a.name = #{name}
+			</if>
+			<if test="price != null and price != ''">
+				and a.price = #{price}
+			</if>
+			<if test="useable != null and useable != ''">
+				and a.useable = #{useable}
+			</if>
+			<if test="angular != null and angular != ''">
+				and a.angular = #{angular}
+			</if>
+			<if test="tradinggroupid != null and tradinggroupid != ''">
+				and a.tradinggroupid = #{tradinggroupid}
+			</if>
+			<if test="companyId != null and companyId != ''">
+				and a.company_id = #{companyId}
+			</if>
+			<if test="showRoomId != null and showRoomId != ''">
+				and a.show_room_id = #{showRoomId}
+			</if>
+			<if test="addtime != null and addtime != ''">
+				and a.addtime = #{addtime}
+			</if>
+        </where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsBooth">
+        select
+			a.id as id,
+			b.sessionid sessionId,
+			a.name as name,
+			a.price as price,
+			a.useable as useable,
+			a.angular as angular,
+			a.tradinggroupid,
+			c.name tradingGroupName,
+			a.company_id as companyId,
+			d.chinesename companyName,
+			e.name showRoomName,
+			a.addtime as addtime
+        from ebs_booth as a
+        left join sys_session b on a.session = b.id
+        left join ebs_tradinggroup c on a.tradinggroupid = c.id
+        left join ebs_companyinfo d on a.company_id = d.id
+        left join ebs_showroom e on a.show_room_id = e.id
+        <where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="boothName != null and boothName != ''">
+                and a.name = #{boothName}
+            </if>
+            <if test="showRoomName != null and showRoomName != ''">
+                and e.name = #{showRoomName}
+            </if>
+            <if test="companyName != null and companyName != ''">
+                and d.chinesename = #{companyName}
+            </if>
+            <if test="price != null and price != ''">
+                and a.price = #{price}
+            </if>
+            <if test="useable != null and useable != ''">
+                and a.useable = #{useable}
+            </if>
+            <if test="angular != null and angular != ''">
+                and a.angular = #{angular}
+            </if>
+            <if test="tradinggroupid != null and tradinggroupid != ''">
+                and a.tradinggroupid = #{tradinggroupid}
+            </if>
+            <if test="companyId != null and companyId != ''">
+                and a.company_id = #{companyId}
+            </if>
+            <if test="showRoomId != null and showRoomId != ''">
+                and a.show_room_id = #{showRoomId}
+            </if>
+        </where>
+        order by a.name	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(a.id) FROM ebs_booth a
+        left join sys_session b on a.session = b.id
+        left join ebs_tradinggroup c on a.tradinggroupid = c.id
+        left join ebs_companyinfo d on a.company_id = d.id
+        left join ebs_showroom e on a.show_room_id = e.id
+		<where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="boothName != null and boothName != ''">
+                and a.name = #{boothName}
+            </if>
+            <if test="showRoomName != null and showRoomName != ''">
+                and e.name = #{showRoomName}
+            </if>
+            <if test="companyName != null and companyName != ''">
+                and d.chinesename = #{companyName}
+            </if>
+            <if test="price != null and price != ''">
+                and a.price = #{price}
+            </if>
+            <if test="useable != null and useable != ''">
+                and a.useable = #{useable}
+            </if>
+            <if test="angular != null and angular != ''">
+                and a.angular = #{angular}
+            </if>
+            <if test="tradinggroupid != null and tradinggroupid != ''">
+                and a.tradinggroupid = #{tradinggroupid}
+            </if>
+            <if test="companyId != null and companyId != ''">
+                and a.company_id = #{companyId}
+            </if>
+            <if test="showRoomId != null and showRoomId != ''">
+                and a.show_room_id = #{showRoomId}
+            </if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.Exhibitors.model.EbsBooth" useGeneratedKeys="true" keyProperty="id">
+        insert into ebs_booth(
+        	<trim suffixOverrides=",">
+                <if test="session != null and session !=''">`session`,</if>
+                <if test="name != null and name != ''">`name`,</if>
+                <if test="price != null and price !=''">`price`,</if>
+                <if test="useable != null and useable !=''">`useable`,</if>
+                <if test="angular != null and angular !=''">`angular`,</if>
+                <if test="tradinggroupid != null">`tradinggroupid`,</if>
+                <if test="companyId != null">`company_id`,</if>
+                <if test="showRoomName != null and showRoomName !=''">`show_room_id`,</if>
+                <if test="addtime != null">`addtime`</if>
+			</trim>
+		) values (
+        	<trim suffixOverrides=",">
+                <if test="session != null and session !=''">#{session},</if>
+                <if test="name != null and name != ''">#{name},</if>
+                <if test="price != null and price !=''">#{price},</if>
+                <if test="useable != null and useable !=''">#{useable},</if>
+                <if test="angular != null and angular !=''">#{angular},</if>
+                <if test="tradinggroupid != null">#{tradinggroupid},</if>
+                <if test="companyId != null">#{companyId},</if>
+                <if test="showRoomName != null and showRoomName !=''">(select id from ebs_showroom where name = #{showRoomName} and session = #{session} order by addtime desc limit 1),</if>
+                <if test="addtime != null">#{addtime}</if>
+			</trim>
+		)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.Exhibitors.model.EbsBooth">
+        update ebs_booth
+        <set>
+			<if test="session != null">`session` = #{session},</if>
+			<if test="name != null">`name` = #{name},</if>
+			<if test="price != null">`price` = #{price},</if>
+			<if test="useable != null">`useable` = #{useable},</if>
+			<if test="angular != null">`angular` = #{angular},</if>
+			<if test="tradinggroupid != null">`tradinggroupid` = #{tradinggroupid},</if>
+			<if test="companyId != null">`company_id` = #{companyId},</if>
+			<if test="showRoomId != null">`show_room_id` = #{showRoomId},</if>
+			<if test="addtime != null">`addtime` = #{addtime}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from ebs_booth where id = #{id};
+        delete from ebs_tradinggroupboothallocation where boothid = #{id};
+    </delete>
+    
+    <select id="GetBoothByMap" resultType="map">
+    	select 
+			a.id as id,
+			a.session as session,
+			a.name as name,
+			a.price as price,
+			a.useable as useable,
+			a.angular as angular,
+			a.tradinggroupid as tradinggroupid,
+			a.company_id as companyId,
+			a.show_room_id as showRoomId,
+			a.addtime as addtime,b.name as roomname
+		from ebs_booth as a
+		left join ebs_showroom as b on b.id=a.show_room_id
+    	<where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="name != null and name != ''">
+                and a.name = #{name}
+            </if>
+            <if test="price != null and price != ''">
+                and a.price = #{price}
+            </if>
+            <if test="useable != null and useable != ''">
+                and a.useable = #{useable}
+            </if>
+            <if test="angular != null and angular != ''">
+                and a.angular = #{angular}
+            </if>
+            <if test="tradinggroupid != null and tradinggroupid != ''">
+                and a.tradinggroupid = #{tradinggroupid}
+            </if>
+            <if test="companyId != null and companyId != ''">
+                and a.company_id = #{companyId}
+            </if>
+            <if test="showRoomId != null and showRoomId != ''">
+                and a.show_room_id = #{showRoomId}
+            </if>
+            <if test="addtime != null and addtime != ''">
+                and a.addtime = #{addtime}
+            </if>
+        </where>
+    </select>
+
+    <update id="assignBooths">
+        update ebs_booth
+        <set>
+			`company_id` = #{companyId}
+        </set>
+        where id in 
+        <foreach collection="booths" item="booth" index="index"
+            open="(" close=")" separator=",">
+            #{booth}
+        </foreach>;
+    </update>
+
+    <update id="unAssignBooths">
+        update ebs_booth
+        <set>
+			`company_id` = 0
+        </set>
+        where id in 
+        <foreach collection="booths" item="booth" index="index"
+            open="(" close=")" separator=",">
+            #{booth}
+        </foreach>;
+    </update>
+    
+    <update id="releaseCompanyBooth">
+    	update ebs_booth set company_id = 0 where company_id = #{companyId} and session = #{sessionId}
+    </update>
+    
+
+    <select id="getCertificationPermission" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsShowroomtype">
+    SELECT
+		isoutdoor
+	FROM
+		ebs_booth
+	LEFT JOIN ebs_showroom ON ebs_showroom.id = ebs_booth.show_room_id
+	LEFT JOIN ebs_showroomtype ON ebs_showroom.type = ebs_showroomtype.id
+	WHERE
+		ebs_booth.`session` = #{sessionId}
+	AND ebs_booth.company_id = #{companyId}
+    </select>
+</mapper>

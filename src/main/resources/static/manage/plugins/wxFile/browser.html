@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>文件管理系统</title>
+<script src="../../js/jquery.min.js?v=2.1.4"></script> 
+  <link rel="stylesheet" href="../../js/plugins/layui/css/layui.css"  media="all">
+  <script src="../../js/plugins/layui/layui.all.js" charset="utf-8"></script> 
+  <link href="../../css/plugins/jsTree/style.min.css" rel="stylesheet">
+  <script src="../../js/plugins/jsTree/jstree.min.js"></script>
+  
+</head>
+<body class="layui-layout-body">
+	<div class="layui-side" style="border:1px solid #d0d0d0;">
+	   <div class="layui-side-scroll" id="using_json"> </div>
+	
+	</div>
+	<div class="layui-body">
+	    <!-- 内容主体区域 -->
+		<div  style="width:100%;padding:10px;border-bottom:1px solid #d0d0d0;">
+			<div class="layui-btn-group">
+			  <!--<button class="layui-btn layui-btn-primary layui-btn-sm">
+			    <i class="layui-icon">&#xe61f;</i>添加文件
+			  </button>
+			  <button class="layui-btn layui-btn-primary layui-btn-sm">
+			    <i class="layui-icon">&#xe642;</i>编辑
+			  </button>-->
+			  <button class="layui-btn layui-btn-primary layui-btn-sm" id="delBtn">
+			    <i class="layui-icon">&#xe640;</i>删除
+			  </button>
+			  <button class="layui-btn layui-btn-primary layui-btn-sm" id="selectBtn">
+			    <i class="layui-icon">&#x1005;</i>选择
+			  </button>
+			</div>
+		</div>
+		<ul id="file-list"  class="layui-fluid layui-row layui-col-space1">
+		
+		</ul>
+	</div>
+	<style>
+	#file-list li{
+	height:200px;
+	line-height:200px;
+	text-align:center;
+	border:1px solid #f0f0f0;
+	}
+	#file-list li div{
+	color:red;
+	font-weight:bold;
+	font-size:48px;
+	line-height:48px;
+	position:absolute;
+	bottom:0px;
+	right:0px;
+	border-top:1px solid red;
+	border-left:1px solid red;
+	}
+	#file-list img{
+	 width:auto;
+	 height:auto;
+	 max-width:100%;
+	 max-height:100%;
+	}
+	#file-list span{
+	display:block;
+	position:absolute;
+	top:0px;
+	left:0px;
+	width:100%;
+	height:24px;
+	line-height:24px;
+	font-size:14px;
+	color:#fff;
+	filter:alpha(Opacity=50);-moz-opacity:0.5;opacity: 0.5;
+	background:#000;
+	}
+	</style>
+<script>
+//JavaScript代码区域
+var laytpl,flow,functionList;
+var jstree = $('#using_json').jstree({
+    'core': {
+        'data': null,
+		'multiple':false
+    },
+	"plugins" : ["contextmenu"],
+	"contextmenu":{
+		"items":{}
+    }
+});
+jstree.on('changed.jstree', function (e, data) {
+	var i, j, r = [];
+	for(i = 0, j = data.selected.length; i < j; i++) {
+		changeFiles(data.instance.get_node(data.selected[i]));
+	}
+  });
+function changeFiles(node){
+	var getTpl = fileList.innerHTML
+	,view = $('#file-list');
+	var data = {
+			title:node.original.text,
+			list:node.original.files
+	};
+	laytpl(getTpl).render(data, function(html){
+	  view.html(html);
+	});
+
+	$("img").one("error", function(e){
+	     $(this).attr("src", "/manage/img/file.png");
+	});
+	$(".layui-col-md3").click(function(){
+		if($(this).find("div").length>0){
+			$(this).find("div").remove();
+			$(this).css("border-color","#f0f0f0");
+		}
+		else{
+			$(this).append('<div class="layui-icon">&#xe605;</div>');
+			$(this).css("border-color","red");
+		}
+	});
+	//flow.lazyimg({isLazyimg:true,elem: '#file-list img',scrollElem: '#file-list'}); 
+}
+function loadFunctionData(){
+	layer.load("正在加载数据");
+	$.post("/getPath",
+	function(data){
+		if(data.status==1){//登陆成功
+			//加载用户信息
+			functionList = data.result;
+			$('#using_json').jstree(true).settings.core.data=functionList;
+			$('#using_json').jstree(true).refresh();
+		}
+		else if(data.status==4){
+			window.location.href="/manage/nopermission.html";
+		}
+		else if(data.status==5){
+			alert(data.msg);
+			window.location.href="/manage/login.html";
+		}
+		else{
+			alert(data.msg);
+		}
+		layer.closeAll();
+	});
+}
+loadFunctionData();
+layui.use('element', function(){
+  var element = layui.element;
+  
+});
+layui.use('laytpl', function(){
+  laytpl = layui.laytpl;
+});
+$("#delBtn").click(function(){
+	if($("#file-list .layui-icon").length==0){
+		layer.msg("请选择要删除的文件",{shift:6,icon:0});
+	}
+	else{
+		layer.confirm('确定要删除这些图片吗?', {icon: 3, title:'提示'}, function(index){
+			var pathArray = new Array();
+			$("#file-list .layui-icon").each(function(){
+				pathArray.push($(this).parent().attr("data-path"));
+			});
+			var loadIndex = layer.load("正在加载数据");
+			$.post('/manage/deleteFiles',{"path":pathArray},function(data){
+				if(data.status==1){
+					//1.获取选中节点
+					var tree = $('#using_json').jstree(true);
+					selected = tree.get_selected();
+					var node = tree.get_node(selected);
+					var files = node.original.files;
+					var newFiles = new Array();
+					for(index in files){
+						if(pathArray.indexOf(files[index].path)<0){
+							newFiles.push(files[index]);
+						}
+					}
+					node.original.files = newFiles;
+					changeFiles(node);
+					layer.msg("删除成功！")
+				}
+				else if(data.status==4){
+					window.location.href="/manage/nopermission.html";
+				}
+				else if(data.status==5){
+					layer.msg(data.msg);
+					window.location.href="/manage/login.html";
+				}
+				else{
+					layer.msg("删除失败。")
+				}
+				layer.close(loadIndex);
+			});
+			layer.close(index);
+		});		
+	}
+});
+$("#selectBtn").click(function(){
+	if($("#file-list .layui-icon").length!=1){
+		layer.msg("必须选择且仅选择一个文件",{shift:6,icon:0});
+	}
+	else{
+		var formNameReg = /(^|&)formName=([^&]*)(&|$)/;
+	    var param = window.location.search.substr(1).match(formNameReg);
+	    if (param != null) {
+	    	formName = unescape(param[2]);
+	    	$("#"+formName,window.parent.document).val('/'+$("#file-list .layui-icon").parent().attr("data-path"));
+	    	parent.layer.closeAll();
+	    }
+	    else{
+		    var reg = new RegExp('(^|&)CKEditorFuncNum=([^&]*)(&|$)', 'i');
+		    var r = window.location.search.substr(1).match(reg);
+		    if (r != null) {
+		    	CKEditorFuncNum = unescape(r[2]);
+		    }
+			window.top.opener.CKEDITOR.tools.callFunction(CKEditorFuncNum, '/'+$("#file-list .layui-icon").parent().attr("data-path"));
+		   	window.top.close();	    	
+	    }
+	}
+});
+var picReg = /(.png|.jpg|.gif|.bmp)$/;
+var docReg = /(.doc|.docx)$/;
+var xlsReg = /(.xls|.xlsx)$/;
+var pptReg = /(.ppt|.pptx)$/;
+var pdfReg = /.pdf$/;
+var rarReg = /(.rar|.zip|.7z|.gz)$/;
+
+</script>
+<script id="fileList" type="text/html">
+<blockquote class="layui-anim layui-anim-up layui-elem-quote layui-text">
+{{ d.title }}
+</blockquote>
+  {{#  layui.each(d.list, function(index, item){ }}
+    <li class="layui-col-md3" data-path="{{item.path}}">
+      <span>{{ item.text }}</span>
+	 <img src="/{{# if(picReg.test(item.path)){}}{{ item.path }}
+{{#}else if(docReg.test(item.path)){}}manage/img/doc.png
+{{#}else if(xlsReg.test(item.path)){}}manage/img/xls.png
+{{#}else if(pptReg.test(item.path)){}}manage/img/ppt.png
+{{#}else if(pdfReg.test(item.path)){}}manage/img/pdf.png
+{{#}else if(rarReg.test(item.path)){}}manage/img/rar.png
+{{#}else{}}manage/img/file.png
+{{#}}}" />
+    </li>
+  {{#  }); }}
+  {{#  if(d.list.length === 0){ }}
+    此目录无数据文件
+  {{#  } }} 
+</script>
+</body>

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>功能管理</title>
+<link rel="shortcut icon" href="/favicon.ico">
+<link href="../css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+<link href="../css/font-awesome.css?v=4.4.0" rel="stylesheet">
+<link href="../css/plugins/jsTree/style.min.css" rel="stylesheet">
+<link href="../css/animate.css" rel="stylesheet">
+<link href="../css/style.css?v=4.1.0" rel="stylesheet">
+<link href="../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+<link rel="stylesheet" href="../js/plugins/layui/css/layui.css"  media="all">
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content  animated fadeInRight">
+<div class="row">
+<div class="col-sm-6">
+  <div class="ibox float-e-margins">
+    <div class="ibox-title">
+      <h5>功能管理</h5>
+      <div class="ibox-tools"> <a class="collapse-link"> <i class="fa fa-chevron-up"></i> </a> <a class="close-link"> <i class="fa fa-times"></i> </a> </div>
+    </div>
+    <div class="ibox-content">
+      <div id="using_json"> </div>
+    </div>
+  </div>
+</div>
+<div class="col-sm-6">
+<div class="ibox-title">
+      <h5 id="edit-title">新增顶级功能</h5>
+      <div class="ibox-tools"> <a class="collapse-link"> <i class="fa fa-chevron-up"></i> </a> <a class="close-link"> <i class="fa fa-times"></i> </a> </div>
+    </div>
+<div class="ibox-content">
+<fieldset class="layui-elem-field layui-field-title">
+<form class="layui-form layui-form-pane" action="">
+  <input id="functionId" name="functionId" type="hidden" value="0">
+  <div class="layui-form-item">
+    <label class="layui-form-label">功能名称</label>
+    <div class="layui-input-block">
+      <input type="text" id="functionName" name="functionName" autocomplete="off" placeholder="请输入功能名称" class="layui-input" lay-verify="required">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">功能序号</label>
+    <div class="layui-input-block">
+      <input type="text" id="functionOrder" name="functionOrder" lay-verify="required|number" placeholder="请输入功能序号" autocomplete="off" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">栏目ID</label>
+    <div class="layui-input-inline">
+      <input type="text" id="functionMenuId" name="functionMenuId" lay-verify="number" placeholder="请输入栏目ID" autocomplete="off" class="layui-input">
+    </div>
+    <div class="layui-form-mid layui-word-aux">栏目ID会根据栏目名称自动关联，如无法查找到同名栏目，请手动关联</div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">功能图标</label>
+    <div class="layui-input-block">
+      <input type="text" id="functionIco" name="functionIco" placeholder="请输入功能图标" autocomplete="off" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">父节点</label>
+    <div class="layui-input-block">
+      <input id="functionParentid" name="functionParentid" type="hidden" value="0">
+
+      <input type="text" id="functionParentname" name="functionParentname" lay-verify="required" placeholder="请输入父节点" autocomplete="off" class="layui-input" value="顶级功能">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">功能路径</label>
+    <div class="layui-input-block">
+      <input type="text" id="functionUrl" name="functionUrl" placeholder="请输入功能路径" autocomplete="off" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">语言</label>
+    <div class="layui-input-block">
+      <input type="radio" name="language" title="中文" value="CN" checked>
+      <input type="radio" name="language" title="日文" value="JP">
+      <input type="radio" name="language" title="英文" value="EN">
+      <input type="radio" name="language" title="俄文" value="RU">
+      <input type="radio" name="language" title="韩文" value="KR">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">接口功能</label>
+    <div class="layui-input-block">
+      <input type="radio" name="functionIsInterface" title="是" value="1">
+      <input type="radio" name="functionIsInterface" title="否" value="0" checked>
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <div class="layui-input-block">
+      <button class="layui-btn" lay-submit="" lay-filter="demo1">保存</button>
+      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+    </div>
+  </div>
+</form>
+</fieldset>
+</div>
+</div>
+</div>
+</div>
+<!-- 全局js --> 
+<script src="../js/plugins/layui/layui.js" charset="utf-8"></script> 
+<script src="../js/jquery.min.js?v=2.1.4"></script> 
+<script src="../js/bootstrap.min.js?v=3.3.6"></script> 
+
+<!-- 自定义js --> 
+<script src="../js/content.js?v=1.0.0"></script> 
+<script src="../js/W.js?v=3.3.6"></script> 
+
+<!-- jsTree plugin javascript --> 
+<script src="../js/plugins/jsTree/jstree.min.js"></script> 
+<script src="../js/plugins/bootstrap-table/bootstrap-table.min.js"></script> 
+<script src="../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script> 
+<script src="../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<style>
+        .jstree-open > .jstree-anchor > .fa-folder:before {
+            content: "\f07c";
+        }
+
+        .jstree-default .jstree-icon.none {
+            width: 0;
+        }
+    </style>
+<script>
+	var functionList;
+        $(document).ready(function () { 
+            var jstree = $('#using_json').jstree({
+                'core': {
+                    'data': null,
+					'multiple':false
+                },
+				"plugins" : ["contextmenu"],
+				"contextmenu":{
+					"items":{
+            		"New":{
+                		"label":"新建子功能" ,
+						"action":function(data){ 
+								var inst = jQuery.jstree.reference(data.reference),  
+								obj = inst.get_node(data.reference);  
+								AddChildNode(obj); 
+							}							
+						},
+            		"Edit":{
+                		"label":"编辑本功能",
+						"action":function(data){
+								var inst = jQuery.jstree.reference(data.reference),  
+								obj = inst.get_node(data.reference);  
+								editNode(obj); 
+							}
+						},
+            		"Delete":{
+                		"label":"删除本功能",
+						"separator_after":true ,
+						"action":function(data){
+								var inst = jQuery.jstree.reference(data.reference),  
+								obj = inst.get_node(data.reference); 
+								deleteNode(obj);
+							}
+						},
+            		"Refresh":{
+                		"label":"刷新",
+						"action":function(data){
+							loadFunctionData();
+							}
+						}
+					}
+				}
+            });
+			jstree.on('changed.jstree', function (e, data) {
+				var i, j, r = [];
+				for(i = 0, j = data.selected.length; i < j; i++) {
+					editNode(data.instance.get_node(data.selected[i])); 
+				}
+			  });
+			  // listen for event 
+			loadFunctionData();
+        });
+		function loadFunctionData(){
+			$(".loading").css("top",$(window).height() / 2 - 30);
+			displayLoading(true);
+			$.post("/manage/system/getAllForTree",{"functionId":0},
+			function(data){
+				if(data.status==1){//登陆成功
+					//加载用户信息
+					functionList = data.result;
+					loadTreeData();
+				}
+				else if(data.status==4){
+					window.location.href="/manage/nopermission.html";
+				}
+				else if(data.status==5){
+					alert(data.msg);
+					window.location.href="/manage/login.html";
+				}
+				else{
+					alert(data.msg);
+				}
+				hiddenLoading(true);
+			});
+		}
+		function loadTreeData(){
+			var treeNodes = "[";
+			for(var i = 0;i<functionList.length;i++){
+				if(i==0){
+					treeNodes+='{"id":"';
+				}
+				else{
+					treeNodes+=',{"id":"';
+				}
+				treeNodes+= functionList[i].functionId+'","parent":"';
+				treeNodes+= functionList[i].functionParentid+'","text":"',
+				treeNodes+=  functionList[i].functionName+'","functionUrl":"';
+				treeNodes+= functionList[i].functionUrl+'","functionUrl":';
+				treeNodes+= functionList[i].functionOrder+',"functionOrder":"'
+				treeNodes+= functionList[i].language+'"}';
+			}
+			treeNodes+="]";
+			treeNodes = treeNodes.replace(new RegExp('"null"',"gm"),"null");
+			treeNodes = treeNodes.replace(new RegExp('"0"',"gm"),'"#"');
+			var jsonNodes = JSON.parse(treeNodes);
+			$('#using_json').jstree(true).settings.core.data=jsonNodes;
+			$('#using_json').jstree(true).refresh();
+		}
+		function AddChildNode(node){
+			for(i=0;i<functionList.length;i++){
+				if(node.id==functionList[i].functionId){
+					$("#functionId").val(0);
+					$("#functionName").val("");
+					$("#functionParentid").val(functionList[i].functionId);
+					$("#functionParentname").val(functionList[i].functionName);
+					$("#functionIco").val("");
+					$("#functionMenuId").val(-1);
+					$('input:radio[name="language"][value="'+functionList[i].language+'"]').next().click();
+					$('input:radio[name="functionIsInterface"][value="0"]').next().click();					
+					$("#edit-title").html("正在新增【"+functionList[i].functionName+"】的子节点");
+				}
+			}
+		}
+		function editNode(node){
+			for(i=0;i<functionList.length;i++){
+					if(node.id==functionList[i].functionId){
+					$("#functionId").val(functionList[i].functionId);
+					$("#functionName").val(functionList[i].functionName);
+					$("#functionOrder").val(functionList[i].functionOrder);
+					$("#functionUrl").val(functionList[i].functionUrl);
+					$("#functionIco").val(functionList[i].functionIco);
+					$("#functionMenuId").val(functionList[i].functionMenuId);
+					//更新父节点
+					$("#functionParentid").val(functionList[i].functionParentid);
+					if(functionList[i].functionParentid!=0){
+						for(j=0;j<functionList.length;j++){
+							if(functionList[i].functionParentid==functionList[j].functionId){
+								$("#functionParentname").val(functionList[j].functionName);
+							}
+						}
+					}
+					else{
+						$("#functionParentname").val('顶级节点');	
+					}
+					$('input:radio[name="language"][value="'+functionList[i].language+'"]').next().click();
+					$('input:radio[name="functionIsInterface"][value="'+(functionList[i].functionIsInterface?1:0)+'"]').next().click();					
+
+					$("#edit-title").html("正在编辑【"+functionList[i].functionName+"】");
+				}
+			}
+		}
+		function deleteNode(node){
+			parent.layer.confirm('确认要删除"'+node.text+'"吗？', {icon: 3, title:'提示'}, function(index){
+				deleteNodeToServer(node.id);
+				parent.layer.close(index);
+
+			}); 
+		}
+		layui.use(['form'], function(){
+		  var form = layui.form;
+		 
+		  //自定义验证规则
+		  form.verify({
+			title: function(value){
+			  if(value.length < 2){
+				return '标题至少得2个字符啊';
+			  }
+			}
+		  });
+  
+		  //监听提交
+		  form.on('submit(demo1)', function(data){
+			  //JSON.stringify(data.field)
+			updateNodeToServer();
+			return false;
+		  });  
+		});
+		function deleteNodeToServer(parentId){		
+			displayLoading(true);
+			$.post("/manage/system/deleteFunction",{"functionId":parentId},
+			function(data){
+				if(data.status==1){//登陆成功
+					loadFunctionData();
+				}
+				else if(data.status==4){
+					window.location.href="/manage/nopermission.html";
+				}
+				else if(data.status==5){
+					parent.layer.msg(data.msg, {icon: 1});
+					window.location.href="/manage/login.html";
+				}
+				else{
+					parent.layer.msg(data.msg, {icon: 1});
+				}
+				hiddenLoading(true);
+			});
+		}
+		function updateNodeToServer(){		
+			displayLoading(true);
+			$.post("/manage/system/updateFunction",$('.layui-form').serialize(),
+			function(data){
+				if(data.status==1){//登陆成功
+					loadFunctionData();
+				}
+				else if(data.status==4){
+					window.location.href="/manage/nopermission.html";
+				}
+				else if(data.status==5){
+					parent.layer.msg(data.msg, {icon: 1});
+					window.location.href="/manage/login.html";
+				}
+				else{
+					parent.layer.msg(data.msg, {icon: 1});
+				}
+				hiddenLoading(true);
+			});			
+		}
+		//自动关联同名菜单ID
+		$("#functionName").blur(function(){
+			if($.trim($(this).val())==""){
+				return;
+			}
+			else{				
+				$.post('/manage/system/getMenuByName',{menuName:$.trim($(this).val())},function(data){
+				if(data.status==1){//登陆成功
+					if(data.result){
+						$('#functionMenuId').val(data.result.menuId);
+					}
+					else{
+						//$('#functionMenuId').val("-1");
+					}
+				}
+				else if(data.status==4){
+					window.location.href="/manage/nopermission.html";
+				}
+				else if(data.status==5){
+					parent.layer.msg(data.msg, {icon: 1});
+					window.location.href="/manage/login.html";
+				}
+				else{
+					parent.layer.msg(data.msg, {icon: 1});
+				}
+			});
+			}
+		});
+    </script>
+</body>
+</html>

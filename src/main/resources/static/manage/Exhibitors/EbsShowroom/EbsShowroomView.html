@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>参展商管理-展厅管理详情</title>
+		<meta content="webkit" name="renderer">
+		<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+		<meta content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" name="viewport"/>
+		<link rel="stylesheet" href="/manage/css/xadmin.css">
+		<link href="/manage/css/style.css?v=4.1.0" rel="stylesheet">
+		<link href="/manage/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="/manage/layui/css/layui.css"  media="all">
+	</head>
+	<body class="gray-bg">
+		<div class="modal inmodal" id="friendlink-model">
+			<div class="modal-content animated bounceInUp" id="vmViewEbsShowroom">
+				<div class="ibox-content">
+					<fieldset class="layui-elem-field layui-field-title" style="border-top:0px">
+						<form class="layui-form layui-form-pane" lay-filter='test1' action="">							
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="code"> 展厅代码 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" class="layui-input" id="code" name="code" readonly type="text" v-model="ebsShowroom.code">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="name"> 展厅名称 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" class="layui-input" id="name" name="name" readonly type="text" v-model="ebsShowroom.name">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="type"> 展厅类型 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" class="layui-input" id="type" name="type" readonly type="text" v-model="ebsShowroom.typename">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="useable"> 是否可用 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block radioborder">
+										<input type='radio' name='useable' value='1' title='可用'>
+										<input type='radio' name='useable' value='0' checked title='不可用'>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="orders"> 显示顺序 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" class="layui-input" id="orders" name="orders" readonly type="text" v-model="ebsShowroom.orders">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="remark"> 备注 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">										
+										<textarea class="layui-textarea" id="remark" name="remark" rows="4" v-model="ebsShowroom.remark"></textarea>
+									</div>
+								</div>
+							</div>							
+							<div class="layui-form-item">
+								<div class="layui-input-block">
+									<button class="layui-btn layui-btn-primary" onclick="xadmin.close();" style="width: 100px;">
+										返回
+									</button>
+									<input type="hidden" id="txtuseable">
+								</div>
+							</div>
+						</form>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+		<script charset="utf-8" src="/manage/js/jquery.min.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/layui/layui.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/xadmin.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/vue.js" type="text/javascript"></script>
+		<script src="/manage/js/bootstrap.min.js?v=3.3.6"></script>
+		<script src="/manage/js/content.js?v=1.0.0"></script>
+		<script charset="UTF-8" type="text/javascript">
+			var viewEbsShowroomId = sessionStorage.getItem("viewEbsShowroomId");
+			loadHeight();
+			vm = new Vue({
+				el : "#vmViewEbsShowroom",
+				data : {
+					ebsShowroom : {}
+				},
+				methods : {},
+				created : function() {
+					var _this = this;
+					$.ajax({
+						url : "/manage/Exhibitors/ebsShowroom/findById",
+						data : {
+							"id" : viewEbsShowroomId
+						},
+						dataType : "json",
+						type : "get",async:false, 
+						success : function(result) {
+							if (result.code === 200) {
+								_this.ebsShowroom = result.data;
+								$("#txtuseable").val(result.data.useable);
+								$("#divuseable").html(getUseAble(result.data.useable));
+							} else {
+								layer.alert("获取修改参展商管理-展厅管理信息失败！");
+							}
+						}
+					});
+
+				}
+			});
+
+			layui.use(['form', 'layer', 'laydate'], function() {
+				var radio = document.getElementsByName("useable");
+				var radioLength = radio.length;
+				for (var i = 0; i < radioLength; i++) {
+					if ($("#txtuseable").val() == radio[i].value) {
+						$(radio[i]).next().click();
+					}
+				}
+			});
+		</script>
+	</body>
+</html>

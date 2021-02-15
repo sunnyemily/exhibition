@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.Exhibitors.dao.EbsTradinggroupboothallocationMapper">
+
+	<select id="getBoothAllocationInfoList" resultType="map">
+		SELECT
+			a.id,
+			a.tradinggroupid,
+			b.name tradingGroupName,
+			a.boothid boothId,
+			c.name boothName,
+			c.company_id companyId,
+			e.chinesename companyName,
+			a.showroomid showroomId,
+			d.name showRoomName
+		FROM
+			ebs_tradinggroupboothallocation a
+		LEFT JOIN ebs_tradinggroup b ON a.tradinggroupid = b.id
+		LEFT JOIN ebs_booth c ON a.boothid = c.id
+		LEFT JOIN ebs_showroom d ON a.showroomid = d.id
+		LEFT JOIN ebs_companyinfo e ON c.company_id = e.id
+		where a.session = #{session} and c.session = #{session} and d.session = #{session}
+		and a.tradinggroupid = #{tradingGroupId}
+		<if test="showRoomId != null and showRoomId !=''">
+			and a.showRoomId = #{showRoomId}
+		</if>
+		order by c.name limit #{index}, #{size}
+	</select>
+	
+	<select id="getBoothAllocationInfoListCount" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			ebs_tradinggroupboothallocation a
+		LEFT JOIN ebs_tradinggroup b ON a.tradinggroupid = b.id
+		LEFT JOIN ebs_booth c ON a.boothid = c.id
+		LEFT JOIN ebs_showroom d ON a.showroomid = d.id
+		LEFT JOIN ebs_companyinfo e ON c.company_id = e.id
+		where a.session = #{session} and c.session = #{session} and d.session = #{session}
+		and a.tradinggroupid = #{tradingGroupId}
+		<if test="showRoomId != null and showRoomId !=''">
+			and a.showRoomId = #{showRoomId}
+		</if>
+	</select>
+	
+	<select id="getRemainingBoothInfoList" resultType="map">
+		SELECT
+			a.id boothId,
+			a.name boothName,
+			a.show_room_id showRoomId,
+			b.name showRoomName
+		FROM
+			ebs_booth a
+		LEFT JOIN ebs_showroom b ON a.show_room_id = b.id
+		where a.tradinggroupid = 0 AND a.session = #{session} AND b.session = #{session} AND a.useable = 1
+		<if test="showRoomId != null and showRoomId != ''">
+			AND a.show_room_id = #{showRoomId}
+		</if>
+		order by a.id desc limit #{index}, #{size}
+	</select>
+	
+	<select id="getRemainingBoothInfoListCount" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			ebs_booth a
+		LEFT JOIN ebs_showroom b ON a.show_room_id = b.id
+		where a.tradinggroupid = 0 AND a.session = #{session} AND b.session = #{session} AND a.useable = 1
+		<if test="showRoomId != null and showRoomId != ''">
+			AND a.show_room_id = #{showRoomId}
+		</if>
+	</select>
+
+	<update id="submitAllocation">
+		insert into ebs_tradinggroupboothallocation (session,tradinggroupid,showroomid,boothid)
+		values (#{session},#{tradingGroupId},#{showRoomId},#{boothId})
+	</update>
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsTradinggroupboothallocation">
+        select
+			a.id as id,
+			a.session as session,
+			a.tradinggroupid as tradinggroupid,
+			a.showroomid as showroomid,
+			a.boothid as boothid
+        from ebs_tradinggroupboothallocation as a
+        where a.id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsTradinggroupboothallocation">
+        select
+			a.id as id,
+			a.session as session,
+			a.tradinggroupid as tradinggroupid,
+			a.showroomid as showroomid,
+			a.boothid as boothid
+        from ebs_tradinggroupboothallocation as a
+        <where>
+			<if test="id != null and id != ''">
+				and a.id = #{id}
+			</if>
+			<if test="session != null and session != ''">
+				and a.session = #{session}
+			</if>
+			<if test="tradinggroupid != null and tradinggroupid != ''">
+				and a.tradinggroupid = #{tradinggroupid}
+			</if>
+			<if test="showroomid != null and showroomid != ''">
+				and a.showroomid = #{showroomid}
+			</if>
+			<if test="boothid != null and boothid != ''">
+				and a.boothid = #{boothid}
+			</if>
+        </where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsTradinggroupboothallocation">
+        select
+			a.id as id,
+			a.session as session,
+			a.tradinggroupid as tradinggroupid,
+			a.showroomid as showroomid,
+			a.boothid as boothid
+        from ebs_tradinggroupboothallocation as a
+        <where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="tradinggroupid != null and tradinggroupid != ''">
+                and a.tradinggroupid = #{tradinggroupid}
+            </if>
+            <if test="showroomid != null and showroomid != ''">
+                and a.showroomid = #{showroomid}
+            </if>
+            <if test="boothid != null and boothid != ''">
+                and a.boothid = #{boothid}
+            </if>
+        </where>
+        order by a.id desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(*) FROM ebs_tradinggroupboothallocation a
+		<where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="tradinggroupid != null and tradinggroupid != ''">
+                and a.tradinggroupid = #{tradinggroupid}
+            </if>
+            <if test="showroomid != null and showroomid != ''">
+                and a.showroomid = #{showroomid}
+            </if>
+            <if test="boothid != null and boothid != ''">
+                and a.boothid = #{boothid}
+            </if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.Exhibitors.model.EbsTradinggroupboothallocation" useGeneratedKeys="true" keyProperty="id">
+        insert into ebs_tradinggroupboothallocation(
+        	<trim suffixOverrides=",">
+                <if test="session != null">`session`,</if>
+                <if test="tradinggroupid != null">`tradinggroupid`,</if>
+                <if test="showroomid != null">`showroomid`,</if>
+                <if test="boothid != null">`boothid`</if>
+			</trim>
+		) values (
+        	<trim suffixOverrides=",">
+                <if test="session != null">#{session},</if>
+                <if test="tradinggroupid != null">#{tradinggroupid},</if>
+                <if test="showroomid != null">#{showroomid},</if>
+                <if test="boothid != null">#{boothid}</if>
+			</trim>
+		)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.Exhibitors.model.EbsTradinggroupboothallocation">
+        update ebs_tradinggroupboothallocation
+        <set>
+			<if test="session != null">`session` = #{session},</if>
+			<if test="tradinggroupid != null">`tradinggroupid` = #{tradinggroupid},</if>
+			<if test="showroomid != null">`showroomid` = #{showroomid},</if>
+			<if test="boothid != null">`boothid` = #{boothid}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from ebs_tradinggroupboothallocation where id = #{id}
+    </delete>
+    
+    <select id="selectAreaAndShowroomType" parameterType="INTEGER" resultType="java.util.Map">
+		SELECT
+			ebs_tradinggroupboothallocation.tradinggroupid,ebs_tradinggroup.`name` AS tradinggroupname,ebs_showroomtype.*
+		FROM
+			ebs_tradinggroupboothallocation
+		LEFT JOIN ebs_showroom
+		ON ebs_tradinggroupboothallocation.showroomid = ebs_showroom.id
+		LEFT JOIN ebs_showroomtype ON ebs_showroomtype.id=ebs_showroom.type
+		LEFT JOIN ebs_tradinggroup ON ebs_tradinggroupboothallocation.tradinggroupid = ebs_tradinggroup.id
+		WHERE
+			tradinggroupid IN (
+				SELECT
+					id
+				FROM
+					ebs_tradinggroup
+				WHERE
+					type = 1
+				AND `session` = #{sessionid}
+			)
+		AND ebs_showroomtype.`status`=1
+		AND ebs_showroom.useable=1
+		GROUP BY tradinggroupid,ebs_showroomtype.id
+		ORDER BY ebs_tradinggroup.orders,tradinggroupid ASC
+    </select>
+    
+    <select id="selectAreaAndShowroomTypeAndBooth" parameterType="INTEGER" resultType="java.util.Map">
+		SELECT
+			ebs_tradinggroupboothallocation.tradinggroupid,
+			ebs_tradinggroup.`name` AS tradinggroupname,
+			ebs_showroomtype.*,
+			ebs_booth.id AS boothId,ebs_booth.`name` AS boothName
+		FROM
+			ebs_tradinggroupboothallocation
+		LEFT JOIN ebs_booth ON ebs_booth.id=ebs_tradinggroupboothallocation.boothid
+		LEFT JOIN ebs_showroom ON ebs_tradinggroupboothallocation.showroomid = ebs_showroom.id
+		LEFT JOIN ebs_showroomtype ON ebs_showroomtype.id = ebs_showroom.type
+		LEFT JOIN ebs_tradinggroup ON ebs_tradinggroupboothallocation.tradinggroupid = ebs_tradinggroup.id
+		WHERE
+			ebs_tradinggroupboothallocation.tradinggroupid IN (
+		SELECT pim_agent.tradinggroupid from web_member
+		
+		LEFT JOIN web_member_session ON web_member.member_id=web_member_session.member_id
+		LEFT JOIN pim_agent ON pim_agent.id=web_member_session.orgnization_id
+		
+		 WHERE web_member.member_id=#{memberId} AND web_member_session.id=#{sessionid}
+			)
+		AND ebs_tradinggroupboothallocation.session=#{sessionid}
+		AND ebs_showroomtype.`status` = 1
+		AND ebs_showroomtype.`session` = #{sessionid}
+		AND ebs_showroom.useable = 1
+		AND ebs_booth.useable=1
+		AND ebs_booth.session=#{sessionid}
+		AND (ebs_booth.company_id=0<if test="companyId != 0"> Or ebs_booth.company_id=#{companyId}</if>)
+		ORDER BY
+			ebs_tradinggroup.orders,ebs_tradinggroupboothallocation.tradinggroupid ASC,ebs_showroomtype.id ASC,ebs_booth.id ASC
+    </select>
+    
+    <select id="getShowRoomList1" resultType="map">
+    	select distinct b.id,b.name from ebs_tradinggroupboothallocation a
+    	left join ebs_showroom b on a.showroomid = b.id
+    	where a.session = #{session} and b.session = #{session} and a.tradinggroupid = #{tradingGroupId}
+    	
+    </select>
+    
+    <select id="getShowRoomList2" resultType="map">
+    	select distinct b.id,b.name from ebs_booth a
+    	left join ebs_showroom b on a.show_room_id = b.id
+    	where a.session = #{session} and b.session = #{session} and a.tradinggroupid = 0
+    </select>
+</mapper>

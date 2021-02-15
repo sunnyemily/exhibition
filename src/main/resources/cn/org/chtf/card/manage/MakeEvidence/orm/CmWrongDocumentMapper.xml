@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.MakeEvidence.dao.CmWrongDocumentMapper">
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.MakeEvidence.model.CmWrongDocument">
+        select
+			a.id as id,
+			a.session as session,
+			a.cardtype as cardtype,
+			a.quantity as quantity,
+			a.controltime as controltime
+        from cm_wrong_document as a
+        where a.id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.MakeEvidence.model.CmWrongDocument">
+        select
+			a.id as id,
+			a.session as session,
+			a.cardtype as cardtype,
+			a.quantity as quantity,
+			a.controltime as controltime
+        from cm_wrong_document as a
+        <where>
+			<if test="id != null and id != ''">
+				and a.id = #{id}
+			</if>
+			<if test="session != null and session != ''">
+				and a.session = #{session}
+			</if>
+			<if test="cardtype != null and cardtype != ''">
+				and a.cardtype = #{cardtype}
+			</if>
+			<if test="quantity != null and quantity != ''">
+				and a.quantity = #{quantity}
+			</if>
+			<if test="controltime != null and controltime != ''">
+				and a.controltime = #{controltime}
+			</if>
+        </where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.MakeEvidence.model.CmWrongDocument">
+        select
+			a.id as id,
+			a.session as session,b.sessionid as sessionname,
+			a.cardtype as cardtype,c.chinesename as cardtypename,
+			a.quantity as quantity,
+			a.controltime as controltime
+        from cm_wrong_document as a
+        inner join sys_session as b on a.session=b.id
+        inner join cm_certificate_type as c on c.id=a.cardtype
+        <where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="cardtype != null and cardtype != ''">
+                and a.cardtype = #{cardtype}
+            </if>
+            <if test="quantity != null and quantity != ''">
+                and a.quantity = #{quantity}
+            </if>
+            <if test="controltime != null and controltime != ''">
+                and a.controltime = #{controltime}
+            </if>
+        </where>
+        order by a.id desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(*) FROM cm_wrong_document a
+		inner join sys_session as b on a.session=b.id
+        inner join cm_certificate_type as c on c.id=a.cardtype
+		<where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="cardtype != null and cardtype != ''">
+                and a.cardtype = #{cardtype}
+            </if>
+            <if test="quantity != null and quantity != ''">
+                and a.quantity = #{quantity}
+            </if>
+            <if test="controltime != null and controltime != ''">
+                and a.controltime = #{controltime}
+            </if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.MakeEvidence.model.CmWrongDocument" useGeneratedKeys="true" keyProperty="id">
+        insert into cm_wrong_document(
+        	<trim suffixOverrides=",">
+                <if test="session != null">`session`,</if>
+                <if test="cardtype != null">`cardtype`,</if>
+                <if test="quantity != null">`quantity`,</if>
+                <if test="controltime != null">`controltime`</if>
+			</trim>
+		) values (
+        	<trim suffixOverrides=",">
+                <if test="session != null">#{session},</if>
+                <if test="cardtype != null">#{cardtype},</if>
+                <if test="quantity != null">#{quantity},</if>
+                <if test="controltime != null">#{controltime}</if>
+			</trim>
+		)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.MakeEvidence.model.CmWrongDocument">
+        update cm_wrong_document
+        <set>
+			<if test="session != null">`session` = #{session},</if>
+			<if test="cardtype != null">`cardtype` = #{cardtype},</if>
+			<if test="quantity != null">`quantity` = #{quantity},</if>
+			<if test="controltime != null">`controltime` = #{controltime}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from cm_wrong_document where id = #{id}
+    </delete>
+    
+    
+    
+</mapper>

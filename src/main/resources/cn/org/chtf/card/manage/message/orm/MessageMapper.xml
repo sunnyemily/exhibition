@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.org.chtf.card.manage.message.dao.MessageMapper">
+  <resultMap id="BaseResultMap" type="cn.org.chtf.card.manage.message.pojo.Message">
+    <id column="message_id" jdbcType="INTEGER" property="messageId" />
+    <result column="menu_id" jdbcType="INTEGER" property="menuId" />
+    <result column="message_company_name" jdbcType="VARCHAR" property="messageCompanyName" />
+    <result column="message_address" jdbcType="VARCHAR" property="messageAddress" />
+    <result column="message_contactor" jdbcType="VARCHAR" property="messageContactor" />
+    <result column="message_position" jdbcType="VARCHAR" property="messagePosition" />
+    <result column="message_tel" jdbcType="VARCHAR" property="messageTel" />
+    <result column="message_email" jdbcType="VARCHAR" property="messageEmail" />
+    <result column="message_addtime" jdbcType="TIMESTAMP" property="messageAddtime" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="cn.org.chtf.card.manage.message.pojo.Message">
+    <result column="message_content" jdbcType="LONGVARCHAR" property="messageContent" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    message_id, menu_id, message_company_name, message_address, message_contactor, message_position, 
+    message_tel, message_email, message_addtime
+  </sql>
+  <sql id="Blob_Column_List">
+    message_content
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from web_message
+    where message_id = #{messageId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from web_message
+    where message_id = #{messageId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.org.chtf.card.manage.message.pojo.Message">
+    insert into web_message (message_id, menu_id, message_company_name, 
+      message_address, message_contactor, message_position, 
+      message_tel, message_email, message_addtime, 
+      message_content)
+    values (#{messageId,jdbcType=INTEGER}, #{menuId,jdbcType=INTEGER}, #{messageCompanyName,jdbcType=VARCHAR}, 
+      #{messageAddress,jdbcType=VARCHAR}, #{messageContactor,jdbcType=VARCHAR}, #{messagePosition,jdbcType=VARCHAR}, 
+      #{messageTel,jdbcType=VARCHAR}, #{messageEmail,jdbcType=VARCHAR}, #{messageAddtime,jdbcType=TIMESTAMP}, 
+      #{messageContent,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.org.chtf.card.manage.message.pojo.Message">
+    insert into web_message
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="messageId != null">
+        message_id,
+      </if>
+      <if test="menuId != null">
+        menu_id,
+      </if>
+      <if test="messageCompanyName != null">
+        message_company_name,
+      </if>
+      <if test="messageAddress != null">
+        message_address,
+      </if>
+      <if test="messageContactor != null">
+        message_contactor,
+      </if>
+      <if test="messagePosition != null">
+        message_position,
+      </if>
+      <if test="messageTel != null">
+        message_tel,
+      </if>
+      <if test="messageEmail != null">
+        message_email,
+      </if>
+      <if test="messageAddtime != null">
+        message_addtime,
+      </if>
+      <if test="messageContent != null">
+        message_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="messageId != null">
+        #{messageId,jdbcType=INTEGER},
+      </if>
+      <if test="menuId != null">
+        #{menuId,jdbcType=INTEGER},
+      </if>
+      <if test="messageCompanyName != null">
+        #{messageCompanyName,jdbcType=VARCHAR},
+      </if>
+      <if test="messageAddress != null">
+        #{messageAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="messageContactor != null">
+        #{messageContactor,jdbcType=VARCHAR},
+      </if>
+      <if test="messagePosition != null">
+        #{messagePosition,jdbcType=VARCHAR},
+      </if>
+      <if test="messageTel != null">
+        #{messageTel,jdbcType=VARCHAR},
+      </if>
+      <if test="messageEmail != null">
+        #{messageEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="messageAddtime != null">
+        #{messageAddtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="messageContent != null">
+        #{messageContent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.org.chtf.card.manage.message.pojo.Message">
+    update web_message
+    <set>
+      <if test="menuId != null">
+        menu_id = #{menuId,jdbcType=INTEGER},
+      </if>
+      <if test="messageCompanyName != null">
+        message_company_name = #{messageCompanyName,jdbcType=VARCHAR},
+      </if>
+      <if test="messageAddress != null">
+        message_address = #{messageAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="messageContactor != null">
+        message_contactor = #{messageContactor,jdbcType=VARCHAR},
+      </if>
+      <if test="messagePosition != null">
+        message_position = #{messagePosition,jdbcType=VARCHAR},
+      </if>
+      <if test="messageTel != null">
+        message_tel = #{messageTel,jdbcType=VARCHAR},
+      </if>
+      <if test="messageEmail != null">
+        message_email = #{messageEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="messageAddtime != null">
+        message_addtime = #{messageAddtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="messageContent != null">
+        message_content = #{messageContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where message_id = #{messageId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.org.chtf.card.manage.message.pojo.Message">
+    update web_message
+    set menu_id = #{menuId,jdbcType=INTEGER},
+      message_company_name = #{messageCompanyName,jdbcType=VARCHAR},
+      message_address = #{messageAddress,jdbcType=VARCHAR},
+      message_contactor = #{messageContactor,jdbcType=VARCHAR},
+      message_position = #{messagePosition,jdbcType=VARCHAR},
+      message_tel = #{messageTel,jdbcType=VARCHAR},
+      message_email = #{messageEmail,jdbcType=VARCHAR},
+      message_addtime = #{messageAddtime,jdbcType=TIMESTAMP},
+      message_content = #{messageContent,jdbcType=LONGVARCHAR}
+    where message_id = #{messageId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.org.chtf.card.manage.message.pojo.Message">
+    update web_message
+    set menu_id = #{menuId,jdbcType=INTEGER},
+      message_company_name = #{messageCompanyName,jdbcType=VARCHAR},
+      message_address = #{messageAddress,jdbcType=VARCHAR},
+      message_contactor = #{messageContactor,jdbcType=VARCHAR},
+      message_position = #{messagePosition,jdbcType=VARCHAR},
+      message_tel = #{messageTel,jdbcType=VARCHAR},
+      message_email = #{messageEmail,jdbcType=VARCHAR},
+      message_addtime = #{messageAddtime,jdbcType=TIMESTAMP}
+    where message_id = #{messageId,jdbcType=INTEGER}
+  </update>
+  <select id="getMessages"  parameterType="cn.org.chtf.card.support.util.PageModel"  resultMap="BaseResultMap">
+  	SELECT
+    <include refid="Base_Column_List" />
+	FROM
+		web_message
+	WHERE
+      <if test="menuId != null and menuId!=0">
+        menu_id = #{menuId,jdbcType=INTEGER} AND 
+      </if> message_company_name LIKE '%${keywords}%'
+	ORDER BY ${field} ${order} ,message_addtime DESC
+	LIMIT #{start,jdbcType=INTEGER},
+	 #{limit,jdbcType=INTEGER};
+  </select>
+  <select id="getTotal"  parameterType="cn.org.chtf.card.support.util.PageModel"  resultType="java.lang.Integer">
+    select count(*) from web_message
+	WHERE
+      <if test="menuId != null and menuId!=0">
+        menu_id = #{menuId,jdbcType=INTEGER} AND 
+      </if> message_company_name LIKE '%${keywords}%'
+  </select> 
+  <delete id="deleteMessages"  parameterType="java.util.List">
+    delete from web_message
+    where message_id in  
+        <foreach collection="messageIdList" item="messageId" index="index"
+            open="(" close=")" separator=",">
+            #{messageId,jdbcType=VARCHAR}
+        </foreach>;
+  </delete> 
+</mapper>

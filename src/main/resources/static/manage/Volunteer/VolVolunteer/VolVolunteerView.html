@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>志愿者信息详情</title>
+    <meta content="webkit" name="renderer">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" name="viewport"/>
+    <link rel="stylesheet" href="/manage/css/xadmin.css">
+	<link href="/manage/css/style.css?v=4.1.0" rel="stylesheet">
+	<link href="/manage/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="/manage/layui/css/layui.css"  media="all">
+</head>
+<body class="gray-bg">
+    <div class="modal inmodal" id="friendlink-model">
+		<div class="modal-content animated bounceInUp" id="vmViewVolVolunteer">
+			<div class="ibox-content">
+				<fieldset class="layui-elem-field layui-field-title" style="border-top:0px">
+					<form class="layui-form layui-form-pane" action="">
+	                    <div class="layui-form-item">
+	                        <label class="layui-form-label" for="officeid">所属处室</label>
+	                        <div class="layui-input-block">
+	                            <div class="layui-input-inline layui-show-xs-block">
+	                                <input autocomplete="off" class="layui-input" id="officeid" name="officeid" readonly type="text" v-model="volVolunteer.officename">
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="layui-form-item">
+	                        <label class="layui-form-label" for="departmentid">所属部门</label>
+	                        <div class="layui-input-block">
+	                            <div class="layui-input-inline layui-show-xs-block">
+	                                <input autocomplete="off" class="layui-input" id="departmentid" name="departmentid" readonly type="text" v-model="volVolunteer.departmentname">
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="layui-form-item">
+	                        <label class="layui-form-label" for="languageid">语种</label>
+	                        <div class="layui-input-block">
+	                            <div class="layui-input-inline layui-show-xs-block">
+	                                <input autocomplete="off" class="layui-input" id="languageid" name="languageid" readonly type="text" v-model="volVolunteer.languagename">
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="layui-form-item">
+	                        <label class="layui-form-label" for="postdate">上岗日期</label>
+	                        <div class="layui-input-block">
+	                            <div class="layui-input-inline layui-show-xs-block">
+	                                <input autocomplete="off" class="layui-input" id="postdate" name="postdate" readonly type="text" v-model="volVolunteer.postdate">
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="layui-form-item">
+	                        <label class="layui-form-label" for="name">姓名</label>
+	                        <div class="layui-input-block">
+	                            <div class="layui-input-inline layui-show-xs-block">
+	                                <input autocomplete="off" class="layui-input" id="name" name="name" readonly type="text" v-model="volVolunteer.name">
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="layui-form-item">
+	                        <label class="layui-form-label" for="contactinfo">联系方式</label>
+	                        <div class="layui-input-block">
+	                            <div class="layui-input-inline layui-show-xs-block">
+	                                <input autocomplete="off" class="layui-input" id="contactinfo" name="contactinfo" readonly type="text" v-model="volVolunteer.contactinfo">
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="layui-form-item">
+	                        <label class="layui-form-label" for="college">学院</label>
+	                        <div class="layui-input-block">
+	                            <div class="layui-input-inline layui-show-xs-block">
+	                                <input autocomplete="off" class="layui-input" id="college" name="college" readonly type="text" v-model="volVolunteer.college">
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="layui-form-item">
+	                        <label class="layui-form-label" for="studentnumber">学号</label>
+	                        <div class="layui-input-block">
+	                            <div class="layui-input-inline layui-show-xs-block">
+	                                <input autocomplete="off" class="layui-input" id="studentnumber" name="studentnumber" readonly type="text" v-model="volVolunteer.studentnumber">
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="layui-form-item">
+	                        <label class="layui-form-label" for="sex">性别</label>
+	                        <div class="layui-input-block">
+	                            <div class="layui-input-inline layui-show-xs-block">
+	                                <input autocomplete="off" class="layui-input" id="sex" name="sex" readonly type="text" v-model="volVolunteer.sexname">
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="layui-form-item">
+	                        <label class="layui-form-label" for="height">身高</label>
+	                        <div class="layui-input-block">
+	                            <div class="layui-input-inline layui-show-xs-block">
+	                                <input autocomplete="off" class="layui-input" id="height" name="height" readonly type="text" v-model="volVolunteer.height">
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="layui-form-item">
+	                        <label class="layui-form-label" for="bodyweight">体重</label>
+	                        <div class="layui-input-block">
+	                            <div class="layui-input-inline layui-show-xs-block">
+	                                <input autocomplete="off" class="layui-input" id="bodyweight" name="bodyweight" readonly type="text" v-model="volVolunteer.bodyweight">
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="layui-form-item">
+	                        <label class="layui-form-label" for="waist">腰围</label>
+	                        <div class="layui-input-block">
+	                            <div class="layui-input-inline layui-show-xs-block">
+	                                <input autocomplete="off" class="layui-input" id="waist" name="waist" readonly type="text" v-model="volVolunteer.waist">
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="layui-form-item">
+	                        <label class="layui-form-label" for="teamleader">组长</label>
+	                        <div class="layui-input-block">
+	                            <div class="layui-input-inline layui-show-xs-block">
+	                                <input autocomplete="off" class="layui-input" id="teamleader" name="teamleader" readonly type="text" v-model="volVolunteer.teamleader">
+	                            </div>
+	                        </div>
+	                    </div>
+			            <div class="layui-form-item">  
+			            	<div class="layui-input-block">	              
+                				<button class="layui-btn layui-btn-primary" onclick="xadmin.close();" style="width: 100px;">返回</button>
+			                </div>
+			            </div>
+			        </form>
+			 	</fieldset>
+			</div>
+		</div>
+	</div>
+	<script charset="utf-8" src="/manage/js/jquery.min.js" type="text/javascript"></script>
+	<script charset="utf-8" src="/manage/layui/layui.js" type="text/javascript"></script>
+	<script charset="utf-8" src="/manage/js/xadmin.js" type="text/javascript"></script>
+	<script charset="utf-8" src="/manage/js/vue.js" type="text/javascript"></script>
+	<script src="/manage/js/bootstrap.min.js?v=3.3.6"></script>
+	<script charset="UTF-8" type="text/javascript">
+    	var viewVolVolunteerId = sessionStorage.getItem("viewVolVolunteerId");
+    	vm = new Vue({
+		    el: "#vmViewVolVolunteer",
+		    data: {
+		    	volVolunteer: {}
+		    },
+		    methods: {},
+		    created: function () {
+		        var _this = this;
+		        $.ajax({
+		            url: "/manage/Volunteer/volVolunteer/findById",
+		            data: {
+		                "id": viewVolVolunteerId
+		            },
+		            dataType: "json",
+		            type: "get",async:false, 
+		            success: function (result) {
+		                if (result.code === 1) {
+		                    _this.volVolunteer = result.data;
+		                } else {
+		                    layer.alert("获取修改志愿者信息信息失败！");
+		                }
+		            }
+		        });
+			}
+		});
+	</script>
+</body>
+</html>

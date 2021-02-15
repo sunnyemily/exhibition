@@ -1,0 +1,68 @@
+    <div class="modal inmodal" id="edit-model" style="display:none">
+		<div class="modal-content animated bounceInUp">
+			<div class="ibox-content">
+				<fieldset class="layui-elem-field layui-field-title" style="border-top:0px">
+					<form class="layui-form layui-form-pane" action="" id="editform">
+					    <input type="hidden" name="id" value="0"  />
+					    <input type="hidden" name="session" value="${exhibitionSessionId}"  />
+					    <input type="hidden" name="cardnature" value="0"  />
+					    <input type="hidden" name="isback" value="1"  />
+						<table width="100%"  class="layui-table form-content">
+						<#if isOut??><input type="hidden" name="isout" value="${isOut}" /></#if>
+							<tr class="papers-edit-bg"><td colspan="3" style="border-right: none;">さす${certificateModal.chinesename}</td><td align="right"><a class="layui-icon layui-icon-close close"></a></td></tr>
+							<tr>
+								<td>*運転手の氏名</td>
+								<td colspan="3"><input class="layui-input" autocomplete="off" id="drivername" name="drivername" type="text"  lay-verify="required"></td>
+							</tr>
+							<tr>
+								<td>*会社名</td>
+								<td colspan="3"><input class="layui-input" autocomplete="off" id="companyname" name="companyname" type="text"  lay-verify="required"></td>
+								
+							</tr>
+							<tr>
+								<td>証明書タイプ</td>
+								<td colspan="3">
+								${certificateModal.chinesename}
+								<input type="hidden" name="cardtype" id="cardtype" value="${certificateModal.id}"  />
+								</td>
+							</tr>
+							<tr>
+								<td>*ナンバープレート</td>
+								<td colspan="3"><input class="layui-input" autocomplete="off" id="platenumber" name="platenumber" type="text"  lay-verify="required"></td>
+								
+							</tr>
+							<tr>
+								<td><#if needCarPicture>*</#if>車輌通行証</td>
+								<input type="hidden" name="drivinglicense" id="drivinglicense" value=""  <#if needCarPicture>lay-verify="required" lay-reqText="車両登録証をアップロードしなければならない"</#if> />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="pic" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>画像をアップロードする
+									</button>
+									<button type="button" class="layui-btn" id="btndrivinglicenseCropper">
+									  <i class="layui-icon">&#xe67c;</i>トリミングサポート
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />車輌通行証：フォーマットはJPG、アップロードファイルは最大2メガ。標準証明書のサイズは390×265（幅×高さ）です。
+									</div>
+								</td>
+								<td colspan="2" class="prepic"><image src="" width="390" height="265" id="predrivinglicense" /></td>
+							</tr>
+							<tr>
+								<td>注釈</td>
+								<td colspan="3">
+									<textarea name="remark" placeholder="注釈" class="layui-textarea"></textarea>
+								</td>
+							</tr>
+							<tr class="papers-edit-bg">
+								<td colspan="4" align="center">
+									<button type="button" class="layui-btn layui-btn-primary close">取消</button>
+									<button type="reset" class="layui-btn layui-btn-primary" id="reset" style="display:none">リセット</button>
+									<button type="button"  lay-submit class="layui-btn"  lay-filter="update">送信</button>
+								</td>
+							</tr>
+							
+						</table>
+					</form>
+				</fieldset>
+			</div>
+		</div>
+	</div>

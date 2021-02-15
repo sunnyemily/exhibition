@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.Exhibitors.dao.EbsBoothApplyListMapper">
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsBoothApplyList">
+        select
+			a.apply_id as applyId,
+			a.tradinggroup_id as tradinggroupId,
+			a.showroom_type_id as showroomTypeId,
+			a.apply_build_type as applyBuildType,
+			a.apply_count as applyCount,
+			a.apply_area as applyArea,
+			a.apply_remove_separator as applyRemoveSeparator,
+			a.apply_device_length as applyDeviceLength,
+			a.apply_device_width as applyDeviceWidth,
+			a.apply_device_high as applyDeviceHigh,
+			a.apply_electricity_amount as applyElectricityAmount,
+			a.apply_voltage as applyVoltage
+        from ebs_booth_apply_list as a
+        where a.apply_id = #{apply_id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsBoothApplyList">
+        select
+			a.apply_id as applyId,
+			a.tradinggroup_id as tradinggroupId,
+			a.showroom_type_id as showroomTypeId,
+			a.apply_build_type as applyBuildType,
+			a.apply_count as applyCount,
+			a.apply_area as applyArea,
+			a.apply_remove_separator as applyRemoveSeparator,
+			a.apply_device_length as applyDeviceLength,
+			a.apply_device_width as applyDeviceWidth,
+			a.apply_device_high as applyDeviceHigh,
+			a.apply_electricity_amount as applyElectricityAmount,
+			a.apply_voltage as applyVoltage
+        from ebs_booth_apply_list as a
+        <where>
+			<if test="applyId != null and applyId != ''">
+				and a.apply_id = #{applyId}
+			</if>
+			<if test="tradinggroupId != null and tradinggroupId != ''">
+				and a.tradinggroup_id = #{tradinggroupId}
+			</if>
+			<if test="showroomTypeId != null and showroomTypeId != ''">
+				and a.showroom_type_id = #{showroomTypeId}
+			</if>
+			<if test="applyBuildType != null and applyBuildType != ''">
+				and a.apply_build_type = #{applyBuildType}
+			</if>
+			<if test="applyCount != null and applyCount != ''">
+				and a.apply_count = #{applyCount}
+			</if>
+			<if test="applyArea != null and applyArea != ''">
+				and a.apply_area = #{applyArea}
+			</if>
+			<if test="applyRemoveSeparator != null and applyRemoveSeparator != ''">
+				and a.apply_remove_separator = #{applyRemoveSeparator}
+			</if>
+			<if test="applyDeviceLength != null and applyDeviceLength != ''">
+				and a.apply_device_length = #{applyDeviceLength}
+			</if>
+			<if test="applyDeviceWidth != null and applyDeviceWidth != ''">
+				and a.apply_device_width = #{applyDeviceWidth}
+			</if>
+			<if test="applyDeviceHigh != null and applyDeviceHigh != ''">
+				and a.apply_device_high = #{applyDeviceHigh}
+			</if>
+			<if test="applyElectricityAmount != null and applyElectricityAmount != ''">
+				and a.apply_electricity_amount = #{applyElectricityAmount}
+			</if>
+			<if test="applyVoltage != null and applyVoltage != ''">
+				and a.apply_voltage = #{applyVoltage}
+			</if>
+        </where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsBoothApplyList">
+        select
+			a.apply_id as applyId,
+			a.tradinggroup_id as tradinggroupId,
+			a.showroom_type_id as showroomTypeId,
+			a.apply_build_type as applyBuildType,
+			a.apply_count as applyCount,
+			a.apply_area as applyArea,
+			a.apply_remove_separator as applyRemoveSeparator,
+			a.apply_device_length as applyDeviceLength,
+			a.apply_device_width as applyDeviceWidth,
+			a.apply_device_high as applyDeviceHigh,
+			a.apply_electricity_amount as applyElectricityAmount,
+			a.apply_voltage as applyVoltage
+        from ebs_booth_apply_list as a
+        <where>
+            <if test="applyId != null and applyId != ''">
+                and a.apply_id = #{applyId}
+            </if>
+            <if test="tradinggroupId != null and tradinggroupId != ''">
+                and a.tradinggroup_id = #{tradinggroupId}
+            </if>
+            <if test="showroomTypeId != null and showroomTypeId != ''">
+                and a.showroom_type_id = #{showroomTypeId}
+            </if>
+            <if test="applyBuildType != null and applyBuildType != ''">
+                and a.apply_build_type = #{applyBuildType}
+            </if>
+            <if test="applyCount != null and applyCount != ''">
+                and a.apply_count = #{applyCount}
+            </if>
+            <if test="applyArea != null and applyArea != ''">
+                and a.apply_area = #{applyArea}
+            </if>
+            <if test="applyRemoveSeparator != null and applyRemoveSeparator != ''">
+                and a.apply_remove_separator = #{applyRemoveSeparator}
+            </if>
+            <if test="applyDeviceLength != null and applyDeviceLength != ''">
+                and a.apply_device_length = #{applyDeviceLength}
+            </if>
+            <if test="applyDeviceWidth != null and applyDeviceWidth != ''">
+                and a.apply_device_width = #{applyDeviceWidth}
+            </if>
+            <if test="applyDeviceHigh != null and applyDeviceHigh != ''">
+                and a.apply_device_high = #{applyDeviceHigh}
+            </if>
+            <if test="applyElectricityAmount != null and applyElectricityAmount != ''">
+                and a.apply_electricity_amount = #{applyElectricityAmount}
+            </if>
+            <if test="applyVoltage != null and applyVoltage != ''">
+                and a.apply_voltage = #{applyVoltage}
+            </if>
+        </where>
+        order by a.id desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(*) FROM ebs_booth_apply_list a
+		<where>
+            <if test="applyId != null and applyId != ''">
+                and a.apply_id = #{applyId}
+            </if>
+            <if test="tradinggroupId != null and tradinggroupId != ''">
+                and a.tradinggroup_id = #{tradinggroupId}
+            </if>
+            <if test="showroomTypeId != null and showroomTypeId != ''">
+                and a.showroom_type_id = #{showroomTypeId}
+            </if>
+            <if test="applyBuildType != null and applyBuildType != ''">
+                and a.apply_build_type = #{applyBuildType}
+            </if>
+            <if test="applyCount != null and applyCount != ''">
+                and a.apply_count = #{applyCount}
+            </if>
+            <if test="applyArea != null and applyArea != ''">
+                and a.apply_area = #{applyArea}
+            </if>
+            <if test="applyRemoveSeparator != null and applyRemoveSeparator != ''">
+                and a.apply_remove_separator = #{applyRemoveSeparator}
+            </if>
+            <if test="applyDeviceLength != null and applyDeviceLength != ''">
+                and a.apply_device_length = #{applyDeviceLength}
+            </if>
+            <if test="applyDeviceWidth != null and applyDeviceWidth != ''">
+                and a.apply_device_width = #{applyDeviceWidth}
+            </if>
+            <if test="applyDeviceHigh != null and applyDeviceHigh != ''">
+                and a.apply_device_high = #{applyDeviceHigh}
+            </if>
+            <if test="applyElectricityAmount != null and applyElectricityAmount != ''">
+                and a.apply_electricity_amount = #{applyElectricityAmount}
+            </if>
+            <if test="applyVoltage != null and applyVoltage != ''">
+                and a.apply_voltage = #{applyVoltage}
+            </if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.Exhibitors.model.EbsBoothApplyList">
+        insert into ebs_booth_apply_list(
+        	<trim suffixOverrides=",">
+                <if test="applyId != null">`apply_id`,</if>
+                <if test="tradinggroupId != null">`tradinggroup_id`,</if>
+                <if test="showroomTypeId != null">`showroom_type_id`,</if>
+                <if test="applyBuildType != null">`apply_build_type`,</if>
+                <if test="applyCount != null">`apply_count`,</if>
+                <if test="applyArea != null">`apply_area`,</if>
+                <if test="applyRemoveSeparator != null">`apply_remove_separator`,</if>
+                <if test="applyDeviceLength != null">`apply_device_length`,</if>
+                <if test="applyDeviceWidth != null">`apply_device_width`,</if>
+                <if test="applyDeviceHigh != null">`apply_device_high`,</if>
+                <if test="applyElectricityAmount != null">`apply_electricity_amount`,</if>
+                <if test="applyVoltage != null">`apply_voltage`</if>
+			</trim>
+		) values (
+        	<trim suffixOverrides=",">
+                <if test="applyId != null">#{applyId},</if>
+                <if test="tradinggroupId != null">#{tradinggroupId},</if>
+                <if test="showroomTypeId != null">#{showroomTypeId},</if>
+                <if test="applyBuildType != null">#{applyBuildType},</if>
+                <if test="applyCount != null">#{applyCount},</if>
+                <if test="applyArea != null">#{applyArea},</if>
+                <if test="applyRemoveSeparator != null">#{applyRemoveSeparator},</if>
+                <if test="applyDeviceLength != null">#{applyDeviceLength},</if>
+                <if test="applyDeviceWidth != null">#{applyDeviceWidth},</if>
+                <if test="applyDeviceHigh != null">#{applyDeviceHigh},</if>
+                <if test="applyElectricityAmount != null">#{applyElectricityAmount},</if>
+                <if test="applyVoltage != null">#{applyVoltage}</if>
+			</trim>
+		)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.Exhibitors.model.EbsBoothApplyList">
+        update ebs_booth_apply_list
+        <set>
+			<if test="applyBuildType != null">`apply_build_type` = #{applyBuildType},</if>
+			<if test="applyCount != null">`apply_count` = #{applyCount},</if>
+			<if test="applyArea != null">`apply_area` = #{applyArea},</if>
+			<if test="applyRemoveSeparator != null">`apply_remove_separator` = #{applyRemoveSeparator},</if>
+			<if test="applyDeviceLength != null">`apply_device_length` = #{applyDeviceLength},</if>
+			<if test="applyDeviceWidth != null">`apply_device_width` = #{applyDeviceWidth},</if>
+			<if test="applyDeviceHigh != null">`apply_device_high` = #{applyDeviceHigh},</if>
+			<if test="applyElectricityAmount != null">`apply_electricity_amount` = #{applyElectricityAmount},</if>
+			<if test="applyVoltage != null">`apply_voltage` = #{applyVoltage}</if>
+        </set>
+        where apply_id = #{applyId} and showroom_type_id=#{showroomTypeId} and tradinggroup_id=#{tradinggroupId}
+    </update>
+
+    <delete id="deleteById">
+        delete from ebs_booth_apply_list where apply_id = #{apply_id}
+    </delete>
+    
+    
+    
+</mapper>

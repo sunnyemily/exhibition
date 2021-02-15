@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.system.dao.SysPrintTemplateMapper">
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.system.model.SysPrintTemplate">
+        select
+			a.id as id,
+			a.session as session,
+			a.cardtypeid as cardtypeid,
+			b.chinesename as cardtypename,
+			a.print_template as printTemplate
+        from sys_print_template as a
+        inner join cm_certificate_type as b on a.cardtypeid=b.id  
+        where a.id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.system.model.SysPrintTemplate">
+        select
+			a.id as id,
+			a.session as session,
+			a.cardtypeid as cardtypeid,
+			a.print_template as printTemplate
+        from sys_print_template as a
+        <where>
+			<if test="id != null and id != ''">
+				and a.id = #{id}
+			</if>
+			<if test="session != null and session != ''">
+				and a.session = #{session}
+			</if>
+			<if test="cardtypeid != null and cardtypeid != ''">
+				and a.cardtypeid = #{cardtypeid}
+			</if>
+			<if test="printTemplate != null and printTemplate != ''">
+				and a.print_template = #{printTemplate}
+			</if>
+        </where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.system.model.SysPrintTemplate">
+        select
+			a.id as id,
+			a.session as session,
+			a.cardtypeid as cardtypeid,
+			b.chinesename as cardtypename,
+			a.print_template as printTemplate
+        from sys_print_template as a   
+        inner join cm_certificate_type as b on a.cardtypeid=b.id     
+        <where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="cardtypeid != null and cardtypeid != ''">
+                and a.cardtypeid = #{cardtypeid}
+            </if>
+            <if test="printTemplate != null and printTemplate != ''">
+                and a.print_template = #{printTemplate}
+            </if>
+        </where>
+        order by a.id desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(*) FROM sys_print_template a
+		inner join cm_certificate_type as b on a.cardtypeid=b.id
+		<where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="cardtypeid != null and cardtypeid != ''">
+                and a.cardtypeid = #{cardtypeid}
+            </if>
+            <if test="printTemplate != null and printTemplate != ''">
+                and a.print_template = #{printTemplate}
+            </if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.system.model.SysPrintTemplate" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_print_template(
+        	<trim suffixOverrides=",">
+                <if test="id != null">`id`,</if>
+                <if test="session != null">`session`,</if>
+                <if test="cardtypeid != null">`cardtypeid`,</if>
+                <if test="printTemplate != null">`print_template`</if>
+			</trim>
+		) values (
+        	<trim suffixOverrides=",">
+                <if test="id != null">#{id},</if>
+                <if test="session != null">#{session},</if>
+                <if test="cardtypeid != null">#{cardtypeid},</if>
+                <if test="printTemplate != null">#{printTemplate}</if>
+			</trim>
+		)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.system.model.SysPrintTemplate">
+        update sys_print_template
+        <set>
+			<if test="session != null">`session` = #{session},</if>
+			<if test="cardtypeid != null">`cardtypeid` = #{cardtypeid},</if>
+			<if test="printTemplate != null">`print_template` = #{printTemplate}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from sys_print_template where id = #{id}
+    </delete>
+    
+    
+    
+</mapper>

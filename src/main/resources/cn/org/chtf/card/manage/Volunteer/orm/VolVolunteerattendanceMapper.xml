@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.Volunteer.dao.VolVolunteerattendanceMapper">
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.Volunteer.model.VolVolunteerattendance">
+        select
+			a.id as id,
+			a.session as session,
+			a.vid as vid,
+			a.attendancedate as attendancedate,
+			a.amstart as amstart,
+			a.amend as amend,
+			a.pmstart as pmstart,
+			a.pmend as pmend,
+			a.attendancestatus as attendancestatus,
+			case a.attendancestatus 
+			when 0 then '正常'
+			when 1 then '迟到'
+			when 2 then '早退'
+			when 3 then '请假'
+			when 4 then '旷工'
+			end as attendancestatusname,b.name,c.name as createbyname,
+			a.addtime as addtime,
+			a.createby as createby
+        from vol_volunteerattendance as a
+        inner join vol_volunteer as b on b.id=a.vid
+        inner join system_user as c on c.id=a.createby
+        where a.id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.Volunteer.model.VolVolunteerattendance">
+        select
+			a.id as id,
+			a.session as session,
+			a.vid as vid,
+			a.attendancedate as attendancedate,
+			a.amstart as amstart,
+			a.amend as amend,
+			a.pmstart as pmstart,
+			a.pmend as pmend,
+			a.attendancestatus as attendancestatus,
+			case a.attendancestatus 
+			when 0 then '正常'
+			when 1 then '迟到'
+			when 2 then '早退'
+			when 3 then '请假'
+			when 4 then '旷工'
+			end as attendancestatusname,b.name,c.name as createbyname,
+			a.addtime as addtime,
+			a.createby as createby
+        from vol_volunteerattendance as a
+        inner join vol_volunteer as b on b.id=a.vid
+        inner join system_user as c on c.id=a.createby
+        <where>
+			<if test="id != null and id != ''">
+				and a.id = #{id}
+			</if>
+			<if test="session != null and session != ''">
+				and a.session = #{session}
+			</if>
+			<if test="vid != null and vid != ''">
+				and a.vid = #{vid}
+			</if>
+			<if test="attendancedate != null and attendancedate != ''">
+				and a.attendancedate = #{attendancedate}
+			</if>
+			<if test="amstart != null and amstart != ''">
+				and a.amstart = #{amstart}
+			</if>
+			<if test="amend != null and amend != ''">
+				and a.amend = #{amend}
+			</if>
+			<if test="pmstart != null and pmstart != ''">
+				and a.pmstart = #{pmstart}
+			</if>
+			<if test="pmend != null and pmend != ''">
+				and a.pmend = #{pmend}
+			</if>
+			<if test="attendancestatus != null and attendancestatus != ''">
+				and a.attendancestatus = #{attendancestatus}
+			</if>
+			<if test="addtime != null and addtime != ''">
+				and a.addtime = #{addtime}
+			</if>
+			<if test="createby != null and createby != ''">
+				and a.createby = #{createby}
+			</if>
+        </where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.Volunteer.model.VolVolunteerattendance">
+        select
+			a.id as id,
+			a.session as session,
+			a.vid as vid,
+			a.attendancedate as attendancedate,
+			a.amstart as amstart,
+			a.amend as amend,
+			a.pmstart as pmstart,
+			a.pmend as pmend,
+			a.attendancestatus as attendancestatus,
+			case a.attendancestatus 
+			when 0 then '正常'
+			when 1 then '迟到'
+			when 2 then '早退'
+			when 3 then '请假'
+			when 4 then '旷工'
+			end as attendancestatusname,b.name,c.name as createbyname,
+			a.addtime as addtime,
+			a.createby as createby
+        from vol_volunteerattendance as a
+        inner join vol_volunteer as b on b.id=a.vid
+        inner join system_user as c on c.id=a.createby
+        <where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+             <if test="name != null and name != ''">
+                and b.name like concat('%',#{name},'%')
+            </if>
+            <if test="vid != null and vid != ''">
+                and a.vid = #{vid}
+            </if>
+            <if test="attendancedate != null and attendancedate != ''">
+                and a.attendancedate = #{attendancedate}
+            </if>
+            
+            <if test="starttime!=null and starttime!='' and startzhuangtai!=null and startzhuangtai!=''">
+            	<if test="startzhuangtai==0">
+            		and (a.amstart &lt; #{starttime} or a.pmstart &lt; #{starttime})
+            	</if>
+            	<if test="startzhuangtai==1">
+            		and (a.amstart > #{starttime} or a.pmstart > #{starttime})
+            	</if>
+            </if>       
+            
+            <if test="endtime!=null and endtime!='' and endzhuangtai!=null and endzhuangtai!=''">
+            	<if test="endzhuangtai==0">
+            		and (a.amend &lt; #{endtime} or a.pmend &lt; #{endtime})
+            	</if>
+            	<if test="endzhuangtai==1">
+            		and (a.amend > #{endtime} or a.pmend > #{endtime})
+            	</if>
+            </if>     
+            
+            <if test="amstart != null and amstart != ''">
+                and a.amstart = #{amstart}
+            </if>
+            <if test="amend != null and amend != ''">
+                and a.amend = #{amend}
+            </if>
+            <if test="pmstart != null and pmstart != ''">
+                and a.pmstart = #{pmstart}
+            </if>
+            <if test="pmend != null and pmend != ''">
+                and a.pmend = #{pmend}
+            </if>
+            <if test="attendancestatus != null and attendancestatus != ''">
+                and a.attendancestatus = #{attendancestatus}
+            </if>
+            <if test="addtime != null and addtime != ''">
+                and a.addtime = #{addtime}
+            </if>
+            <if test="createby != null and createby != ''">
+                and a.createby = #{createby}
+            </if>
+        </where>
+        order by a.id desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(*) FROM vol_volunteerattendance a
+        inner join vol_volunteer as b on b.id=a.vid
+        inner join system_user as c on c.id=a.createby
+		<where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="vid != null and vid != ''">
+                and a.vid = #{vid}
+            </if>
+            <if test="attendancedate != null and attendancedate != ''">
+                and a.attendancedate = #{attendancedate}
+            </if>
+            <if test="amstart != null and amstart != ''">
+                and a.amstart = #{amstart}
+            </if>
+            <if test="amend != null and amend != ''">
+                and a.amend = #{amend}
+            </if>
+            <if test="pmstart != null and pmstart != ''">
+                and a.pmstart = #{pmstart}
+            </if>
+            <if test="pmend != null and pmend != ''">
+                and a.pmend = #{pmend}
+            </if>
+            <if test="attendancestatus != null and attendancestatus != ''">
+                and a.attendancestatus = #{attendancestatus}
+            </if>
+            <if test="addtime != null and addtime != ''">
+                and a.addtime = #{addtime}
+            </if>
+            <if test="createby != null and createby != ''">
+                and a.createby = #{createby}
+            </if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.Volunteer.model.VolVolunteerattendance" useGeneratedKeys="true" keyProperty="id">
+        insert into vol_volunteerattendance(
+        	<trim suffixOverrides=",">
+                <if test="session != null">`session`,</if>
+                <if test="vid != null">`vid`,</if>
+                <if test="attendancedate != null">`attendancedate`,</if>
+                <if test="amstart != null">`amstart`,</if>
+                <if test="amend != null">`amend`,</if>
+                <if test="pmstart != null">`pmstart`,</if>
+                <if test="pmend != null">`pmend`,</if>
+                <if test="attendancestatus != null">`attendancestatus`,</if>
+                <if test="addtime != null">`addtime`,</if>
+                <if test="createby != null">`createby`</if>
+			</trim>
+		) values (
+        	<trim suffixOverrides=",">
+                <if test="session != null">#{session},</if>
+                <if test="vid != null">#{vid},</if>
+                <if test="attendancedate != null">#{attendancedate},</if>
+                <if test="amstart != null">#{amstart},</if>
+                <if test="amend != null">#{amend},</if>
+                <if test="pmstart != null">#{pmstart},</if>
+                <if test="pmend != null">#{pmend},</if>
+                <if test="attendancestatus != null">#{attendancestatus},</if>
+                <if test="addtime != null">#{addtime},</if>
+                <if test="createby != null">#{createby}</if>
+			</trim>
+		)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.Volunteer.model.VolVolunteerattendance">
+        update vol_volunteerattendance
+        <set>
+			<if test="session != null">`session` = #{session},</if>
+			<if test="vid != null">`vid` = #{vid},</if>
+			<if test="attendancedate != null">`attendancedate` = #{attendancedate},</if>
+			<if test="amstart != null">`amstart` = #{amstart},</if>
+			<if test="amend != null">`amend` = #{amend},</if>
+			<if test="pmstart != null">`pmstart` = #{pmstart},</if>
+			<if test="pmend != null">`pmend` = #{pmend},</if>
+			<if test="attendancestatus != null">`attendancestatus` = #{attendancestatus},</if>
+			<if test="addtime != null">`addtime` = #{addtime},</if>
+			<if test="createby != null">`createby` = #{createby}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from vol_volunteerattendance where id = #{id}
+    </delete>
+    
+    
+    
+</mapper>

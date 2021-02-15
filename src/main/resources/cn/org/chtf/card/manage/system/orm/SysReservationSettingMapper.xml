@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.system.dao.SysReservationSettingMapper">
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.system.model.SysReservationSetting">
+        select
+			a.id as id,
+			a.session as session,
+			a.reserstartdate as reserstartdate,
+			a.reserenddate as reserenddate,
+			concat(a.reserstartdate,' ~ ',a.reserenddate) as qujian,
+			a.exhibitiondate as exhibitiondate,
+			a.totalvotes as totalvotes,
+			a.onlinevotes as onlinevotes,
+			a.onsitevotes as onsitevotes,
+			a.createby as createby,
+			a.addtime as addtime,a.status
+        from sys_reservation_setting as a
+        where a.id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.system.model.SysReservationSetting">
+        select
+			a.id as id,
+			a.session as session,
+			a.reserstartdate as reserstartdate,
+			a.reserenddate as reserenddate,
+			a.exhibitiondate as exhibitiondate,
+			a.totalvotes as totalvotes,
+			a.onlinevotes as onlinevotes,
+			a.onsitevotes as onsitevotes,
+			a.createby as createby,
+			a.addtime as addtime,a.status
+        from sys_reservation_setting as a
+        <where>			
+			<if test="session != null and session != ''">
+				and a.session = #{sessionId}
+			</if>			
+			<if test="exhibitiondate != null and exhibitiondate != ''">
+				and a.exhibitiondate = #{exhibitiondate}
+			</if>			
+			<if test="status != null">
+				and a.status = #{status}
+			</if>
+        </where>
+    </select>
+
+    <select id="canReserve" resultType="int">
+        select
+			count(*)
+        from sys_reservation_setting
+        where	
+				session = #{sessionId}
+				AND exhibitiondate = #{exhibitiondate}
+				AND status = 1
+				<![CDATA[ 
+				AND reserstartdate <= now()			
+				AND reserenddate >= now()
+				 ]]>	
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.system.model.SysReservationSetting">
+        select
+			a.id as id,
+			a.session as session,
+			a.reserstartdate as reserstartdate,
+			a.reserenddate as reserenddate,
+			a.exhibitiondate as exhibitiondate,
+			a.totalvotes as totalvotes,
+			a.onlinevotes as onlinevotes,
+			a.onsitevotes as onsitevotes,
+			a.createby as createby,
+			a.addtime as addtime,a.status
+        from sys_reservation_setting as a
+        <where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="reserstartdate != null and reserstartdate != ''">
+                and a.reserstartdate = #{reserstartdate}
+            </if>
+            <if test="reserenddate != null and reserenddate != ''">
+                and a.reserenddate = #{reserenddate}
+            </if>
+            <if test="exhibitiondate != null and exhibitiondate != ''">
+                and a.exhibitiondate = #{exhibitiondate}
+            </if>
+            <if test="totalvotes != null and totalvotes != ''">
+                and a.totalvotes = #{totalvotes}
+            </if>
+            <if test="onlinevotes != null and onlinevotes != ''">
+                and a.onlinevotes = #{onlinevotes}
+            </if>
+            <if test="onsitevotes != null and onsitevotes != ''">
+                and a.onsitevotes = #{onsitevotes}
+            </if>
+            <if test="createby != null and createby != ''">
+                and a.createby = #{createby}
+            </if>
+            <if test="addtime != null and addtime != ''">
+                and a.addtime = #{addtime}
+            </if>
+            <if test="status != null and status != ''">
+				and a.status = #{status}
+			</if>
+        </where>
+        order by a.id desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(*) FROM sys_reservation_setting a
+		<where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="reserstartdate != null and reserstartdate != ''">
+                and a.reserstartdate = #{reserstartdate}
+            </if>
+            <if test="reserenddate != null and reserenddate != ''">
+                and a.reserenddate = #{reserenddate}
+            </if>
+            <if test="exhibitiondate != null and exhibitiondate != ''">
+                and a.exhibitiondate = #{exhibitiondate}
+            </if>
+            <if test="totalvotes != null and totalvotes != ''">
+                and a.totalvotes = #{totalvotes}
+            </if>
+            <if test="onlinevotes != null and onlinevotes != ''">
+                and a.onlinevotes = #{onlinevotes}
+            </if>
+            <if test="onsitevotes != null and onsitevotes != ''">
+                and a.onsitevotes = #{onsitevotes}
+            </if>
+            <if test="createby != null and createby != ''">
+                and a.createby = #{createby}
+            </if>
+            <if test="addtime != null and addtime != ''">
+                and a.addtime = #{addtime}
+            </if>
+            <if test="status != null and status != ''">
+				and a.status = #{status}
+			</if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.system.model.SysReservationSetting" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_reservation_setting(
+        	<trim suffixOverrides=",">
+                <if test="session != null">`session`,</if>
+                <if test="reserstartdate != null">`reserstartdate`,</if>
+                <if test="reserenddate != null">`reserenddate`,</if>
+                <if test="exhibitiondate != null">`exhibitiondate`,</if>
+                <if test="totalvotes != null">`totalvotes`,</if>
+                <if test="onlinevotes != null">`onlinevotes`,</if>
+                <if test="onsitevotes != null">`onsitevotes`,</if>
+                <if test="createby != null">`createby`,</if>
+                <if test="status != null">`status`,</if>
+                <if test="addtime != null">`addtime`</if>
+			</trim>
+		) values (
+        	<trim suffixOverrides=",">
+                <if test="session != null">#{session},</if>
+                <if test="reserstartdate != null">#{reserstartdate},</if>
+                <if test="reserenddate != null">#{reserenddate},</if>
+                <if test="exhibitiondate != null">#{exhibitiondate},</if>
+                <if test="totalvotes != null">#{totalvotes},</if>
+                <if test="onlinevotes != null">#{onlinevotes},</if>
+                <if test="onsitevotes != null">#{onsitevotes},</if>
+                <if test="createby != null">#{createby},</if>
+                <if test="status != null">#{status},</if>
+                <if test="addtime != null">#{addtime}</if>
+			</trim>
+		)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.system.model.SysReservationSetting">
+        update sys_reservation_setting
+        <set>
+			<if test="session != null">`session` = #{session},</if>
+			<if test="reserstartdate != null">`reserstartdate` = #{reserstartdate},</if>
+			<if test="reserenddate != null">`reserenddate` = #{reserenddate},</if>
+			<if test="exhibitiondate != null">`exhibitiondate` = #{exhibitiondate},</if>
+			<if test="totalvotes != null">`totalvotes` = #{totalvotes},</if>
+			<if test="onlinevotes != null">`onlinevotes` = #{onlinevotes},</if>
+			<if test="onsitevotes != null">`onsitevotes` = #{onsitevotes},</if>
+			<if test="createby != null">`createby` = #{createby},</if>
+			<if test="status != null">`status` = #{status},</if>
+			<if test="addtime != null">`addtime` = #{addtime}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from sys_reservation_setting where id = #{id}
+    </delete>  
+    
+    
+    <select id="SearchByDateTimeList" resultType="map">
+    	select a.totalvotes,a.onlinevotes,b.exhibitiondate,name,cardnumber,phone,b.addtime from sys_reservation_setting as a
+		inner join online_reservation_details as b on a.exhibitiondate=b.exhibitiondate and b.session=#{session}
+		where a.id=#{id}
+		order by b.addtime desc
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="SearchByDateTimeListCount" resultType="int">
+    	select count(*) from sys_reservation_setting as a
+		inner join online_reservation_details as b on a.exhibitiondate=b.exhibitiondate and b.session=#{session}
+		where a.id=#{id}
+    </select>
+    
+</mapper>

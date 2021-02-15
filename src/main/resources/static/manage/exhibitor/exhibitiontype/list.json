@@ -1,0 +1,14 @@
+{
+	"status": 1,
+	"msg": "查询成功",
+	"count": 1,
+	"result": [{
+		"id": 1,
+		"menuId": 0,
+		"typeName": "标展变型展位",
+		"moneyType": "按个数",
+		"priceUnit": "￥",
+		"updatetime": 1531801588000,
+		"isUse": "可用"
+	}]
+}

@@ -1,0 +1,195 @@
+    <div class="modal inmodal" id="edit-model" style="display:none">
+		<div class="modal-content animated bounceInUp">
+			<div class="ibox-content">
+				<fieldset class="layui-elem-field layui-field-title" style="border-top:0px">
+					<form class="layui-form layui-form-pane" action="" id="editform">
+					    <input type="hidden" name="id" value="0"  />
+					    <input type="hidden" name="session" value="${exhibitionSessionId}"  />
+					    <input type="hidden" name="cardnature" value="0"  />
+					    <input type="hidden" name="isback" value="1"  />
+						<table width="100%"  class="layui-table form-content">
+						<#if isOut??><input type="hidden" name="isout" value="${isOut}" /></#if>
+							<tr class="papers-edit-bg"><td colspan="3" style="border-right: none;">추가${certificateModal.chinesename}</td><td align="right"><a class="layui-icon layui-icon-close close"></a></td></tr>
+							<tr>
+								<td>*성함</td>
+								<td width="40%"><input class="layui-input" autocomplete="off" id="name" name="name" type="text"  lay-verify="required"></td>
+								<td>*성별</td>
+								<td>
+									<input type="radio" name="sex" value="0" title="男" checked>
+      								<input type="radio" name="sex" value="1" title="女">
+      							</td>
+							</tr>
+							<tr>
+								<td>*국가/지자체</td>
+								<td>
+									<div class="layui-input-inline" style="width:30%">
+								      <select name="country" lay-verify="required" lay-filter="country"  lay-reqText="국가를 선택하세요.(필수)" >
+										  <option value="">선택하세요.</option>
+									  </select>   
+								    </div>
+								    <div class="layui-input-inline" style="width:30%">
+								      <select name="province" lay-verify="required" lay-filter="province"  lay-reqText="지자체를 선택하세요.(필수)" >
+										  <option value="">선택하세요.</option>
+									  </select>   
+								    </div>
+								    <div class="layui-input-inline" style="width:30%" >
+								      <select name="city" lay-verify="required"  lay-reqText="도시를 선택하세요.(필수)">
+										  <option value="">선택하세요.</option>
+									  </select>   
+								    </div>
+								</td>
+								<td>*직무</td>
+								<td><input class="layui-input" autocomplete="off" id="jobtitle" name="jobtitle" type="text"  lay-verify="required"></td>
+							</tr>
+							<tr>
+								<td>*엄체명</td>
+								<td><#if isExhibitor!=0>
+							      <select name="companyid" id="companyid">
+							      	<#if companys??>
+							      	<#list companys as c>
+									<option value="${c.id}" <#if ((company.id)??&&c.id==company.id) >selected</#if> >${c.chinesename}</option>
+									</#list>
+									<#else>
+									<option value="${company.id!'0'}">${company.chinesename!''}</option>
+									</#if>
+								  </select>
+								  <#else>
+								  	<input class="layui-input" autocomplete="off" id="companyname" name="companyname" type="text"  lay-verify="required" value="<#if company??>${company.chinesename!''}</#if>" <#if company??>disabled</#if> />
+								  </#if>
+								</td>
+								<td>엄체명</td>
+								<td>
+							      <select name="cardtype" id="cardtype" lay-filter="cardtype">
+								  </select>
+								</td>
+							</tr>
+							<tr>
+								<td>*주민등록증/역권/기자증</td>
+								<td>
+									<input type="radio" value="0" checked id="idcardpassport1" title="주민등록증" name="idcardpassport">
+									<input type="radio" value="1" name="idcardpassport" id="idcardpassport2" title="역권">
+									<input type="radio" value="2" name="idcardpassport" id="idcardpassport3" title="기자증">
+									
+								</td>
+								<td>*증명서 번호</td>
+								<td><input class="layui-input" autocomplete="off" id="cardnumber" name="cardnumber" type="text"  lay-verify="required|checkID"></td>
+							</tr>
+							<tr>
+								<td>우편번호</td>
+								<td><input class="layui-input" autocomplete="off" id="postcode" name="postcode" type="text"></td>
+								<td>주소</td>
+								<td><input class="layui-input" autocomplete="off" id="address" name="address" type="text"></td>
+							</tr>
+							<tr>
+								<td>회사 공식 사이트</td>
+								<td colspan="3"><input class="layui-input" autocomplete="off" id="website" name="website" type="text"></td>
+							</tr>
+							<tr>
+								<td>*휴대전화</td>
+								<td><input class="layui-input" autocomplete="off" id="phone" name="phone" type="text" lay-verify="required"></td>
+								<td>우편번호</td>
+								<td><input class="layui-input" autocomplete="off" id="email" name="email" type="text"></td>
+							</tr>
+							<tr>
+								<td>전화번호</td>
+								<td><input class="layui-input" autocomplete="off" id="tel" name="tel" type="text"></td>
+								<td>팩스</td>
+								<td><input class="layui-input" autocomplete="off" id="fax" name="fax" type="text"></td>
+							</tr>
+							<#if certificateModal.issurvey==1>
+							<tr>
+								<td>*업무영역</td>
+								<td>	
+							      <select id="yewulingyu" name="bussinessarea" lay-verify="required">
+								  </select>
+								</td>
+								<td>*참가자 신분</td>
+								<td>	
+							      <select name="participants" id="canhuijuese" lay-verify="required">
+								  </select>
+								</td>
+							</tr>
+							<tr>
+								<td>*참가 목적</td>
+								<td colspan="3" id="purpose">
+								</td>
+							</tr>
+							<tr>
+								<td>*참관하고 싶은 전시구</td>
+								<td colspan="3">
+								<select id="xcgdzq" name="visitexhibition" lay-verify="required">
+								</select>
+								</td>
+							</tr>
+							<tr>
+								<td>*당신은 어떻게 본 전시회를 알게 되셨나요?</td>
+								<td colspan="3" id="knowexhibition">
+								</td>
+							</tr>
+							<tr>
+								<td>*업무성격</td>
+								<td colspan="3" id="businessnature">
+								</td>
+							</tr>
+							</#if>
+							<tr>
+								<td>*증명사진</td>
+								<input type="hidden" name="imagepath" id="imagepath" value=""  lay-verify="required" lay-reqText="증명사진을 업로드 하세요.(필수)" />
+								<td>
+									<button type="button" class="layui-btn" id="pic" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>이미지 업로드
+									</button>
+									<button type="button" class="layui-btn" id="btnimagepathCropper">
+									  <i class="layui-icon">&#xe67c;</i>재단조수
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />표준증명사진,포맷:jpg 파일크기< 2M 화소크기:600*749(가로*높이) 배경컬러:붉은색,흰색,파란색
+								</td>
+								<td colspan="2" class="prepic"><image src="" width="195" height="243" id="preimagepath" /></td>
+							</tr>
+							<tr>
+								<td>*<#if certificateModal.chinesename=="기자증" >언론사 기자증<#else>*주민등록증/여권</#if></td>
+								<input type="hidden" name="idphotopath" id="idphotopath" value=""  lay-verify="required" lay-reqText="주민등록증/여권을 업로드 하세요.(필수)"  />
+								<td>
+									<button type="button" class="layui-btn" id="idpic" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>이미지 업로드
+									</button>
+									<button type="button" class="layui-btn" id="btnidphotopathCropper">
+									  <i class="layui-icon">&#xe67c;</i>재단조수
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />포맷:jpg 파일크기< 2M 크기<#if certificateModal.chinesename=="기자증" >606*436<#else>693*472</#if>(가로*높이)。</div>
+								</td>
+								<td colspan="2" class="prepic"><image src="" width="195" height="132" id="preidphotopath" /></td>
+							</tr>
+							<#if certificateModal.chinesename=="바이어 증">
+							<tr>
+								<td>*사업자등록증</td>
+								<input type="hidden" name="businesslicense" id="businesslicense" value=""  lay-verify="required" lay-reqText="사업자등록증을 반드시 업로드 하셔야 합니다."  />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnBusinesslicenseCropper">
+									  <i class="layui-icon">&#xe67c;</i>재단조수
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />주의: 포맷:jpg 파일크기< 2M 화소크기:800*1060(가로*높이)</div>
+								</td>
+								<td colspan="2" class="prepic"><image src="" width="195" height="258" id="prebusinesslicense" /></td>
+							</tr>
+							<tr>
+								<td>*구매의향</td>
+								<td colspan="3">
+									<textarea name="purchasingintention" required  lay-verify="required" placeholder="请输入采购意向" class="layui-textarea"></textarea>
+								</td>
+							</tr>
+							</#if>
+							<tr class="papers-edit-bg">
+								<td colspan="4" align="center">
+									<button type="button" class="layui-btn layui-btn-primary close">취소</button>
+									<button type="reset" class="layui-btn layui-btn-primary" id="reset" style="display:none">재설정</button>
+									<button type="button"  lay-submit class="layui-btn"  lay-filter="update">제출(submit)</button>
+								</td>
+							</tr>
+							
+						</table>
+					</form>
+				</fieldset>
+			</div>
+		</div>
+	</div>

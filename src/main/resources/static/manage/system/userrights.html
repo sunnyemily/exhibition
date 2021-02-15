@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>字典表详情</title>
+		<meta content="webkit" name="renderer">
+		<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+		<meta content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" name="viewport"/>
+		<link rel="stylesheet" href="/manage/css/xadmin.css">
+		<link href="/manage/css/style.css?v=4.1.0" rel="stylesheet">
+		<link href="/manage/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="/manage/layui/css/layui.css"  media="all">
+	</head>
+	<body class="gray-bg">
+		<div class="modal inmodal" id="friendlink-model">
+			<div class="modal-content animated bounceInUp" id="vmViewSystemDictionaries">
+				<div class="ibox-content">
+					<fieldset class="layui-elem-field layui-field-title" style="border-top:0px">
+						<form class="layui-form layui-form-pane" lay-filter='test1' action="">
+							<div class="layui-form-item">
+								<span style="font-size:16px"> 所属人员：<span style="font-weight:bold" id="spPeople"></span> &nbsp;&nbsp;&nbsp;
+									所属部门：<span style="font-weight:bold" id="spDepart"></span> </span>
+							</div>
+							<div class="layui-form-item">
+								<table style="font-size:16px;" class="layui-table">
+									<tr>
+										<td height="30px" width="120px" align="right">全部交易团：</td>
+										<td>
+										<input type="radio" name="isall" lay-filter="isall" id="isall1" value="1" title="是">
+										<input type="radio" name="isall" lay-filter="isall" id="isall0" value="0" title="否">
+										</td>
+									<tr>
+									<tr class="trjytList">
+										<td align="right">交易团：</td>
+										<td id="tdjyt" style="padding:10px 0px"></td>
+									</tr>
+									<tr class="trjytList">
+										<td align="right">零散：</td>
+										<td id="tdls" style="padding:10px 0px"></td>
+									</tr>
+									<tr class="trjytList">
+										<td align="right">线上展区：</td>
+										<td id="tdxsh" style="padding:10px 0px"></td>
+									</tr>
+								</table>
+							</div>
+
+							<div class="layui-form-item">
+								<div class="layui-input-block">
+									<button class="layui-btn" id="tj" lay-filter="edit" lay-submit="">
+										提    交
+									</button>
+								</div>
+							</div>
+						</form>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+		<script charset="utf-8" src="/manage/js/jquery.min.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/layui/layui.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/xadmin.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/vue.js" type="text/javascript"></script>
+		<script src="/manage/js/bootstrap.min.js?v=3.3.6"></script>
+		<script charset="UTF-8" type="text/javascript">
+			loadHeight();
+			var viewUserId = sessionStorage.getItem("viewUserId");
+			var viewUserName = sessionStorage.getItem("viewUserName");
+			var viewUserDepartMent = sessionStorage.getItem("viewUserDepartMent");			
+			$("#spPeople").html(viewUserName);
+			$("#spDepart").html(viewUserDepartMent);
+
+			layui.use(['form', 'layer', 'laydate'], function() {
+				var form = layui.form, layer = layui.layer, laydate = layui.laydate;
+				form.on('submit(edit)', function(data) {
+					if ($('input:radio[name="isall"]:checked').val() == null) {
+						layer.msg('请选择是否全部交易团', {
+							icon : 5
+						});
+						return false;
+					}
+					var isall = $("input[name='isall']:checked").val();
+					var ids = "";
+					var count = 0;
+					$(".jiaoyituan").each(function() {
+						if ($(this).is(':checked')) {
+							if (count == 0) {
+								ids = $(this).val();
+							} else {
+								ids += ',' + $(this).val();
+							}
+							count++;
+						}
+					});
+					if (count == 0) {
+						layer.msg('请选择交易团', {
+							icon : 5
+						});
+						return false;
+					}					  
+					var params = {};
+					params.userid = viewUserId;
+					params.isall=isall;
+					params.ids=ids;
+					$.ajax({
+						url : "/common/AddUserRightsForUser",
+						data : JSON.stringify(params),
+						type : "post",
+						async : false,
+						contentType : "application/json",
+						success : function(result) {
+							if (result.code === 1) {
+								layer.msg(result.msg, {
+									icon : 6,
+									time : 500
+								}, function() {
+									xadmin.close();
+	                                // 可以对父窗口进行刷新
+	                                //parent.reloadTableData_NoSort();
+								});
+							} else {
+								layer.alert(result.msg);
+							}
+						}
+					});
+					return false;
+				});
+
+				form.on('radio(isall)', function(data) {
+					if (data.value == 1) {
+						xzh = true;
+						$(".trjytList").hide();
+					} else {
+						xzh = false;
+						$(".trjytList").show();
+					}
+					$(".jiaoyituan").each(function() {
+						$(this).prop("checked", xzh);
+					});
+					form.render('checkbox');
+				});
+				
+				var params = {};
+				params.userid = viewUserId;
+				$.ajax({
+					url : "/common/GetUser",
+					data : JSON.stringify(params),
+					type : "post",
+					async : false,
+					contentType : "application/json",
+					success : function(result) {
+						if(result.code==1){
+							var radio = document.getElementsByName("isall");
+							var radioLength = radio.length;
+							for (var i = 0; i < radioLength; i++) {
+								if (result.data[0].isall == radio[i].value) {
+									$(radio[i]).next().click();
+								}
+							}
+							if(result.data[0].isall==1){
+								$(".trjytList").hide();
+							}
+							else{
+								$(".trjytList").show();
+							}
+						}
+					}
+				});	
+				
+				var params = {};
+				params.userid = viewUserId;
+				$.ajax({
+					url : "/manage/system/GetTradingGroupForUser",
+					data : {userid:viewUserId},
+					type : "post",
+					async : false,					
+					success : function(result) {
+						var strHtml = "<ul>";
+						var strLingSan = "<ul>";
+						var strXianShang = "<ul>";
+						if (result.code === 1) {
+							for (var j = 0; j < result.data.length; j++) {
+								if(result.data[j].type==0){
+									strHtml += "<li style='float:left;'><input class='jiaoyituan' type='checkbox' lay-skin='primary' value='" + result.data[j].jytid + "' title='" + result.data[j].name + "' ";
+									if (result.data[j].zhuangtai == 1) {
+										strHtml += " checked ";
+									}
+									strHtml += "></li>";
+								} else if(result.data[j].type==1){
+									strLingSan += "<li style='float:left;'><input class='jiaoyituan' type='checkbox' lay-skin='primary' value='" + result.data[j].jytid + "' title='" + result.data[j].name + "' ";
+									if (result.data[j].zhuangtai == 1) {
+										strLingSan += " checked ";
+									}
+									strLingSan += "></li>";
+								} else if(result.data[j].type==2){
+									strXianShang += "<li style='float:left;'><input class='jiaoyituan' type='checkbox' lay-skin='primary' value='" + result.data[j].jytid + "' title='" + result.data[j].name + "' ";
+									if (result.data[j].zhuangtai == 1) {
+										strXianShang += " checked ";
+									}
+									strXianShang += "></li>";
+								}								
+								isAll=result.data[j].isall;
+							}
+							strHtml += "</ul>";
+							strLingSan += "</ul>";
+							strXianShang += "</ul>";
+							$("#tdjyt").html(strHtml);
+							$("#tdls").html(strLingSan);
+							$("#tdxsh").html(strXianShang);
+							$("#tj").show();
+						} else {
+							layer.alert(result.msg);
+							$("#tj").hide();
+						}
+					}
+				});
+				form.render('', 'test1');
+			});
+		</script>
+	</body>
+</html>

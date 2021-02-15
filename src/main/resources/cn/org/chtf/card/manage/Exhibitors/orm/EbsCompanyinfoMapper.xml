@@ -1,0 +1,1138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.Exhibitors.dao.EbsCompanyinfoMapper">
+
+	<select id="Greenlist" resultType="map">
+        SELECT
+        	c.id,        	
+			c.id companyId,
+			c.chinesename,
+			c.contactperson,
+			c.phone,
+			c.tel,			
+			c.addtime,
+			c.useable,
+			case when c.comany_type_id=0 then '交易团' else '零散' end as qyleixing,
+			ifnull(d.shuliang,0) as shuliang
+        FROM  ebs_companyinfo c 
+        INNER JOIN system_user_rights ON c.tradinggroupid = system_user_rights.tradinggroupid
+		and system_user_rights.userid = #{userId} and system_user_rights.session=#{session}
+		left join (select companyid,count(*) as shuliang from ebs_personnelcard where session=#{session} and isgreen=1 and cardtype=#{cardtype} group by companyid) as d on c.id=d.companyid
+		WHERE c.useable=1
+		<if test="membertype == null or membertype == ''">
+			and c.comany_type_id in (0,2)
+        </if>
+		<if test="membertype != null and membertype != ''">
+			and c.comany_type_id = #{membertype}
+        </if>        
+        <if test="session != null and session != ''">
+            and c.session = #{session}
+        </if>
+        <if test="companyName != null and companyName != ''">
+            and c.chinesename like concat ('%',#{companyName},'%')
+        </if>
+       
+        <if test="startTime != null and startTime != ''">
+            and c.addtime >= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and c.addtime &lt;= #{endTime}
+        </if>
+        <if test="tradinggroupid != null and tradinggroupid != ''">
+            and c.tradinggroupid = #{tradinggroupid}
+        </if>
+        order by c.addtime desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="Greenlistcount" resultType="int">
+		SELECT count(*) FROM  ebs_companyinfo c 
+		INNER JOIN system_user_rights ON c.tradinggroupid = system_user_rights.tradinggroupid
+		and system_user_rights.userid = #{userId} and system_user_rights.session=#{session}	
+		WHERE  c.useable=1
+		<if test="membertype == null or membertype == ''">
+			and c.comany_type_id in (0,2)
+        </if>
+		<if test="membertype != null and membertype != ''">
+			and c.comany_type_id = #{membertype}
+        </if>       
+        <if test="session != null and session != ''">
+            and c.session = #{session}
+        </if>
+        <if test="companyName != null and companyName != ''">
+            and c.chinesename like concat ('%',#{companyName},'%')
+        </if>
+       
+        <if test="startTime != null and startTime != ''">
+            and c.addtime >= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and c.addtime &lt;= #{endTime}
+        </if>
+        <if test="tradinggroupid != null and tradinggroupid != ''">
+            and c.tradinggroupid = #{tradinggroupid}
+        </if>
+        
+	</select>
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsCompanyinfo">
+        select
+			a.id as id,
+			a.session as session,
+			a.country as country,
+			a.comany_type_id as comanyTypeId,
+			a.chinesename as chinesename,
+			a.engname as engname,
+			a.russianname as russianname,
+			a.chineseaddress as chineseaddress,
+			a.engaddress as engaddress,
+			a.postcode as postcode,
+			a.phone as phone,
+			a.tel as tel,
+			a.fax as fax,
+			a.website as website,
+			a.email as email,
+			a.province as province,
+			a.city as city,
+			a.contactperson as contactperson,
+			a.jobtitle as jobtitle,
+			a.principal as principal,
+			a.industryid as industryid,
+			a.busscope as busscope,
+			a.hopecustomers as hopecustomers,
+			a.companyprofile as companyprofile,
+			a.purchaseintention as purchaseintention,
+			a.exhibitors_nature_id as exhibitorsNatureId,
+			b.chinese_name as exhibitorsNatureIdname,
+			a.buslicensepath as buslicensepath,
+			a.companypicture as companypicture,
+			a.companyvideo as companyvideo,
+			a.companypictures as companypictures,
+			a.relateddocumentspath as relateddocumentspath,
+			a.exhibits as exhibits,
+			a.tradinggroupid as tradinggroupid,
+			a.organizationcode as organizationcode,
+			a.addtime as addtime,
+			a.useable as useable,			
+			a.companylogo,
+			a.url,
+			ifnull(c.name,'') as tradinggroupname,
+			ifnull(e.sl,0) as attendcount,a.videourl,
+			a.clickrates,ifnull(u.uid,0) as uid
+        from ebs_companyinfo as a
+        left join wechat_user as u on u.companyid=a.id
+        left join ebs_tradinggroup as c on c.id=a.tradinggroupid
+        left join sys_company_type as b on b.id=a.exhibitors_nature_id
+        left join (select chinesename,count(*) as sl from ebs_companyinfo group by chinesename) as e on e.chinesename=a.chinesename
+        where a.id = #{id}
+    </select>
+    
+    <select id="findOneById" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsCompanyinfo">
+        select
+        	'' as loginname,
+			a.id as id,
+			a.session as session,
+			a.country as country,
+			a.comany_type_id as comanyTypeId,
+			a.chinesename as chinesename,
+			a.engname as engname,
+			a.russianname as russianname,
+			a.chineseaddress as chineseaddress,
+			a.engaddress as engaddress,
+			a.postcode as postcode,
+			a.phone as phone,
+			a.tel as tel,
+			a.fax as fax,
+			a.website as website,
+			a.email as email,
+			a.province as province,
+			a.city as city,
+			case when ifnull(x.name,'')='' then '' else case when ifnull(y.name,'')='' then x.name else concat(x.name,' ',y.name,' ',z.name) end end as countryAndprovince,
+			a.contactperson as contactperson,
+			a.jobtitle as jobtitle,
+			a.principal as principal,
+			a.industryid as industryid,
+			a.busscope as busscope,
+			a.hopecustomers as hopecustomers,
+			a.companyprofile as companyprofile,
+			a.purchaseintention as purchaseintention,
+			a.exhibitors_nature_id as exhibitorsNatureId,
+			a.buslicensepath as buslicensepath,
+			a.companypicture as companypicture,
+			a.companyvideo as companyvideo,
+			a.companypictures as companypictures,
+			a.relateddocumentspath as relateddocumentspath,
+			a.exhibits as exhibits,
+			a.tradinggroupid as tradinggroupid,
+			a.organizationcode as organizationcode,
+			a.addtime as addtime,
+			a.useable as useable,b.chinese_name as xzname,c.chinese_name as hyname,a.videourl
+        from ebs_companyinfo as a
+        left join sys_company_type as b on a.exhibitors_nature_id=b.id
+        left join sys_industry as c on c.id=a.industryid
+        left join sys_country_area as x on x.id=a.country
+        left join sys_country_area as y on y.id=a.province
+        left join sys_country_area as z on z.id=a.city
+        where a.id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsCompanyinfo">
+        select
+			a.id as id,
+			a.session as session,
+			a.country as country,
+			a.comany_type_id as comanyTypeId,
+			a.chinesename as chinesename,
+			a.engname as engname,
+			a.russianname as russianname,
+			a.chineseaddress as chineseaddress,
+			a.engaddress as engaddress,
+			a.postcode as postcode,
+			a.phone as phone,
+			a.tel as tel,
+			a.fax as fax,
+			a.website as website,
+			a.email as email,
+			a.province as province,
+			a.city as city,
+			a.contactperson as contactperson,
+			a.jobtitle as jobtitle,
+			a.principal as principal,
+			a.industryid as industryid,
+			a.busscope as busscope,
+			a.hopecustomers as hopecustomers,
+			a.companyprofile as companyprofile,
+			a.purchaseintention as purchaseintention,
+			a.exhibitors_nature_id as exhibitorsNatureId,
+			a.buslicensepath as buslicensepath,
+			a.companypicture as companypicture,
+			a.companyvideo as companyvideo,
+			a.companypictures as companypictures,
+			a.relateddocumentspath as relateddocumentspath,
+			a.exhibits as exhibits,
+			a.tradinggroupid as tradinggroupid,
+			a.organizationcode as organizationcode,
+			a.addtime as addtime,
+			a.useable as useable,
+			a.companylogo,
+			ifnull(b.name,'') as tradinggroupname,a.videourl
+        from ebs_companyinfo as a
+        left join ebs_tradinggroup as b on a.tradinggroupid=b.id
+        <where>
+			<if test="id != null and id != ''">
+				and a.id = #{id}
+			</if>
+			<if test="session != null and session != ''">
+				and a.session = #{session}
+			</if>
+			<if test="country != null and country != ''">
+				and a.country = #{country}
+			</if>
+			<if test="comanyTypeId != null and comanyTypeId != ''">
+				and a.comany_type_id = #{comanyTypeId}
+			</if>
+			<if test="chinesename != null and chinesename != ''">
+				and a.chinesename = #{chinesename}
+			</if>
+			<if test="engname != null and engname != ''">
+				and a.engname = #{engname}
+			</if>
+			<if test="russianname != null and russianname != ''">
+				and a.russianname = #{russianname}
+			</if>
+			<if test="chineseaddress != null and chineseaddress != ''">
+				and a.chineseaddress = #{chineseaddress}
+			</if>
+			<if test="engaddress != null and engaddress != ''">
+				and a.engaddress = #{engaddress}
+			</if>
+			<if test="postcode != null and postcode != ''">
+				and a.postcode = #{postcode}
+			</if>
+			<if test="phone != null and phone != ''">
+				and a.phone = #{phone}
+			</if>
+			<if test="tel != null and tel != ''">
+				and a.tel = #{tel}
+			</if>
+			<if test="fax != null and fax != ''">
+				and a.fax = #{fax}
+			</if>
+			<if test="website != null and website != ''">
+				and a.website = #{website}
+			</if>
+			<if test="email != null and email != ''">
+				and a.email = #{email}
+			</if>
+			<if test="province != null and province != ''">
+				and a.province = #{province}
+			</if>
+			<if test="city != null and city != ''">
+				and a.city = #{city}
+			</if>
+			<if test="contactperson != null and contactperson != ''">
+				and a.contactperson = #{contactperson}
+			</if>
+			<if test="jobtitle != null and jobtitle != ''">
+				and a.jobtitle = #{jobtitle}
+			</if>
+			<if test="principal != null and principal != ''">
+				and a.principal = #{principal}
+			</if>
+			<if test="industryid != null and industryid != ''">
+				and a.industryid = #{industryid}
+			</if>
+			<if test="busscope != null and busscope != ''">
+				and a.busscope = #{busscope}
+			</if>
+			<if test="hopecustomers != null and hopecustomers != ''">
+				and a.hopecustomers = #{hopecustomers}
+			</if>
+			<if test="companyprofile != null and companyprofile != ''">
+				and a.companyprofile = #{companyprofile}
+			</if>
+			<if test="purchaseintention != null and purchaseintention != ''">
+				and a.purchaseintention = #{purchaseintention}
+			</if>
+			<if test="exhibitorsNatureId != null and exhibitorsNatureId != ''">
+				and a.exhibitors_nature_id = #{exhibitorsNatureId}
+			</if>
+			<if test="buslicensepath != null and buslicensepath != ''">
+				and a.buslicensepath = #{buslicensepath}
+			</if>
+			<if test="relateddocumentspath != null and relateddocumentspath != ''">
+				and a.relateddocumentspath = #{relateddocumentspath}
+			</if>
+			<if test="exhibits != null and exhibits != ''">
+				and a.exhibits = #{exhibits}
+			</if>
+			<if test="tradinggroupid != null and tradinggroupid != ''">
+				and a.tradinggroupid = #{tradinggroupid}
+			</if>
+			<if test="organizationcode != null and organizationcode != ''">
+				and a.organizationcode = #{organizationcode}
+			</if>
+			<if test="addtime != null and addtime != ''">
+				and a.addtime = #{addtime}
+			</if>
+			<if test="useable != null and useable != ''">
+				and a.useable = #{useable}
+			</if>
+        </where>
+        ORDER BY b.orders,a.addtime DESC
+    </select>
+
+    <select id="findHistoryByMap" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsCompanyinfo">
+        select
+			a.id as id,
+			a.session as session,
+			a.country as country,
+			a.comany_type_id as comanyTypeId,
+			a.chinesename as chinesename,
+			a.engname as engname,
+			a.russianname as russianname,
+			a.chineseaddress as chineseaddress,
+			a.engaddress as engaddress,
+			a.postcode as postcode,
+			a.phone as phone,
+			a.tel as tel,
+			a.fax as fax,
+			a.website as website,
+			a.email as email,
+			a.province as province,
+			a.city as city,
+			a.contactperson as contactperson,
+			a.jobtitle as jobtitle,
+			a.principal as principal,
+			a.industryid as industryid,
+			a.busscope as busscope,
+			a.hopecustomers as hopecustomers,
+			a.companyprofile as companyprofile,
+			a.purchaseintention as purchaseintention,
+			a.exhibitors_nature_id as exhibitorsNatureId,
+			a.buslicensepath as buslicensepath,
+			a.companypicture as companypicture,
+			a.companyvideo as companyvideo,
+			a.companypictures as companypictures,
+			a.relateddocumentspath as relateddocumentspath,
+			a.exhibits as exhibits,
+			a.tradinggroupid as tradinggroupid,
+			a.organizationcode as organizationcode,
+			a.addtime as addtime,
+			a.useable as useable,
+			a.companylogo,a.videourl
+        from ebs_companyinfo as a
+        <where>
+			<if test="id != null and id != ''">
+				and a.id = #{id}
+			</if>
+			<if test="session != null and session != ''">
+				and a.session != #{session}
+			</if>
+			<if test="country != null and country != ''">
+				and a.country = #{country}
+			</if>
+			<if test="comanyTypeId != null and comanyTypeId != ''">
+				and a.comany_type_id = #{comanyTypeId}
+			</if>
+			<if test="chinesename != null and chinesename != ''">
+				and a.chinesename = #{chinesename}
+			</if>
+			<if test="engname != null and engname != ''">
+				and a.engname = #{engname}
+			</if>
+			<if test="russianname != null and russianname != ''">
+				and a.russianname = #{russianname}
+			</if>
+			<if test="chineseaddress != null and chineseaddress != ''">
+				and a.chineseaddress = #{chineseaddress}
+			</if>
+			<if test="engaddress != null and engaddress != ''">
+				and a.engaddress = #{engaddress}
+			</if>
+			<if test="postcode != null and postcode != ''">
+				and a.postcode = #{postcode}
+			</if>
+			<if test="phone != null and phone != ''">
+				and a.phone = #{phone}
+			</if>
+			<if test="tel != null and tel != ''">
+				and a.tel = #{tel}
+			</if>
+			<if test="fax != null and fax != ''">
+				and a.fax = #{fax}
+			</if>
+			<if test="website != null and website != ''">
+				and a.website = #{website}
+			</if>
+			<if test="email != null and email != ''">
+				and a.email = #{email}
+			</if>
+			<if test="province != null and province != ''">
+				and a.province = #{province}
+			</if>
+			<if test="city != null and city != ''">
+				and a.city = #{city}
+			</if>
+			<if test="contactperson != null and contactperson != ''">
+				and a.contactperson = #{contactperson}
+			</if>
+			<if test="jobtitle != null and jobtitle != ''">
+				and a.jobtitle = #{jobtitle}
+			</if>
+			<if test="principal != null and principal != ''">
+				and a.principal = #{principal}
+			</if>
+			<if test="industryid != null and industryid != ''">
+				and a.industryid = #{industryid}
+			</if>
+			<if test="busscope != null and busscope != ''">
+				and a.busscope = #{busscope}
+			</if>
+			<if test="hopecustomers != null and hopecustomers != ''">
+				and a.hopecustomers = #{hopecustomers}
+			</if>
+			<if test="companyprofile != null and companyprofile != ''">
+				and a.companyprofile = #{companyprofile}
+			</if>
+			<if test="purchaseintention != null and purchaseintention != ''">
+				and a.purchaseintention = #{purchaseintention}
+			</if>
+			<if test="exhibitorsNatureId != null and exhibitorsNatureId != ''">
+				and a.exhibitors_nature_id = #{exhibitorsNatureId}
+			</if>
+			<if test="buslicensepath != null and buslicensepath != ''">
+				and a.buslicensepath = #{buslicensepath}
+			</if>
+			<if test="relateddocumentspath != null and relateddocumentspath != ''">
+				and a.relateddocumentspath = #{relateddocumentspath}
+			</if>
+			<if test="exhibits != null and exhibits != ''">
+				and a.exhibits = #{exhibits}
+			</if>
+			<if test="tradinggroupid != null and tradinggroupid != ''">
+				and a.tradinggroupid = #{tradinggroupid}
+			</if>
+			<if test="organizationcode != null and organizationcode != ''">
+				and a.organizationcode = #{organizationcode}
+			</if>
+			<if test="addtime != null and addtime != ''">
+				and a.addtime = #{addtime}
+			</if>
+			<if test="useable != null and useable != ''">
+				and a.useable = #{useable}
+			</if>
+        </where>
+        ORDER BY a.addtime DESC
+    </select>
+    
+    
+    <select id="PreviousEnterpriseList" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsCompanyinfo">
+    	select id from ebs_companyinfo 
+	    where 1=1 and session != #{newsession}
+	    <if test="leixing != null and leixing != ''">
+				and comany_type_id = #{leixing}
+		</if>
+		<if test="leixing == null or leixing == ''">
+				and comany_type_id in (0,2)
+		</if>  
+	    <if test="companyName != null and companyName != ''">
+			and chinesename like concat('%',#{companyName},'%')  
+		</if>    	
+	    <if test="companyName != null and companyName != ''">
+			and chinesename like concat('%',#{companyName},'%')  
+		</if>    	
+    	order by session desc,CONVERT(chinesename USING gbk)
+    	limit #{index}, #{size}
+    </select>
+    
+    <select id="PreviousEnterpriseListCount" resultType="int">
+    	select count(*) from ebs_companyinfo 
+	    where 1=1 and session != #{newsession}
+	    <if test="leixing != null and leixing != ''">
+			and comany_type_id = #{leixing}
+		</if>
+		<if test="leixing == null or leixing == ''">
+			and comany_type_id in (0,2)
+		</if>  
+	    <if test="companyName != null and companyName != ''">
+			and chinesename like concat('%',#{companyName},'%')  
+		</if>    	 	
+    </select>
+	
+
+    <select id="list" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsCompanyinfo">
+        select
+        	case a.comany_type_id 
+			when 0 then '交易团'
+			when 1 then '记者'
+			when 2 then '零散展商'
+			when 3 then '布撤展商'
+			when 4 then '外宾'
+			when 5 then '采购商'
+			end as qyleixing,
+			a.id as id,
+			a.session as session,
+			a.country as country,
+			a.comany_type_id as comanyTypeId,
+			a.chinesename as chinesename,
+			a.engname as engname,
+			a.russianname as russianname,
+			a.chineseaddress as chineseaddress,
+			a.engaddress as engaddress,
+			a.postcode as postcode,
+			a.phone as phone,
+			a.tel as tel,
+			a.fax as fax,
+			a.website as website,
+			a.email as email,
+			a.province as province,
+			a.city as city,
+			a.contactperson as contactperson,
+			a.jobtitle as jobtitle,
+			a.principal as principal,
+			a.industryid as industryid,
+			a.busscope as busscope,
+			a.hopecustomers as hopecustomers,
+			a.companyprofile as companyprofile,
+			a.purchaseintention as purchaseintention,
+			a.exhibitors_nature_id as exhibitorsNatureId,
+			a.buslicensepath as buslicensepath,
+			a.relateddocumentspath as relateddocumentspath,
+			a.exhibits as exhibits,
+			a.tradinggroupid as tradinggroupid,
+			a.organizationcode as organizationcode,
+			a.addtime as addtime,
+			a.videourl,
+			a.useable as useable
+			<if test="GeenPass!=null and GeenPass!=''">
+				,b.shuliang
+			</if>
+        from ebs_companyinfo as a
+        <if test="GeenPass!=null and GeenPass!=''">
+        	left join (select companyid,count(*) as shuliang from ebs_personnelcard where session=#{session} and cardtype=#{cardtype} group by companyid) as b on a.id=b.companyid
+        </if>
+        <where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="country != null and country != ''">
+                and a.country = #{country}
+            </if>
+            <if test="comanyTypeId != null and comanyTypeId != ''">
+                and a.comany_type_id in ( ${comanyTypeId} )
+            </if>
+            <if test="chinesename != null and chinesename != ''">
+                and a.chinesename like concat('%',#{chinesename},'%') 
+            </if>
+            <if test="engname != null and engname != ''">
+                and a.engname like concat('%',#{engname},'%')
+            </if>
+            <if test="russianname != null and russianname != ''">
+                and a.russianname like concat('%',#{russianname},'%')
+            </if>
+            <if test="chineseaddress != null and chineseaddress != ''">
+                and a.chineseaddress = #{chineseaddress}
+            </if>
+            <if test="engaddress != null and engaddress != ''">
+                and a.engaddress = #{engaddress}
+            </if>
+            <if test="postcode != null and postcode != ''">
+                and a.postcode = #{postcode}
+            </if>
+            <if test="phone != null and phone != ''">
+                and a.phone = #{phone}
+            </if>
+            <if test="tel != null and tel != ''">
+                and a.tel = #{tel}
+            </if>
+            <if test="fax != null and fax != ''">
+                and a.fax = #{fax}
+            </if>
+            <if test="website != null and website != ''">
+                and a.website = #{website}
+            </if>
+            <if test="email != null and email != ''">
+                and a.email = #{email}
+            </if>
+            <if test="province != null and province != ''">
+                and a.province = #{province}
+            </if>
+            <if test="city != null and city != ''">
+                and a.city = #{city}
+            </if>
+            <if test="contactperson != null and contactperson != ''">
+                and a.contactperson = #{contactperson}
+            </if>
+            <if test="jobtitle != null and jobtitle != ''">
+                and a.jobtitle = #{jobtitle}
+            </if>
+            <if test="principal != null and principal != ''">
+                and a.principal = #{principal}
+            </if>
+            <if test="industryid != null and industryid != ''">
+                and a.industryid = #{industryid}
+            </if>
+            <if test="busscope != null and busscope != ''">
+                and a.busscope = #{busscope}
+            </if>
+            <if test="hopecustomers != null and hopecustomers != ''">
+                and a.hopecustomers = #{hopecustomers}
+            </if>
+            <if test="companyprofile != null and companyprofile != ''">
+                and a.companyprofile = #{companyprofile}
+            </if>
+            <if test="purchaseintention != null and purchaseintention != ''">
+                and a.purchaseintention = #{purchaseintention}
+            </if>
+            <if test="exhibitorsNatureId != null and exhibitorsNatureId != ''">
+                and a.exhibitors_nature_id = #{exhibitorsNatureId}
+            </if>
+            <if test="buslicensepath != null and buslicensepath != ''">
+                and a.buslicensepath = #{buslicensepath}
+            </if>
+            <if test="relateddocumentspath != null and relateddocumentspath != ''">
+                and a.relateddocumentspath = #{relateddocumentspath}
+            </if>
+            <if test="exhibits != null and exhibits != ''">
+                and a.exhibits = #{exhibits}
+            </if>
+            <if test="tradinggroupid != null and tradinggroupid != ''">
+                and a.tradinggroupid = #{tradinggroupid}
+            </if>
+            <if test="organizationcode != null and organizationcode != ''">
+                and a.organizationcode = #{organizationcode}
+            </if>
+            <if test="addtime != null and addtime != ''">
+                and a.addtime = #{addtime}
+            </if>
+            <if test="useable != null and useable != ''">
+                and a.useable = #{useable}
+            </if>
+        </where>
+        order by a.id desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(*) FROM ebs_companyinfo a
+		<where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="country != null and country != ''">
+                and a.country = #{country}
+            </if>
+            <if test="comanyTypeId != null and comanyTypeId != ''">
+                and a.comany_type_id in ( ${comanyTypeId} )
+            </if>
+            <if test="chinesename != null and chinesename != ''">
+                and a.chinesename like concat('%',#{chinesename},'%') 
+            </if>
+            <if test="engname != null and engname != ''">
+                and a.engname like concat('%',#{engname},'%')
+            </if>
+            <if test="russianname != null and russianname != ''">
+                and a.russianname like concat('%',#{russianname},'%')
+            </if>
+            <if test="chineseaddress != null and chineseaddress != ''">
+                and a.chineseaddress = #{chineseaddress}
+            </if>
+            <if test="engaddress != null and engaddress != ''">
+                and a.engaddress = #{engaddress}
+            </if>
+            <if test="postcode != null and postcode != ''">
+                and a.postcode = #{postcode}
+            </if>
+            <if test="phone != null and phone != ''">
+                and a.phone = #{phone}
+            </if>
+            <if test="tel != null and tel != ''">
+                and a.tel = #{tel}
+            </if>
+            <if test="fax != null and fax != ''">
+                and a.fax = #{fax}
+            </if>
+            <if test="website != null and website != ''">
+                and a.website = #{website}
+            </if>
+            <if test="email != null and email != ''">
+                and a.email = #{email}
+            </if>
+            <if test="province != null and province != ''">
+                and a.province = #{province}
+            </if>
+            <if test="city != null and city != ''">
+                and a.city = #{city}
+            </if>
+            <if test="contactperson != null and contactperson != ''">
+                and a.contactperson = #{contactperson}
+            </if>
+            <if test="jobtitle != null and jobtitle != ''">
+                and a.jobtitle = #{jobtitle}
+            </if>
+            <if test="principal != null and principal != ''">
+                and a.principal = #{principal}
+            </if>
+            <if test="industryid != null and industryid != ''">
+                and a.industryid = #{industryid}
+            </if>
+            <if test="busscope != null and busscope != ''">
+                and a.busscope = #{busscope}
+            </if>
+            <if test="hopecustomers != null and hopecustomers != ''">
+                and a.hopecustomers = #{hopecustomers}
+            </if>
+            <if test="companyprofile != null and companyprofile != ''">
+                and a.companyprofile = #{companyprofile}
+            </if>
+            <if test="purchaseintention != null and purchaseintention != ''">
+                and a.purchaseintention = #{purchaseintention}
+            </if>
+            <if test="exhibitorsNatureId != null and exhibitorsNatureId != ''">
+                and a.exhibitors_nature_id = #{exhibitorsNatureId}
+            </if>
+            <if test="buslicensepath != null and buslicensepath != ''">
+                and a.buslicensepath = #{buslicensepath}
+            </if>
+            <if test="relateddocumentspath != null and relateddocumentspath != ''">
+                and a.relateddocumentspath = #{relateddocumentspath}
+            </if>
+            <if test="exhibits != null and exhibits != ''">
+                and a.exhibits = #{exhibits}
+            </if>
+            <if test="tradinggroupid != null and tradinggroupid != ''">
+                and a.tradinggroupid = #{tradinggroupid}
+            </if>
+            <if test="organizationcode != null and organizationcode != ''">
+                and a.organizationcode = #{organizationcode}
+            </if>
+            <if test="addtime != null and addtime != ''">
+                and a.addtime = #{addtime}
+            </if>
+            <if test="useable != null and useable != ''">
+                and a.useable = #{useable}
+            </if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.Exhibitors.model.EbsCompanyinfo" useGeneratedKeys="true" keyProperty="id">
+        insert into ebs_companyinfo(
+        	<trim suffixOverrides=",">
+                <if test="session != null">`session`,</if>
+                <if test="country != null">`country`,</if>
+                <if test="comanyTypeId != null">`comany_type_id`,</if>
+                <if test="chinesename != null">`chinesename`,</if>
+                <if test="engname != null">`engname`,</if>
+                <if test="russianname != null">`russianname`,</if>
+                <if test="chineseaddress != null">`chineseaddress`,</if>
+                <if test="engaddress != null">`engaddress`,</if>
+                <if test="postcode != null">`postcode`,</if>
+                <if test="phone != null">`phone`,</if>
+                <if test="tel != null">`tel`,</if>
+                <if test="fax != null">`fax`,</if>
+                <if test="website != null">`website`,</if>
+                <if test="email != null">`email`,</if>
+                <if test="province != null">`province`,</if>
+                <if test="city != null">`city`,</if>
+                <if test="contactperson != null">`contactperson`,</if>
+                <if test="jobtitle != null">`jobtitle`,</if>
+                <if test="principal != null">`principal`,</if>
+                <if test="industryid != null">`industryid`,</if>
+                <if test="busscope != null">`busscope`,</if>
+                <if test="hopecustomers != null">`hopecustomers`,</if>
+                <if test="companyprofile != null">`companyprofile`,</if>
+                <if test="purchaseintention != null">`purchaseintention`,</if>
+                <if test="exhibitorsNatureId != null">`exhibitors_nature_id`,</if>
+                <if test="buslicensepath != null">`buslicensepath`,</if>
+                <if test="companypicture != null">`companypicture`,</if>
+                <if test="companyvideo != null">`companyvideo`,</if>
+                <if test="companypictures != null">`companypictures`,</if>
+                <if test="relateddocumentspath != null">`relateddocumentspath`,</if>
+                <if test="exhibits != null">`exhibits`,</if>
+                <if test="tradinggroupid != null">`tradinggroupid`,</if>
+                <if test="organizationcode != null">`organizationcode`,</if>
+                <if test="addtime != null">`addtime`,</if>
+                <if test="companylogo != null">`companylogo`,</if>
+                <if test="url != null">`url`,</if>
+                <if test="videourl != null">`videourl`,</if>
+                <if test="useable != null">`useable`</if>
+			</trim>
+		) values (
+        	<trim suffixOverrides=",">
+                <if test="session != null">#{session},</if>
+                <if test="country != null">#{country},</if>
+                <if test="comanyTypeId != null">#{comanyTypeId},</if>
+                <if test="chinesename != null">#{chinesename},</if>
+                <if test="engname != null">#{engname},</if>
+                <if test="russianname != null">#{russianname},</if>
+                <if test="chineseaddress != null">#{chineseaddress},</if>
+                <if test="engaddress != null">#{engaddress},</if>
+                <if test="postcode != null">#{postcode},</if>
+                <if test="phone != null">#{phone},</if>
+                <if test="tel != null">#{tel},</if>
+                <if test="fax != null">#{fax},</if>
+                <if test="website != null">#{website},</if>
+                <if test="email != null">#{email},</if>
+                <if test="province != null">#{province},</if>
+                <if test="city != null">#{city},</if>
+                <if test="contactperson != null">#{contactperson},</if>
+                <if test="jobtitle != null">#{jobtitle},</if>
+                <if test="principal != null">#{principal},</if>
+                <if test="industryid != null">#{industryid},</if>
+                <if test="busscope != null">#{busscope},</if>
+                <if test="hopecustomers != null">#{hopecustomers},</if>
+                <if test="companyprofile != null">#{companyprofile},</if>
+                <if test="purchaseintention != null">#{purchaseintention},</if>
+                <if test="exhibitorsNatureId != null">#{exhibitorsNatureId},</if>
+                <if test="buslicensepath != null">#{buslicensepath},</if>
+                <if test="companypicture != null">#{companypicture},</if>
+                <if test="companyvideo != null">#{companyvideo},</if>
+                <if test="companypictures != null">#{companypictures},</if>
+                <if test="relateddocumentspath != null">#{relateddocumentspath},</if>
+                <if test="exhibits != null">#{exhibits},</if>
+                <if test="tradinggroupid != null">#{tradinggroupid},</if>
+                <if test="organizationcode != null">#{organizationcode},</if>
+                <if test="addtime != null">#{addtime},</if>
+                <if test="companylogo != null">#{companylogo},</if>
+                <if test="url != null">#{url},</if>
+                <if test="videourl != null">#{videourl},</if>
+                <if test="useable != null">#{useable}</if>
+			</trim>
+		)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.Exhibitors.model.EbsCompanyinfo">
+        update ebs_companyinfo
+        <set>
+			<if test="session != null">`session` = #{session},</if>
+			<if test="country != null">`country` = #{country},</if>
+			<if test="comanyTypeId != null">`comany_type_id` = #{comanyTypeId},</if>
+			<if test="chinesename != null">`chinesename` = #{chinesename},</if>
+			<if test="engname != null">`engname` = #{engname},</if>
+			<if test="russianname != null">`russianname` = #{russianname},</if>
+			<if test="chineseaddress != null">`chineseaddress` = #{chineseaddress},</if>
+			<if test="engaddress != null">`engaddress` = #{engaddress},</if>
+			<if test="postcode != null">`postcode` = #{postcode},</if>
+			<if test="phone != null">`phone` = #{phone},</if>
+			<if test="tel != null">`tel` = #{tel},</if>
+			<if test="fax != null">`fax` = #{fax},</if>
+			<if test="website != null">`website` = #{website},</if>
+			<if test="email != null">`email` = #{email},</if>
+			<if test="province != null">`province` = #{province},</if>
+			<if test="city != null">`city` = #{city},</if>
+			<if test="contactperson != null">`contactperson` = #{contactperson},</if>
+			<if test="jobtitle != null">`jobtitle` = #{jobtitle},</if>
+			<if test="principal != null">`principal` = #{principal},</if>
+			<if test="industryid != null">`industryid` = #{industryid},</if>
+			<if test="busscope != null">`busscope` = #{busscope},</if>
+			<if test="hopecustomers != null">`hopecustomers` = #{hopecustomers},</if>
+			<if test="companyprofile != null">`companyprofile` = #{companyprofile},</if>
+			<if test="purchaseintention != null">`purchaseintention` = #{purchaseintention},</if>
+			<if test="exhibitorsNatureId != null">`exhibitors_nature_id` = #{exhibitorsNatureId},</if>
+			<if test="buslicensepath != null">`buslicensepath` = #{buslicensepath},</if>
+			<if test="companypicture != null">`companypicture` = #{companypicture},</if>
+			<if test="companyvideo != null">`companyvideo` = #{companyvideo},</if>
+			<if test="companypictures != null">`companypictures` = #{companypictures},</if>
+			<if test="relateddocumentspath != null">`relateddocumentspath` = #{relateddocumentspath},</if>
+			<if test="exhibits != null">`exhibits` = #{exhibits},</if>
+			<if test="tradinggroupid != null">`tradinggroupid` = #{tradinggroupid},</if>
+			<if test="organizationcode != null">`organizationcode` = #{organizationcode},</if>
+			<if test="addtime != null">`addtime` = #{addtime},</if>
+			<if test="companylogo != null">`companylogo` = #{companylogo},</if>
+			<if test="url != null">`url` = #{url},</if>
+			<if test="auditStatus != null">`audit_status` = #{auditStatus},</if>
+			<if test="auditRemark != null">`audit_remark` = #{auditRemark},</if>
+			<if test="videourl != null">`videourl` = #{videourl},</if>
+			<if test="useable != null">`useable` = #{useable}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from ebs_companyinfo where id = #{id}
+    </delete>
+    
+	 <delete id="delete">
+	   delete from ebs_companyinfo
+	   where tradinggroupid in (SELECT
+	tradinggroupid
+FROM
+	web_member_session
+LEFT JOIN pim_agent ON orgnization_id=pim_agent.id
+WHERE
+	 member_id=#{memberId} AND web_member_session.id=#{sessionId}) 
+	   AND 
+	   id in  
+	       <foreach collection="idList" item="id" index="index"
+	           open="(" close=")" separator=",">
+	           #{id,jdbcType=VARCHAR}
+	       </foreach>;
+	       delete from ebs_booth_apply where company_id in 
+	       <foreach collection="idList" item="id" index="index"
+	           open="(" close=")" separator=",">
+	           #{id,jdbcType=VARCHAR}
+	       </foreach>
+	       AND session_id=#{sessionId} and member_id=#{memberId};
+	       UPDATE ebs_booth
+			SET ebs_booth.company_id = NULL
+			WHERE
+				company_id IN 
+	       <foreach collection="idList" item="id" index="index"
+	           open="(" close=")" separator=",">
+	           #{id,jdbcType=VARCHAR}
+	       </foreach>
+			AND `session` =#{sessionId}
+	 </delete>
+    
+    <select id="getLastCompanyByMemberId" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsCompanyinfo">
+        select *,
+			ebs_companyinfo.exhibitors_nature_id AS exhibitorsNatureId
+        from ebs_companyinfo 
+        where id = (select orgnization_id from web_member_session where member_id=#{memberId} order by addtime Desc limit 1)
+    </select>
+    
+    
+    <select id="getCompanyByMemberIdAndSessionId" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsCompanyinfo">
+        select *,
+			ebs_companyinfo.exhibitors_nature_id AS exhibitorsNatureId
+        from ebs_companyinfo 
+        where id = (select orgnization_id from web_member_session where member_id=#{memberId} order by addtime Desc limit 1)
+    </select>
+	<select id="getTraddingGroupCompanys"  resultType="map">
+		SELECT
+			ebs_companyinfo.id,
+			ebs_booth_apply.apply_id AS applyId,
+			ebs_booth_audit.*,
+			ebs_companyinfo.*,
+			ebs_companyinfo.exhibitors_nature_id AS exhibitorsNatureId,
+			GROUP_CONCAT(`name`) AS booths,
+			COUNT(`name`) AS count,
+			ebs_booth_audit.exhibition_office_audit_status AS auditStatus
+		FROM
+			ebs_booth_apply
+		LEFT JOIN ebs_booth_audit  ON ebs_booth_audit.company_id = ebs_booth_apply.company_id AND ebs_booth_audit.session_id = #{sessionIds}
+		LEFT JOIN ebs_companyinfo ON ebs_companyinfo.id = ebs_booth_apply.company_id
+		LEFT JOIN ebs_booth ON ebs_companyinfo.id = ebs_booth.company_id
+		WHERE
+			member_id = #{memberId}
+				<if test="showRoomId != null">AND ebs_booth.show_room_id=#{showRoomId}</if>
+				<if test="qymc != null and qymc != '' ">
+					AND (
+						ebs_companyinfo.chinesename like concat('%',#{qymc},'%')
+						OR ebs_companyinfo.engname like concat('%',#{qymc},'%')
+						OR ebs_companyinfo.russianname like concat('%',#{qymc},'%')
+					)
+				</if>
+				AND ebs_booth_apply.session_id = #{sessionIds}
+				<if test="exhibitionOfficeAuditStatus != null and exhibitionOfficeAuditStatus != 0">
+					AND ebs_booth_audit.exhibition_office_audit_status=#{exhibitionOfficeAuditStatus}
+				</if>
+				
+				<if test="exhibitionOfficeAuditStatus == 0">
+					AND (
+						ebs_booth_audit.exhibition_office_audit_status=#{exhibitionOfficeAuditStatus} 
+						OR isnull(ebs_booth_audit.exhibition_office_audit_status)
+						)
+				</if>
+		GROUP BY
+			apply_id
+			order by ebs_booth_apply.apply_id
+		LIMIT ${start}, ${limit}
+	  </select>
+    
+	<select id="getTraddingGroupCompanysCount"  resultType="int">
+		select count(*) from (
+			SELECT
+			 ebs_booth_apply.*
+			FROM
+			 ebs_booth_apply
+			LEFT JOIN ebs_booth_audit  ON ebs_booth_audit.company_id = ebs_booth_apply.company_id AND ebs_booth_audit.session_id = #{sessionIds,jdbcType=INTEGER}
+			LEFT JOIN ebs_companyinfo ON ebs_companyinfo.id = ebs_booth_apply.company_id
+			LEFT JOIN ebs_booth ON ebs_companyinfo.id = ebs_booth.company_id
+			WHERE
+				member_id = #{memberId}
+				<if test="showRoomId != null">
+					AND ebs_booth.show_room_id=#{showRoomId}
+				</if>
+				<if test="qymc != null and qymc != '' ">
+					AND (
+						ebs_companyinfo.chinesename like concat('%',#{qymc},'%')
+						OR ebs_companyinfo.engname like concat('%',#{qymc},'%')
+						OR ebs_companyinfo.russianname like concat('%',#{qymc},'%')
+					)
+				</if>
+				AND ebs_booth_apply.session_id = #{sessionIds}
+				<if test="exhibitionOfficeAuditStatus != null and exhibitionOfficeAuditStatus != 0">
+					AND ebs_booth_audit.exhibition_office_audit_status=#{exhibitionOfficeAuditStatus}
+				</if>
+				
+				<if test="exhibitionOfficeAuditStatus == 0">
+					AND (
+						ebs_booth_audit.exhibition_office_audit_status=#{exhibitionOfficeAuditStatus} 
+						OR isnull(ebs_booth_audit.exhibition_office_audit_status)
+						)
+				</if>
+			GROUP BY
+			 apply_id
+			) as a
+	 </select>
+	<select id="getTraddingGroupHistoryCompanys"  resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsCompanyinfo">
+SELECT
+	ebs_companyinfo.*
+FROM
+	web_member_session
+LEFT JOIN pim_agent ON orgnization_id = pim_agent.id
+LEFT JOIN ebs_companyinfo ON pim_agent.tradinggroupid = ebs_companyinfo.tradinggroupid
+WHERE
+	member_id = #{memberId}
+AND web_member_session.id = #{sessionId}
+AND ebs_companyinfo.`session` != #{sessionId}
+AND chinesename LIKE concat('%',#{chinesename},'%')
+GROUP BY chinesename
+ORDER BY ebs_companyinfo.addtime DESC
+		LIMIT ${start}, ${limit}
+	  </select>
+    
+	<select id="getTraddingGroupHistoryCompanysCount"  resultType="int">
+
+SELECT count(*) from (SELECT
+	count(DISTINCT(chinesename))
+FROM
+	web_member_session
+LEFT JOIN pim_agent ON orgnization_id = pim_agent.id
+LEFT JOIN ebs_companyinfo ON pim_agent.tradinggroupid = ebs_companyinfo.tradinggroupid
+WHERE
+	member_id = #{memberId}
+AND web_member_session.id = #{sessionId}
+AND ebs_companyinfo.`session` != #{sessionId}
+AND chinesename LIKE concat('%',#{chinesename},'%')
+GROUP BY chinesename
+) as c
+	 </select>
+	  
+	  
+	 <select id="EnterpriseWithdrawallist" resultType="map">
+        select c.id,c.chinesename,c.contactperson,c.tel,d.chinese_name as exhibitorsnaturename from pim_agent as a
+		inner join ebs_tradinggroup as b on a.tradinggroupid=b.id 
+		inner join ebs_companyinfo as c on c.tradinggroupid=b.id and c.session=#{session}
+		left join sys_company_type as d on d.id=c.exhibitors_nature_id
+		where a.id=#{dbyid}
+		<if test="chinesename != null and chinesename != ''">
+           and c.chinesename like concat('%',#{chinesename},'%') 
+        </if>
+        <!--
+        SELECT 
+		 ebs_booth_apply.apply_id as applyid,ebs_companyinfo.chinesename,ebs_companyinfo.contactperson,ebs_companyinfo.tel,ebs_companyinfo.id,sys_company_type.chinese_name as exhibitorsnaturename
+		FROM
+		 ebs_booth_apply
+		LEFT JOIN ebs_companyinfo ON ebs_companyinfo.id = ebs_booth_apply.company_id
+		left join sys_company_type on sys_company_type.id=ebs_companyinfo.exhibitors_nature_id
+		WHERE
+		ebs_booth_apply.member_id = #{memberid}
+		AND ebs_booth_apply.session_id = #{session}
+		<if test="chinesename != null and chinesename != ''">
+           and ebs_companyinfo.chinesename like concat('%',#{chinesename},'%') 
+        </if>
+        -->
+        order by b.orders,c.id desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="EnterpriseWithdrawallistcount" resultType="int">
+		select count(*) from pim_agent as a
+		inner join ebs_tradinggroup as b on a.tradinggroupid=b.id 
+		inner join ebs_companyinfo as c on c.tradinggroupid=b.id and c.session=#{session}
+		where a.id=#{dbyid}
+		<if test="chinesename != null and chinesename != ''">
+           and c.chinesename like concat('%',#{chinesename},'%') 
+        </if>
+		<!--SELECT 
+		 count(*)
+		FROM
+		 ebs_booth_apply
+		LEFT JOIN ebs_companyinfo ON ebs_companyinfo.id = ebs_booth_apply.company_id
+		left join sys_company_type on sys_company_type.id=ebs_companyinfo.exhibitors_nature_id
+		WHERE
+		ebs_booth_apply.member_id = #{memberid}
+		AND ebs_booth_apply.session_id = #{session}
+		<if test="chinesename != null and chinesename != ''">
+           and ebs_companyinfo.chinesename like concat('%',#{chinesename},'%') 
+   </if>-->
+	</select> 
+	
+	<select id="GetAgentTypes" resultType="map">
+		select c.id,a.quantity from pim_agenttype as a
+		inner join cm_certificate_type as b on a.cardtype=b.id and b.session=12
+		inner join cm_certificate_type as c on b.chinesename=c.chinesename and c.session=#{newsession}
+		where agentid=#{agentid} and rounds=#{oldsession}
+	</select>
+	
+	<select id="GetMemberInfoByCompanyId" resultType="cn.org.chtf.card.manage.member.pojo.Member">
+		call sp_GetMemberByCompanyId(#{companyid},#{session});
+	</select>
+	
+	<select id="GetTopComapnyInfo" resultType="map">
+		select companylogo as picture,a.id as companyId,a.chinesename as companyName,ifnull(b.name,'') as area,'' as num,
+		comany_type_id as companyType 
+		from ebs_companyinfo as a
+		left join ebs_tradinggroup as b on a.tradinggroupid=b.id		
+		where a.session=#{sessionId}
+		and ifnull(a.companylogo,'')!=''
+		and a.comany_type_id in (0,2,7) and a.audit_status = 2
+		order by rand() limit ${count}
+	</select>
+	
+	<select id="GetCompanyBooth" resultType="map">
+		select name as boothName from ebs_booth where company_id=#{companyid} and session=#{session} order by name
+	</select>
+	  
+	  
+</mapper>

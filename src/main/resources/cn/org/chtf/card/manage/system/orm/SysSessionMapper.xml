@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.system.dao.SysSessionMapper">
+
+	<select id="getAllSession" resultType="map">
+		select a.id,a.sessionid,a.status,a.site_name,a.exhibitionid from sys_session as a
+		inner join sys_exhibition as b on a.exhibitionid=b.id and b.useable=1
+		<if test="url != null">
+			and b.url=#{url}
+		</if>
+		ORDER BY a.exhibitionid,a.id;
+	</select>
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.system.model.SysSession">
+        select a.id,a.exhibitionid,a.sessionid,a.remark,a.status,a.addtime,a.site_head_logo as siteHeadLogo
+        ,a.site_smart_logo as siteSmartLogo
+        ,a.purchaser_register_status as purchaserRegisterStatus
+        ,a.purchaser_card_limit as purchaserCardLimit
+        ,a.evidence_delay as evidenceDelay
+        ,date_format(a.delegation_add_company_end_date,'%Y-%m-%d') as delegationAddCompanyEndDate
+        ,a.exhibitors_regist_end_date as exhibitorsRegistEndDate
+        ,a.foreign_exhibitors_regist_end_date as foreignExhibitorsRegistEndDate
+        ,a.certificates_end_date as certificatesEndDate
+        ,a.certificates_fpr_end_date as certificatesFprEndDate
+        ,a.certificates_exhibitors_end_date as certificatesExhibitorsEndDate
+        ,a.start_date as startDate
+        ,a.end_date as endDate
+        ,a.site_name as siteName
+        ,a.site_description as siteDescription
+        ,a.site_keywords as siteKeywords
+        ,b.exhibitionname        from sys_session as a
+        left join sys_exhibition as b on a.exhibitionid=b.id
+        where a.id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.system.model.SysSession">
+        select a.id,a.exhibitionid,a.sessionid,a.remark,a.status,a.addtime,a.site_head_logo as siteHeadLogo
+        ,a.site_smart_logo as siteSmartLogo
+        ,a.purchaser_register_status as purchaserRegisterStatus
+        ,a.purchaser_card_limit as purchaserCardLimit
+        ,a.evidence_delay as evidenceDelay
+        ,a.delegation_add_company_end_date as delegationAddCompanyEndDate
+        ,a.exhibitors_regist_end_date as exhibitorsRegistEndDate
+        ,a.foreign_exhibitors_regist_end_date as foreignExhibitorsRegistEndDate
+        ,a.certificates_end_date as certificatesEndDate
+        ,a.certificates_fpr_end_date as certificatesFprEndDate
+        ,a.certificates_exhibitors_end_date as certificatesExhibitorsEndDate
+        ,a.start_date as startDate
+        ,a.end_date as endDate
+        ,a.site_name as siteName
+        ,a.site_description as siteDescription
+        ,a.site_keywords as siteKeywords        from sys_session as a
+        <where>
+                            <if test="id != null and id != ''">
+                    and a.id = #{id}
+                </if>
+                            <if test="exhibitionid != null and exhibitionid != ''">
+                    and a.exhibitionid = #{exhibitionid}
+                </if>
+                            <if test="sessionid != null and sessionid != ''">
+                    and a.sessionid = #{sessionid}
+                </if>
+                            <if test="remark != null and remark != ''">
+                    and a.remark = #{remark}
+                </if>
+                            <if test="status != null and status != ''">
+                    and a.status = #{status}
+                </if>
+                            <if test="addtime != null and addtime != ''">
+                    and a.addtime = #{addtime}
+                </if>
+                            <if test="siteHeadLogo != null and siteHeadLogo != ''">
+                    and a.site_head_logo = #{siteHeadLogo}
+                </if>
+                            <if test="siteSmartLogo != null and siteSmartLogo != ''">
+                    and a.site_smart_logo = #{siteSmartLogo}
+                </if>
+                            <if test="purchaserRegisterStatus != null and purchaserRegisterStatus != ''">
+                    and a.purchaser_register_status = #{purchaserRegisterStatus}
+                </if>
+                            <if test="purchaserCardLimit != null and purchaserCardLimit != ''">
+                    and a.purchaser_card_limit = #{purchaserCardLimit}
+                </if>
+                            <if test="evidenceDelay != null and evidenceDelay != ''">
+                    and a.evidence_delay = #{evidenceDelay}
+                </if>
+                            <if test="delegationAddCompanyEndDate != null and delegationAddCompanyEndDate != ''">
+                    and a.delegation_add_company_end_date = #{delegationAddCompanyEndDate}
+                </if>
+                            <if test="exhibitorsRegistEndDate != null and exhibitorsRegistEndDate != ''">
+                    and a.exhibitors_regist_end_date = #{exhibitorsRegistEndDate}
+                </if>
+                            <if test="foreignExhibitorsRegistEndDate != null and foreignExhibitorsRegistEndDate != ''">
+                    and a.foreign_exhibitors_regist_end_date = #{foreignExhibitorsRegistEndDate}
+                </if>
+                            <if test="certificatesEndDate != null and certificatesEndDate != ''">
+                    and a.certificates_end_date = #{certificatesEndDate}
+                </if>
+                            <if test="certificatesFprEndDate != null and certificatesFprEndDate != ''">
+                    and a.certificates_fpr_end_date = #{certificatesFprEndDate}
+                </if>
+                            <if test="certificatesExhibitorsEndDate != null and certificatesExhibitorsEndDate != ''">
+                    and a.certificates_exhibitors_end_date = #{certificatesExhibitorsEndDate}
+                </if>
+                            <if test="startDate != null and startDate != ''">
+                    and a.start_date = #{startDate}
+                </if>
+                            <if test="endDate != null and endDate != ''">
+                    and a.end_date = #{endDate}
+                </if>
+                            <if test="siteName != null and siteName != ''">
+                    and a.site_name = #{siteName}
+                </if>
+                            <if test="siteDescription != null and siteDescription != ''">
+                    and a.site_description = #{siteDescription}
+                </if>
+                            <if test="siteKeywords != null and siteKeywords != ''">
+                    and a.site_keywords = #{siteKeywords}
+                </if>
+                    </where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.system.model.SysSession">
+        select a.id,a.exhibitionid,a.sessionid,a.remark,a.status,a.addtime,a.site_head_logo as siteHeadLogo
+        ,a.site_smart_logo as siteSmartLogo
+        ,a.purchaser_register_status as purchaserRegisterStatus
+        ,a.purchaser_card_limit as purchaserCardLimit
+        ,a.evidence_delay as evidenceDelay
+        ,a.delegation_add_company_end_date as delegationAddCompanyEndDate
+        ,a.exhibitors_regist_end_date as exhibitorsRegistEndDate
+        ,a.foreign_exhibitors_regist_end_date as foreignExhibitorsRegistEndDate
+        ,a.certificates_end_date as certificatesEndDate
+        ,a.certificates_fpr_end_date as certificatesFprEndDate
+        ,a.certificates_exhibitors_end_date as certificatesExhibitorsEndDate
+        ,a.start_date as startDate
+        ,a.end_date as endDate
+        ,a.site_name as siteName
+        ,a.site_description as siteDescription
+        ,a.site_keywords as siteKeywords,b.exhibitionname        from sys_session as a
+        left join sys_exhibition as b on a.exhibitionid=b.id
+                <where>
+                            <if test="id != null and id != ''">and a.id =
+                    #{id}
+                </if>
+                            <if test="exhibitionid != null and exhibitionid != ''">and a.exhibitionid =
+                    #{exhibitionid}
+                </if>
+                            <if test="sessionid != null and sessionid != ''">and a.sessionid =
+                    #{sessionid}
+                </if>
+                            <if test="remark != null and remark != ''">and a.remark =
+                    #{remark}
+                </if>
+                            <if test="status != null and status != ''">and a.status =
+                    #{status}
+                </if>
+                            <if test="addtime != null and addtime != ''">and a.addtime =
+                    #{addtime}
+                </if>
+                            <if test="siteHeadLogo != null and siteHeadLogo != ''">and a.site_head_logo =
+                    #{siteHeadLogo}
+                </if>
+                            <if test="siteSmartLogo != null and siteSmartLogo != ''">and a.site_smart_logo =
+                    #{siteSmartLogo}
+                </if>
+                            <if test="purchaserRegisterStatus != null and purchaserRegisterStatus != ''">and a.purchaser_register_status =
+                    #{purchaserRegisterStatus}
+                </if>
+                            <if test="purchaserCardLimit != null and purchaserCardLimit != ''">and a.purchaser_card_limit =
+                    #{purchaserCardLimit}
+                </if>
+                            <if test="evidenceDelay != null and evidenceDelay != ''">and a.evidence_delay =
+                    #{evidenceDelay}
+                </if>
+                            <if test="delegationAddCompanyEndDate != null and delegationAddCompanyEndDate != ''">and a.delegation_add_company_end_date =
+                    #{delegationAddCompanyEndDate}
+                </if>
+                            <if test="exhibitorsRegistEndDate != null and exhibitorsRegistEndDate != ''">and a.exhibitors_regist_end_date =
+                    #{exhibitorsRegistEndDate}
+                </if>
+                            <if test="foreignExhibitorsRegistEndDate != null and foreignExhibitorsRegistEndDate != ''">and a.foreign_exhibitors_regist_end_date =
+                    #{foreignExhibitorsRegistEndDate}
+                </if>
+                            <if test="certificatesEndDate != null and certificatesEndDate != ''">and a.certificates_end_date =
+                    #{certificatesEndDate}
+                </if>
+                            <if test="certificatesFprEndDate != null and certificatesFprEndDate != ''">and a.certificates_fpr_end_date =
+                    #{certificatesFprEndDate}
+                </if>
+                            <if test="certificatesExhibitorsEndDate != null and certificatesExhibitorsEndDate != ''">and a.certificates_exhibitors_end_date =
+                    #{certificatesExhibitorsEndDate}
+                </if>
+                            <if test="startDate != null and startDate != ''">and a.start_date =
+                    #{startDate}
+                </if>
+                            <if test="endDate != null and endDate != ''">and a.end_date =
+                    #{endDate}
+                </if>
+                            <if test="siteName != null and siteName != ''">and a.site_name =
+                    #{siteName}
+                </if>
+                            <if test="siteDescription != null and siteDescription != ''">and a.site_description =
+                    #{siteDescription}
+                </if>
+                            <if test="siteKeywords != null and siteKeywords != ''">and a.site_keywords =
+                    #{siteKeywords}
+                </if>
+                    </where>
+        order by a.id desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(id) 
+		FROM 
+		sys_session
+		<where>
+                            <if test="id != null and id != ''">and id =
+                    #{id}
+                </if>
+                            <if test="exhibitionid != null and exhibitionid != ''">and exhibitionid =
+                    #{exhibitionid}
+                </if>
+                            <if test="sessionid != null and sessionid != ''">and sessionid =
+                    #{sessionid}
+                </if>
+                            <if test="remark != null and remark != ''">and remark =
+                    #{remark}
+                </if>
+                            <if test="status != null and status != ''">and status =
+                    #{status}
+                </if>
+                            <if test="addtime != null and addtime != ''">and addtime =
+                    #{addtime}
+                </if>
+                            <if test="siteHeadLogo != null and siteHeadLogo != ''">and site_head_logo =
+                    #{siteHeadLogo}
+                </if>
+                            <if test="siteSmartLogo != null and siteSmartLogo != ''">and site_smart_logo =
+                    #{siteSmartLogo}
+                </if>
+                            <if test="purchaserRegisterStatus != null and purchaserRegisterStatus != ''">and purchaser_register_status =
+                    #{purchaserRegisterStatus}
+                </if>
+                            <if test="purchaserCardLimit != null and purchaserCardLimit != ''">and purchaser_card_limit =
+                    #{purchaserCardLimit}
+                </if>
+                            <if test="evidenceDelay != null and evidenceDelay != ''">and evidence_delay =
+                    #{evidenceDelay}
+                </if>
+                            <if test="delegationAddCompanyEndDate != null and delegationAddCompanyEndDate != ''">and delegation_add_company_end_date =
+                    #{delegationAddCompanyEndDate}
+                </if>
+                            <if test="exhibitorsRegistEndDate != null and exhibitorsRegistEndDate != ''">and exhibitors_regist_end_date =
+                    #{exhibitorsRegistEndDate}
+                </if>
+                            <if test="foreignExhibitorsRegistEndDate != null and foreignExhibitorsRegistEndDate != ''">and foreign_exhibitors_regist_end_date =
+                    #{foreignExhibitorsRegistEndDate}
+                </if>
+                            <if test="certificatesEndDate != null and certificatesEndDate != ''">and certificates_end_date =
+                    #{certificatesEndDate}
+                </if>
+                            <if test="certificatesFprEndDate != null and certificatesFprEndDate != ''">and certificates_fpr_end_date =
+                    #{certificatesFprEndDate}
+                </if>
+                            <if test="certificatesExhibitorsEndDate != null and certificatesExhibitorsEndDate != ''">and certificates_exhibitors_end_date =
+                    #{certificatesExhibitorsEndDate}
+                </if>
+                            <if test="startDate != null and startDate != ''">and start_date =
+                    #{startDate}
+                </if>
+                            <if test="endDate != null and endDate != ''">and end_date =
+                    #{endDate}
+                </if>
+                            <if test="siteName != null and siteName != ''">and site_name =
+                    #{siteName}
+                </if>
+                            <if test="siteDescription != null and siteDescription != ''">and site_description =
+                    #{siteDescription}
+                </if>
+                            <if test="siteKeywords != null and siteKeywords != ''">and site_keywords =
+                    #{siteKeywords}
+                </if>
+                    </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.system.model.SysSession"            useGeneratedKeys="true" keyProperty="id">
+        insert into sys_session(<trim suffixOverrides=",">
+                                                        <if test="exhibitionid != null">`exhibitionid`,</if>
+                                                <if test="sessionid != null">`sessionid`,</if>
+                                                <if test="remark != null">`remark`,</if>
+                                                <if test="status != null">`status`,</if>
+                                                <if test="addtime != null">`addtime`,</if>
+                                                <if test="siteHeadLogo != null">`site_head_logo`,</if>
+                                                <if test="siteSmartLogo != null">`site_smart_logo`,</if>
+                                                <if test="purchaserRegisterStatus != null">`purchaser_register_status`,</if>
+                                                <if test="purchaserCardLimit != null">`purchaser_card_limit`,</if>
+                                                <if test="evidenceDelay != null">`evidence_delay`,</if>
+                                                <if test="delegationAddCompanyEndDate != null">`delegation_add_company_end_date`,</if>
+                                                <if test="exhibitorsRegistEndDate != null">`exhibitors_regist_end_date`,</if>
+                                                <if test="foreignExhibitorsRegistEndDate != null">`foreign_exhibitors_regist_end_date`,</if>
+                                                <if test="certificatesEndDate != null">`certificates_end_date`,</if>
+                                                <if test="certificatesFprEndDate != null">`certificates_fpr_end_date`,</if>
+                                                <if test="certificatesExhibitorsEndDate != null">`certificates_exhibitors_end_date`,</if>
+                                                <if test="startDate != null">`start_date`,</if>
+                                                <if test="endDate != null">`end_date`,</if>
+                                                <if test="siteName != null">`site_name`,</if>
+                                                <if test="siteDescription != null">`site_description`,</if>
+                                                <if test="siteKeywords != null">`site_keywords`</if>
+                    </trim>)
+        values (<trim suffixOverrides=",">
+                                                        <if test="exhibitionid != null">#{exhibitionid},</if>
+                                                <if test="sessionid != null">#{sessionid},</if>
+                                                <if test="remark != null">#{remark},</if>
+                                                <if test="status != null">#{status},</if>
+                                                <if test="addtime != null">#{addtime},</if>
+                                                <if test="siteHeadLogo != null">#{siteHeadLogo},</if>
+                                                <if test="siteSmartLogo != null">#{siteSmartLogo},</if>
+                                                <if test="purchaserRegisterStatus != null">#{purchaserRegisterStatus},</if>
+                                                <if test="purchaserCardLimit != null">#{purchaserCardLimit},</if>
+                                                <if test="evidenceDelay != null">#{evidenceDelay},</if>
+                                                <if test="delegationAddCompanyEndDate != null">#{delegationAddCompanyEndDate},</if>
+                                                <if test="exhibitorsRegistEndDate != null">#{exhibitorsRegistEndDate},</if>
+                                                <if test="foreignExhibitorsRegistEndDate != null">#{foreignExhibitorsRegistEndDate},</if>
+                                                <if test="certificatesEndDate != null">#{certificatesEndDate},</if>
+                                                <if test="certificatesFprEndDate != null">#{certificatesFprEndDate},</if>
+                                                <if test="certificatesExhibitorsEndDate != null">#{certificatesExhibitorsEndDate},</if>
+                                                <if test="startDate != null">#{startDate},</if>
+                                                <if test="endDate != null">#{endDate},</if>
+                                                <if test="siteName != null">#{siteName},</if>
+                                                <if test="siteDescription != null">#{siteDescription},</if>
+                                                <if test="siteKeywords != null">#{siteKeywords}</if>
+                    </trim>)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.system.model.SysSession">
+        update sys_session
+        <set>
+                                                                            <if test="exhibitionid != null">`exhibitionid` = #{exhibitionid}
+                        ,</if>
+                                                                <if test="sessionid != null">`sessionid` = #{sessionid}
+                        ,</if>
+                                                                <if test="remark != null">`remark` = #{remark}
+                        ,</if>
+                                                                <if test="status != null">`status` = #{status}
+                        ,</if>
+                                                                <if test="addtime != null">`addtime` = #{addtime}
+                        ,</if>
+                                                                <if test="siteHeadLogo != null">`site_head_logo` = #{siteHeadLogo}
+                        ,</if>
+                                                                <if test="siteSmartLogo != null">`site_smart_logo` = #{siteSmartLogo}
+                        ,</if>
+                                                                <if test="purchaserRegisterStatus != null">`purchaser_register_status` = #{purchaserRegisterStatus}
+                        ,</if>
+                                                                <if test="purchaserCardLimit != null">`purchaser_card_limit` = #{purchaserCardLimit}
+                        ,</if>
+                                                                <if test="evidenceDelay != null">`evidence_delay` = #{evidenceDelay}
+                        ,</if>
+                                                                <if test="delegationAddCompanyEndDate != null">`delegation_add_company_end_date` = #{delegationAddCompanyEndDate}
+                        ,</if>
+                                                                <if test="exhibitorsRegistEndDate != null">`exhibitors_regist_end_date` = #{exhibitorsRegistEndDate}
+                        ,</if>
+                                                                <if test="foreignExhibitorsRegistEndDate != null">`foreign_exhibitors_regist_end_date` = #{foreignExhibitorsRegistEndDate}
+                        ,</if>
+                                                                <if test="certificatesEndDate != null">`certificates_end_date` = #{certificatesEndDate}
+                        ,</if>
+                                                                <if test="certificatesFprEndDate != null">`certificates_fpr_end_date` = #{certificatesFprEndDate}
+                        ,</if>
+                                                                <if test="certificatesExhibitorsEndDate != null">`certificates_exhibitors_end_date` = #{certificatesExhibitorsEndDate}
+                        ,</if>
+                                                                <if test="startDate != null">`start_date` = #{startDate}
+                        ,</if>
+                                                                <if test="endDate != null">`end_date` = #{endDate}
+                        ,</if>
+                                                                <if test="siteName != null">`site_name` = #{siteName}
+                        ,</if>
+                                                                <if test="siteDescription != null">`site_description` = #{siteDescription}
+                        ,</if>
+                                                                <if test="siteKeywords != null">`site_keywords` = #{siteKeywords}
+                        </if>
+                                    </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from sys_session
+        where id = #{id}
+    </delete>
+    
+    <select id="getSessionID" resultType="String">
+    	select a.id from sys_session as a
+		inner join sys_exhibition as b on a.exhibitionid=b.id and b.useable=1 and b.url=#{url}
+		where a.status = 1;
+    </select>
+    
+    <select id="getExhibitionInfo" resultType="map">
+    SELECT
+		a.id AS sessionId,
+		a.exhibitionid AS exhibitionId,
+		b.exhibitionname AS exhibitionName,
+		b.russianexhibitionname AS ruExhibitionName,
+		b.japaneseexhibitionname AS jpExhibitionName,
+		b.englishexhibitionname AS enExhibitionName,
+		b.hangulexhibitionname AS krExhibitionName,
+		a.sessionid AS sessionName,
+		a.remark AS sessionTitle,
+		a. STATUS AS `status`,
+		a.addtime,
+		a.site_head_logo AS siteHeadLogo,
+		a.site_head_logo_inner AS siteHeadLogoInner,
+		a.site_smart_logo AS siteSmartLogo,
+		a.purchaser_register_status AS purchaserRegisterStatus,
+		a.purchaser_card_limit AS purchaserCardLimit,
+		a.evidence_delay AS evidenceDelay,
+		a.delegation_add_company_end_date AS delegationAddCompanyEndDate,
+		a.exhibitors_regist_end_date AS exhibitorsRegistEndDate,
+		a.foreign_exhibitors_regist_end_date AS foreignExhibitorsRegistEndDate,
+		a.certificates_end_date AS certificatesEndDate,
+		a.certificates_fpr_end_date AS certificatesFprEndDate,
+		a.certificates_exhibitors_end_date AS certificatesExhibitorsEndDate,
+		a.start_date AS startDate,
+		a.end_date AS endDate,
+		concat(date_format(start_date,'%Y年%m月%d日'),'-',date_format(end_date,'%d日')) as startenddate,
+		a.site_name AS siteName,
+		a.site_description AS siteDescription,
+		a.site_keywords AS siteKeywords
+	FROM
+		sys_session AS a
+	INNER JOIN sys_exhibition AS b ON a.exhibitionid = b.id
+	AND b.useable = 1  and b.url=#{url}
+	WHERE
+		a. STATUS = 1
+    </select>
+    
+    <select id="getHistorySession" resultType="map">
+    	select a.id,a.sessionid from sys_session as a
+		inner join sys_exhibition as b on a.exhibitionid=b.id and b.useable=1 and b.url=#{url}
+		where a.status = 0;
+    </select>
+    
+    <select id="getHistoryCountryCount" resultType="map">
+    	select a.id,a.sessionid,ifnull(icount,0) as icount from (
+		select a.id,a.sessionid from sys_session as a
+		inner join sys_exhibition as b on a.exhibitionid=b.id and b.useable=1 and b.url=#{url}
+		where a.status = 0
+		) as a
+		left join (
+				select session,count(1) as icount from (
+				select parent_id,session from ebs_companyinfo as a
+				inner join sys_country_area as b on a.province=b.id
+				group by session,parent_id
+			) as a group by session
+		) as b on a.id=b.session
+    </select>
+    
+    <select id="getHistoryCompanyCount" resultType="map">
+    	select a.sessionid,ifnull(b.gn,0) as gn,ifnull(b.gw,0) as gw from (
+		select a.id,a.sessionid from sys_session as a
+		inner join sys_exhibition as b on a.exhibitionid=b.id and b.useable=1 and b.url=#{url}
+		where a.status = 0
+		) as a
+		left join (
+				select session,sum(case when parent_id=900000 then 1 else 0 end) as gn,sum(case when parent_id=900000 then 0 else 1 end) as gw from ebs_companyinfo as a
+				inner join sys_country_area as b on a.province=b.id
+				group by session
+		) as b on a.id=b.session
+    </select>
+    
+    <select id="GetLastSessionInfoByExhibitionid" resultType="cn.org.chtf.card.manage.system.model.SysSession">
+    	select a.id,a.exhibitionid,a.sessionid,a.remark,a.status,a.addtime,a.site_head_logo as siteHeadLogo
+        ,a.site_smart_logo as siteSmartLogo
+        ,a.purchaser_register_status as purchaserRegisterStatus
+        ,a.purchaser_card_limit as purchaserCardLimit
+        ,a.evidence_delay as evidenceDelay
+        ,a.delegation_add_company_end_date as delegationAddCompanyEndDate
+        ,a.exhibitors_regist_end_date as exhibitorsRegistEndDate
+        ,a.foreign_exhibitors_regist_end_date as foreignExhibitorsRegistEndDate
+        ,a.certificates_end_date as certificatesEndDate
+        ,a.certificates_fpr_end_date as certificatesFprEndDate
+        ,a.certificates_exhibitors_end_date as certificatesExhibitorsEndDate
+        ,a.start_date as startDate
+        ,a.end_date as endDate
+        ,a.site_name as siteName
+        ,a.site_description as siteDescription
+        ,a.site_keywords as siteKeywords from sys_session as a where exhibitionid=#{exhibitionid} order by id desc limit 1
+    </select>
+    
+    <update id="updateStatus" parameterType="cn.org.chtf.card.manage.system.model.SysSession">
+    	update sys_session set status=0 where exhibitionid=#{exhibitionid}
+    </update>
+</mapper>

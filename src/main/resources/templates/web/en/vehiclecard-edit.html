@@ -1,0 +1,68 @@
+    <div class="modal inmodal" id="edit-model" style="display:none">
+		<div class="modal-content animated bounceInUp">
+			<div class="ibox-content">
+				<fieldset class="layui-elem-field layui-field-title" style="border-top:0px">
+					<form class="layui-form layui-form-pane" action="" id="editform">
+					    <input type="hidden" name="id" value="0"  />
+					    <input type="hidden" name="session" value="${exhibitionSessionId}"  />
+					    <input type="hidden" name="cardnature" value="0"  />
+					    <input type="hidden" name="isback" value="1"  />
+						<table width="100%"  class="layui-table form-content">
+						<#if isOut??><input type="hidden" name="isout" value="${isOut}" /></#if>
+							<tr class="papers-edit-bg"><td colspan="3" style="border-right: none;">add ${certificateModal.engname}</td><td align="right"><a class="layui-icon layui-icon-close close"></a></td></tr>
+							<tr>
+								<td>*driver name</td>
+								<td colspan="3"><input class="layui-input" autocomplete="off" id="drivername" name="drivername" type="text"  lay-verify="required"></td>
+							</tr>
+							<tr>
+								<td>*company name</td>
+								<td colspan="3"><input class="layui-input" autocomplete="off" id="companyname" name="companyname" type="text"  lay-verify="required"></td>
+								
+							</tr>
+							<tr>
+								<td>type of driving certificate</td>
+								<td colspan="3">
+								${certificateModal.chinesename}
+								<input type="hidden" name="cardtype" id="cardtype" value="${certificateModal.id}"  />
+								</td>
+							</tr>
+							<tr>
+								<td>*license plate number</td>
+								<td colspan="3"><input class="layui-input" autocomplete="off" id="platenumber" name="platenumber" type="text"  lay-verify="required"></td>
+								
+							</tr>
+							<tr>
+								<td><#if needCarPicture>*</#if>vehicle license</td>
+								<input type="hidden" name="drivinglicense" id="drivinglicense" value=""  <#if needCarPicture>lay-verify="required" lay-reqText="vehicle license must be uploaded"</#if> />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="pic" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>photos upload 
+									</button>
+									<button type="button" class="layui-btn" id="btndrivinglicenseCropper">
+									  <i class="layui-icon">&#xe67c;</i>tailoring assistance
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />vehicle card: The format should be jpg, which is less than 2M. The standard ID photo size is 390*265 (width*height) pixels.
+									</div>
+								</td>
+								<td colspan="2" class="prepic"><image src="" width="390" height="265" id="predrivinglicense" /></td>
+							</tr>
+							<tr>
+								<td>remark</td>
+								<td colspan="3">
+									<textarea name="remark" placeholder="remark" class="layui-textarea"></textarea>
+								</td>
+							</tr>
+							<tr class="papers-edit-bg">
+								<td colspan="4" align="center">
+									<button type="button" class="layui-btn layui-btn-primary close">cancel</button>
+									<button type="reset" class="layui-btn layui-btn-primary" id="reset" style="display:none">reset</button>
+									<button type="button"  lay-submit class="layui-btn"  lay-filter="update">submit</button>
+								</td>
+							</tr>
+							
+						</table>
+					</form>
+				</fieldset>
+			</div>
+		</div>
+	</div>

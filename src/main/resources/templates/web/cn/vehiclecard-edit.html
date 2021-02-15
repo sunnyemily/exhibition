@@ -1,0 +1,68 @@
+    <div class="modal inmodal" id="edit-model" style="display:none">
+		<div class="modal-content animated bounceInUp">
+			<div class="ibox-content">
+				<fieldset class="layui-elem-field layui-field-title" style="border-top:0px">
+					<form class="layui-form layui-form-pane" action="" id="editform">
+					    <input type="hidden" name="id" value="0"  />
+					    <input type="hidden" name="session" value="${exhibitionSessionId}"  />
+					    <input type="hidden" name="cardnature" value="0"  />
+					    <input type="hidden" name="isback" value="1"  />
+						<table width="100%"  class="layui-table form-content">
+						<#if isOut??><input type="hidden" name="isout" value="${isOut}" /></#if>
+							<tr class="papers-edit-bg"><td colspan="3" style="border-right: none;">添加${certificateModal.chinesename}</td><td align="right"><a class="layui-icon layui-icon-close close"></a></td></tr>
+							<tr>
+								<td>*司机姓名</td>
+								<td colspan="3"><input class="layui-input" autocomplete="off" id="drivername" name="drivername" type="text"  lay-verify="required"></td>
+							</tr>
+							<tr>
+								<td>*公司名称</td>
+								<td colspan="3"><input class="layui-input" autocomplete="off" id="companyname" name="companyname" type="text"  lay-verify="required"></td>
+								
+							</tr>
+							<tr>
+								<td>证件类型</td>
+								<td colspan="3">
+								${certificateModal.chinesename}
+								<input type="hidden" name="cardtype" id="cardtype" value="${certificateModal.id}"  />
+								</td>
+							</tr>
+							<tr>
+								<td>*车牌号码</td>
+								<td colspan="3"><input class="layui-input" autocomplete="off" id="platenumber" name="platenumber" type="text"  lay-verify="required"></td>
+								
+							</tr>
+							<tr>
+								<td><#if needCarPicture>*</#if>车辆行驶证</td>
+								<input type="hidden" name="drivinglicense" id="drivinglicense" value=""  <#if needCarPicture>lay-verify="required" lay-reqText="必须上传车辆行驶证"</#if> />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="pic" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>上传图片
+									</button>
+									<button type="button" class="layui-btn" id="btndrivinglicenseCropper">
+									  <i class="layui-icon">&#xe67c;</i>裁剪助手
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />格式为JPG，上传文件小于2M，尺寸390*265（宽*高）像素。
+									</div>
+								</td>
+								<td colspan="2" class="prepic"><image src="" width="390" height="265" id="predrivinglicense" /></td>
+							</tr>
+							<tr>
+								<td>备注</td>
+								<td colspan="3">
+									<textarea name="remark" placeholder="备注" class="layui-textarea"></textarea>
+								</td>
+							</tr>
+							<tr class="papers-edit-bg">
+								<td colspan="4" align="center">
+									<button type="button" class="layui-btn layui-btn-primary close">取消</button>
+									<button type="reset" class="layui-btn layui-btn-primary" id="reset" style="display:none">重置</button>
+									<button type="button"  lay-submit class="layui-btn"  lay-filter="update">提交</button>
+								</td>
+							</tr>
+							
+						</table>
+					</form>
+				</fieldset>
+			</div>
+		</div>
+	</div>

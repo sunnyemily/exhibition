@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.org.chtf.card.manage.menu.dao.MenuMapper">
+  <resultMap id="BaseResultMap" type="cn.org.chtf.card.manage.menu.pojo.Menu">
+    <id column="menu_id" jdbcType="INTEGER" property="menuId" />
+    <result column="menu_name" jdbcType="VARCHAR" property="menuName" />
+    <result column="menu_picture" jdbcType="VARCHAR" property="menuPicture" />
+    <result column="menu_picture2" jdbcType="VARCHAR" property="menuPicture2" />
+    <result column="menu_order" jdbcType="INTEGER" property="menuOrder" />
+    <result column="menu_language" jdbcType="VARCHAR" property="menuLanguage" />
+    <result column="menu_other_name" jdbcType="VARCHAR" property="menuOtherName" />
+    <result column="menu_type" jdbcType="INTEGER" property="menuType" />
+    <result column="menu_parent_id" jdbcType="INTEGER" property="menuParentId" />
+    <result column="menu_intro" jdbcType="VARCHAR" property="menuIntro" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    menu_id, menu_name, menu_picture, menu_picture2, menu_order, menu_language, menu_other_name, 
+    menu_type, menu_parent_id, menu_intro
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from web_menu
+    where menu_id = #{menuId,jdbcType=INTEGER}
+  </select>
+  <select id="getMenuByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from web_menu
+    where menu_name = #{menu_name,jdbcType=VARCHAR} LIMIT 1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from web_menu
+    where menu_id = #{menuId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.org.chtf.card.manage.menu.pojo.Menu">
+    insert into web_menu (menu_id, menu_name, menu_picture, 
+      menu_picture2, menu_order, menu_language, 
+      menu_other_name, menu_type, menu_parent_id, 
+      menu_intro)
+    values (#{menuId,jdbcType=INTEGER}, #{menuName,jdbcType=VARCHAR}, #{menuPicture,jdbcType=VARCHAR}, 
+      #{menuPicture2,jdbcType=VARCHAR}, #{menuOrder,jdbcType=INTEGER}, #{menuLanguage,jdbcType=VARCHAR}, 
+      #{menuOtherName,jdbcType=VARCHAR}, #{menuType,jdbcType=INTEGER}, #{menuParentId,jdbcType=INTEGER}, 
+      #{menuIntro,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.org.chtf.card.manage.menu.pojo.Menu" useGeneratedKeys="true" keyProperty="menuId">
+    insert into web_menu
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="menuId != null">
+        menu_id,
+      </if>
+      <if test="menuName != null">
+        menu_name,
+      </if>
+      <if test="menuPicture != null">
+        menu_picture,
+      </if>
+      <if test="menuPicture2 != null">
+        menu_picture2,
+      </if>
+      <if test="menuOrder != null">
+        menu_order,
+      </if>
+      <if test="menuLanguage != null">
+        menu_language,
+      </if>
+      <if test="menuOtherName != null">
+        menu_other_name,
+      </if>
+      <if test="menuType != null">
+        menu_type,
+      </if>
+      <if test="menuParentId != null">
+        menu_parent_id,
+      </if>
+      <if test="menuIntro != null">
+        menu_intro,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="menuId != null">
+        #{menuId,jdbcType=INTEGER},
+      </if>
+      <if test="menuName != null">
+        #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="menuPicture != null">
+        #{menuPicture,jdbcType=VARCHAR},
+      </if>
+      <if test="menuPicture2 != null">
+        #{menuPicture2,jdbcType=VARCHAR},
+      </if>
+      <if test="menuOrder != null">
+        #{menuOrder,jdbcType=INTEGER},
+      </if>
+      <if test="menuLanguage != null">
+        #{menuLanguage,jdbcType=VARCHAR},
+      </if>
+      <if test="menuOtherName != null">
+        #{menuOtherName,jdbcType=VARCHAR},
+      </if>
+      <if test="menuType != null">
+        #{menuType,jdbcType=INTEGER},
+      </if>
+      <if test="menuParentId != null">
+        #{menuParentId,jdbcType=INTEGER},
+      </if>
+      <if test="menuIntro != null">
+        #{menuIntro,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.org.chtf.card.manage.menu.pojo.Menu">
+    update web_menu
+    <set>
+      <if test="menuName != null">
+        menu_name = #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="menuPicture != null">
+        menu_picture = #{menuPicture,jdbcType=VARCHAR},
+      </if>
+      <if test="menuPicture2 != null">
+        menu_picture2 = #{menuPicture2,jdbcType=VARCHAR},
+      </if>
+      <if test="menuOrder != null">
+        menu_order = #{menuOrder,jdbcType=INTEGER},
+      </if>
+      <if test="menuLanguage != null">
+        menu_language = #{menuLanguage,jdbcType=VARCHAR},
+      </if>
+      <if test="menuOtherName != null">
+        menu_other_name = #{menuOtherName,jdbcType=VARCHAR},
+      </if>
+      <if test="menuType != null">
+        menu_type = #{menuType,jdbcType=INTEGER},
+      </if>
+      <if test="menuParentId != null">
+        menu_parent_id = #{menuParentId,jdbcType=INTEGER},
+      </if>
+      <if test="menuIntro != null">
+        menu_intro = #{menuIntro,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where menu_id = #{menuId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.org.chtf.card.manage.menu.pojo.Menu">
+    update web_menu
+    set menu_name = #{menuName,jdbcType=VARCHAR},
+      menu_picture = #{menuPicture,jdbcType=VARCHAR},
+      menu_picture2 = #{menuPicture2,jdbcType=VARCHAR},
+      menu_order = #{menuOrder,jdbcType=INTEGER},
+      menu_language = #{menuLanguage,jdbcType=VARCHAR},
+      menu_other_name = #{menuOtherName,jdbcType=VARCHAR},
+      menu_type = #{menuType,jdbcType=INTEGER},
+      menu_parent_id = #{menuParentId,jdbcType=INTEGER},
+      menu_intro = #{menuIntro,jdbcType=VARCHAR}
+    where menu_id = #{menuId,jdbcType=INTEGER}
+  </update>
+  <select id="selectChilds" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from web_menu
+    where menu_parent_id = #{menuId,jdbcType=INTEGER} order by menu_order asc
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from web_menu
+    order by menu_order asc
+  </select>
+  <select id="selectLanguageMenu" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from web_menu
+    where  menu_language = #{languageName,jdbcType=VARCHAR} order by menu_order asc
+  </select>
+  <select id="selectBrotherMenu" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from web_menu
+    where  menu_parent_id = (select menu_parent_id from web_menu where menu_id=#{menuId,jdbcType=INTEGER}) order by menu_order asc
+  </select>
+</mapper>

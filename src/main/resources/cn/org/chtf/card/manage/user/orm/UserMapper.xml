@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.org.chtf.card.manage.user.dao.UserDAO">
+  <resultMap id="BaseResultMap" type="cn.org.chtf.card.manage.user.pojo.User">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="isall" jdbcType="INTEGER" property="isall" />
+    <result column="islock" jdbcType="INTEGER" property="islock" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="photo" jdbcType="VARCHAR" property="photo" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="department" jdbcType="VARCHAR" property="department" />
+    <result column="lastlogin" jdbcType="TIMESTAMP" property="lastlogin" />
+    <result column="failcount" jdbcType="SMALLINT" property="failcount" />
+    <result column="role_ids" jdbcType="VARCHAR" property="roleIds" />
+    <result column="rolename" jdbcType="VARCHAR" property="rolename" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    islock,isall,id,username, password, name, photo, email, phone, department, lastlogin, failcount,(SELECT group_concat(role_name) from system_role where role_id in (SELECT
+			role_id
+			FROM
+				system_user_role
+			WHERE
+				system_user_role.username = system_user.username
+		)) AS rolename
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from system_user
+    where username = #{username,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from system_user
+    where username = #{username,jdbcType=VARCHAR}
+  </delete>
+  
+  <delete id="deleteUsers"  parameterType="java.util.List">
+    delete from system_user_role
+    where username in  
+        <foreach collection="usernameList" item="username" index="index"
+            open="(" close=")" separator=",">
+            #{username,jdbcType=VARCHAR}
+        </foreach>;
+  	delete from system_user where  username in 
+        <foreach collection="usernameList" item="username" index="index"
+            open="(" close=")" separator=",">
+            #{username,jdbcType=VARCHAR}
+        </foreach>;
+  </delete>
+  
+  <select id="login" parameterType="map" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from system_user
+    where username = #{username,jdbcType=VARCHAR} and password=#{password,jdbcType=VARCHAR} and <![CDATA[ (failcount<5 OR (now()-lastlogin)>1000) ]]>
+  </select>
+  
+  <insert id="insert" parameterType="cn.org.chtf.card.manage.user.pojo.User">
+    insert into system_user (username, password, name,photo, 
+      email, phone, department, 
+      lastlogin, failcount)
+    values (#{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{photo,jdbcType=VARCHAR},
+      #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{department,jdbcType=VARCHAR}, 
+      #{lastlogin,jdbcType=TIMESTAMP}, #{failcount,jdbcType=SMALLINT})
+  </insert>
+  
+  <insert id="insertSelective" parameterType="cn.org.chtf.card.manage.user.pojo.User">
+    insert into system_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="username != null">
+        username,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="photo != null">
+        photo,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="department != null">
+        department,
+      </if>
+      <if test="lastlogin != null">
+        lastlogin,
+      </if>
+      <if test="failcount != null">
+        failcount,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="photo != null">
+        #{photo,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null">
+        #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="lastlogin != null">
+        #{lastlogin,jdbcType=TIMESTAMP},
+      </if>
+      <if test="failcount != null">
+        #{failcount,jdbcType=SMALLINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.org.chtf.card.manage.user.pojo.User">
+    update system_user
+    <set>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="photo != null">
+        photo = #{photo,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null">
+        department = #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="lastlogin != null">
+        lastlogin = #{lastlogin,jdbcType=TIMESTAMP},
+      </if>
+      <if test="failcount != null">
+        failcount = #{failcount,jdbcType=SMALLINT},
+      </if>
+      <if test="isall != null">
+        isall = #{isall},
+      </if>
+      <if test="islock != null">
+        islock = #{islock},
+      </if>
+    </set>
+    where username = #{username,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.org.chtf.card.manage.user.pojo.User">
+    update system_user
+    set password = #{password,jdbcType=VARCHAR},
+      photo = #{photo,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      department = #{department,jdbcType=VARCHAR},
+      lastlogin = #{lastlogin,jdbcType=TIMESTAMP},
+      failcount = #{failcount,jdbcType=SMALLINT}
+    where username = #{username,jdbcType=VARCHAR}
+  </update>
+  <update id="updateFailCount" parameterType="java.lang.String">
+    update system_user
+    set 
+      failcount = failcount+1
+    where username = #{username,jdbcType=VARCHAR}
+  </update>
+  <update id="clearFailCount" parameterType="java.lang.String">
+    update system_user
+    set 
+      failcount = 0,
+      lastlogin = NOW()
+    where username = #{username,jdbcType=VARCHAR}
+  </update>
+  <update id="updatePassword" parameterType="cn.org.chtf.card.manage.user.pojo.User">
+    update system_user
+    set password = #{password,jdbcType=VARCHAR}
+    where username = #{username,jdbcType=VARCHAR}
+  </update>
+  <select id="getUsers"  parameterType="cn.org.chtf.card.support.util.PageModel"  resultMap="BaseResultMap">
+  	SELECT
+  	islock,
+  	isall,
+  	id,
+	username,
+	name,
+	photo,
+	email,
+	phone,
+	department,
+	lastlogin,
+	failcount,
+			(SELECT
+			GROUP_CONCAT(role_id)
+			FROM
+				system_user_role
+			WHERE
+				system_user_role.username = system_user.username
+		) AS role_ids,b.jsm as rolename
+	FROM
+		system_user
+		left join (
+			select username as yhm,role_name as jsm from system_user_role as a
+			inner join system_role as b on a.role_id=b.role_id
+		) as b on system_user.username=b.yhm
+	WHERE name LIKE '%${keywords}%'
+	ORDER BY ${field} ${order}
+	LIMIT #{start,jdbcType=INTEGER},
+	 #{limit,jdbcType=INTEGER};
+  </select>
+  <select id="getTotal"  parameterType="cn.org.chtf.card.support.util.PageModel"  resultType="java.lang.Integer">
+    select count(*) from system_user
+	WHERE name LIKE '%${keywords}%'
+	ORDER BY ${field} ${order}
+  </select>  
+  <update id="updateUser" parameterType="cn.org.chtf.card.manage.user.pojo.User">
+  	DELETE FROM system_user_role WHERE username=#{username,jdbcType=VARCHAR};
+    update system_user
+    <set>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="photo != null">
+        photo = #{photo,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null">
+        department = #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="lastlogin != null">
+        lastlogin = #{lastlogin,jdbcType=TIMESTAMP},
+      </if>
+      <if test="failcount != null">
+        failcount = #{failcount,jdbcType=SMALLINT},
+      </if>
+      <if test="isall != null">
+        isall = #{isall},
+      </if>
+    </set>
+    where username = #{username,jdbcType=VARCHAR};
+    <if test="roleIdList!=null">
+    	INSERT INTO system_user_role (username,role_id) VALUES	 
+		<foreach item="roleId" collection="roleIdList" separator="," open="" close=";">
+		(#{username,jdbcType=VARCHAR},#{roleId,jdbcType=INTEGER})
+		</foreach>
+    </if>
+  </update>
+  <insert id="addUser" parameterType="cn.org.chtf.card.manage.user.pojo.User">
+    insert into system_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="username != null">
+        username,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="photo != null">
+        photo,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="department != null">
+        department,
+      </if>
+      <if test="lastlogin != null">
+        lastlogin,
+      </if>
+      <if test="failcount != null">
+        failcount,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="photo != null">
+        #{photo,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null">
+        #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="lastlogin != null">
+        #{lastlogin,jdbcType=TIMESTAMP},
+      </if>
+      <if test="failcount != null">
+        #{failcount,jdbcType=SMALLINT},
+      </if>
+    </trim>;
+    <if test="roleIdList!=null">
+    	INSERT INTO system_user_role (username,role_id) VALUES	 
+		<foreach item="roleId" collection="roleIdList" separator="," open="" close=";">
+		(#{username,jdbcType=VARCHAR},#{roleId,jdbcType=INTEGER})
+		</foreach>
+    </if>
+  </insert>
+  
+  <update id="update" parameterType="cn.org.chtf.card.manage.user.pojo.User">
+    update system_user
+    <set>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="photo != null">
+        photo = #{photo,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null">
+        department = #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="lastlogin != null">
+        lastlogin = #{lastlogin,jdbcType=TIMESTAMP},
+      </if>
+      <if test="failcount != null">
+        failcount = #{failcount,jdbcType=SMALLINT},
+      </if>
+      <if test="isall != null">
+        isall = #{isall},
+      </if>
+      <if test="islock != null">
+        islock = #{islock},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  
+  
+</mapper>

@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.Exhibitors.dao.EbsTradinggroupMapper">
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsTradinggroup">
+        select
+			a.id,
+			a.session,
+			a.name,
+			a.engname,
+			a.japanname,
+			a.russianame,
+			a.koreaname,
+			a.exportname,
+			a.type,
+			case a.type 
+			when 0 then '交易团' 
+			when 1 then '零散' 
+			when 2 then '线上展区' end as typename,
+			a.contactperson,
+			a.tel,
+			a.phone,
+			a.addtime,
+			a.orders
+		from ebs_tradinggroup as a
+        where a.id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsTradinggroup">
+        select
+			a.id,
+			a.session,
+			a.name,
+			a.engname,
+			a.japanname,
+			a.russianame,
+			a.koreaname,
+			a.exportname,
+			a.type,
+			case a.type 
+			when 0 then '交易团' 
+			when 1 then '零散' 
+			when 2 then '线上展区' end as typename,
+			a.contactperson,
+			a.tel,
+			a.phone,
+			a.addtime,
+			a.orders
+		from ebs_tradinggroup as a
+        <where>
+			<if test="id != null and id != ''">
+				and a.id = #{id}
+			</if>
+			<if test="session != null and session != ''">
+				and a.session = #{session}
+			</if>
+			<if test="name != null and name != ''">
+				and (
+						a.name = #{name}			
+						or a.engname = #{name}					
+						or a.japanname = #{name}					
+						or a.russianame = #{name}					
+						or a.koreaname = #{name}
+					)
+			</if>
+			<if test="type != null and type != ''">
+				and a.type = #{type}
+			</if>
+			<if test="contactperson != null and contactperson != ''">
+				and a.contactperson = #{contactperson}
+			</if>
+			<if test="tel != null and tel != ''">
+				and a.tel = #{tel}
+			</if>
+			<if test="phone != null and phone != ''">
+				and a.phone = #{phone}
+			</if>
+			<if test="addtime != null and addtime != ''">
+				and a.addtime = #{addtime}
+			</if>
+		</where>
+		order by a.orders
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsTradinggroup">
+        select
+			a.id,
+			a.session,
+			a.name,
+			a.engname,
+			a.japanname,
+			a.russianame,
+			a.koreaname,
+			a.exportname,
+			a.type,
+			case a.type 
+			when 0 then '交易团' 
+			when 1 then '零散' 
+			when 2 then '线上展区' end as typename,
+			a.contactperson,
+			a.tel,
+			a.phone,
+			a.addtime,
+			ifnull(b.name,'') as agentname,
+			b.id as agentid,
+			ifnull(shuliang,0) as shuliang,
+			ifnull(d.boothNumber,0) as boothNumber,
+			showRoomName,
+			a.orders
+		from ebs_tradinggroup as a
+		left join pim_agent as b on a.id=b.tradinggroupid
+		<if test="session != null and session != ''">
+			and b.session = #{session}
+		</if>
+		left join (
+			select tradinggroup_id,count(*) as shuliang from ebs_booth_apply_list group by tradinggroup_id
+		) as c on a.id=c.tradinggroup_id
+		left join (
+			select tradinggroupid,count(*) boothNumber from ebs_booth
+			where tradinggroupid != 0 and !ISNULL(tradinggroupid) and session = #{session} group by tradinggroupid
+		) as d on a.id=d.tradinggroupid
+		left join (
+			select tradinggroupid, GROUP_CONCAT(distinct ebs_showroom.name order by orders) showRoomName from ebs_booth
+			left join ebs_showroom on ebs_booth.show_room_id = ebs_showroom.id
+			where tradinggroupid != 0 and !ISNULL(tradinggroupid) and ebs_booth.session = #{session} group by tradinggroupid
+		) as e on a.id=e.tradinggroupid
+        <where>
+			<if test="id != null and id != ''">and a.id =
+				#{id}
+			</if>
+			<if test="session != null and session != ''">
+				and a.session = #{session}
+			</if>
+			<if test="name != null and name != ''">
+				and (
+						a.name  like concat('%', #{name},'%')			
+						or a.engname  like concat('%', #{name},'%')					
+						or a.japanname  like concat('%', #{name},'%')					
+						or a.russianame  like concat('%', #{name},'%')					
+						or a.koreaname like concat('%', #{name},'%')
+					)
+			</if>
+			<if test="passType != null and passType != ''">
+				and a.type != #{passType}
+			</if>
+			<if test="type != null and type != ''">
+				and a.type = #{type}
+			</if>
+			<if test="contactperson != null and contactperson != ''">and a.contactperson =
+				#{contactperson}
+			</if>
+			<if test="tel != null and tel != ''">and a.tel =
+				#{tel}
+			</if>
+			<if test="phone != null and phone != ''">and a.phone =
+				#{phone}
+			</if>
+			<if test="addtime != null and addtime != ''">and a.addtime =
+				#{addtime}
+			</if>
+		</where>
+        order by a.orders,a.id desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(id) 
+		FROM 
+		ebs_tradinggroup a
+		<where>
+			<if test="id != null and id != ''">and a.id =
+				#{id}
+			</if>
+			<if test="session != null and session != ''">
+				and a.session = #{session}
+			</if>
+			<if test="name != null and name != ''">
+				and (
+						a.name  like concat('%', #{name},'%')			
+						or a.engname  like concat('%', #{name},'%')					
+						or a.japanname  like concat('%', #{name},'%')					
+						or a.russianame  like concat('%', #{name},'%')					
+						or a.koreaname like concat('%', #{name},'%')
+					)
+			</if>
+			<if test="passType != null and passType != ''">
+				and a.type != #{passType}
+			</if>
+			<if test="type != null and type != ''">
+				and a.type = #{type}
+			</if>
+			<if test="contactperson != null and contactperson != ''">and a.contactperson =
+				#{contactperson}
+			</if>
+			<if test="tel != null and tel != ''">and a.tel =
+				#{tel}
+			</if>
+			<if test="phone != null and phone != ''">and a.phone =
+				#{phone}
+			</if>
+			<if test="addtime != null and addtime != ''">and a.addtime =
+				#{addtime}
+			</if>
+		</where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.Exhibitors.model.EbsTradinggroup"            useGeneratedKeys="true" keyProperty="id">
+        insert into ebs_tradinggroup(
+        	<trim suffixOverrides=",">
+				<if test="session != null">`session`,</if>
+				<if test="name != null">`name`,</if>
+				<if test="exportname != null">`exportname`,</if>
+				<if test="type != null">`type`,</if>
+				<if test="contactperson != null">`contactperson`,</if>
+				<if test="tel != null">`tel`,</if>
+				<if test="phone != null">`phone`,</if>
+				<if test="addtime != null">`addtime`,</if>
+				<if test="engname != null">`engname`,</if>
+				<if test="japanname != null">`japanname`,</if>
+				<if test="russianame != null">`russianame`,</if>
+				<if test="koreaname != null">`koreaname`,</if>
+				<if test="orders != null">`orders`</if>
+       		</trim>
+       	) values (
+       		<trim suffixOverrides=",">
+				<if test="session != null">#{session},</if>
+				<if test="name != null">#{name},</if>
+				<if test="exportname != null">#{exportname},</if>
+				<if test="type != null">#{type},</if>
+				<if test="contactperson != null">#{contactperson},</if>
+				<if test="tel != null">#{tel},</if>
+				<if test="phone != null">#{phone},</if>
+				<if test="addtime != null">#{addtime},</if>
+				<if test="engname != null">#{engname},</if>
+				<if test="japanname != null">#{japanname},</if>
+				<if test="russianame != null">#{russianame},</if>
+				<if test="koreaname != null">#{koreaname},</if>
+				<if test="orders != null">#{orders}</if>
+			</trim>
+		)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.Exhibitors.model.EbsTradinggroup">
+        update ebs_tradinggroup
+        <set>
+			<if test="session != null">`session` = #{session}
+			,</if>
+			<if test="name != null">`name` = #{name},</if>
+			<if test="exportname != null">`exportname` = #{exportname},</if>
+			<if test="type != null">`type` = #{type}
+			,</if>
+			<if test="contactperson != null">`contactperson` = #{contactperson}
+			,</if>
+			<if test="tel != null">`tel` = #{tel}
+			,</if>
+			<if test="phone != null">`phone` = #{phone}
+			,</if>
+			<if test="addtime != null">`addtime` = #{addtime},</if>
+			<if test="engname != null">`engname` = #{engname},</if>
+			<if test="japanname != null">`japanname` = #{japanname},</if>
+			<if test="russianame != null">`russianame` = #{russianame},</if>
+			<if test="koreaname != null">`koreaname` = #{koreaname},</if>
+			<if test="orders != null">`orders` = #{orders}
+			</if>
+		</set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from ebs_tradinggroup
+        where id = #{id}
+    </delete>
+    
+    <select id="GetBoothByTradingGroupId" resultType="map">
+    	select b.name as jytname,c.name as zhqname,ifnull(d.name,'') as zhwname  from ebs_tradinggroupboothallocation as a
+		inner join ebs_tradinggroup as b on a.tradinggroupid=b.id
+		inner join ebs_showroom as c on c.id=a.showroomid
+		left join ebs_booth as d on d.id=a.boothid
+		where a.tradinggroupid=#{jytid}
+		order by b.orders
+    </select>
+
+	<select id="selectByType" resultType="map">
+		select * from ebs_tradinggroup where type = #{type} and session = #{session} order by orders
+	</select>
+</mapper>

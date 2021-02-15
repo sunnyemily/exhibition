@@ -1,0 +1,548 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.ReportManagement.dao.ReportManagementMapper">
+    <select id="getEnterpriseList" resultType="map">
+    	SELECT
+			ifnull(c.chinesename, '') chinesename,
+			ifnull(c.engname, '') engname,
+			ifnull(c.russianname, '') russianname,
+			ifnull(c.chineseaddress, '') chineseaddress,
+			ifnull(c.engaddress, '') engaddress,
+			ifnull(c.postcode, '') postcode,
+			ifnull(c.tel, '') tel,
+			ifnull(c.fax, '') fax,
+			ifnull(c.website, '') website,
+			ifnull(c.email, '') email,
+			ifnull(c.principal, '') principal,
+			ifnull(c.contactperson, '') contactperson,
+			ifnull(c.busscope, '') busscope,
+			ifnull(d.apply_products, '') applyProducts,
+			ifnull(e.booths, '') booths,
+			ifnull(e.showRoomIds, '') showRoomIds
+		FROM
+			web_member a
+		INNER JOIN web_member_session b ON a.member_id = b.member_id AND b.id = #{session}
+		<if test="exportType == 0">
+			INNER JOIN pim_agent bb ON b.orgnization_id = bb.id AND bb.type = 0 AND bb.isopen = 1
+			INNER JOIN ebs_tradinggroup cc ON bb.tradinggroupid = cc.id
+			INNER JOIN ebs_companyinfo c ON cc.id = c.tradinggroupid AND c.session = b.id AND c.useable = 1
+		</if>
+		<if test="exportType != 0">
+			INNER JOIN ebs_companyinfo c ON b.orgnization_id = c.id AND c.session = b.id AND c.useable = 1
+		</if>
+		LEFT JOIN ebs_booth_apply d ON c.id = d.company_id AND d.session_id = b.id
+		LEFT JOIN ebs_booth_apply_list f ON f.apply_id = d.apply_id
+		LEFT JOIN (
+			select
+				company_id,
+				GROUP_CONCAT(DISTINCT NAME ORDER BY NAME) booths,
+				GROUP_CONCAT(DISTINCT show_room_id) showRoomIds,
+				GROUP_CONCAT(DISTINCT tradinggroupid) tradingGroupIds
+			from ebs_booth where session = #{session} AND useable = 1 AND company_id != 0
+			group by company_id
+		) e ON c.id = e.company_id
+		<where>
+			a.member_status = 0
+			<if test="exportType == 0">
+				AND a.member_type = 0
+				<if test="tradingGroupId != null and tradingGroupId != ''">
+					AND c.tradinggroupid = #{tradingGroupId}
+				</if>
+			</if>
+			<if test="exportType != 0">
+				<if test="exportType == 1">
+					AND a.member_type = 2
+					<if test="tradingGroupId != null and tradingGroupId != ''">
+						AND #{tradingGroupId} = f.tradinggroup_id
+					</if>
+				</if>
+				<if test="exportType == 2">
+					AND a.member_type = 7
+					<if test="tradingGroupId != null and tradingGroupId != ''">
+						AND c.tradinggroupid = #{tradingGroupId}
+					</if>
+				</if>
+			</if>
+			<if test="showRoomId != null and showRoomId != ''">
+				AND find_in_set(#{showRoomId}, e.showRoomIds)
+			</if>
+		</where>
+		GROUP BY c.id
+    </select>
+    
+    <select id="getShowRoomList" resultType="map">
+    	SELECT DISTINCT b.id,b.name FROM ebs_showroom b WHERE FIND_IN_SET(b.id,#{showRoomIds}) and b.useable = 1 ORDER BY b.orders
+    </select>
+    
+    <select id="NationalDocumentStatisticsList" resultType="map">
+        select a.id,a.name,zjs,city as cengshishu from sys_country_area as a
+		inner join (
+			select country,sum(zjs) as zjs,sum(city) as city from (
+			select a.id,'ry' as act,a.country,count(*) as zjs,sum(case when ifnull(a.city,0)=0 then 0 else 1 end) as city from ebs_personnelcard as a
+			inner join ebs_companyinfo as b on a.companyname = b.chinesename and a.session=b.session
+			where a.status=1 and a.session=#{session} and a.country!=0
+			group by a.country
+			union
+			select a.id,'cl' as act,b.country,count(1) as zjs,sum(case when ifnull(b.city,0)=0 then 0 else 1 end) city from ebs_vehiclecard as a
+			inner join ebs_companyinfo as b on a.companyname = b.chinesename and a.session=b.session
+			where a.status=1 and a.session=#{session}
+			) as a group by country
+		) as b on a.id=b.country
+		where a.parent_id=0
+		<if test="id != null and id != ''">
+			and a.id = #{id}
+		</if>
+        order by a.id	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="NationalDocumentStatisticsListCount" resultType="int">
+		select count(*) from sys_country_area as a
+		inner join (
+			select country,sum(zjs) as zjs,sum(city) as city from (
+			select a.id,'ry' as act,a.country,count(*) as zjs,sum(case when ifnull(a.city,0)=0 then 0 else 1 end) as city from ebs_personnelcard as a
+			inner join ebs_companyinfo as b on a.companyname = b.chinesename and a.session=b.session
+			where a.status=1 and a.session=#{session} and a.country!=0
+			group by a.country
+			union
+			select a.id,'cl' as act,b.country,count(1) as zjs,sum(case when ifnull(b.city,0)=0 then 0 else 1 end) city from ebs_vehiclecard as a
+			inner join ebs_companyinfo as b on a.companyname = b.chinesename and a.session=b.session
+			where a.status=1 and a.session=#{session}
+			) as a group by country
+		) as b on a.id=b.country
+		where a.parent_id=0
+		<if test="id != null and id != ''">
+			and a.id = #{id}
+		</if>
+	</select>
+	
+	<select id="NationalDocumentStatisticsCardList" resultType="cn.org.chtf.card.manage.ReportManagement.model.ReportManagement">
+		select * from (
+			select 'cheliang' as leixing,a.id,c.chinesename as cardtypename,
+			case b.comany_type_id 
+			when 0 then '交易团'
+			when 1 then '记者'
+			when 2 then '零散展商'
+			when 3 then '布撤展商'
+			when 4 then '外宾'
+			when 5 then '采购商'
+			end
+			 as tjleixing,b.chinesename as companyname,a.drivername as name,a.drivinglicense as imagepath,vw.uname as agentname,'' as cardnumber 
+			 from ebs_vehiclecard as a
+			inner join ebs_companyinfo as b on a.companyname = b.chinesename and a.session=b.session
+			inner join cm_certificate_type as c on c.type=1 and a.cardtype=c.id
+			left join vw_Frontend_user_integration as vw on vw.isback=a.isback and vw.uid=a.agent
+			where a.status=1 and a.session=#{session} and b.country=#{country}
+			union
+			select 'renyuan' as leixing,a.id,c.chinesename as cardtypename,
+			case d.comany_type_id 
+			when 0 then '交易团'
+			when 1 then '记者'
+			when 2 then '零散展商'
+			when 3 then '布撤展商'
+			when 4 then '外宾'
+			when 5 then '采购商'
+			end
+			 as tjleixing,a.companyname,a.name,a.imagepath,vw.uname as agentname,a.cardnumber from ebs_personnelcard as a
+			inner join ebs_companyinfo as d on a.companyname = d.chinesename and a.session=d.session
+			inner join cm_certificate_type as c on c.type=0 and a.cardtype=c.id
+			left join vw_Frontend_user_integration as vw on vw.isback=a.isback and vw.uid=a.agent
+			where a.status=1 and a.session=#{session} and a.country=#{country}
+		) as a 		
+		order by a.leixing desc,a.id	
+		limit #{index}, #{size}
+	</select>
+	
+    <select id="NationalDocumentStatisticsCardListCount" resultType="int">
+		select count(*) from (
+			select a.id,c.chinesename as cardtypename,'' as tjleixing,b.chinesename as companyname,a.drivername as name,a.drivinglicense as imagepath,vw.uname as agentname,'' as cardnumber 
+			from ebs_vehiclecard as a
+			inner join ebs_companyinfo as b on a.companyname = b.chinesename and a.session=b.session
+			inner join cm_certificate_type as c on c.type=1 and a.cardtype=c.id
+			left join vw_Frontend_user_integration as vw on vw.isback=a.isback and vw.uid=a.agent
+			where a.status=1 and a.session=#{session} and b.country=#{country}
+			union
+			select a.id,c.chinesename as cardtypename,'' as tjleixing,a.companyname,a.name,a.imagepath,vw.uname as agentname,a.cardnumber from ebs_personnelcard as a
+			inner join cm_certificate_type as c on c.type=0 and a.cardtype=c.id
+			left join vw_Frontend_user_integration as vw on vw.isback=a.isback and vw.uid=a.agent
+			where a.status=1 and a.session=#{session} and a.country=#{country}
+		) as a 		
+	</select>
+	
+	<select id="AudienceSurveyViewList" resultType="map">
+        select
+			a.id as id,
+			a.session as session,
+			a.name as name,
+			a.sex as sex,case when a.sex=0 then '男' else '女' end as sexname,
+			a.country as country,
+			a.province as province,
+			a.city,
+			a.jobtitle as jobtitle,
+			a.companyname as companyname,
+			a.companyid as companyid,
+			a.postcode as postcode,
+			a.idcardpassport as idcardpassport,
+			case a.idcardpassport 
+			when 0 then '身份证' 
+			when 1 then '护照' 
+			when 2 then '记者证'
+			end as idcardpassportname,
+			a.cardnumber as cardnumber,
+			a.address as address,
+			a.cardtype as cardtype,b.chinesename as cardtypename,
+			a.website as website,
+			a.email as email,
+			a.tel as tel,
+			a.fax as fax,
+			a.phone as phone,
+			a.imagepath as imagepath,
+			a.idphotopath as idphotopath,
+			a.addtime as addtime,
+			a.status as status,
+			a.bussinessarea as bussinessarea,
+			a.participants as participants,
+			a.visitexhibition as visitexhibition,
+			a.purpose as purpose,
+			a.knowexhibition as knowexhibition,
+			a.businessnature as businessnature,
+			a.remark as remark,
+			a.agent as agent,
+			'' as agentname,
+			a.printstatus as printstatus,
+			case printstatus 
+				when 0 then '未打印'
+				when 1 then '打印中'
+				when 2 then '已打印'
+			end	as printstatusname,
+			a.printtype as printtype,
+			case printtype 
+				when -1 then ''
+				when 0 then '正常打印' 
+				when 1 then 'IC卡打印' 
+			end printtypename,
+			a.printtime,
+			a.verificationstatus as verificationstatus,
+			case when a.verificationstatus=0 then '未验证' else '已验证' end as verificationstatusname,
+			a.iccode as iccode,
+			a.vipcode as vipcode,
+			a.cardnature as cardnature,
+			case when a.cardnature=0 then '网络' else '现场' end as cardnaturename,
+			a.makecardtime as makecardtime,
+			a.issuevalid,a.boothcode,a.isback,a.printtime,
+			a.isforensics as isforensics,
+			a.forensicstime as forensicstime,
+			a.certificatenumber as certificatenumber,
+			a.printnumber as printnumber,
+			a.is_out as isout,case when a.is_out=0 then '否' else '是' end as isoutname,
+			'' as tjleixing
+        from ebs_personnelcard as a
+        inner join cm_certificate_type as b on b.type=0 and a.cardtype=b.id        
+        where 1=1 
+		<if test="session != null and session != ''">
+			and a.session = #{session}
+		</if>
+		<if test="type == 'participants'">
+			and a.participants = #{typeid}
+		</if>
+		<if test="type == 'purpose'">
+			and concat(',',purpose,',') like concat('%,',#{typeid},',%')
+		</if>
+		<if test="type == 'visitexhibition'">
+			and a.visitexhibition = #{typeid}
+		</if>
+		<if test="type == 'knowexhibition'">
+			and concat(',',knowexhibition,',') like concat('%,',#{typeid},',%')
+		</if>
+		<if test="type == 'businessnature'">
+			and concat(',',businessnature,',') like concat('%,',#{typeid},',%')
+		</if>
+		<if test="type == 'bussinessarea'">
+			and a.bussinessarea = #{typeid}
+		</if>
+        order by a.id	
+        <if test="index !=null">
+			limit #{index}, #{size}
+		</if>		
+    </select>
+    
+    <select id="AudienceSurveyViewListCount" resultType="int">
+		select count(*) from ebs_personnelcard as a
+        inner join cm_certificate_type as b on b.type=0 and a.cardtype=b.id        
+        where 1=1 
+		<if test="session != null and session != ''">
+			and a.session = #{session}
+		</if>
+		<if test="type == 'participants'">
+			and a.participants = #{typeid}
+		</if>
+		<if test="type == 'purpose'">
+			and concat(',',purpose,',') like concat('%,',#{typeid},',%')
+		</if>
+		<if test="type == 'visitexhibition'">
+			and a.visitexhibition = #{typeid}
+		</if>
+		<if test="type == 'knowexhibition'">
+			and concat(',',knowexhibition,',') like concat('%,',#{typeid},',%')
+		</if>
+		<if test="type == 'businessnature'">
+			and concat(',',businessnature,',') like concat('%,',#{typeid},',%')
+		</if>
+		<if test="type == 'bussinessarea'">
+			and a.bussinessarea = #{typeid}
+		</if>
+	</select>
+	
+	<select id="PurchaseIntentionStatisticsList" resultType="cn.org.chtf.card.manage.ReportManagement.model.PurchaseIntentionStatistics">
+		select * from (
+		select purchaseintention as name,count(1) as shuliang,'0' as percent from ebs_companyinfo 
+		where session=#{session} and purchaseintention!=''
+		<if test="purchaseintention != null and purchaseintention != ''">
+			and purchaseintention like concat('%',#{purchaseintention},'%')
+		</if>
+		group by purchaseintention
+		) as a
+		order by a.name	
+		limit #{index}, #{size}
+	</select>
+	
+	<select id="PurchaseIntentionStatisticsListCount" resultType="int">
+		select count(*) from (
+			select count(*) from ebs_companyinfo 
+			where session=#{session} and purchaseintention!=''
+			<if test="purchaseintention != null and purchaseintention != ''">
+				and purchaseintention like concat('%',#{purchaseintention},'%')
+			</if>
+			group by purchaseintention
+		) as a
+	</select>
+	
+	<select id="PlaceofAttributionList" resultType="map">
+		SELECT 
+			ebs_tradinggroup.id,
+			ebs_tradinggroup.name,
+			IFNULL(country.`name`,'') country,
+			IFNULL(province.`name`,'') province,
+			COUNT(DISTINCT ebs_companyinfo.id) companyNumber,
+			IFNULL(ebs_personnelcard.number,0) cardNumber,
+			IFNULL(group_concat(ebs_booth.name order by ebs_booth.name),'') booths
+		FROM web_member
+		INNER JOIN web_member_session ON web_member.member_id = web_member_session.member_id
+		AND web_member_session.id = #{session} AND web_member.member_type = 0 AND web_member.member_status = 0
+		INNER JOIN pim_agent ON web_member_session.orgnization_id = pim_agent.id
+		INNER JOIN ebs_tradinggroup ON pim_agent.tradinggroupid = ebs_tradinggroup.id
+		AND ebs_tradinggroup.`session` = web_member_session.id
+		LEFT JOIN ebs_companyinfo ON ebs_companyinfo.tradinggroupid = ebs_tradinggroup.id
+		AND ebs_companyinfo.`session` = web_member_session.id
+		LEFT JOIN (
+			select companyid,COUNT(*) number FROM ebs_personnelcard a
+			inner join cm_certificate_type as b on b.type=0 and a.cardtype=b.id and b.useable = 1 and b.session = a.session
+			WHERE a.session = #{session} GROUP BY companyid
+		) ebs_personnelcard ON ebs_companyinfo.id = ebs_personnelcard.companyid
+		left join ebs_booth on ebs_companyinfo.id = ebs_booth.company_id and ebs_booth.useable = 1 and ebs_booth.session = web_member_session.id
+		LEFT JOIN sys_country_area country ON ebs_companyinfo.country = country.id AND country.use_flag = 'Y'
+		LEFT JOIN sys_country_area province ON ebs_companyinfo.province = province.id AND province.use_flag = 'Y'
+		<where>
+			<if test="id != null and id != ''">
+				and ebs_tradinggroup.id = #{id}
+			</if>
+		</where>
+		GROUP BY ebs_tradinggroup.id,ebs_companyinfo.province
+		order by ebs_tradinggroup.orders,ebs_tradinggroup.id
+		<if test="index!=null and size != null">
+			limit #{index}, #{size}
+		</if>
+	</select>
+	
+	<select id="PlaceofAttributionListCount" resultType="int">
+		select count(*) from (
+			SELECT 
+				ebs_tradinggroup.id
+			FROM web_member
+			INNER JOIN web_member_session ON web_member.member_id = web_member_session.member_id
+			AND web_member_session.id = #{session} AND web_member.member_type = 0 AND web_member.member_status = 0
+			INNER JOIN pim_agent ON web_member_session.orgnization_id = pim_agent.id
+			INNER JOIN ebs_tradinggroup ON pim_agent.tradinggroupid = ebs_tradinggroup.id
+			AND ebs_tradinggroup.`session` = web_member_session.id
+			LEFT JOIN ebs_companyinfo ON ebs_companyinfo.tradinggroupid = ebs_tradinggroup.id
+			AND ebs_companyinfo.`session` = web_member_session.id
+			<where>
+				<if test="id != null and id != ''">
+					and ebs_tradinggroup.id = #{id}
+				</if>
+			</where>
+			GROUP BY ebs_tradinggroup.id,ebs_companyinfo.province
+		) a
+	</select>
+	
+	<select id="ExhibitorInformationStatisticsList" resultType="map">
+		SELECT	
+		ifnull(e.booths,'') as booths,'' as mianji,ifnull(c.chinesename,'') as chinesename
+		,ifnull(c.engname,'') as engname,ifnull(e.name,'') as name,ifnull(c.phone,'') as phone,ifnull(c.contactperson,'') as contactperson,
+		'' as httype,case when a.member_type=2 then '零散' else '交易团' end as czstype,'' as htnumber		
+		FROM
+			web_member a
+		LEFT JOIN web_member_session b ON a.member_id = b.member_id
+		LEFT JOIN ebs_companyinfo c ON b.orgnization_id = c.id AND c.useable = 1
+		left join sys_country_area as e on e.id=c.country
+		LEFT JOIN ebs_booth_audit d ON c.id = d.company_id
+		LEFT JOIN (
+			SELECT
+				company_id,
+				GROUP_CONCAT(NAME) booths
+			FROM
+				ebs_booth
+			GROUP BY
+				company_id
+		) e ON c.id = e.company_id
+		LEFT JOIN (
+			SELECT
+				company_id,
+				GROUP_CONCAT(DISTINCT tradinggroupid) tradinggroupids
+			FROM
+				ebs_booth
+			GROUP BY
+				company_id
+		) f ON c.id = f.company_id
+		WHERE
+			a.member_type in (0,2)
+		AND a.member_status = 0
+		and b.id=#{session}
+		order by a.member_id	
+		<if test="index != null and index != ''">
+			limit #{index}, #{size}
+		</if>		
+	</select>
+	
+	<select id="ExhibitorInformationStatisticsListCount" resultType="int">
+		SELECT	
+		count(*)		
+		FROM
+			web_member a
+		LEFT JOIN web_member_session b ON a.member_id = b.member_id
+		LEFT JOIN ebs_companyinfo c ON b.orgnization_id = c.id AND c.useable = 1
+		left join sys_country_area as e on e.id=c.country
+		LEFT JOIN ebs_booth_audit d ON c.id = d.company_id
+		LEFT JOIN (
+			SELECT
+				company_id,
+				GROUP_CONCAT(NAME) booths
+			FROM
+				ebs_booth
+			GROUP BY
+				company_id
+		) e ON c.id = e.company_id
+		LEFT JOIN (
+			SELECT
+				company_id,
+				GROUP_CONCAT(DISTINCT tradinggroupid) tradinggroupids
+			FROM
+				ebs_booth
+			GROUP BY
+				company_id
+		) f ON c.id = f.company_id
+		WHERE
+			a.member_type in (0,2)
+		AND a.member_status = 0
+		and b.id=#{session}
+	</select>
+	
+	<select id="QuestionnaireManagementList" resultType="map">
+		SELECT	
+		a.member_id as memberid,c.chinesename,c.id,case when a.member_type=2 then '零散' else '交易团' end as czstype,ifnull(shuliang,0) as shuliang
+		FROM
+		web_member a
+		inner JOIN web_member_session b ON a.member_id = b.member_id
+		inner JOIN ebs_companyinfo c ON b.orgnization_id = c.id AND c.useable = 1	
+		left join (select companyid,count(*) as shuliang from sys_survey_result where surveyid=#{surveyid} group by companyid) as d on c.id=d.companyid	
+		WHERE
+			a.member_type in (0,2)
+		AND a.member_status = 0
+		and b.id=#{session}
+		<if test="companytypeid != null and companytypeid != ''">
+			and a.member_type = #{companytypeid}
+		</if>
+		<if test="chinesename != null and chinesename != ''">
+			and c.chinesename like concat('%',#{chinesename},'%')
+		</if>
+		order by a.member_id	
+		limit #{index}, #{size}
+	</select>
+	
+	<select id="QuestionnaireManagementListCount" resultType="int">
+		SELECT	
+		count(*)
+		FROM
+		web_member a
+		inner JOIN web_member_session b ON a.member_id = b.member_id
+		inner JOIN ebs_companyinfo c ON b.orgnization_id = c.id AND c.useable = 1		
+		WHERE
+			a.member_type in (0,2)
+		AND a.member_status = 0
+		and b.id=#{session}
+		<if test="companytypeid != null and companytypeid != ''">
+			and a.member_type = #{companytypeid}
+		</if>
+		<if test="chinesename != null and chinesename != ''">
+			and c.chinesename like concat('%',#{chinesename},'%')
+		</if>
+	</select>
+	
+	<select id="HeadofTradingGroupList" resultType="map">
+		select t.name as jytname,ifnull(c.name,'') as dbyname,ifnull(c.tel,'') as tel
+		,ifnull(c.phone,'') as phone,ifnull(c.companyname,'') as companyname,
+		ifnull(q.othercard,'') as qtzj,ifnull(c.imagepath,'') as imagepath
+		,ifnull(c.loginname,'') as loginname,ifnull(d.zhanweihao,'') as zhanweihao,ifnull(d.zhanweishu,'') as zhanweishu from ebs_tradinggroup as t
+		left join pim_agent as c on c.tradinggroupid=t.id
+		left join (
+			select a.tradinggroupid,GROUP_CONCAT(b.name) as zhanweihao,count(*) as zhanweishu from ebs_tradinggroupboothallocation as a
+			inner join ebs_booth as b on a.boothid=b.id
+			where a.session=#{session} 
+			group by a.tradinggroupid
+		) as d on d.tradinggroupid=t.id 
+		left join (
+			select agent,GROUP_CONCAT(chinesename,':',sl) as othercard from (
+			select agent,b.chinesename,count(*) as sl from ebs_personnelcard as a
+			inner join cm_certificate_type as b on a.cardtype=b.id
+			where a.isback=1 and a.session=#{session}
+			group by agent,b.chinesename
+			union
+			select agent,b.chinesename,count(*) as sl from ebs_vehiclecard as a
+			inner join cm_certificate_type as b on a.cardtype=b.id
+			where a.isback=1 and a.session=#{session}
+			group by agent,b.chinesename
+			) as a group by agent
+		) as q on q.agent=c.id
+		where t.session=#{session}
+		<if test="id != null and id != ''">
+			and c.id = #{id}
+		</if>
+		order by c.name desc	
+		<if test="index != null and index != ''">
+			limit #{index}, #{size}
+		</if>
+	</select>
+	
+	<select id="HeadofTradingGroupListCount" resultType="int">
+		select count(*) from ebs_tradinggroup as t
+		left join pim_agent as c on c.tradinggroupid=t.id
+		where t.session=#{session}
+		<if test="id != null and id != ''">
+			and c.id = #{id}
+		</if>
+	</select>
+	
+	<select id="PurchaseIntentionStatisticsListForDownLoad" resultType="map">
+		select * from (
+		select purchaseintention as name,count(1) as shuliang,'0' as percent from ebs_companyinfo 
+		where session=#{session} and purchaseintention!=''
+		<if test="purchaseintention != null and purchaseintention != ''">
+			and purchaseintention like concat('%',#{purchaseintention},'%')
+		</if>
+		group by purchaseintention
+		) as a
+		order by a.name			
+	</select>
+	
+</mapper>

@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>修改届次信息</title>
+		<meta content="webkit" name="renderer">
+		<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+		<meta content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" name="viewport"/>
+		<link rel="stylesheet" href="/manage/css/xadmin.css">
+		<link href="/manage/css/style.css?v=4.1.0" rel="stylesheet">
+		<link href="/manage/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="/manage/layui/css/layui.css"  media="all">
+	</head>
+	<body class="gray-bg">
+		<div class="modal inmodal" id="friendlink-model">
+			<div class="modal-content animated bounceInUp" id="vmUpdateSysSession">
+				<div class="ibox-content">
+					<fieldset class="layui-elem-field layui-field-title" style="border-top:0px">
+						<form class="layui-form layui-form-pane" lay-filter='test1' action="">
+							<div class="layui-form-item">
+								<label class="layui-form-label" style="width:370px" for="exhibitionid"><span style='color:red'>*</span>所属展会 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" style="width:80%">
+										<select id="exhibitionid" name="exhibitionid" lay-verify="required">
+											<option value="">==请选择==</option>
+										</select>
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" style="width:370px" for="sessionid"><span style='color:red'>*</span>届次名 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" style="width:80%">
+										<input autocomplete="off" class="layui-input" lay-verify="required" id="sessionid" name="sessionid"  type="text" v-model="sysSessionx.sessionid">
+
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" style="width:370px" for="remark"> 备注 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" style="width:80%">
+										<input autocomplete="off" class="layui-input" id="remark" name="remark"  type="text" v-model="sysSessionx.remark">
+
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" style="width:370px" for="siteHeadLogo"> 网站顶部logo </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block radioborder" style="width:80%">
+										<div class="layui-input-inline" style="width:100%;display:none">
+											<input id="siteHeadLogo" name="siteHeadLogo" readonly type="text" class="layui-input" v-model="sysSessionx.siteHeadLogo">
+										</div>
+										<div class="layui-input-inline" style="padding-left:5px">
+											<button type="button" class="layui-btn" id="uploadPictrue1">
+												<i class="layui-icon">&#xe67c;</i>上传图片
+											</button>
+											<button type="button" class="layui-btn layui-btn-primary" id="yulanimg1">
+												预览
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" style="width:370px" for="siteSmartLogo"> 网站小logo </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block radioborder" style="width:80%">
+										<div class="layui-input-inline" style="width:100%;display:none">
+											<input id="siteSmartLogo" name="siteSmartLogo" readonly type="text" class="layui-input" v-model="sysSessionx.siteSmartLogo">
+										</div>
+										<div class="layui-input-inline" style="padding-left:5px">
+											<button type="button" class="layui-btn" id="uploadPictrue2">
+												<i class="layui-icon">&#xe67c;</i>上传图片
+											</button>
+											<button type="button" class="layui-btn layui-btn-primary" id="yulanimg2">
+												预览
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" style="width:370px" for="purchaserRegisterStatus"> 采购商注册状态 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block radioborder" style="width:80%">
+										<input type='radio' name='purchaserRegisterStatus' value='1' title='开'>
+										<input type='radio' name='purchaserRegisterStatus' value='0' title='关'>
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" style="width:370px" for="purchaserCardLimit"><span style='color:red'>*</span>采购商参展证数量上限 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" style="width:80%">
+
+										<input autocomplete="off" class="layui-input" lay-verify="required" id="purchaserCardLimit" name="purchaserCardLimit"  type="text" v-model="sysSessionx.purchaserCardLimit">
+
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" style="width:370px" for="evidenceDelay"><span style='color:red'>*</span>取证凭证延时时间 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" style="width:80%">
+
+										<input placeholder="单位为分钟" autocomplete="off" lay-verify="required" class="layui-input" id="evidenceDelay" name="evidenceDelay"  type="text" v-model="sysSessionx.evidenceDelay">
+
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" style="width:370px" for="delegationAddCompanyEndDate"><span style='color:red'>*</span>交易团添加企业截止时间 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" style="width:80%">
+										<input class="layui-input" autocomplete="off" lay-verify="required" id="delegationAddCompanyEndDate" name="delegationAddCompanyEndDate" v-model="sysSessionx.delegationAddCompanyEndDate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd'})">
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" style="width:370px" for="exhibitorsRegistEndDate"><span style='color:red'>*</span>零散参展商注册截止日期 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" style="width:80%">
+										<input class="layui-input" autocomplete="off" lay-verify="required" id="exhibitorsRegistEndDate" name="exhibitorsRegistEndDate" v-model="sysSessionx.exhibitorsRegistEndDate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd'})">
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" style="width:370px" for="foreignExhibitorsRegistEndDate"><span style='color:red'>*</span>国外零散参展商注册截止日期 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" style="width:80%">
+										<input class="layui-input" autocomplete="off" lay-verify="required" id="foreignExhibitorsRegistEndDate" name="foreignExhibitorsRegistEndDate" v-model="sysSessionx.foreignExhibitorsRegistEndDate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd'})">
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" style="width:370px" for="certificatesEndDate"><span style='color:red'>*</span>证件添加截止日期 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" style="width:80%">
+										<input class="layui-input" autocomplete="off" lay-verify="required" id="certificatesEndDate" name="certificatesEndDate" v-model="sysSessionx.certificatesEndDate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd'})">
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" style="width:370px" for="certificatesFprEndDate"><span style='color:red'>*</span>嘉宾B、采购商、布撤展证件、布撤展车证截止日期 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" style="width:80%">
+										<input class="layui-input" autocomplete="off" lay-verify="required" id="certificatesFprEndDate" name="certificatesFprEndDate" v-model="sysSessionx.certificatesFprEndDate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd'})">
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" style="width:370px" for="certificatesExhibitorsEndDate"><span style='color:red'>*</span>零散参展商证件注册截止日期 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" style="width:80%">
+										<input class="layui-input" autocomplete="off" lay-verify="required" id="certificatesExhibitorsEndDate" name="certificatesExhibitorsEndDate" v-model="sysSessionx.certificatesExhibitorsEndDate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd'})">
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" style="width:370px" for="startDate"><span style='color:red'>*</span>展会开始日期 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" style="width:80%">
+										<input class="layui-input" autocomplete="off" lay-verify="required" id="startDate" name="startDate" type="text" v-model="sysSessionx.startDate" onclick="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd'})">
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" style="width:370px" for="endDate"><span style='color:red'>*</span>展会结束日期 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" style="width:80%">
+										<input class="layui-input" autocomplete="off" lay-verify="required" id="endDate" name="endDate" v-model="sysSessionx.endDate" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd'})">
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" style="width:370px" for="siteName"><span style='color:red'>*</span>网站标题 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" style="width:80%">
+										<input autocomplete="off" class="layui-input" lay-verify="required" id="siteName" name="siteName"  type="text" v-model="sysSessionx.siteName">
+
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" style="width:370px" for="siteDescription"> 描述 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" style="width:80%">
+										<textarea class="layui-textarea" id="siteDescription" name="siteDescription" v-model="sysSessionx.siteDescription" rows="4"></textarea>
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" style="width:370px" for="siteKeywords"> 关键词 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" style="width:80%">
+
+										<input autocomplete="off" class="layui-input" id="siteKeywords" name="siteKeywords"  type="text" v-model="sysSessionx.siteKeywords">
+
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" style="width:370px" for="status"> 状态 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block radioborder" style="width:80%">
+										<input type='radio' name='status' value='1' title='启用'>
+										<input type='radio' name='status' value='0' title='禁用'>
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<div class="layui-input-block">
+									<button class="layui-btn" lay-filter="edit" lay-submit="">
+										确认修改
+									</button>
+									<input type="hidden" id="huiyiID">
+									<input type="hidden" id="txtstatus">
+									<input type="hidden" id="txtpurchaserRegisterStatus">
+								</div>
+							</div>
+						</form>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+		<script charset="utf-8" src="/manage/js/jquery.min.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/layui/layui.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/xadmin.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/vue.js" type="text/javascript"></script>
+		<script type="text/javascript" src="/manage/plugins/My97DatePicker/WdatePicker.js"></script>
+		<script src="/manage/js/bootstrap.min.js?v=3.3.6"></script>
+		<script src="/manage/js/manage/common.js"></script>
+		<script charset="UTF-8" type="text/javascript">
+			var editSysSessionId = sessionStorage.getItem("editSysSessionId");
+			vm = new Vue({
+				el : "#vmUpdateSysSession",
+				data : {
+					sysSession : {}
+				},
+				methods : {},
+				created : function() {
+					var _this = this;
+					$.ajax({
+						url : "/manage/system/sysSession/findById",
+						data : {
+							"id" : editSysSessionId
+						},
+						dataType : "json",
+						type : "get",
+						async: false,
+						success : function(result) {
+							if (result.code === 200) {
+								_this.sysSession = result.data;
+								_this.sysSessionx = JSON.parse( JSON.stringify(result.data) );
+								
+								
+								$("#huiyiID").val(result.data.exhibitionid);
+
+								var siteHeadLogo = result.data.siteHeadLogo;
+								$("#yulanimg1").attr("onclick", "window.open('" + siteHeadLogo + "')");
+								var siteSmartLogo = result.data.siteSmartLogo;
+								$("#yulanimg2").attr("onclick", "window.open('" + siteSmartLogo + "')");
+
+								$("#txtstatus").val(result.data.status);
+								
+
+								$("#txtpurchaserRegisterStatus").val(result.data.purchaserRegisterStatus);
+								
+							} else {
+								layer.alert("获取修改届次信息信息失败！");
+							}
+						}
+					});
+				}
+			});
+
+			layui.use('upload', function() {
+				var upload = layui.upload;
+
+				//上传图片
+				var uploadPictrue = upload.render({
+					accept : 'images',
+					size : 1024,
+					exts : 'jpg|jpeg|png|gif|bmp',
+					elem : '#uploadPictrue1'//绑定元素
+					,
+					url : '/manage/uploadPicture'//上传接
+					,
+					before : function(obj) {
+						layer.load();
+						//上传loading
+					},
+					done : function(res) {
+						layer.closeAll('loading');
+						if (res.status == 1) {
+							$("#siteHeadLogo").val(res.result);
+							layer.msg('上传成功', {
+								icon : 6
+							});
+						} else {
+							layer.msg(res.msg, {
+								shift : 6
+							});
+						}
+					},
+					error : function() {
+						//请求异常回调
+						layer.msg('接口异常', {
+							shift : 6
+						});
+						layer.closeAll('loading');
+					}
+				});
+			});
+
+			layui.use('upload', function() {
+				var upload = layui.upload;
+
+				//上传图片
+				var uploadPictrue = upload.render({
+					accept : 'images',
+					size : 1024,
+					exts : 'jpg|jpeg|png|gif|bmp',
+					elem : '#uploadPictrue2'//绑定元素
+					,
+					url : '/manage/uploadPicture'//上传接
+					,
+					before : function(obj) {
+						layer.load();
+						//上传loading
+					},
+					done : function(res) {
+						layer.closeAll('loading');
+						if (res.status == 1) {
+							$("#siteSmartLogo").val(res.result);
+							layer.msg('上传成功', {
+								icon : 6
+							});
+						} else {
+							layer.msg(res.msg, {
+								shift : 6
+							});
+						}
+					},
+					error : function() {
+						//请求异常回调
+						layer.msg('接口异常', {
+							shift : 6
+						});
+						layer.closeAll('loading');
+					}
+				});
+			});
+
+			layui.use(['form', 'layer', 'laydate'], function() {
+				var form = layui.form, layer = layui.layer, laydate = layui.laydate;
+				loadexhibition(form, $("#huiyiID").val());
+
+				var sta = $("#txtstatus").val();
+				var radio = document.getElementsByName("status");
+				var radioLength = radio.length;
+				for (var i = 0; i < radioLength; i++) {
+					if (sta == radio[i].value) {
+						$(radio[i]).next().click();
+					}
+				}
+
+				var purchaserRegisterStatus = $("#txtpurchaserRegisterStatus").val();
+				var radio = document.getElementsByName("purchaserRegisterStatus");
+				var radioLength = radio.length;
+				for (var i = 0; i < radioLength; i++) {
+					if (purchaserRegisterStatus == radio[i].value) {
+						$(radio[i]).next().click();
+					}
+				}
+
+				form.render('', 'test1');
+
+				//监听提交
+				form.on('submit(edit)', function(data) {
+
+					//组装数据
+					data.field.id = editSysSessionId;
+					console.log(data.field);
+
+					//发异步，把数据提交给controller
+					$.ajax({
+						url : "/manage/system/sysSession/update",
+						data : JSON.stringify(data.field),
+						dataType : "json",
+						contentType : "application/json",
+						type : "post",
+						success : function(result) {
+							if (result.code === 200) {
+								layer.msg("修改成功", {
+									icon : 6,
+									time : 500
+								}, function() {
+									//关闭当前frame
+									xadmin.close();
+									// 可以对父窗口进行刷新
+									xadmin.father_reload();
+								});
+							} else {
+								layer.alert(result.msg);
+							}
+						}
+					});
+
+					return false;
+				});
+
+			});
+		</script>
+	</body>
+</html>

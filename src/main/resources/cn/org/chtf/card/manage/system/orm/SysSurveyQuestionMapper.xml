@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.system.dao.SysSurveyQuestionMapper">
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.system.model.SysSurveyQuestion">
+        select
+			a.id as id,
+			a.parentid as parentid,
+			a.cntitle as cntitle,
+			a.engtitle as engtitle,
+			a.russiantile as russiantile,
+			a.japtile as japtile,
+			a.hangultitle as hangultitle,
+			a.showtype as showtype,
+			a.code as code,
+			a.useable as useable,a.orders
+        from sys_survey_question as a
+        where a.id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.system.model.SysSurveyQuestion">
+        select
+			a.id as id,
+			a.parentid as parentid,
+			a.cntitle as cntitle,
+			a.engtitle as engtitle,
+			a.russiantile as russiantile,
+			a.japtile as japtile,
+			a.hangultitle as hangultitle,
+			a.showtype as showtype,
+			a.code as code,
+			a.useable as useable,a.orders
+        from sys_survey_question as a
+        <where>
+			<if test="id != null and id != ''">
+				and a.id = #{id}
+			</if>
+			<if test="parentid != null and parentid != ''">
+				and a.parentid = #{parentid}
+			</if>
+			<if test="cntitle != null and cntitle != ''">
+				and a.cntitle = #{cntitle}
+			</if>
+			<if test="engtitle != null and engtitle != ''">
+				and a.engtitle = #{engtitle}
+			</if>
+			<if test="russiantile != null and russiantile != ''">
+				and a.russiantile = #{russiantile}
+			</if>
+			<if test="japtile != null and japtile != ''">
+				and a.japtile = #{japtile}
+			</if>
+			<if test="hangultitle != null and hangultitle != ''">
+				and a.hangultitle = #{hangultitle}
+			</if>
+			<if test="showtype != null and showtype != ''">
+				and a.showtype = #{showtype}
+			</if>
+			<if test="code != null and code != ''">
+				and a.code = #{code}
+			</if>
+			<if test="useable != null and useable != ''">
+				and a.useable = #{useable}
+			</if>
+        </where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.system.model.SysSurveyQuestion">
+        select
+			a.id as id,
+			a.parentid as parentid,
+			a.cntitle as cntitle,
+			a.engtitle as engtitle,
+			a.russiantile as russiantile,
+			a.japtile as japtile,
+			a.hangultitle as hangultitle,
+			a.showtype as showtype,
+			case a.showtype 
+			when 0 then '多选'
+			when 1 then '单选'
+			when 2 then '多行文本'
+			when 3 then '单行文本'
+			end as showtypename,
+			a.code as code,
+			a.useable as useable,a.orders
+        from sys_survey_question as a
+        <where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="parentid != null and parentid != ''">
+                and a.parentid = #{parentid}
+            </if>
+            <if test="cntitle != null and cntitle != ''">
+                and a.cntitle = #{cntitle}
+            </if>
+            <if test="engtitle != null and engtitle != ''">
+                and a.engtitle = #{engtitle}
+            </if>
+            <if test="russiantile != null and russiantile != ''">
+                and a.russiantile = #{russiantile}
+            </if>
+            <if test="japtile != null and japtile != ''">
+                and a.japtile = #{japtile}
+            </if>
+            <if test="hangultitle != null and hangultitle != ''">
+                and a.hangultitle = #{hangultitle}
+            </if>
+            <if test="showtype != null and showtype != ''">
+                and a.showtype = #{showtype}
+            </if>
+            <if test="code != null and code != ''">
+                and a.code = #{code}
+            </if>
+            <if test="useable != null and useable != ''">
+                and a.useable = #{useable}
+            </if>
+        </where>
+        order by a.orders asc,a.id desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(*) FROM sys_survey_question a
+		<where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="parentid != null and parentid != ''">
+                and a.parentid = #{parentid}
+            </if>
+            <if test="cntitle != null and cntitle != ''">
+                and a.cntitle = #{cntitle}
+            </if>
+            <if test="engtitle != null and engtitle != ''">
+                and a.engtitle = #{engtitle}
+            </if>
+            <if test="russiantile != null and russiantile != ''">
+                and a.russiantile = #{russiantile}
+            </if>
+            <if test="japtile != null and japtile != ''">
+                and a.japtile = #{japtile}
+            </if>
+            <if test="hangultitle != null and hangultitle != ''">
+                and a.hangultitle = #{hangultitle}
+            </if>
+            <if test="showtype != null and showtype != ''">
+                and a.showtype = #{showtype}
+            </if>
+            <if test="code != null and code != ''">
+                and a.code = #{code}
+            </if>
+            <if test="useable != null and useable != ''">
+                and a.useable = #{useable}
+            </if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.system.model.SysSurveyQuestion" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_survey_question(
+        	<trim suffixOverrides=",">
+                <if test="parentid != null">`parentid`,</if>
+                <if test="cntitle != null">`cntitle`,</if>
+                <if test="engtitle != null">`engtitle`,</if>
+                <if test="russiantile != null">`russiantile`,</if>
+                <if test="japtile != null">`japtile`,</if>
+                <if test="hangultitle != null">`hangultitle`,</if>
+                <if test="showtype != null">`showtype`,</if>
+                <if test="code != null">`code`,</if>
+                <if test="orders != null">`orders`,</if>
+                <if test="useable != null">`useable`</if>
+			</trim>
+		) values (
+        	<trim suffixOverrides=",">
+                <if test="parentid != null">#{parentid},</if>
+                <if test="cntitle != null">#{cntitle},</if>
+                <if test="engtitle != null">#{engtitle},</if>
+                <if test="russiantile != null">#{russiantile},</if>
+                <if test="japtile != null">#{japtile},</if>
+                <if test="hangultitle != null">#{hangultitle},</if>
+                <if test="showtype != null">#{showtype},</if>
+                <if test="code != null">#{code},</if>
+                <if test="orders != null">#{orders},</if>
+                <if test="useable != null">#{useable}</if>
+			</trim>
+		)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.system.model.SysSurveyQuestion">
+        update sys_survey_question
+        <set>
+			<if test="parentid != null">`parentid` = #{parentid},</if>
+			<if test="cntitle != null">`cntitle` = #{cntitle},</if>
+			<if test="engtitle != null">`engtitle` = #{engtitle},</if>
+			<if test="russiantile != null">`russiantile` = #{russiantile},</if>
+			<if test="japtile != null">`japtile` = #{japtile},</if>
+			<if test="hangultitle != null">`hangultitle` = #{hangultitle},</if>
+			<if test="showtype != null">`showtype` = #{showtype},</if>
+			<if test="code != null">`code` = #{code},</if>
+			<if test="orders != null">`orders` = #{orders},</if>
+			<if test="useable != null">`useable` = #{useable}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from sys_survey_question where id = #{id}
+    </delete>
+    
+    
+    
+</mapper>

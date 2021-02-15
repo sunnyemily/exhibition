@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.online.dao.ReservationErhaltenZertifikatMapper">
+	
+	
+	<select id="list" resultType="map">
+		SELECT id 
+			, type 
+			, reserStartDate as reserStartDate
+			, reserEndDate as reserEndDate
+			, reservationName as reservationName
+			, phone
+			, companyName as companyName
+		from online_reservation_getCertificate 
+		<where>
+			<if test="reserStartDate != null and reserStartDate != ''">
+				reserStartDate >= #{reserStartDate} 
+			</if>
+			<if test="reserEndDate != null and reserEndDate != ''">
+				AND reserStartDate &lt;=#{reserEndDate}
+			</if>
+			<if test="reserStartDate != null and reserStartDate != ''"> 
+				AND reserEndDate >= #{reserStartDate} 
+			</if>
+			<if test="reserEndDate != null and reserEndDate != ''">
+				AND reserEndDate &lt;= #{reserEndDate}
+			</if>
+		</where> 
+	</select>
+	
+	<select id="StatisticsInfo" resultType="map">
+		SELECT
+			count(*) AS Reserved 
+		FROM
+			online_reservation_getCertificate			
+		<where>
+			<if test="reserStartDate != null and reserStartDate != ''">
+				reserStartDate >= #{reserStartDate} 
+			</if>
+			<if test="reserEndDate != null and reserEndDate != ''">
+				AND reserStartDate &lt;=#{reserEndDate}
+			</if>
+			<if test="reserStartDate != null and reserStartDate != ''"> 
+				AND reserEndDate >= #{reserStartDate} 
+			</if>
+			<if test="reserEndDate != null and reserEndDate != ''">
+				AND reserEndDate &lt;= #{reserEndDate}
+			</if>
+		</where> 
+		</select>
+		
+	<select id="total" resultType="int">
+		SELECT
+			SUM(reservationNumber) 
+		FROM
+			sys_reservation_certificate 
+		<where>
+			<if test="reserStartDate != null and reserStartDate != ''">
+				reserStartDate >= #{reserStartDate} 
+			</if>
+			<if test="reserEndDate != null and reserEndDate != ''">
+				AND reserStartDate &lt;= #{reserEndDate}
+			</if>
+			<if test="reserStartDate != null and reserStartDate != ''"> 
+				AND reserEndDate >= #{reserStartDate} 
+			</if>
+			<if test="reserEndDate != null and reserEndDate != ''">
+				AND reserEndDate &lt;= #{reserEndDate}
+			</if>
+		</where> 
+	</select>
+	
+	<select id="listcount" resultType="int">
+		SELECT
+			count(*)
+		from online_reservation_getCertificate
+		<where>
+			<if test="reserStartDate != null and reserStartDate != ''">
+				reserStartDate >= #{reserStartDate} 
+			</if>
+			<if test="reserEndDate != null and reserEndDate != ''">
+				AND reserStartDate &lt;=#{reserEndDate}
+			</if>
+			<if test="reserStartDate != null and reserStartDate != ''"> 
+				AND reserEndDate >= #{reserStartDate} 
+			</if>
+			<if test="reserEndDate != null and reserEndDate != ''">
+				AND reserEndDate &lt;= #{reserEndDate}
+			</if>
+		</where> 
+		limit #{index}, #{size};
+	</select>
+	
+	
+	<!-- 删除数据 -->
+	<delete id="deleteById" >
+		delete from online_reservation_getCertificate 
+		where id=#{id};
+	</delete>
+	
+</mapper>

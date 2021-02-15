@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>零散参展商展位分配</title>
+    <meta content="webkit" name="renderer">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" name="viewport"/>
+    <link rel="stylesheet" href="/manage/css/xadmin.css">
+    <link rel="stylesheet" href="/manage/css/font.css">
+    <link rel="stylesheet" href="/manage/css/bootstrap.min.css?v=3.3.6">
+	<link rel="stylesheet" href="/manage/css/font-awesome.css?v=4.4.0">
+	<link rel="stylesheet" href="/manage/css/animate.css">
+	<link rel="stylesheet" href="/manage/css/style.css">
+	<link rel="stylesheet" href="/manage/css/plugins/bootstrap-table/bootstrap-table.min.css">
+    <script type="text/javascript" charset="utf-8" src="/manage/js/jquery.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="/manage/layui/layui.js"></script>
+    <script type="text/javascript" charset="utf-8" src="/manage/js/xadmin.js"></script>
+    <script type="text/javascript" charset="utf-8" src="/manage/js/vue.js"></script>
+    <style type="text/css">
+    	.layui-checkbox-disbaled[lay-skin=primary] span {
+		    color: #009688;
+		}
+		.layui-disabled, .layui-disabled:hover {
+		    color: #009688!important;
+		}
+		.layui-radio-disbaled>i {
+		    color: #3c763d!important;
+		}
+    </style>
+</head>
+<body>
+<div class="wrapper wrapper-content  animated fadeInRight">
+  <div class="row" id="vmEbsCompanyinfo">
+    <div class="col-sm-12">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>零散参展商-展位分配</h5>
+          <div class="ibox-tools"> <a class="collapse-link"> <i class="fa fa-chevron-up"></i> </a> <a class="close-link"> <i class="fa fa-times"></i> </a> </div>
+        </div>        
+        <div class="ibox-content">
+            <div class="fixed-table-toolbar" style="height:50px;">
+              <div class="pull-left search">
+				<button type="button" class="btn btn-primary" onclick="exportToExcel()" style="padding-left: 10px;">导出EXCEL</button>
+				<a href="" target="_blank" style="display:none;padding-left:5px" id="xiazai">下载导出文件</a>
+			  </div>
+              <div class="columns columns-right btn-group pull-right">
+                <button class="btn btn-default btn-outline" type="button" name="search" title="搜索" onclick="reloadTableData()" id="search"> <i class="glyphicon glyphicon-search"></i> </button>
+              </div>
+              <div class="pull-right search">
+                <input class="form-control input-outline" type="text" placeholder="请输入企业名称" id="companyName" style="width: 140px;">
+              </div>
+              <div class="pull-right search" style="padding-right:10px">
+				<table>
+					<tr>
+						<td>专业展区：</td>
+						<td>
+							<select class="form-control input-outline" id="tradingGroupSelect" onchange="reloadTableData()">
+							</select>
+						</td>
+					</tr>
+				</table>
+			  </div>
+              <div class="pull-right search" style="padding-right:10px">
+				<table>
+					<tr>
+						<td>展位：</td>
+						<td>
+							<select class="form-control input-outline" id="booth" onchange="reloadTableData()">
+								<option value="" selected>全部</option>
+								<option value="0">未分配</option>
+								<option value="1">已分配</option>
+							</select>
+						</td>
+					</tr>
+				</table>
+			  </div>
+              <div class="pull-right search" style="padding-right:10px">
+				<table>
+					<tr>
+						<td>省份：</td>
+						<td>
+							<select class="form-control input-outline" id="province" onchange="reloadTableData()">
+								<option value="" selected>全部</option>
+								<option value="0">省内</option>
+								<option value="1">省外</option>
+							</select>
+						</td>
+					</tr>
+				</table>
+			  </div>
+            </div>
+            <div>
+            	<div align="left" id="boothApplyNumber"></div>
+            	<div align="left" id="productsNumber"></div>
+            </div>
+            <table class="layui-hide statisticsInfo" border="1px" style="text-align:center;" width="100%">
+		        <thead>
+			        <tr>
+			            <td colspan=4>展位申请</td>
+			            <td colspan=3>产品申请</td>
+			        </tr>
+			    </thead>
+		        <tfoot>
+			        <tr>
+			            <td>申请企业数</td>
+			            <td>总数</td>
+			            <td>已分配</td>
+			            <td>未分配</td>
+			            <td>总数</td>
+			            <td>已审核</td>
+			            <td>未审核</td>
+			        </tr>
+			        <tr>
+			            <td id="applyCompanyNumber"></td>
+			            <td id="boothApplyTotal"></td>
+			            <td id="allocationedNumber"></td>
+			            <td id="notAllocationedNumber"></td>
+			            <td id="productsTotal"></td>
+			            <td id="auditedProductsNumber"></td>
+			            <td id="waitAuditProductsNumber"></td>
+			        </tr>
+		        </tfoot>
+            </table>
+            <table id="test" lay-filter="test"></table>
+        </div>
+      </div>
+    </div>    
+  </div>
+</div>
+<div style="display: none;" id="allocationBoothDiv">
+	<fieldset class="layui-elem-field noborder">
+		<form class="layui-form layui-form-pane" action="">
+			<input type="hidden" id="companyId">
+			<input type="hidden" id="applyId">
+			<div class="layui-form-item" style="margin-bottom: 0px;">
+				<label class="layui-form-label" style="margin-bottom: 0px;">参展展品</label>
+				<div class="layui-input-block" style="margin-left: 120px;">
+					<input type="text" class="layui-input" id="applyProducts" value="" style="height: 40px;">
+				</div>
+			</div>
+			<div class="layui-form-item" pane="" id="applyBoothInfo"></div>
+			<div class="layui-form-item">
+			    <div class="layui-input-block">
+			      <button type="button" class="layui-btn" onclick="submitAllocation()" style="margin-left: 48%;">保存</button>
+			    </div>
+			</div>
+		</form>
+	</fieldset>
+</div>
+<div style="display: none;padding: 10px;" id="rollOutDiv">
+    <table border="1" style="width: 100%">
+      <tbody style="color: black;">
+        <tr height="40">
+          <td width="30%" style="border-right-width: 0px;"> 
+	      	&emsp;报名时间：<span id="addtime"></span>
+		  </td>
+		  <td style="border-left-width: 0px;">
+	      	&emsp;账户：<span id="memberUsername"></span>
+		  </td>
+        </tr>
+        <tr height="40">
+          <td rowspan="3" align="right">企业名称：</td>
+          <td>
+          	&emsp;中文：<span id="chineseName"></span>
+		  </td>
+        </tr>
+        <tr height="40">
+          <td>
+          	&emsp;英文：<span id="engName"></span>
+		  </td>
+        </tr>
+        <tr height="40">
+          <td>
+          	&emsp;俄文：<span id="russianName"></span>
+		  </td>
+        </tr>
+        <tr height="40">
+          <td rowspan="2" align="right">地址：</td>
+          <td>
+          	&emsp;中文：<span id="chineseAddress"></span>
+          </td>
+        </tr>
+        <tr height="40">
+          <td>
+          	&emsp;英文：<span id="engAddress"></span>
+		  </td>
+        </tr>
+        <tr height="40">
+          <td align="right">负责人：</td>
+          <td>
+          	&emsp;<span id="principal"></span>
+		  </td>
+        </tr>
+        <tr height="40">
+          <td align="right">联系人：</td>
+          <td>
+            &emsp;<span id="contactPerson"></span>
+		  </td>
+        </tr>
+        <tr height="40">
+          <td align="right">
+          	<font color="red">*</font>&ensp;转出到交易团：
+          </td>
+          <td>
+            <select id="tradingGroup" style="width:100%;height:40px;border: 0px;padding-left: 10px;">
+            	<option value="0" selected="selected">&emsp;请选择</option>
+            </select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+</div>
+<script src="/manage/js/bootstrap.min.js?v=3.3.6"></script> 
+<script src="/manage/js/content.js?v=1.0.0"></script>
+<script src="/manage/js/manage/common.js?v=1.0.0"></script>
+</body>
+<script type="text/javascript">
+var table;
+layui.use(['table', 'form'], function(){
+    var $ = layui.jquery, table = layui.table, form = layui.form;
+	//导出excel
+	window.exportToExcel = function(){
+		$.get("/manage/Exhibitors/ebsScatteredExhibitorsboothallocationController/exportExcel", function(r){
+			if(r.code==1){						
+				layer.msg('导出成功', {
+					icon : 1,
+					time : 1000
+				});
+				$("#xiazai").attr("href",r.src);
+				$("#xiazai").show();
+			}else if(r.code==4){
+				window.location.href="/manage/nopermission.html";
+			}else if(r.code==5){
+				layer.confirm(data.msg, {icon: 3, title:'提示'}, function(index){
+				  	window.location.href="/manage/login.html";
+				  	layer.close(index);
+				});
+			}else{
+				layer.msg(r.msg, {icon: 6});
+			}
+		})
+	}
+	//加载展位数量统计和产品数量统计
+	window.loadCount = function(){
+		$.get("/manage/Exhibitors/ebsScatteredExhibitorsboothallocationController/loadCount", {"tradingGroupId":$("#tradingGroupSelect").val()}, function(r){
+			if(r.code===1){
+				$("#applyCompanyNumber").html(r.data.applyCompanyNumber);
+				$("#boothApplyTotal").html(r.data.boothApplyTotal);
+				$("#allocationedNumber").html(r.data.allocationedNumber);
+				$("#notAllocationedNumber").html(r.data.boothApplyTotal-r.data.allocationedNumber);
+				$("#productsTotal").html(r.data.productsTotal);
+				$("#auditedProductsNumber").html(r.data.auditedPassProductsNumber);
+				$("#waitAuditProductsNumber").html(r.data.waitAuditProductsNumber);
+				$(".statisticsInfo").removeClass("layui-hide");
+			}else if(r.status!=4){
+				layer.alert(r.msg);
+			}
+		})
+	}
+	loadCount();
+	//加载专业展区
+	var tradingGroupList = loadTradingGroupByType(form, '', "tradingGroupSelect", 1);
+	table.render({
+		elem: '#test'
+		,url: '/manage/Exhibitors/ebsScatteredExhibitorsboothallocationController/getScatteredExhibitorsList'	
+		,where:{
+			booth:$("#booth").val()
+			,province:$("#province").val()
+			,companyName:$("#companyName").val()
+			,tradingGroupId:""
+		}	
+		,response: {
+			statusCode: 1 
+		}
+		,even: true
+		,page: true
+		,cols: [[ //表头
+			{type:'numbers',title:'序号'}
+			,{align:'center', field: 'chinesename', title: '企业名称', templet:function (d) {
+				return '<a onclick="visitScatteredExhibitorInfo(\''+d.companyId+'\')">'+d.chinesename+"</a>";
+			}}			
+			,{align:'center', field: 'booths', title: '展位号'}
+			,{align:'center', field: 'exhibitionOfficeAuditRemark', title: '展位审核未通过原因'}
+			,{align:'center', field: 'contactperson', title: '联系人'}
+			,{align:'center', field: 'addtime', title: '注册日期', templet:'<div>{{ layui.util.toDateString(d.addtime) }}</div>'}
+			,{fixed: 'right',width:170, title:'操作', templet:function (d) {
+				var btn = '';
+				if(d.booths != null && d.booths != ''){
+					if(d.exhibitionOfficeAuditStatus != '1'){
+						btn += '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="cancleAllocationBooth">取消分配</a>';
+					}
+				}else{
+					btn += '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="allocationBooth">分配展位</a>';
+					btn += '<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="rollOut">转出</a>';
+				}
+				//btn += '<a class="layui-btn layui-btn-primary layui-btn-xs" href="http://www.baidu.com" target="_blank">打印</a>';
+				return btn;
+			}}
+		]],
+	});
+	//查看零散企业信息
+	window.visitScatteredExhibitorInfo = function(companyId) {
+		sessionStorage.setItem("editEbsCompanyinfoId", companyId);
+		xadmin.open('查看零散参展商信息','EbsScatteredExhibitorBoothAllocationView.html');
+	};
+	//监听工具条
+	table.on('tool(test)', function(obj){
+	    var data = obj.data;
+	    if(obj.event === 'allocationBooth'){
+	    	allocationBooth(data.chinesename, data.companyId);
+	    }else if(obj.event === 'rollOut'){
+	    	rollOut(data.chinesename, data.companyId, data.memberId);
+	    }else if(obj.event === 'cancleAllocationBooth'){
+	    	cancleAllocationBooth(data.companyId);
+	    }
+	});
+	//重新加载数据
+	window.reloadTableData = function() {
+		table.reload('test', {page:true,
+			where : {
+				booth:$("#booth").val()
+				,province:$("#province").val()
+				,companyName:$("#companyName").val()
+				,tradingGroupId:$("#tradingGroupSelect").val()
+			}
+		});
+		loadCount();
+	};
+	var boothTypeCount = 0;
+	var allocationBoothLayer;
+	window.cancleAllocationBooth = function(companyId) {
+		layer.confirm("确认取消分配？", {icon: 3, title:'提示'}, function(){ 
+			$.get("/manage/Exhibitors/ebsScatteredExhibitorsboothallocationController/cancleAllocationBooth", {"companyId":companyId}, function(r){
+				if(r.code===1){
+					layer.alert("取消成功");
+					reloadTableData();
+				}else{
+					layer.alert(r.msg);
+				}
+			})
+		});
+	}
+	//保存
+	window.submitAllocation = function() {
+		var selectBoothId = "";
+		var list = [];
+		var param = {};
+		for(var i=0;i<boothTypeCount;i++){
+			var map = {};
+			map.applyProducts = $("#applyProducts").val();
+			map.applyId = $("#applyId").val();
+			
+			var showRoomTypeSelected = $("#showRoomType"+i).prop("checked");
+			if(showRoomTypeSelected){
+				var tradingGroupName = $("#tradingGroup"+i).text();
+				map.tradingGroupId = $("#tradingGroupId"+i).val();
+				map.showRoomTypeId = $("#showRoomType"+i).val();
+				var tollmehod = $("#showRoomType"+i).attr("tollmehod");
+				var area = $("#applyArea"+i).val();
+				var count = $("#applyCount"+i).val();
+				var applyBuildType = $("input[type=radio][name=applyBuildType"+i+"]:checked").val();
+				if(applyBuildType==0 || tollmehod=='按面积'){
+					if(area==''){
+						$("#applyArea"+i).focus();
+						layer.alert("请输入要申请的面积");					
+						return;
+					}
+					map.applyArea = area;
+				}else{
+					if(count==''){
+						$("#applyCount"+i).focus();
+						layer.alert("请输入要申请的展位个数");					
+						return;
+					}
+					map.applyCount = count;
+				}
+				map.applyBuildType = applyBuildType;
+				if(applyBuildType==1) map.applyRemoveSeparator = $("input[type=radio][name=applyRemoveSeparator"+i+"]:checked").val();
+				map.applyDeviceLength = $("#applyDeviceLength"+i).val();
+				map.applyDeviceWidth = $("#applyDeviceWidth"+i).val();
+				map.applyDeviceHigh = $("#applyDeviceHigh"+i).val();
+				map.applyElectricityAmount = $("#applyElectricityAmount"+i).val();
+				map.applyVoltage = $("input[type=radio][name=applyVoltage"+i+"]:checked").val();
+				list.push(map);
+				var selectCount = $('input[type=checkbox][name=booth'+i+']:checked').length;
+				if(area == null && count !=null && count != ''){
+					if(selectCount != count){
+						layer.alert("【"+tradingGroupName+"】申请数（"+count+"个）与选中数（"+selectCount+"个）不符");
+						return;
+					}
+				}else if(count == null && area !=null && area != ''){
+					var singleArea = $("#boothList"+i).attr("singlearea");
+					var selectArea = selectCount*singleArea;
+					var boothlimit = $("#boothList"+i).attr("boothlimit")*1;
+					if(area%singleArea!=0){
+						layer.alert("【"+tradingGroupName+"】申请面积应为（"+singleArea+"）的倍数");
+						return;
+					}
+					if(area < boothlimit){
+						layer.alert("【"+tradingGroupName+"】最低起租面积（"+boothlimit+"平方米）");
+						return;
+					}
+					if(selectArea != area){
+						layer.alert("【"+tradingGroupName+"】申请面积（"+area+"平方米）与选中面积（"+selectArea+"平方米）不符");
+						return;
+					}
+				}
+				$('input[type=checkbox][name=booth'+i+']:checked').each(function() {
+					selectBoothId += $(this).val()+",";
+			    });
+			}
+		}
+		if(list.length<=0){
+			layer.alert("请选择至少一个展厅填写展位申请信息");
+			return;
+		}
+		param.list = list;
+		$.ajax({
+			type:"post",
+			url:"/manage/Exhibitors/ebsScatteredExhibitorsboothallocationController/updateApplyInfo",
+			data:JSON.stringify(param),
+			dataType: "json",
+			contentType: "application/json",
+            success: function (result) {
+                if (result.code === 1) {
+					selectBoothId = selectBoothId.substring(0,selectBoothId.length-1);
+                	$.get("/manage/Exhibitors/ebsScatteredExhibitorsboothallocationController/allocationBooth", {"selectBoothId":selectBoothId, "companyId":$("#companyId").val()}, function(r){
+            			if(r.code===1){
+            				layer.alert("分配成功");
+            				layer.close(allocationBoothLayer);
+            				reloadTableData();
+            			}else{
+            				layer.alert(r.msg);
+            			}
+            		})
+                } else {
+                    layer.alert(result.msg);
+                }
+            }
+		})
+	}
+	//分配展位
+	window.allocationBooth = function(companyName, companyId){
+		$.get("/manage/Exhibitors/ebsScatteredExhibitorsboothallocationController/getApplyBoothInfo", {"companyId":companyId, "tradingGroupType":1}, function(r){
+			if(r.code===1){
+				if(r.data.length<=0){
+					layer.alert("未查询到该企业的申请信息");
+					return;
+				};
+				boothTypeCount = r.data.length;
+				$("#companyId").val(companyId);
+				var tradingGroupId = 0;
+				var htmlStr = '<label class="layui-form-label">申请展位</label><div class="layui-input-block" style="margin-left: 120px;">';
+				r.data.forEach(function(item,index,dataList){
+					var flag = false;
+					tradingGroupList.forEach(function(item2,index2){
+						if(item.tradingGroupId == item2.id) flag = true;
+					})
+					if(!flag) return;
+				 //var currentTradingGroupId = $("#tradingGroupSelect").val();
+				 //if(currentTradingGroupId == item.tradingGroupId){
+				  htmlStr += '<input type="hidden" id="tradingGroupId'+index+'" value="'+item.tradingGroupId+'"></input>';
+				  if(tradingGroupId != item.tradingGroupId){
+					htmlStr += '<blockquote style="margin: 0px;" id="tradingGroup'+index+'" class="layui-elem-quote layui-text">'+item.tradingGroupName+'</blockquote>';
+					tradingGroupId = item.tradingGroupId;
+				  }else{
+					htmlStr += '<blockquote style="margin: 0px;" id="tradingGroup'+index+'" class="layui-elem-quote layui-text layui-hide">'+item.tradingGroupName+'</blockquote>';
+				  }
+					htmlStr += '<div>';
+					htmlStr += '	<div onclick="listenShowRoomCheckBox(this)">';
+				  if(item.applyId!=null && item.applyId != 0){
+					htmlStr += '		<input type="checkbox" id="showRoomType'+index+'" value="'+item.showRoomTypeId+'" title="'+item.showRoomTypeName+'" lay-skin="primary" tollmehod="'+item.tollmehod+'" checked>';
+					$("#applyProducts").val(item.applyProducts);
+					$("#applyId").val(item.applyId);
+				  }else{
+					htmlStr += '		<input type="checkbox" id="showRoomType'+index+'" value="'+item.showRoomTypeId+'" title="'+item.showRoomTypeName+'" lay-skin="primary" tollmehod="'+item.tollmehod+'" class="defaultValue">';
+				  }
+					htmlStr += '	</div>';
+					htmlStr += '	<hr style="margin: 6px;"/>';
+					htmlStr += '	<div class="layui-form-item" style="padding-top: 15px;">';
+					htmlStr += '		<div class="layui-inline" style="margin-right: 0px;">';
+					htmlStr += '			<label class="layui-form-label" style="width: 60px;padding: 5px 0px;margin-left: 1px;">申请：</label>';
+					htmlStr += '			<div class="layui-input-inline" style="width: 60px;margin-left: 60px;margin-right: 0px;">';
+				if(item.tollmehod == '按面积' || item.applyBuildType == '0'){
+				  if(item.applyId!=null && item.applyId != 0){
+					htmlStr += '				<input type="text" class="layui-input" id="applyArea'+index+'" value="'+item.applyArea+'" style="height: 30px;">';
+				  }else{
+					htmlStr += '				<input type="text" class="layui-input" id="applyArea'+index+'" value="'+item.applyArea+'" style="height: 30px;" disabled>';
+				  }
+				}else{
+				  if(item.applyId!=null && item.applyId != 0){
+					htmlStr += '				<input type="text" class="layui-input" id="applyCount'+index+'" value="'+item.applyCount+'" style="height: 30px;">';
+				  }else{
+					htmlStr += '				<input type="text" class="layui-input" id="applyCount'+index+'" value="'+item.applyCount+'" style="height: 30px;" disabled>';
+				  }
+				}
+					htmlStr += '			</div>';
+					htmlStr += '		</div>';
+					htmlStr += '		<div class="layui-inline" style="margin-right: 0px;width: 45px;">';
+				if(item.tollmehod == '按面积' || item.applyBuildType == '0'){
+					htmlStr += '			<span style="font-size: 14px;font-weight: bold;padding: 5px 0px;" id="applyUnit'+index+'">平方米</span>';
+				}else{
+					htmlStr += '			<span style="font-size: 14px;font-weight: bold;padding: 5px 0px;" id="applyUnit'+index+'">个</span>';
+				}
+					htmlStr += '		</div>';
+				if(item.tollmehod == '按个数'){
+					htmlStr += '		<div class="layui-inline" style="margin-left: 10px;">';
+					htmlStr += '			<label class="layui-form-label" style="width: 90px;padding-right: 0px;border-right-width: 0px;">展位搭建：</label>';
+					htmlStr += '			<div class="layui-input-inline" style="width: 220px;margin-left: 80px;" onclick="checkApplyBuildType(\'applyBuildType'+index+'\')">';
+				  if(item.applyBuildType == '1'){
+				   if(item.applyId!=null && item.applyId != 0){
+					htmlStr += '				<input type="radio" name="applyBuildType'+index+'" value=0 title="特装展位">';
+					htmlStr += '				<input type="radio" name="applyBuildType'+index+'" value=1 title="标准展位" checked>';
+				   }else{
+					htmlStr += '				<input type="radio" name="applyBuildType'+index+'" value=0 title="特装展位" disabled>';
+					htmlStr += '				<input type="radio" name="applyBuildType'+index+'" value=1 title="标准展位" disabled checked>';
+				   }
+				  }else if(item.applyBuildType == '0'){
+				   if(item.applyId!=null && item.applyId != 0){
+					htmlStr += '				<input type="radio" name="applyBuildType'+index+'" value=0 title="特装展位" checked>';
+					htmlStr += '				<input type="radio" name="applyBuildType'+index+'" value=1 title="标准展位">';
+				   }else{
+					htmlStr += '				<input type="radio" name="applyBuildType'+index+'" value=0 title="特装展位" disabled checked>';
+					htmlStr += '				<input type="radio" name="applyBuildType'+index+'" value=1 title="标准展位" disabled>';
+				   }
+				  }else if(item.applyBuildType == ''){
+				   if(item.applyId!=null && item.applyId != 0){
+					htmlStr += '				<input type="radio" name="applyBuildType'+index+'" value=0 title="特装展位">';
+					htmlStr += '				<input type="radio" name="applyBuildType'+index+'" value=1 title="标准展位">';
+				   }else{
+					htmlStr += '				<input type="radio" name="applyBuildType'+index+'" value=0 title="特装展位" disabled>';
+					htmlStr += '				<input type="radio" name="applyBuildType'+index+'" value=1 title="标准展位" disabled>';
+				   }
+				  }
+					htmlStr += '			</div>';
+					htmlStr += '		</div>';
+				 if(item.applyBuildType == '1'){
+					htmlStr += '		<div class="layui-inline" id="applyRemoveSeparatorDiv'+index+'" style="margin-left: 10px;">';
+				 }else{
+					htmlStr += '		<div class="layui-inline" id="applyRemoveSeparatorDiv'+index+'" style="margin-left: 10px;display:none;">';
+				 }
+					htmlStr += '			<label class="layui-form-label" style="width: 160px;padding-right: 0px;border-right-width: 0px;">标准展位间隔板拆除：</label>';
+					htmlStr += '			<div class="layui-input-inline" style="width: 220px;margin-left: 150px;">';
+				  if(item.applyRemoveSeparator == '0'){
+				   if(item.applyId!=null && item.applyId != 0){
+					htmlStr += '				<input type="radio" name="applyRemoveSeparator'+index+'" value=0 title="是" checked>';
+					htmlStr += '				<input type="radio" name="applyRemoveSeparator'+index+'" value=1 title="否">';
+				   }else{
+					htmlStr += '				<input type="radio" name="applyRemoveSeparator'+index+'" value=0 title="是" disabled checked>';
+					htmlStr += '				<input type="radio" name="applyRemoveSeparator'+index+'" value=1 title="否" disabled>';
+				   }
+				  }else if(item.applyRemoveSeparator == '1'){
+				   if(item.applyId!=null && item.applyId != 0){
+					htmlStr += '				<input type="radio" name="applyRemoveSeparator'+index+'" value=0 title="是">';
+					htmlStr += '				<input type="radio" name="applyRemoveSeparator'+index+'" value=1 title="否" checked>';
+				   }else{
+					htmlStr += '				<input type="radio" name="applyRemoveSeparator'+index+'" value=0 title="是" disabled>';
+					htmlStr += '				<input type="radio" name="applyRemoveSeparator'+index+'" value=1 title="否" disabled checked>';
+				   }
+				  }else if(item.applyRemoveSeparator == ''){
+				   if(item.applyId!=null && item.applyId != 0){
+					htmlStr += '				<input type="radio" name="applyRemoveSeparator'+index+'" value=0 title="是">';
+					htmlStr += '				<input type="radio" name="applyRemoveSeparator'+index+'" value=1 title="否">';
+				   }else{
+					htmlStr += '				<input type="radio" name="applyRemoveSeparator'+index+'" value=0 title="是" disabled>';
+					htmlStr += '				<input type="radio" name="applyRemoveSeparator'+index+'" value=1 title="否" disabled>';
+				   }
+				  }
+					htmlStr += '			</div>';
+					htmlStr += '		</div>';
+				}
+					htmlStr += '	</div>';
+					htmlStr += '	<div class="layui-form-item">';
+					htmlStr += '		<div class="layui-inline" style="margin-right: 0px;">';
+					htmlStr += '			<label class="layui-form-label" style="width: 85px;padding: 5px 0px;margin-left: 1px;">设备 : 长：</label>';
+					htmlStr += '			<div class="layui-input-inline" style="width: 60px;margin-left: 80px;margin-right: 0px;">';
+				if(item.applyId!=null && item.applyId != 0){
+					htmlStr += '			  <input type="text" class="layui-input" id="applyDeviceLength'+index+'" value="'+item.applyDeviceLength+'" style="height: 30px;">';
+				}else{
+					htmlStr += '			  <input type="text" class="layui-input" id="applyDeviceLength'+index+'" value="'+item.applyDeviceLength+'" style="height: 30px;" disabled>';
+				}
+					htmlStr += '			</div>';
+					htmlStr += '		</div>';
+					htmlStr += '		<span style="font-size: 14px;font-weight: bold;padding: 5px 0px;">米</span>';
+					htmlStr += '		<div class="layui-inline" style="margin-right: 0px;">';
+					htmlStr += '			<label class="layui-form-label" style="width: 70px;padding: 5px 0px;">宽：</label>';
+					htmlStr += '			<div class="layui-input-inline" style="width: 60px;margin-left: 50px;margin-right: 0px;">';
+				if(item.applyId!=null && item.applyId != 0){
+					htmlStr += '			  <input type="text" class="layui-input" id="applyDeviceWidth'+index+'" value="'+item.applyDeviceWidth+'" style="height: 30px;">';
+				}else{
+					htmlStr += '			  <input type="text" class="layui-input" id="applyDeviceWidth'+index+'" value="'+item.applyDeviceWidth+'" style="height: 30px;" disabled>';
+				}
+					htmlStr += '			</div>';
+					htmlStr += '		</div>';
+					htmlStr += '		<span style="font-size: 14px;font-weight: bold;padding: 5px 0px;">米</span>';
+					htmlStr += '		<div class="layui-inline" style="margin-right: 0px;">';
+					htmlStr += '			<label class="layui-form-label" style="width: 70px;padding: 5px 0px;">高：</label>';
+					htmlStr += '			<div class="layui-input-inline" style="width: 60px;margin-left: 50px;margin-right: 0px;">';
+				if(item.applyId!=null && item.applyId != 0){
+					htmlStr += '			  <input type="text" class="layui-input" id="applyDeviceHigh'+index+'" value="'+item.applyDeviceHigh+'" style="height: 30px;">';
+				}else{
+					htmlStr += '			  <input type="text" class="layui-input" id="applyDeviceHigh'+index+'" value="'+item.applyDeviceHigh+'" style="height: 30px;" disabled>';
+				}
+					htmlStr += '			</div>';
+					htmlStr += '		</div>';
+					htmlStr += '		<span style="font-size: 14px;font-weight: bold;padding: 5px 0px;">米</span>';
+					htmlStr += '		<div class="layui-inline" style="margin-right: 0px;">';
+					htmlStr += '			<label class="layui-form-label" style="width: 95px;padding: 5px 0px;">用电量：</label>';
+					htmlStr += '			<div class="layui-input-inline" style="width: 60px;margin-left: 75px;margin-right: 0px;">';
+				if(item.applyId!=null && item.applyId != 0){
+					htmlStr += '			  <input type="text" class="layui-input" id="applyElectricityAmount'+index+'" value="'+item.applyElectricityAmount+'" style="height: 30px;">';
+				}else{
+					htmlStr += '			  <input type="text" class="layui-input" id="applyElectricityAmount'+index+'" value="'+item.applyElectricityAmount+'" style="height: 30px;" disabled>';
+				}
+					htmlStr += '			</div>';
+					htmlStr += '		</div>';
+					htmlStr += '		<span style="font-size: 14px;font-weight: bold;padding: 5px 0px;">KW</span>';
+					htmlStr += '		<div class="layui-inline" style="margin-left: 10px;">';
+					htmlStr += '			<label class="layui-form-label" style="width: 90px;padding-right: 0px;border-right-width: 0px;">电源电压：</label>';
+					htmlStr += '			<div class="layui-input-inline" style="width: 220px;margin-left: 80px;">';
+				if(item.applyVoltage == '380'){
+				  if(item.applyId!=null && item.applyId != 0){
+					htmlStr += '				<input type="radio" name="applyVoltage'+index+'" value="220" title="220V">';
+					htmlStr += '				<input type="radio" name="applyVoltage'+index+'" value="380" title="380V" checked>';
+				  }else{
+					htmlStr += '				<input type="radio" name="applyVoltage'+index+'" value="220" title="220V" disabled>';
+					htmlStr += '				<input type="radio" name="applyVoltage'+index+'" value="380" title="380V" disabled checked>';
+				  }
+				}else if(item.applyVoltage == '220'){
+				  if(item.applyId!=null && item.applyId != 0){
+					htmlStr += '				<input type="radio" name="applyVoltage'+index+'" value="220" title="220V" checked>';
+					htmlStr += '				<input type="radio" name="applyVoltage'+index+'" value="380" title="380V">';
+				  }else{
+					htmlStr += '				<input type="radio" name="applyVoltage'+index+'" value="220" title="220V" disabled checked>';
+					htmlStr += '				<input type="radio" name="applyVoltage'+index+'" value="380" title="380V" disabled>';
+				  }
+				}else if(item.applyVoltage == ''){
+				  if(item.applyId!=null && item.applyId != 0){
+					htmlStr += '				<input type="radio" name="applyVoltage'+index+'" value="220" title="220V">';
+					htmlStr += '				<input type="radio" name="applyVoltage'+index+'" value="380" title="380V">';
+				  }else{
+					htmlStr += '				<input type="radio" name="applyVoltage'+index+'" value="220" title="220V" disabled>';
+					htmlStr += '				<input type="radio" name="applyVoltage'+index+'" value="380" title="380V" disabled>';
+				  }
+				}
+					htmlStr += '			</div>';
+					htmlStr += '		</div>';
+					htmlStr += '	</div>';
+					htmlStr += '	<hr style="margin: 6px;"/>';
+					htmlStr += '	<div class="layui-form-item">';
+					htmlStr += '		<div id="boothList'+index+'" area="'+item.applyArea+'" boothlimit="'+item.boothlimit+'" count="'+item.applyCount+'" singleArea="'+item.singleArea+'" tradingGroupName="'+item.tradingGroupName+'">';
+				if(item.boothIdName != null && item.boothIdName != ''){
+				  var boothIdName = item.boothIdName.split(',');
+				  boothIdName.forEach(function(i){
+				   if(item.applyId!=null && item.applyId != 0){
+					htmlStr += '			<input type="checkbox" name="booth'+index+'" value="'+i.substring(0,i.indexOf('|'))+'" title="'+i.substring(i.indexOf('|')+1,i.lastIndexOf('|'))+'" lay-skin="primary" '+((i.substring(i.lastIndexOf('|')+1)==null||i.substring(i.lastIndexOf('|')+1)==0)?'':'checked')+'>';
+				   }else{
+					htmlStr += '			<input type="checkbox" name="booth'+index+'" value="'+i.substring(0,i.indexOf('|'))+'" title="'+i.substring(i.indexOf('|')+1,i.lastIndexOf('|'))+'" lay-skin="primary" '+((i.substring(i.lastIndexOf('|')+1)==null||i.substring(i.lastIndexOf('|')+1)==0)?'':'checked')+' disabled>';
+				   }
+				  })
+				}
+					htmlStr += '		</div>';
+					htmlStr += '	</div>';
+					htmlStr += '</div>';
+				 //}
+				})
+				htmlStr += "</div>";
+				$("#applyBoothInfo").html(htmlStr);
+				form.render();
+				allocationBoothLayer = layer.open({
+		    		type: 1
+		    		,area: ['90%', '90%']
+		    		,content: $("#allocationBoothDiv")
+		    		,title: '分配展位-【'+companyName+"】"
+		    	})
+			}else{
+				layer.alert(r.msg);
+			}
+		})
+	}
+	//监听展厅复选框
+	window.listenShowRoomCheckBox = function(obj){
+		var index = obj.querySelector("input").id.replace("showRoomType","");
+		var showRoomType = $("#showRoomType"+index+":checked").val();
+		if(showRoomType!=null){//选中状态
+			var className = obj.querySelector("input").className;
+			$("#applyArea"+index).removeAttr("disabled");
+			$("#applyCount"+index).removeAttr("disabled");
+			$("input[name='applyBuildType"+index+"']").removeAttr("disabled");
+			$("input[name='applyRemoveSeparator"+index+"']").removeAttr("disabled");
+			$("input[name='applyVoltage"+index+"']").removeAttr("disabled");
+			$("input[name='booth"+index+"']").removeAttr("disabled");
+			$("#applyDeviceLength"+index).removeAttr("disabled");
+			$("#applyDeviceWidth"+index).removeAttr("disabled");
+			$("#applyDeviceHigh"+index).removeAttr("disabled");
+			$("#applyElectricityAmount"+index).removeAttr("disabled");
+			if(className.indexOf("defaultValue")>-1){
+				obj.querySelector("input").className="";
+				$("#applyArea"+index).val("");
+				$("#applyCount"+index).val("");
+				$("input[name='applyBuildType"+index+"'][value=1]").attr("checked",true);
+				$("input[name='applyRemoveSeparator"+index+"'][value=1]").attr("checked",true);
+				$("#applyRemoveSeparatorDiv"+index).show();
+				$("input[name='applyVoltage"+index+"'][value=220]").attr("checked",true);
+				$("#applyDeviceLength"+index).val("0.00");
+				$("#applyDeviceWidth"+index).val("0.00");
+				$("#applyDeviceHigh"+index).val("0.00");
+				$("#applyElectricityAmount"+index).val("0.00");
+			}
+		}else{
+			$("#applyArea"+index).attr("disabled", true);
+			$("#applyCount"+index).attr("disabled", true);
+			$("input[name='applyBuildType"+index+"']").attr("disabled", true);
+			$("input[name='applyRemoveSeparator"+index+"']").attr("disabled", true);
+			$("input[name='applyVoltage"+index+"']").attr("disabled", true);
+			$("input[name='booth"+index+"']").attr("disabled", true);
+			$("#applyDeviceLength"+index).attr("disabled", true);
+			$("#applyDeviceWidth"+index).attr("disabled", true);
+			$("#applyDeviceHigh"+index).attr("disabled", true);
+			$("#applyElectricityAmount"+index).attr("disabled", true);
+		}
+		form.render();
+	}
+	//切换展位搭建类型
+	window.checkApplyBuildType = function(cname){
+		var index = cname.replace("applyBuildType", "");
+		var showRoomType = $("#showRoomType"+index+":checked").val();
+		if(showRoomType==null) return;
+		var selectedValue = $("input[type=radio][name="+cname+"]:checked").val();
+		if(selectedValue==0){
+			$("#applyCount"+index).val('');
+			$("#applyCount"+index).attr('id', "applyArea"+index);
+			$("#applyUnit"+index).text('平方米');
+			$("#applyRemoveSeparatorDiv"+index).hide();
+		}else{
+			$("#applyArea"+index).val('');
+			$("#applyArea"+index).attr('id', "applyCount"+index);
+			$("#applyUnit"+index).text('个');
+			$("#applyRemoveSeparatorDiv"+index).show();
+		};
+		$("input:radio[name=applyRemoveSeparator"+index+"][value='1']").attr("checked",true);
+		form.render();
+	}
+	//转出
+	window.rollOut = function(companyName, companyId, memberId){
+		//加载企业信息
+		$.get("/manage/Exhibitors/ebsScatteredExhibitorsManage/selectCompanyInfo", {"id":companyId}, function(r){
+			if(r.code===1){
+				$("#addtime").html((r.data==null || r.data.addtime==null)?'':r.data.addtime);
+				$("#memberUsername").html((r.data==null || r.data.memberUsername==null)?'':r.data.memberUsername);
+				$("#chineseName").html((r.data==null || r.data.chinesename==null)?'':r.data.chinesename);
+				$("#engName").html((r.data==null || r.data.engname==null)?'':r.data.engname);
+				$("#russianName").html((r.data==null || r.data.russianname==null)?'':r.data.russianname);
+				$("#chineseAddress").html((r.data==null || r.data.chineseaddress==null)?'':r.data.chineseaddress);
+				$("#engAddress").html((r.data==null || r.data.engaddress==null)?'':r.data.engaddress);
+				$("#principal").html((r.data==null || r.data.principal==null)?'':r.data.principal);
+				$("#contactPerson").html((r.data==null || r.data.contactperson==null)?'':r.data.contactperson);
+				$.get("/manage/Exhibitors/ebsTradingGroupBoothAuditController/selectTradingGroup", function(r){
+					if(r.code===1){
+						var optionStr = '<option value="" selected>全部</option>';
+						r.data.forEach(function (item){
+							optionStr += '<option value="'+item.id+'">'+item.name+'</option>'
+						});
+						$("#tradingGroup").html(optionStr);
+						layer.open({
+				    		type: 1
+				    		,area: ['50%', '80%']
+				    		,content: $("#rollOutDiv")
+				    		,title: '零散参展商转出-【'+companyName+"】"
+				    		,btn: ['确定']
+							,yes: function(index){
+								var tradingGroupId = $("#tradingGroup").val();
+				    			if(tradingGroupId==null || tradingGroupId==''){
+				    				layer.alert("请先选择交易团");
+				    			}else{
+				    				$.get("/manage/Exhibitors/ebsScatteredExhibitorsboothallocationController/rollOut", {"tradingGroupId":tradingGroupId, "companyId":companyId, "memberId":memberId}, function(r){
+				    					if(r.code===1){
+				    						layer.alert("转出成功");
+				    						layer.close(index);
+				    						reloadTableData();
+				    					}else{
+				    						layer.alert(r.msg);
+				    					}
+				    				})
+				    			}
+				    		}
+				    	})
+					}else{
+						layer.alert(r.msg);
+					}
+				})
+			}else{
+				layer.alert(r.msg);
+			}
+		})
+	}
+});
+</script>
+</html>

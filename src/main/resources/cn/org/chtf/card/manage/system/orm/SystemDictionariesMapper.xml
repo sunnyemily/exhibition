@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.system.dao.SystemDictionariesMapper">
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.system.model.SystemDictionaries">
+        select
+			a.dicid as dicid,
+			a.dic_code as dicCode,
+			a.dic_cn_name as dicCnName,
+			a.dic_en_name as dicEnName,
+			a.dic_rus_name as dicRusName,
+			a.dic_jap_name as dicJapName,
+			a.dic_kor_name as dicKorName,
+			a.dic_parentid as dicParentid,
+			a.dic_type as dicType,
+			a.dic_description as dicDescription,
+			a.dic_order as dicOrder,
+			a.useable as useable
+        from system_dictionaries as a
+        where a.dicid = #{dicid}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.system.model.SystemDictionaries">
+        select
+			a.dicid as dicid,
+			a.dic_code as dicCode,
+			a.dic_cn_name as dicCnName,
+			a.dic_en_name as dicEnName,
+			a.dic_rus_name as dicRusName,
+			a.dic_jap_name as dicJapName,
+			a.dic_kor_name as dicKorName,
+			a.dic_parentid as dicParentid,
+			a.dic_type as dicType,
+			a.dic_description as dicDescription,
+			a.dic_order as dicOrder,
+			a.useable as useable
+        from system_dictionaries as a
+        <where>
+			<if test="dicid != null and dicid != ''">
+				and a.dicid = #{dicid}
+			</if>
+			<if test="dicCode != null and dicCode != ''">
+				and a.dic_code = #{dicCode}
+			</if>
+			<if test="dicCnName != null and dicCnName != ''">
+				and a.dic_cn_name = #{dicCnName}
+			</if>
+			<if test="dicEnName != null and dicEnName != ''">
+				and a.dic_en_name = #{dicEnName}
+			</if>
+			<if test="dicRusName != null and dicRusName != ''">
+				and a.dic_rus_name = #{dicRusName}
+			</if>
+			<if test="dicJapName != null and dicJapName != ''">
+				and a.dic_jap_name = #{dicJapName}
+			</if>
+			<if test="dicKorName != null and dicKorName != ''">
+				and a.dic_kor_name = #{dicKorName}
+			</if>
+			<if test="dicParentid != null and dicParentid != ''">
+				and a.dic_parentid = #{dicParentid}
+			</if>
+			<if test="dicType != null and dicType != ''">
+				and a.dic_type = #{dicType}
+			</if>
+			<if test="dicDescription != null and dicDescription != ''">
+				and a.dic_description = #{dicDescription}
+			</if>
+			<if test="dicOrder != null and dicOrder != ''">
+				and a.dic_order = #{dicOrder}
+			</if>
+			<if test="useable != null and useable != ''">
+				and a.useable = #{useable}
+			</if>
+        </where>
+        order by a.dic_order
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.system.model.SystemDictionaries">
+        select
+			a.dicid as dicid,
+			a.dic_code as dicCode,
+			a.dic_cn_name as dicCnName,
+			a.dic_en_name as dicEnName,
+			a.dic_rus_name as dicRusName,
+			a.dic_jap_name as dicJapName,
+			a.dic_kor_name as dicKorName,
+			a.dic_parentid as dicParentid,
+			a.dic_type as dicType,
+			a.dic_description as dicDescription,
+			a.dic_order as dicOrder,
+			a.useable as useable
+        from system_dictionaries as a
+        <where>
+        	a.dicid!=1    
+            <if test="dicid != null and dicid != ''">
+                and a.dicid = #{dicid}
+            </if>
+            <if test="dicCode != null and dicCode != ''">
+                and a.dic_code = #{dicCode}
+            </if>
+            <if test="dicCnName != null and dicCnName != ''">
+                and a.dic_cn_name = #{dicCnName}
+            </if>
+            <if test="dicEnName != null and dicEnName != ''">
+                and a.dic_en_name = #{dicEnName}
+            </if>
+            <if test="dicRusName != null and dicRusName != ''">
+                and a.dic_rus_name = #{dicRusName}
+            </if>
+            <if test="dicJapName != null and dicJapName != ''">
+                and a.dic_jap_name = #{dicJapName}
+            </if>
+            <if test="dicKorName != null and dicKorName != ''">
+                and a.dic_kor_name = #{dicKorName}
+            </if>
+            <if test="dicParentid != null and dicParentid != ''">
+                and a.dic_parentid = #{dicParentid}
+            </if>
+            <if test="dicType != null and dicType != ''">
+                and a.dic_type = #{dicType}
+            </if>
+            <if test="dicDescription != null and dicDescription != ''">
+                and a.dic_description = #{dicDescription}
+            </if>
+            <if test="dicOrder != null and dicOrder != ''">
+                and a.dic_order = #{dicOrder}
+            </if>
+            <if test="useable != null and useable != ''">
+                and a.useable = #{useable}
+            </if>
+        </where>
+        order by a.dic_order,a.dicid	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(*) FROM system_dictionaries a
+		<where>
+			a.dicid!=1 
+            <if test="dicid != null and dicid != ''">
+                and a.dicid = #{dicid}
+            </if>
+            <if test="dicCode != null and dicCode != ''">
+                and a.dic_code = #{dicCode}
+            </if>
+            <if test="dicCnName != null and dicCnName != ''">
+                and a.dic_cn_name = #{dicCnName}
+            </if>
+            <if test="dicEnName != null and dicEnName != ''">
+                and a.dic_en_name = #{dicEnName}
+            </if>
+            <if test="dicRusName != null and dicRusName != ''">
+                and a.dic_rus_name = #{dicRusName}
+            </if>
+            <if test="dicJapName != null and dicJapName != ''">
+                and a.dic_jap_name = #{dicJapName}
+            </if>
+            <if test="dicKorName != null and dicKorName != ''">
+                and a.dic_kor_name = #{dicKorName}
+            </if>
+            <if test="dicParentid != null and dicParentid != ''">
+                and a.dic_parentid = #{dicParentid}
+            </if>
+            <if test="dicType != null and dicType != ''">
+                and a.dic_type = #{dicType}
+            </if>
+            <if test="dicDescription != null and dicDescription != ''">
+                and a.dic_description = #{dicDescription}
+            </if>
+            <if test="dicOrder != null and dicOrder != ''">
+                and a.dic_order = #{dicOrder}
+            </if>
+            <if test="useable != null and useable != ''">
+                and a.useable = #{useable}
+            </if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.system.model.SystemDictionaries" useGeneratedKeys="true" keyProperty="dicid">
+        insert into system_dictionaries(
+        	<trim suffixOverrides=",">
+                <if test="dicCode != null">`dic_code`,</if>
+                <if test="dicCnName != null">`dic_cn_name`,</if>
+                <if test="dicEnName != null">`dic_en_name`,</if>
+                <if test="dicRusName != null">`dic_rus_name`,</if>
+                <if test="dicJapName != null">`dic_jap_name`,</if>
+                <if test="dicKorName != null">`dic_kor_name`,</if>
+                <if test="dicParentid != null">`dic_parentid`,</if>
+                <if test="dicType != null">`dic_type`,</if>
+                <if test="dicDescription != null">`dic_description`,</if>
+                <if test="dicOrder != null">`dic_order`,</if>
+                <if test="useable != null">`useable`</if>
+			</trim>
+		) values (
+        	<trim suffixOverrides=",">
+                <if test="dicCode != null">#{dicCode},</if>
+                <if test="dicCnName != null">#{dicCnName},</if>
+                <if test="dicEnName != null">#{dicEnName},</if>
+                <if test="dicRusName != null">#{dicRusName},</if>
+                <if test="dicJapName != null">#{dicJapName},</if>
+                <if test="dicKorName != null">#{dicKorName},</if>
+                <if test="dicParentid != null">#{dicParentid},</if>
+                <if test="dicType != null">#{dicType},</if>
+                <if test="dicDescription != null">#{dicDescription},</if>
+                <if test="dicOrder != null">#{dicOrder},</if>
+                <if test="useable != null">#{useable}</if>
+			</trim>
+		)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.system.model.SystemDictionaries">
+        update system_dictionaries
+        <set>
+			<if test="dicCode != null">`dic_code` = #{dicCode},</if>
+			<if test="dicCnName != null">`dic_cn_name` = #{dicCnName},</if>
+			<if test="dicEnName != null">`dic_en_name` = #{dicEnName},</if>
+			<if test="dicRusName != null">`dic_rus_name` = #{dicRusName},</if>
+			<if test="dicJapName != null">`dic_jap_name` = #{dicJapName},</if>
+			<if test="dicKorName != null">`dic_kor_name` = #{dicKorName},</if>
+			<if test="dicParentid != null">`dic_parentid` = #{dicParentid},</if>
+			<if test="dicType != null">`dic_type` = #{dicType},</if>
+			<if test="dicDescription != null">`dic_description` = #{dicDescription},</if>
+			<if test="dicOrder != null">`dic_order` = #{dicOrder},</if>
+			<if test="useable != null">`useable` = #{useable}</if>
+        </set>
+        where dicid = #{dicid}
+    </update>
+
+    <delete id="deleteById">
+        delete from system_dictionaries where dicid = #{dicid}
+    </delete>  
+    
+    
+</mapper>

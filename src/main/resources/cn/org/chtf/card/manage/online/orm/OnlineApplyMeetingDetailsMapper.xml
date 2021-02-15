@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.online.dao.OnlineApplyMeetingDetailsMapper">
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.online.model.OnlineApplyMeetingDetails">
+        select
+			a.id as id,
+			a.meetingid as meetingid,
+			a.mobilephone as mobilephone,
+			a.pass as pass,
+			a.ishost as ishost
+        from online_apply_meeting_details as a
+        where a.id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.online.model.OnlineApplyMeetingDetails">
+        select
+			a.id as id,
+			a.meetingid as meetingid,
+			a.mobilephone as mobilephone,
+			a.pass as pass,
+			a.ishost as ishost
+        from online_apply_meeting_details as a
+        <where>
+			<if test="id != null and id != ''">
+				and a.id = #{id}
+			</if>
+			<if test="meetingid != null and meetingid != ''">
+				and a.meetingid = #{meetingid}
+			</if>
+			<if test="mobilephone != null and mobilephone != ''">
+				and a.mobilephone = #{mobilephone}
+			</if>
+			<if test="pass != null and pass != ''">
+				and a.pass = #{pass}
+			</if>
+			<if test="ishost != null and ishost != ''">
+				and a.ishost = #{ishost}
+			</if>
+        </where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.online.model.OnlineApplyMeetingDetails">
+        select
+			a.id as id,
+			a.meetingid as meetingid,
+			a.mobilephone as mobilephone,
+			a.pass as pass,
+			a.ishost as ishost
+        from online_apply_meeting_details as a
+        <where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="meetingid != null and meetingid != ''">
+                and a.meetingid = #{meetingid}
+            </if>
+            <if test="mobilephone != null and mobilephone != ''">
+                and a.mobilephone = #{mobilephone}
+            </if>
+            <if test="pass != null and pass != ''">
+                and a.pass = #{pass}
+            </if>
+            <if test="ishost != null and ishost != ''">
+                and a.ishost = #{ishost}
+            </if>
+        </where>
+        order by a.id desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(*) FROM online_apply_meeting_details a
+		<where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="meetingid != null and meetingid != ''">
+                and a.meetingid = #{meetingid}
+            </if>
+            <if test="mobilephone != null and mobilephone != ''">
+                and a.mobilephone = #{mobilephone}
+            </if>
+            <if test="pass != null and pass != ''">
+                and a.pass = #{pass}
+            </if>
+            <if test="ishost != null and ishost != ''">
+                and a.ishost = #{ishost}
+            </if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.online.model.OnlineApplyMeetingDetails" useGeneratedKeys="true" keyProperty="id">
+        insert into online_apply_meeting_details(
+        	<trim suffixOverrides=",">
+                <if test="meetingid != null">`meetingid`,</if>
+                <if test="mobilephone != null">`mobilephone`,</if>
+                <if test="pass != null">`pass`,</if>
+                <if test="ishost != null">`ishost`</if>
+			</trim>
+		) values (
+        	<trim suffixOverrides=",">
+                <if test="meetingid != null">#{meetingid},</if>
+                <if test="mobilephone != null">#{mobilephone},</if>
+                <if test="pass != null">#{pass},</if>
+                <if test="ishost != null">#{ishost}</if>
+			</trim>
+		)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.online.model.OnlineApplyMeetingDetails">
+        update online_apply_meeting_details
+        <set>
+			<if test="meetingid != null">`meetingid` = #{meetingid},</if>
+			<if test="mobilephone != null">`mobilephone` = #{mobilephone},</if>
+			<if test="pass != null">`pass` = #{pass},</if>
+			<if test="ishost != null">`ishost` = #{ishost}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from online_apply_meeting_details where id = #{id}
+    </delete>
+    
+    <update id="updateHost">
+    	update online_apply_meeting_details set ishost=0 where meetingid=#{iMeetid}
+    </update>
+    
+    <update id="updateToHost">
+    	update online_apply_meeting_details set ishost=1 where meetingid=#{iMeetid} and mobilephone=#{hostPhone}
+    </update>
+    
+    
+</mapper>

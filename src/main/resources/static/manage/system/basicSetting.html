@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>网站设置</title>
+<link rel="shortcut icon" href="/favicon.ico">
+<link href="../css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+<link href="../css/font-awesome.css?v=4.4.0" rel="stylesheet">
+<link href="../css/plugins/jsTree/style.min.css" rel="stylesheet">
+<link href="../css/animate.css" rel="stylesheet">
+<link href="../css/style.css?v=4.1.0" rel="stylesheet">
+<link href="../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+<link rel="stylesheet" href="../js/plugins/layui/css/layui.css"  media="all">
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content  animated fadeInRight">
+<div class="row">
+<div class="col-sm-12">
+<div class="ibox-title">
+      <h5 id="edit-title">网站基本信息设置</h5>
+      <div class="ibox-tools"> <a class="collapse-link"> <i class="fa fa-chevron-up"></i> </a> <a class="close-link"> <i class="fa fa-times"></i> </a> </div>
+    </div>
+<div class="ibox-content">
+<fieldset>
+<div class="layui-tab layui-tab-card">
+  <ul class="layui-tab-title">
+    <li class="layui-this" data-cid="1">中文版</li>
+    <li data-cid="2">英文版</li>
+    <li data-cid="3" style="display:none">日文版</li>
+  </ul>
+  <div class="layui-tab-content">
+    <div class="layui-tab-item layui-show">
+	<form class="layui-form layui-form-pane" action="">
+	  <input id="bsId" name="bsId" type="hidden" value="1">
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">网站名称</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsSitename" name="bsSitename" autocomplete="off" placeholder="请输入网站名称" class="layui-input" lay-verify="required">
+	    </div>
+	  </div>
+	  <div class="layui-form-item" style="display:none">
+	    <label class="layui-form-label">背景音乐</label>
+        <div class="layui-input-inline">
+          <input id="bsMusic1" name="bsMusic" type="text" class="layui-input" value="">
+        </div>
+        <div class="layui-input-inline" style="width:160px;">
+          <button type="button" class="layui-btn uploadPictrue">
+            <i class="layui-icon">&#xe67c;</i>上传背景音乐
+          </button>
+        </div>
+        <div class="layui-input-inline" style="width:114px;">
+          <button type="button" class="layui-btn browseServer">
+            <i class="layui-icon">&#xe67c;</i>浏览服务器
+          </button>
+        </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">网站关键字</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsKeyword" name="bsKeyword" placeholder="请输入关键字，此功能主要提升SEO" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">网站描述</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsDescription" name="bsDescription" placeholder="请输入网站描述，此功能主要提升SEO" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">网站域名</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsDomain" name="bsDomain" placeholder="请输入网站域名" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">公司地址</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsAddress" name="bsAddress" placeholder="请输入地址" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">邮编</label>
+	    <div class="layui-input-inline">
+	      <input type="text" id="bsTel" name="bsTel" placeholder="请输入邮编" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">联系邮箱</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsEamil" name="bsEamil" placeholder="请输入联系邮箱" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">ICP备案号</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsIcp" name="bsIcp" placeholder="请输入ICP备案号" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">公安备案号</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsGaNum" name="bsGaNum" placeholder="请输入公安备案号" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div style="display:none">
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">系统邮箱</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsMailEmail" name="bsMailEmail" placeholder="请输入发送邮件邮箱" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">邮箱密码</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsMailPassword" name="bsMailPassword" placeholder="请输入邮箱密码" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">POP3地址</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsPop3" name="bsPop3" placeholder="请输入POP3服务器地址" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">SMTP地址</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsSmtp" name="bsSmtp" placeholder="请输入SMTP服务器地址" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">IMAP地址</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsImap" name="bsImap" placeholder="请输入IMAP服务器地址" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <div class="layui-input-block">
+	      <button class="layui-btn" lay-submit="" lay-filter="demo1">保存</button>
+	      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+	    </div>
+	  </div>
+	</form>
+</div>
+    <div class="layui-tab-item">
+	<form class="layui-form layui-form-pane" action="">
+	  <input id="bsId" name="bsId" type="hidden" value="1">
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">网站名称</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsSitename" name="bsSitename" autocomplete="off" placeholder="请输入网站名称" class="layui-input" lay-verify="required">
+	    </div>
+	  </div>
+	  <div class="layui-form-item" style="display:none">
+	    <label class="layui-form-label">背景音乐</label>
+        <div class="layui-input-inline">
+          <input id="bsMusic2" name="bsMusic" type="text" class="layui-input" value="">
+        </div>
+        <div class="layui-input-inline" style="width:160px;">
+          <button type="button" class="layui-btn uploadPictrue">
+            <i class="layui-icon">&#xe67c;</i>上传背景音乐
+          </button>
+        </div>
+        <div class="layui-input-inline" style="width:114px;">
+          <button type="button" class="layui-btn browseServer">
+            <i class="layui-icon">&#xe67c;</i>浏览服务器
+          </button>
+        </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">网站关键字</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsKeyword" name="bsKeyword" placeholder="请输入关键字，此功能主要提升SEO" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">网站描述</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsDescription" name="bsDescription" placeholder="请输入网站描述，此功能主要提升SEO" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">网站域名</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsDomain" name="bsDomain" placeholder="请输入网站域名" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">公司地址</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsAddress" name="bsAddress" placeholder="请输入地址" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">邮编</label>
+	    <div class="layui-input-inline">
+	      <input type="text" id="bsTel" name="bsTel" placeholder="请输入邮编" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">联系邮箱</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsEamil" name="bsEamil" placeholder="请输入联系邮箱" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">ICP备案号</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsIcp" name="bsIcp" placeholder="请输入ICP备案号" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">公安备案号</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsGaNum" name="bsGaNum" placeholder="请输入公安备案号" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div style="display:none">
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">系统邮箱</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsMailEmail" name="bsMailEmail" placeholder="请输入发送邮件邮箱" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">邮箱密码</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsMailPassword" name="bsMailPassword" placeholder="请输入邮箱密码" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">POP3地址</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsPop3" name="bsPop3" placeholder="请输入POP3服务器地址" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">SMTP地址</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsSmtp" name="bsSmtp" placeholder="请输入SMTP服务器地址" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">IMAP地址</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsImap" name="bsImap" placeholder="请输入IMAP服务器地址" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <div class="layui-input-block">
+	      <button class="layui-btn" lay-submit="" lay-filter="demo1">保存</button>
+	      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+	    </div>
+	  </div>
+	</form>
+	</div>
+    <div class="layui-tab-item">
+	<form class="layui-form layui-form-pane" action="">
+	  <input id="bsId" name="bsId" type="hidden" value="1">
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">网站名称</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsSitename" name="bsSitename" autocomplete="off" placeholder="请输入网站名称" class="layui-input" lay-verify="required">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">背景音乐</label>
+        <div class="layui-input-inline">
+          <input id="bsMusic3" name="bsMusic" type="text" class="layui-input" value="">
+        </div>
+        <div class="layui-input-inline" style="width:160px;">
+          <button type="button" class="layui-btn uploadPictrue">
+            <i class="layui-icon">&#xe67c;</i>上传背景音乐
+          </button>
+        </div>
+        <div class="layui-input-inline" style="width:114px;">
+          <button type="button" class="layui-btn browseServer">
+            <i class="layui-icon">&#xe67c;</i>浏览服务器
+          </button>
+        </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">网站关键字</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsKeyword" name="bsKeyword" placeholder="请输入关键字，此功能主要提升SEO" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">网站描述</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsDescription" name="bsDescription" placeholder="请输入网站描述，此功能主要提升SEO" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">网站域名</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsDomain" name="bsDomain" placeholder="请输入网站域名" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">公司地址</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsAddress" name="bsAddress" placeholder="请输入地址" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">联系电话</label>
+	    <div class="layui-input-inline">
+	      <input type="text" id="bsTel" name="bsTel" placeholder="请输入联系电话" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">联系邮箱</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsEamil" name="bsEamil" placeholder="请输入联系邮箱" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">ICP备案号</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsIcp" name="bsIcp" placeholder="请输入ICP备案号" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">公安备案号</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsGaNum" name="bsGaNum" placeholder="请输入公安备案号" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div style="display:none">
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">系统邮箱</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsMailEmail" name="bsMailEmail" placeholder="请输入发送邮件邮箱" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">邮箱密码</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsMailPassword" name="bsMailPassword" placeholder="请输入邮箱密码" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">POP3地址</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsPop3" name="bsPop3" placeholder="请输入POP3服务器地址" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">SMTP地址</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsSmtp" name="bsSmtp" placeholder="请输入SMTP服务器地址" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <label class="layui-form-label">IMAP地址</label>
+	    <div class="layui-input-block">
+	      <input type="text" id="bsImap" name="bsImap" placeholder="请输入IMAP服务器地址" autocomplete="off" class="layui-input">
+	    </div>
+	  </div>
+	  </div>
+	  <div class="layui-form-item">
+	    <div class="layui-input-block">
+	      <button class="layui-btn" lay-submit="" lay-filter="demo1">保存</button>
+	      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+	    </div>
+	  </div>
+	</form>
+	</div>
+  </div>
+</div>
+</fieldset>
+</div>
+</div>
+</div>
+</div>
+<!-- 全局js --> 
+<script src="../js/plugins/layui/layui.js" charset="utf-8"></script> 
+<script src="../js/jquery.min.js?v=2.1.4"></script> 
+<script src="../js/bootstrap.min.js?v=3.3.6"></script> 
+
+<!-- 自定义js --> 
+<script src="../js/content.js?v=1.0.0"></script> 
+<script src="../js/W.js?v=3.3.6"></script> 
+
+
+<script src="../js/plugins/bootstrap-table/bootstrap-table.min.js"></script> 
+<script src="../js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script> 
+<script src="../js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<style>
+        .jstree-open > .jstree-anchor > .fa-folder:before {
+            content: "\f07c";
+        }
+
+        .jstree-default .jstree-icon.none {
+            width: 0;
+        }
+    </style>
+<script>
+var element;
+$(document).ready(function(){
+	getBasicSetting(0,1);
+});
+function getBasicSetting(formIndex,id){	
+	displayLoading(true);
+	$.post("/manage/system/getBasicSetting",{bsid:id},
+	function(data){
+		if(data.status==1){
+			for(var key in data.result){
+				$("form:eq("+formIndex+") [name="+key+"]").val(data.result[key]);
+			}
+		}
+		else if(data.status==4){
+			window.location.href="/manage/nopermission.html";
+		}
+		else if(data.status==5){
+			parent.layer.msg(data.msg, {icon: 1});
+			window.location.href="/manage/login.html";
+		}
+		else{
+			parent.layer.msg(data.msg, {icon: 1});
+		}
+		hiddenLoading(true);
+	});	
+}
+layui.use('element', function(){
+	element = layui.element;
+	element.on('tab', function(data){
+		//赋值配置ID
+		$("form:eq("+data.index+") #bsId").val($(this).attr('data-cid'));
+		//读取服务器配置
+		getBasicSetting(data.index,$(this).attr('data-cid'));
+	});
+});
+layui.use(['form'], function(){
+  var form = layui.form;  
+  //监听提交
+  form.on('submit(demo1)', function(data){
+	  //JSON.stringify(data.field)
+	updateToServer();
+	return false;
+  });  
+});
+function updateToServer(){		
+	displayLoading(true);
+	$.post("/manage/system/updateBasicSetting",$('.layui-show form').serialize(),
+	function(data){
+		hiddenLoading(true);
+		if(data.status==1){
+			parent.layer.msg("更新成功", {icon: 1});
+		}
+		else if(data.status==4){
+			window.location.href="/manage/nopermission.html";
+		}
+		else if(data.status==5){
+			parent.layer.msg(data.msg, {icon: 1});
+			window.location.href="/manage/login.html";
+		}
+		else{
+			parent.layer.msg(data.msg, {icon: 1});
+		}
+	});			
+}
+layui.use('upload', function(){
+	var upload = layui.upload;
+	//上传图片
+	var uploadPictrue = upload.render({
+		accept:'file'
+		,size:10240
+		,exts:'mp3'
+		,elem: '.uploadPictrue' //绑定元素
+		,url: '/manage/uploadFile' //上传接
+		,before: function(obj){
+			console.info($(this));
+			layer.load(); //上传loading
+		}
+		,done: function(res){
+			if(res.status==1){
+				var formIndex = $(".layui-this").attr("data-cid")-1;
+				$("form:eq("+formIndex+") :text[name='bsMusic']").val(res.result);
+				layer.msg('上传成功', {icon: 6});
+			}
+			else if(res.status==4){
+				window.location.href="/manage/nopermission.html";
+			}
+			else if(res.status==5){
+				layer.confirm(res.msg, {icon: 3, title:'提示'}, function(index){
+					  window.location.href="/manage/login.html";
+					  layer.close(index);
+					});
+			}
+		    else{
+			 layer.msg(res.msg, {shift: 6});
+		    }
+			layer.closeAll('loading');
+		}
+		,error: function(){
+		  //请求异常回调
+		  	layer.msg('接口异常', {shift: 6});
+			layer.closeAll('loading');
+		}
+	  });
+});
+$(".browseServer").on("click",function(){
+	var formIndex = $(".layui-this").attr("data-cid");
+	layer.open({
+		  title:'文件浏览器',
+		  area: ['80%', '80%'],
+		  type: 2, 
+		  content: ['/manage/plugins/wxFile/browser.html?formName=bsMusic'+formIndex, 'no'] //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: 
+		}); 
+});
+    </script>
+</body>
+</html>

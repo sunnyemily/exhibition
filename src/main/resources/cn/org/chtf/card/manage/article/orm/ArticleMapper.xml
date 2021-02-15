@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.org.chtf.card.manage.article.dao.ArticleMapper">
+  <resultMap id="BaseResultMap" type="cn.org.chtf.card.manage.article.pojo.Article">
+    <id column="article_id" jdbcType="INTEGER" property="articleId" />
+    <result column="menu_id" jdbcType="INTEGER" property="menuId" />
+    <result column="article_title" jdbcType="VARCHAR" property="articleTitle" />
+    <result column="article_source" jdbcType="VARCHAR" property="articleSource" />
+    <result column="article_author" jdbcType="VARCHAR" property="articleAuthor" />
+    <result column="article_file" jdbcType="VARCHAR" property="articleFile" />
+    <result column="article_picture" jdbcType="VARCHAR" property="articlePicture" />
+    <result column="article_updatetime" jdbcType="TIMESTAMP" property="articleUpdatetime" />
+    <result column="article_order" jdbcType="INTEGER" property="articleOrder" />
+    <result column="article_Operator" jdbcType="VARCHAR" property="articleOperator" />
+    <result column="article_is_home" jdbcType="BIT" property="articleIsHome" />
+    <result column="exhibition_id" jdbcType="INTEGER" property="exhibitionId" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="cn.org.chtf.card.manage.article.pojo.Article">
+    <result column="article_content" jdbcType="LONGVARCHAR" property="articleContent" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    article_id, menu_id, article_title, article_source, article_author, article_file, 
+    article_picture,  article_updatetime, article_order, article_Operator, 
+    article_is_home, exhibition_id
+  </sql>
+  <sql id="Blob_Column_List">
+    article_content
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from web_article
+    where article_id = #{articleId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from web_article
+    where article_id = #{articleId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.org.chtf.card.manage.article.pojo.Article">
+    insert into web_article (article_id, menu_id, article_title, 
+      article_source, article_author, article_file, 
+      article_picture, article_updatetime, 
+      article_order, article_Operator, article_is_home, 
+      exhibition_id,article_content)
+    values (#{articleId,jdbcType=INTEGER}, #{menuId,jdbcType=INTEGER}, #{articleTitle,jdbcType=VARCHAR}, 
+      #{articleSource,jdbcType=VARCHAR}, #{articleAuthor,jdbcType=VARCHAR}, #{articleFile,jdbcType=VARCHAR}, 
+      #{articlePicture,jdbcType=VARCHAR}, #{articleUpdatetime,jdbcType=TIMESTAMP}, 
+      #{articleOrder,jdbcType=INTEGER}, #{articleOperator,jdbcType=VARCHAR}, #{articleIsHome,jdbcType=TINYINT}, 
+      #{exhibitionId,jdbcType=INTEGER}, #{articleContent,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.org.chtf.card.manage.article.pojo.Article">
+    insert into web_article
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="articleId != null">
+        article_id,
+      </if>
+      <if test="menuId != null">
+        menu_id,
+      </if>
+      <if test="articleTitle != null">
+        article_title,
+      </if>
+      <if test="articleSource != null">
+        article_source,
+      </if>
+      <if test="articleAuthor != null">
+        article_author,
+      </if>
+      <if test="articleFile != null">
+        article_file,
+      </if>
+      <if test="articlePicture != null">
+        article_picture,
+      </if>
+      <if test="articleUpdatetime != null">
+        article_updatetime,
+      </if>
+      <if test="articleOrder != null">
+        article_order,
+      </if>
+      <if test="articleOperator != null">
+        article_Operator,
+      </if>
+      <if test="articleIsHome != null">
+        article_is_home,
+      </if>
+      <if test="exhibitionId != null">
+        exhibition_id,
+      </if>
+      <if test="articleContent != null">
+        article_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="articleId != null">
+        #{articleId,jdbcType=INTEGER},
+      </if>
+      <if test="menuId != null">
+        #{menuId,jdbcType=INTEGER},
+      </if>
+      <if test="articleTitle != null">
+        #{articleTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="articleSource != null">
+        #{articleSource,jdbcType=VARCHAR},
+      </if>
+      <if test="articleAuthor != null">
+        #{articleAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="articleFile != null">
+        #{articleFile,jdbcType=VARCHAR},
+      </if>
+      <if test="articlePicture != null">
+        #{articlePicture,jdbcType=VARCHAR},
+      </if>
+      <if test="articleUpdatetime != null">
+        #{articleUpdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="articleOrder != null">
+        #{articleOrder,jdbcType=INTEGER},
+      </if>
+      <if test="articleOperator != null">
+        #{articleOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="articleIsHome != null">
+        #{articleIsHome,jdbcType=TINYINT},
+      </if>
+      <if test="exhibitionId != null">
+        #{exhibitionId,jdbcType=TINYINT},
+      </if>
+      <if test="articleContent != null">
+        #{articleContent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.org.chtf.card.manage.article.pojo.Article">
+    update web_article
+    <set>
+      <if test="menuId != null">
+        menu_id = #{menuId,jdbcType=INTEGER},
+      </if>
+      <if test="articleTitle != null">
+        article_title = #{articleTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="articleSource != null">
+        article_source = #{articleSource,jdbcType=VARCHAR},
+      </if>
+      <if test="articleAuthor != null">
+        article_author = #{articleAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="articleFile != null">
+        article_file = #{articleFile,jdbcType=VARCHAR},
+      </if>
+      <if test="articlePicture != null">
+        article_picture = #{articlePicture,jdbcType=VARCHAR},
+      </if>
+      <if test="articleUpdatetime != null">
+        article_updatetime = #{articleUpdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="articleOrder != null">
+        article_order = #{articleOrder,jdbcType=INTEGER},
+      </if>
+      <if test="articleOperator != null">
+        article_Operator = #{articleOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="articleIsHome != null">
+        article_is_home = #{articleIsHome,jdbcType=TINYINT},
+      </if>
+      <if test="exhibitionId != null">
+        exhibition_id = #{exhibitionId,jdbcType=INTEGER},
+      </if>
+      <if test="articleContent != null">
+        article_content = #{articleContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where article_id = #{articleId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.org.chtf.card.manage.article.pojo.Article">
+    update web_article
+    set menu_id = #{menuId,jdbcType=INTEGER},
+      article_title = #{articleTitle,jdbcType=VARCHAR},
+      article_source = #{articleSource,jdbcType=VARCHAR},
+      article_author = #{articleAuthor,jdbcType=VARCHAR},
+      article_file = #{articleFile,jdbcType=VARCHAR},
+      article_picture = #{articlePicture,jdbcType=VARCHAR},
+      article_updatetime = #{articleUpdatetime,jdbcType=TIMESTAMP},
+      article_order = #{articleOrder,jdbcType=INTEGER},
+      article_Operator = #{articleOperator,jdbcType=VARCHAR},
+      article_is_home = #{articleIsHome,jdbcType=TINYINT},
+      exhibition_id = #{exhibitionId,jdbcType=INTEGER},
+      article_content = #{articleContent,jdbcType=LONGVARCHAR}
+    where article_id = #{articleId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.org.chtf.card.manage.article.pojo.Article">
+    update web_article
+    set menu_id = #{menuId,jdbcType=INTEGER},
+      article_title = #{articleTitle,jdbcType=VARCHAR},
+      article_source = #{articleSource,jdbcType=VARCHAR},
+      article_author = #{articleAuthor,jdbcType=VARCHAR},
+      article_file = #{articleFile,jdbcType=VARCHAR},
+      article_picture = #{articlePicture,jdbcType=VARCHAR},
+      article_updatetime = #{articleUpdatetime,jdbcType=TIMESTAMP},
+      article_order = #{articleOrder,jdbcType=INTEGER},
+      article_Operator = #{articleOperator,jdbcType=VARCHAR},
+      article_is_home = #{articleIsHome,jdbcType=TINYINT},
+      exhibition_id = #{exhibitionId,jdbcType=INTEGER},
+    where article_id = #{articleId,jdbcType=INTEGER}
+  </update>
+  <select id="getArticles"  parameterType="cn.org.chtf.card.manage.article.pojo.ArticlePageModel"  resultMap="ResultMapWithBLOBs">
+  	SELECT
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+	FROM
+		web_article
+	WHERE
+      <if test="menuId != null and menuId!=0">
+        menu_id = #{menuId,jdbcType=INTEGER} AND 
+      </if>
+      <if test="exhibitionId != null and exhibitionId!=0">
+        exhibition_id = #{exhibitionId,jdbcType=INTEGER} AND 
+      </if> article_title LIKE '%${keywords}%'
+	ORDER BY ${field} ${order} ,article_updatetime DESC
+	LIMIT #{start,jdbcType=INTEGER},
+	 #{limit,jdbcType=INTEGER};
+  </select>
+  <select id="getTotal"  parameterType="cn.org.chtf.card.manage.article.pojo.ArticlePageModel"  resultType="java.lang.Integer">
+    select count(*) from web_article
+	WHERE
+      <if test="menuId != null and menuId!=0">
+        menu_id = #{menuId,jdbcType=INTEGER} AND 
+      </if>
+      <if test="exhibitionId != null and exhibitionId!=0">
+        exhibition_id = #{exhibitionId,jdbcType=INTEGER} AND 
+      </if> article_title LIKE '%${keywords}%'
+  </select> 
+  <delete id="deleteArticles"  parameterType="java.util.List">
+    delete from web_article
+    where article_id in  
+        <foreach collection="articleIdList" item="articleId" index="index"
+            open="(" close=")" separator=",">
+            #{articleId,jdbcType=VARCHAR}
+        </foreach>;
+  </delete> 
+  <select id="getHomeArticles"  parameterType="cn.org.chtf.card.support.util.PageModel"  resultMap="ResultMapWithBLOBs">
+  	SELECT
+    <include refid="Base_Column_List" />
+	FROM
+		web_article
+	WHERE
+      <if test="menuId != null and menuId!=0">
+        menu_id = #{menuId,jdbcType=INTEGER} AND
+      </if>
+      <if test="exhibitionId != null and exhibitionId!=0">
+        exhibition_id = #{exhibitionId,jdbcType=INTEGER} AND 
+      </if>
+      article_is_home = 1
+	ORDER BY article_order ASC ,article_updatetime DESC
+	LIMIT #{limit,jdbcType=INTEGER};
+  </select>
+</mapper>

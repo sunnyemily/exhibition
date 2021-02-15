@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>用户资料编辑</title>
+<link rel="shortcut icon" href="/favicon.ico">
+<link href="../css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+<link href="../css/font-awesome.css?v=4.4.0" rel="stylesheet">
+<link href="../css/animate.css" rel="stylesheet">
+<link href="../css/style.css?v=4.1.0" rel="stylesheet">
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+  <div class="row">
+    <div class="ibox float-e-margins">
+      <div class="ibox-title">
+        <h5>编辑个人资料</h5>
+        <div class="ibox-tools"> <a class="collapse-link"> <i class="fa fa-chevron-up"></i> </a> <a class="dropdown-toggle" data-toggle="dropdown" href="form_basic.html#"> <i class="fa fa-wrench"></i> </a>
+          <ul class="dropdown-menu dropdown-user">
+            <li><a href="form_basic.html#">选项1</a> </li>
+            <li><a href="form_basic.html#">选项2</a> </li>
+          </ul>
+          <a class="close-link"> <i class="fa fa-times"></i> </a> </div>
+      </div>
+      <div class="ibox-content">
+        <form class="form-horizontal m-t" id="signupForm">
+        <input id="username" name="username" type="hidden" value="">
+          <div class="form-group">
+            <label class="col-sm-3 control-label">姓名：</label>
+            <div class="col-sm-8">
+              <input id="name" name="name" class="form-control" type="text">
+              <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 请填写真实姓名</span> </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">E-mail：</label>
+            <div class="col-sm-8">
+              <input id="email" name="email" class="form-control" type="email">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">电话：</label>
+            <div class="col-sm-8">
+              <input id="phone" name="phone" class="form-control" type="text" data-mask="99-9999999" />
+              <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 18888888888</span> </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label">部门：</label>
+            <div class="col-sm-8">
+              <input id="department" name="department" class="form-control" type="text" />
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-8 col-sm-offset-3">
+              <button id="btnSubmit" class="btn btn-primary" type="button">提交</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 全局js --> 
+<script src="../js/jquery.min.js?v=2.1.4"></script> 
+<script src="../js/bootstrap.min.js?v=3.3.6"></script> 
+
+<!-- 自定义js --> 
+<script src="../js/content.js?v=1.0.0"></script> 
+
+<!-- jQuery Validation plugin javascript--> 
+<script src="../js/plugins/validate/jquery.validate.min.js"></script> 
+<script src="../js/plugins/validate/messages_zh.min.js"></script> 
+<script src="../js/demo/form-validate-demo.js"></script> 
+<script src="../js/W.js"></script> 
+<script type="text/javascript">
+	
+    $(document).ready(function(){
+		$(".loading").css("top",$(window).height() / 2 - 30);
+			displayLoading(true);
+			$.post("/manage/getUser",
+			function(data){
+				if(data.status==1){//登陆成功
+					//加载用户信息
+					$("#username").val(data.result.username);
+					$("#name").val(data.result.name);
+					$("#email").val(data.result.email);
+					$("#phone").val(data.result.phone);
+					$("#department").val(data.result.department);					
+				}
+				else if(data.status==5){
+					alert(data.msg);
+					window.location.href="/manage/login.html";
+				}
+				else{
+					alert(data.msg);
+				}
+				hiddenLoading(true);
+			});
+		$("#btnSubmit").on("click",function(){
+			$(".loading").css("top",$(window).height() / 2 - 30);
+			displayLoading(true);
+			$.post("/manage/updateProfile",$('#signupForm').serialize(),
+			function(data){
+				if(data.status==1){//更新成功
+					//加载用户信息
+					$(".manage-name",window.parent.document).text(data.result.name);
+					alert(data.msg);					
+				}
+				else if(data.status==5){
+					alert(data.msg);
+					window.location.href="/manage/login.html";
+				}
+				else{
+					alert(data.msg);
+				}
+				hiddenLoading(true);
+			});
+			
+		});
+});
+    </script>
+</body>
+</html>

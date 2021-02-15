@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.system.dao.SysSurveyMapper">
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.system.model.SysSurvey">
+        select
+			a.id as id,
+			a.session as session,
+			a.cnname as cnname,
+			a.engname as engname,
+			a.russianname as russianname,
+			a.japname as japname,
+			a.hangulname as hangulname,
+			a.type as type,
+			a.useable as useable,
+			a.addtime as addtime,
+			a.createby as createby
+        from sys_survey as a
+        where a.id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.system.model.SysSurvey">
+        select
+			a.id as id,
+			a.session as session,
+			a.cnname as cnname,
+			a.engname as engname,
+			a.russianname as russianname,
+			a.japname as japname,
+			a.hangulname as hangulname,
+			a.type as type,
+			a.useable as useable,
+			a.addtime as addtime,
+			a.createby as createby
+        from sys_survey as a
+        <where>
+			<if test="id != null and id != ''">
+				and a.id = #{id}
+			</if>
+			<if test="session != null and session != ''">
+				and a.session = #{session}
+			</if>
+			<if test="cnname != null and cnname != ''">
+				and a.cnname = #{cnname}
+			</if>
+			<if test="engname != null and engname != ''">
+				and a.engname = #{engname}
+			</if>
+			<if test="russianname != null and russianname != ''">
+				and a.russianname = #{russianname}
+			</if>
+			<if test="japname != null and japname != ''">
+				and a.japname = #{japname}
+			</if>
+			<if test="hangulname != null and hangulname != ''">
+				and a.hangulname = #{hangulname}
+			</if>
+			<if test="type != null and type != ''">
+				and a.type = #{type}
+			</if>
+			<if test="useable != null and useable != ''">
+				and a.useable = #{useable}
+			</if>
+			<if test="addtime != null and addtime != ''">
+				and a.addtime = #{addtime}
+			</if>
+			<if test="createby != null and createby != ''">
+				and a.createby = #{createby}
+			</if>
+        </where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.system.model.SysSurvey">
+        select
+			a.id as id,
+			a.session as session,
+			a.cnname as cnname,
+			a.engname as engname,
+			a.russianname as russianname,
+			a.japname as japname,
+			a.hangulname as hangulname,
+			a.type as type,
+			a.useable as useable,
+			a.addtime as addtime,
+			a.createby as createby,
+			b.name as createbyname
+        from sys_survey as a
+        inner join system_user as b on a.createby=b.id
+        <where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="cnname != null and cnname != ''">
+                and a.cnname = #{cnname}
+            </if>
+            <if test="engname != null and engname != ''">
+                and a.engname = #{engname}
+            </if>
+            <if test="russianname != null and russianname != ''">
+                and a.russianname = #{russianname}
+            </if>
+            <if test="japname != null and japname != ''">
+                and a.japname = #{japname}
+            </if>
+            <if test="hangulname != null and hangulname != ''">
+                and a.hangulname = #{hangulname}
+            </if>
+            <if test="type != null and type != ''">
+                and a.type = #{type}
+            </if>
+            <if test="useable != null and useable != ''">
+                and a.useable = #{useable}
+            </if>
+            <if test="addtime != null and addtime != ''">
+                and a.addtime = #{addtime}
+            </if>
+            <if test="createby != null and createby != ''">
+                and a.createby = #{createby}
+            </if>
+        </where>
+        order by a.id desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(*) FROM sys_survey a
+		inner join system_user as b on a.createby=b.id
+		<where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="cnname != null and cnname != ''">
+                and a.cnname = #{cnname}
+            </if>
+            <if test="engname != null and engname != ''">
+                and a.engname = #{engname}
+            </if>
+            <if test="russianname != null and russianname != ''">
+                and a.russianname = #{russianname}
+            </if>
+            <if test="japname != null and japname != ''">
+                and a.japname = #{japname}
+            </if>
+            <if test="hangulname != null and hangulname != ''">
+                and a.hangulname = #{hangulname}
+            </if>
+            <if test="type != null and type != ''">
+                and a.type = #{type}
+            </if>
+            <if test="useable != null and useable != ''">
+                and a.useable = #{useable}
+            </if>
+            <if test="addtime != null and addtime != ''">
+                and a.addtime = #{addtime}
+            </if>
+            <if test="createby != null and createby != ''">
+                and a.createby = #{createby}
+            </if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.system.model.SysSurvey" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_survey(
+        	<trim suffixOverrides=",">
+                <if test="session != null">`session`,</if>
+                <if test="cnname != null">`cnname`,</if>
+                <if test="engname != null">`engname`,</if>
+                <if test="russianname != null">`russianname`,</if>
+                <if test="japname != null">`japname`,</if>
+                <if test="hangulname != null">`hangulname`,</if>
+                <if test="type != null">`type`,</if>
+                <if test="useable != null">`useable`,</if>
+                <if test="addtime != null">`addtime`,</if>
+                <if test="createby != null">`createby`</if>
+			</trim>
+		) values (
+        	<trim suffixOverrides=",">
+                <if test="session != null">#{session},</if>
+                <if test="cnname != null">#{cnname},</if>
+                <if test="engname != null">#{engname},</if>
+                <if test="russianname != null">#{russianname},</if>
+                <if test="japname != null">#{japname},</if>
+                <if test="hangulname != null">#{hangulname},</if>
+                <if test="type != null">#{type},</if>
+                <if test="useable != null">#{useable},</if>
+                <if test="addtime != null">#{addtime},</if>
+                <if test="createby != null">#{createby}</if>
+			</trim>
+		)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.system.model.SysSurvey">
+        update sys_survey
+        <set>
+			<if test="session != null">`session` = #{session},</if>
+			<if test="cnname != null">`cnname` = #{cnname},</if>
+			<if test="engname != null">`engname` = #{engname},</if>
+			<if test="russianname != null">`russianname` = #{russianname},</if>
+			<if test="japname != null">`japname` = #{japname},</if>
+			<if test="hangulname != null">`hangulname` = #{hangulname},</if>
+			<if test="type != null">`type` = #{type},</if>
+			<if test="useable != null">`useable` = #{useable},</if>
+			<if test="addtime != null">`addtime` = #{addtime},</if>
+			<if test="createby != null">`createby` = #{createby}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from sys_survey where id = #{id}
+    </delete>
+    
+    <select id="findByOneMap" resultType="cn.org.chtf.card.manage.system.model.SysSurvey">
+        select
+			a.id as id,
+			a.session as session,
+			a.cnname as cnname,
+			a.engname as engname,
+			a.russianname as russianname,
+			a.japname as japname,
+			a.hangulname as hangulname,
+			a.type as type,
+			a.useable as useable,
+			a.addtime as addtime,
+			a.createby as createby
+        from sys_survey as a
+        where a.useable=1 
+        <if test="session != null and session != ''">
+			and a.session = #{session}
+		</if>
+        limit 1
+    </select>
+    
+    
+</mapper>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.online.dao.OnlineActivityManageMapper">
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.online.model.OnlineActivityManage">
+        select
+			a.id as id,
+			a.session,
+			a.activitydate as activitydate,
+			a.theweek as theweek,
+			a.orders as orders,
+			a.status as status
+        from online_activity_manage as a
+        where a.id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.online.model.OnlineActivityManage">
+        select
+			a.id as id,a.session,
+			a.activitydate as activitydate,
+			a.theweek as theweek,
+			a.orders as orders,
+			a.status as status
+        from online_activity_manage as a
+        <where>
+			<if test="id != null and id != ''">
+				and a.id = #{id}
+			</if>
+			<if test="activitydate != null and activitydate != ''">
+				and a.activitydate = #{activitydate}
+			</if>
+			<if test="theweek != null and theweek != ''">
+				and a.theweek = #{theweek}
+			</if>
+			<if test="orders != null and orders != ''">
+				and a.orders = #{orders}
+			</if>
+			<if test="status != null and status != ''">
+				and a.status = #{status}
+			</if>
+        </where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.online.model.OnlineActivityManage">
+        select
+			a.id as id,a.session,
+			a.activitydate as activitydate,
+			a.theweek as theweek,
+			a.orders as orders,
+			a.status as status
+        from online_activity_manage as a
+        <where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="activitydate != null and activitydate != ''">
+                and a.activitydate = #{activitydate}
+            </if>
+            <if test="theweek != null and theweek != ''">
+                and a.theweek = #{theweek}
+            </if>
+            <if test="orders != null and orders != ''">
+                and a.orders = #{orders}
+            </if>
+            <if test="status != null and status != ''">
+                and a.status = #{status}
+            </if>
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+        </where>
+        order by a.orders asc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(*) FROM online_activity_manage a
+		<where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="activitydate != null and activitydate != ''">
+                and a.activitydate = #{activitydate}
+            </if>
+            <if test="theweek != null and theweek != ''">
+                and a.theweek = #{theweek}
+            </if>
+            <if test="orders != null and orders != ''">
+                and a.orders = #{orders}
+            </if>
+            <if test="status != null and status != ''">
+                and a.status = #{status}
+            </if>
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.online.model.OnlineActivityManage" useGeneratedKeys="true" keyProperty="id">
+        insert into online_activity_manage(
+        	<trim suffixOverrides=",">
+                <if test="activitydate != null">`activitydate`,</if>
+                `theweek`,
+                <if test="orders != null">`orders`,</if>
+                <if test="session != null">`session`,</if>
+                <if test="status != null">`status`</if>
+			</trim>
+		) values (
+        	<trim suffixOverrides=",">
+                <if test="activitydate != null">#{activitydate},</if>
+                dayofweek(#{activitydate})-1,
+                <if test="orders != null">#{orders},</if>
+                <if test="session != null">#{session},</if>
+                <if test="status != null">#{status}</if>
+			</trim>
+		)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.online.model.OnlineActivityManage">
+        update online_activity_manage
+        <set>
+			<if test="activitydate != null">`activitydate` = #{activitydate},</if>
+			`theweek` = dayofweek(#{activitydate})-1,
+			<if test="orders != null">`orders` = #{orders},</if>
+			<if test="session != null">`session` = #{session},</if>
+			<if test="status != null">`status` = #{status}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from online_activity_manage where id = #{id}
+    </delete>
+    
+    
+    
+</mapper>

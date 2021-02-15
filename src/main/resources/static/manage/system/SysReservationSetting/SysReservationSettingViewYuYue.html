@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>线上预约详细详情</title>
+    <meta content="webkit" name="renderer">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" name="viewport"/>
+    <link rel="stylesheet" href="/manage/css/xadmin.css">
+    <link rel="stylesheet" href="/manage/css/font.css">
+    <link href="/manage/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+	<link href="/manage/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+	<link href="/manage/css/animate.css" rel="stylesheet">
+	<link href="/manage/css/style.css?v=4.1.0" rel="stylesheet">
+	<link href="/manage/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <script charset="utf-8" src="/manage/js/jquery.min.js" type="text/javascript"></script>
+    <script charset="utf-8" src="/manage/layui/layui.js" type="text/javascript"></script>
+    <script charset="utf-8" src="/manage/js/xadmin.js" type="text/javascript"></script>
+</head>
+<body class="gray-bg">
+   <div class="wrapper wrapper-content  animated fadeInRight">
+  <div class="row" id="vmSysReservationSetting">
+    <div class="col-sm-12">
+      <div class="ibox float-e-margins">  
+        <div class="ibox-content">
+            <div class="fixed-table-toolbar" style="height:50px;">
+              <div class="bars pull-left">
+                <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
+                  <span id="spmsg" style="font-size:16px;"></span>
+                  <!--<button type="button" class="btn btn-outline btn-default" title="批量删除" id="delAll" onclick="delall()"> <i class="glyphicon glyphicon-trash" aria-hidden="true"></i> </button>-->
+                  
+                </div>
+              </div>
+              <!--<div class="columns columns-right btn-group pull-right">
+                <button class="btn btn-default btn-outline" type="button" name="refresh" onclick="location.reload()" title="刷新" id="refresh"> <i class="glyphicon glyphicon-repeat"></i> </button>
+              </div>
+              <div class="columns columns-right btn-group pull-right">
+               <button class="btn btn-default btn-outline" type="button" name="search" title="搜索" onclick="reloadTableData()" id="search"> <i class="glyphicon glyphicon-search"></i> </button>
+              </div>
+              <div class="pull-right search">
+                <input name="keyword" class="form-control input-outline" type="text" placeholder="请选择开始时间" id="keyword">
+              </div>
+              <div class="pull-right search">
+                <input name="keyword" class="form-control input-outline" type="text" placeholder="请选择结束时间" id="keyword">
+              </div>-->
+            </div>
+            <table id="test" lay-filter="test"></table>
+        </div>
+      
+      </div>
+    </div>    
+  </div>
+</div>
+	
+	<script src="/manage/js/bootstrap.min.js?v=3.3.6"></script>
+	<script src="/manage/js/content.js?v=1.0.0"></script>
+	<script charset="UTF-8" type="text/javascript">
+	loadHeight();
+    	var viewSysReservationSettingId = sessionStorage.getItem("viewSysReservationSettingId");
+    	var table;
+		layui.use('table', function(){
+			table = layui.table;
+		    var $ = layui.jquery;	
+			table.render({
+				elem: '#test'
+				,url: '/manage/system/sysReservationSetting/SearchByDateTime'
+				,where:{
+					id:viewSysReservationSettingId
+				}		
+				,response: {
+					statusCode: 1 
+				}
+				,page: true
+				,cols: [[ //表头
+					//{type:'checkbox'},
+					{type:'numbers',title:'序号'}
+					,{align:'center', field: 'exhibitiondate', title: '展会日期'}
+					,{align:'center', field: 'name', title: '预约人'}
+					,{align:'center', field: 'cardnumber', title: '证件号码'}
+					,{align:'center', field: 'phone', title: '手机号'}
+					,{align:'center', field: 'addtime', title: '预约时间',
+						templet : function(d) {
+							return showTime(d.addtime);
+						}}	
+				]],
+				done: function (res, curr, count) {// 表格渲染完成之后的回调
+			        arr(res.remark); 			       
+				}
+			});				
+		});	
+		function arr(res){
+			$("#spmsg").html(res);
+		}
+</script>
+</body>
+</html>

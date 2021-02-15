@@ -1,0 +1,144 @@
+html{height: 100%;}
+body{
+    display: flex;
+    -webkit-justify-content:center;
+    -moz-justify-content:center;
+    -o-justify-content:center;
+    justify-content:center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+body.signin {
+    background: #18c8f6;
+    background:url("../img/login_bg.jpg") no-repeat center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    color: rgba(255,255,255,.95);
+}
+.logo{
+	width:90px;
+	margin:30px auto;
+}
+.logo img{width:90px;border-radius:45px;box-shadow: 0px 0px 10px 5px #f0f0f0}
+.welcome{
+	color:#0f2c6a;
+	font-family: Microsoft YaHei;
+	font-size:18px;
+	text-align:center;
+    display: flex;
+    -webkit-justify-content:space-between;
+    -moz-justify-content:space-between;
+    -o-justify-content:space-between;
+    justify-content:space-between;
+    -webkit-align-items: center;
+    align-items: center;
+}
+.welcome .welcom-left{align:left}
+.welcome .welcom-right{align:right}
+.btn-login{background-color:#0f2c6a}
+.btn-login:hover{color:#d0d0d0}
+.middle-box{
+	padding-top:0px;
+}
+.loginscreen{
+	background-color:#fff;
+	width:550px;
+	height:500px;
+	border-radius: 5px;
+}
+.login-copyright{
+	font-size:14px;
+	font-family: Microsoft YaHei;
+	text-align:center;
+	color:#666;
+	margin-top:32px;
+}
+.sk-spinner-wave div {
+    background-color: #fff;
+}
+.form-control{
+	color:#666
+}
+.signinpanel {
+    width: 750px;
+    margin: 10% auto 0 auto;
+}
+
+.signinpanel .logopanel {
+    float: none;
+    width: auto;
+    padding: 0;
+    background: none;
+}
+
+.signinpanel .signin-info ul {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.signinpanel .form-control {
+    display: block;
+    margin-top: 15px;
+}
+
+.signinpanel .uname {
+    background: #fff url(../img/user.png) no-repeat 95% center;color:#333;
+}
+
+.signinpanel .pword {
+    background: #fff url(../img/locked.png) no-repeat 95% center;color:#333;
+}
+
+.signinpanel .btn {
+    margin-top: 15px;
+}
+
+.signinpanel form {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255,255,255,.3);
+    -moz-box-shadow: 0 3px 0 rgba(12, 12, 12, 0.03);
+    -webkit-box-shadow: 0 3px 0 rgba(12, 12, 12, 0.03);
+    box-shadow: 0 3px 0 rgba(12, 12, 12, 0.03);
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    padding: 30px;
+}
+
+.signup-footer{border-top: solid 1px rgba(255,255,255,.3);margin:20px 0;padding-top: 15px;}
+
+@media screen and (max-width: 768px) {
+    .signinpanel,
+    .signuppanel {
+        margin: 0 auto;
+        width: 420px!important;
+        padding: 20px;
+    }
+    .signinpanel form {
+        margin-top: 20px;
+    }
+    .signup-footer {
+        margin-bottom: 10px;
+    }
+    .signuppanel .form-control {
+        margin-bottom: 10px;
+    }
+    .signup-footer .pull-left,
+    .signup-footer .pull-right {
+        float: none !important;
+        text-align: center;
+    }
+    .signinpanel .signin-info ul {
+        display: none;
+    }
+}
+@media screen and (max-width: 320px) {
+    .signinpanel,
+    .signuppanel {
+        margin:0 20px;
+        width:auto;
+    }
+}

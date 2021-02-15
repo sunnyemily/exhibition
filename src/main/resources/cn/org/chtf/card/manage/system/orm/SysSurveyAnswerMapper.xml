@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.system.dao.SysSurveyAnswerMapper">
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.system.model.SysSurveyAnswer">
+        select
+			a.id as id,a.questionid,
+			a.cnanswername as cnanswername,
+			a.enganswername as enganswername,
+			a.russiaanswername as russiaanswername,
+			a.japanswername as japanswername,
+			a.hangulanswername as hangulanswername,
+			a.useable as useable,a.orders
+        from sys_survey_answer as a
+        where a.id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.system.model.SysSurveyAnswer">
+        select
+			a.id as id,a.questionid,
+			a.cnanswername as cnanswername,
+			a.enganswername as enganswername,
+			a.russiaanswername as russiaanswername,
+			a.japanswername as japanswername,
+			a.hangulanswername as hangulanswername,
+			a.useable as useable,a.orders
+        from sys_survey_answer as a
+        <where>
+			<if test="id != null and id != ''">
+				and a.id = #{id}
+			</if>
+			<if test="questionid != null and questionid != ''">
+				and a.questionid = #{questionid}
+			</if>
+			<if test="cnanswername != null and cnanswername != ''">
+				and a.cnanswername = #{cnanswername}
+			</if>
+			<if test="enganswername != null and enganswername != ''">
+				and a.enganswername = #{enganswername}
+			</if>
+			<if test="russiaanswername != null and russiaanswername != ''">
+				and a.russiaanswername = #{russiaanswername}
+			</if>
+			<if test="japanswername != null and japanswername != ''">
+				and a.japanswername = #{japanswername}
+			</if>
+			<if test="hangulanswername != null and hangulanswername != ''">
+				and a.hangulanswername = #{hangulanswername}
+			</if>
+			<if test="useable != null and useable != ''">
+				and a.useable = #{useable}
+			</if>
+        </where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.system.model.SysSurveyAnswer">
+        select
+			a.id as id,a.questionid,
+			a.cnanswername as cnanswername,
+			a.enganswername as enganswername,
+			a.russiaanswername as russiaanswername,
+			a.japanswername as japanswername,
+			a.hangulanswername as hangulanswername,
+			a.useable as useable,a.orders
+        from sys_survey_answer as a
+        <where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="questionid != null and questionid != ''">
+				and a.questionid = #{questionid}
+			</if>
+            <if test="cnanswername != null and cnanswername != ''">
+                and a.cnanswername = #{cnanswername}
+            </if>
+            <if test="enganswername != null and enganswername != ''">
+                and a.enganswername = #{enganswername}
+            </if>
+            <if test="russiaanswername != null and russiaanswername != ''">
+                and a.russiaanswername = #{russiaanswername}
+            </if>
+            <if test="japanswername != null and japanswername != ''">
+                and a.japanswername = #{japanswername}
+            </if>
+            <if test="hangulanswername != null and hangulanswername != ''">
+                and a.hangulanswername = #{hangulanswername}
+            </if>
+            <if test="useable != null and useable != ''">
+                and a.useable = #{useable}
+            </if>
+        </where>
+        order by a.orders,a.id desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(*) FROM sys_survey_answer a
+		<where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="questionid != null and questionid != ''">
+				and a.questionid = #{questionid}
+			</if>
+            <if test="cnanswername != null and cnanswername != ''">
+                and a.cnanswername = #{cnanswername}
+            </if>
+            <if test="enganswername != null and enganswername != ''">
+                and a.enganswername = #{enganswername}
+            </if>
+            <if test="russiaanswername != null and russiaanswername != ''">
+                and a.russiaanswername = #{russiaanswername}
+            </if>
+            <if test="japanswername != null and japanswername != ''">
+                and a.japanswername = #{japanswername}
+            </if>
+            <if test="hangulanswername != null and hangulanswername != ''">
+                and a.hangulanswername = #{hangulanswername}
+            </if>
+            <if test="useable != null and useable != ''">
+                and a.useable = #{useable}
+            </if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.system.model.SysSurveyAnswer" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_survey_answer(
+        	<trim suffixOverrides=",">
+        		<if test="questionid != null">`questionid`,</if>
+                <if test="cnanswername != null">`cnanswername`,</if>
+                <if test="enganswername != null">`enganswername`,</if>
+                <if test="russiaanswername != null">`russiaanswername`,</if>
+                <if test="japanswername != null">`japanswername`,</if>
+                <if test="hangulanswername != null">`hangulanswername`,</if>
+                <if test="orders != null">`orders`,</if>
+                <if test="useable != null">`useable`</if>
+			</trim>
+		) values (
+        	<trim suffixOverrides=",">
+        		<if test="questionid != null">#{questionid},</if>
+                <if test="cnanswername != null">#{cnanswername},</if>
+                <if test="enganswername != null">#{enganswername},</if>
+                <if test="russiaanswername != null">#{russiaanswername},</if>
+                <if test="japanswername != null">#{japanswername},</if>
+                <if test="hangulanswername != null">#{hangulanswername},</if>
+                <if test="orders != null">#{orders},</if>
+                <if test="useable != null">#{useable}</if>
+			</trim>
+		)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.system.model.SysSurveyAnswer">
+        update sys_survey_answer
+        <set>
+        	<if test="questionid != null">`questionid` = #{questionid},</if>
+			<if test="cnanswername != null">`cnanswername` = #{cnanswername},</if>
+			<if test="enganswername != null">`enganswername` = #{enganswername},</if>
+			<if test="russiaanswername != null">`russiaanswername` = #{russiaanswername},</if>
+			<if test="japanswername != null">`japanswername` = #{japanswername},</if>
+			<if test="hangulanswername != null">`hangulanswername` = #{hangulanswername},</if>
+			<if test="orders != null">`orders` = #{orders},</if>
+			<if test="useable != null">`useable` = #{useable}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from sys_survey_answer where id = #{id}
+    </delete>
+    
+    <delete id="deleteByQuestionId">
+        delete from sys_survey_answer where questionid = #{id}
+    </delete>
+    
+</mapper>

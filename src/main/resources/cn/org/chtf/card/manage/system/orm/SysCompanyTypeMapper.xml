@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.system.dao.SysCompanyTypeMapper">
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.system.model.SysCompanyType">
+        select
+			a.id as id,
+			a.chinese_name as chineseName,
+			a.russian_name as russianName,
+			a.japanese_name as japaneseName,
+			a.english_name as englishName,
+			a.hangul_name as hangulName,
+			a.order_num as orderNum,
+			a.add_time as addTime,
+			a.update_time as updateTime,
+			a.use_flag as useFlag
+        from sys_company_type as a
+        where a.id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.system.model.SysCompanyType">
+        select
+			a.id as id,
+			a.chinese_name as chineseName,
+			a.russian_name as russianName,
+			a.japanese_name as japaneseName,
+			a.english_name as englishName,
+			a.hangul_name as hangulName,
+			a.order_num as orderNum,
+			a.add_time as addTime,
+			a.update_time as updateTime,
+			a.use_flag as useFlag
+        from sys_company_type as a
+        <where>
+			<if test="id != null and id != ''">
+				and a.id = #{id}
+			</if>
+			<if test="chineseName != null and chineseName != ''">
+				and a.chinese_name = #{chineseName}
+			</if>
+			<if test="russianName != null and russianName != ''">
+				and a.russian_name = #{russianName}
+			</if>
+			<if test="japaneseName != null and japaneseName != ''">
+				and a.japanese_name = #{japaneseName}
+			</if>
+			<if test="englishName != null and englishName != ''">
+				and a.english_name = #{englishName}
+			</if>
+			<if test="hangulName != null and hangulName != ''">
+				and a.hangul_name = #{hangulName}
+			</if>
+			<if test="orderNum != null and orderNum != ''">
+				and a.order_num = #{orderNum}
+			</if>
+			<if test="addTime != null and addTime != ''">
+				and a.add_time = #{addTime}
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				and a.update_time = #{updateTime}
+			</if>
+			<if test="useFlag != null and useFlag != ''">
+				and a.use_flag = #{useFlag}
+			</if>
+        </where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.system.model.SysCompanyType">
+        select
+			a.id as id,
+			a.chinese_name as chineseName,
+			a.russian_name as russianName,
+			a.japanese_name as japaneseName,
+			a.english_name as englishName,
+			a.hangul_name as hangulName,
+			a.order_num as orderNum,
+			a.add_time as addTime,
+			a.update_time as updateTime,
+			a.use_flag as useFlag
+        from sys_company_type as a
+        <where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="chineseName != null and chineseName != ''">
+                and a.chinese_name like concat('%',#{chineseName},'%')
+            </if>
+            <if test="russianName != null and russianName != ''">
+                and a.russian_name = #{russianName}
+            </if>
+            <if test="japaneseName != null and japaneseName != ''">
+                and a.japanese_name = #{japaneseName}
+            </if>
+            <if test="englishName != null and englishName != ''">
+                and a.english_name = #{englishName}
+            </if>
+            <if test="hangulName != null and hangulName != ''">
+                and a.hangul_name = #{hangulName}
+            </if>
+            <if test="orderNum != null and orderNum != ''">
+                and a.order_num = #{orderNum}
+            </if>
+            <if test="addTime != null and addTime != ''">
+                and a.add_time = #{addTime}
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                and a.update_time = #{updateTime}
+            </if>
+            and a.use_flag = 'Y'
+        </where>
+        order by a.order_num
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(id) FROM sys_company_type a
+		<where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="chineseName != null and chineseName != ''">
+                and a.chinese_name like concat('%',#{chineseName},'%')
+            </if>
+            <if test="russianName != null and russianName != ''">
+                and a.russian_name = #{russianName}
+            </if>
+            <if test="japaneseName != null and japaneseName != ''">
+                and a.japanese_name = #{japaneseName}
+            </if>
+            <if test="englishName != null and englishName != ''">
+                and a.english_name = #{englishName}
+            </if>
+            <if test="hangulName != null and hangulName != ''">
+                and a.hangul_name = #{hangulName}
+            </if>
+            <if test="orderNum != null and orderNum != ''">
+                and a.order_num = #{orderNum}
+            </if>
+            <if test="addTime != null and addTime != ''">
+                and a.add_time = #{addTime}
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                and a.update_time = #{updateTime}
+            </if>
+			and a.use_flag = 'Y'
+        </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.system.model.SysCompanyType" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_company_type(
+        	<trim suffixOverrides=",">
+                <if test="chineseName != null">`chinese_name`,</if>
+                <if test="russianName != null">`russian_name`,</if>
+                <if test="japaneseName != null">`japanese_name`,</if>
+                <if test="englishName != null">`english_name`,</if>
+                <if test="hangulName != null">`hangul_name`,</if>
+                <if test="orderNum != null">`order_num`,</if>
+                <if test="addTime != null">`add_time`,</if>
+                <if test="updateTime != null">`update_time`,</if>
+                <if test="useFlag != null">`use_flag`</if>
+			</trim>
+		) values (
+        	<trim suffixOverrides=",">
+                <if test="chineseName != null">#{chineseName},</if>
+                <if test="russianName != null">#{russianName},</if>
+                <if test="japaneseName != null">#{japaneseName},</if>
+                <if test="englishName != null">#{englishName},</if>
+                <if test="hangulName != null">#{hangulName},</if>
+                <if test="orderNum != null">#{orderNum},</if>
+                <if test="addTime != null">#{addTime},</if>
+                <if test="updateTime != null">#{updateTime},</if>
+                <if test="useFlag != null">#{useFlag}</if>
+			</trim>
+		)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.system.model.SysCompanyType">
+        update sys_company_type
+        <set>
+			<if test="chineseName != null">`chinese_name` = #{chineseName},</if>
+			<if test="russianName != null">`russian_name` = #{russianName},</if>
+			<if test="japaneseName != null">`japanese_name` = #{japaneseName},</if>
+			<if test="englishName != null">`english_name` = #{englishName},</if>
+			<if test="hangulName != null">`hangul_name` = #{hangulName},</if>
+			<if test="orderNum != null">`order_num` = #{orderNum},</if>
+			<if test="addTime != null">`add_time` = #{addTime},</if>
+			<if test="updateTime != null">`update_time` = #{updateTime},</if>
+			<if test="useFlag != null">`use_flag` = #{useFlag}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from sys_company_type where id = #{id}
+    </delete>
+</mapper>

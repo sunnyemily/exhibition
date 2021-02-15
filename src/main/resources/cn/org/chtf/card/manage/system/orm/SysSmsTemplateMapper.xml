@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.system.dao.SysSmsTemplateMapper">
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.system.model.SysSmsTemplate">
+        select
+			a.sms_id as smsId,
+			a.sms_session_id as smsSessionId,
+			a.sms_title as smsTitle,
+			a.sms_template as smsTemplate
+        from sys_sms_template as a
+        where a.sms_id = #{sms_id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.system.model.SysSmsTemplate">
+        select
+			a.sms_id as smsId,
+			a.sms_session_id as smsSessionId,
+			a.sms_title as smsTitle,
+			a.sms_template as smsTemplate
+        from sys_sms_template as a
+        <where>
+			<if test="smsId != null and smsId != ''">
+				and a.sms_id = #{smsId}
+			</if>
+			<if test="smsSessionId != null and smsSessionId != ''">
+				and a.sms_session_id = #{smsSessionId}
+			</if>
+			<if test="smsTitle != null and smsTitle != ''">
+				and a.sms_title = #{smsTitle}
+			</if>
+			<if test="smsTemplate != null and smsTemplate != ''">
+				and a.sms_template = #{smsTemplate}
+			</if>
+        </where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.system.model.SysSmsTemplate">
+        select
+			a.sms_id as smsId,
+			a.sms_session_id as smsSessionId,
+			a.sms_title as smsTitle,
+			a.sms_template as smsTemplate
+        from sys_sms_template as a
+        <where>
+            <if test="smsId != null and smsId != ''">
+                and a.sms_id = #{smsId}
+            </if>
+            <if test="smsSessionId != null and smsSessionId != ''">
+                and a.sms_session_id = #{smsSessionId}
+            </if>
+            <if test="smsTitle != null and smsTitle != ''">
+                and a.sms_title = #{smsTitle}
+            </if>
+            <if test="smsTemplate != null and smsTemplate != ''">
+                and a.sms_template = #{smsTemplate}
+            </if>
+        </where>
+        order by a.sms_id desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(*) FROM sys_sms_template a
+		<where>
+            <if test="smsId != null and smsId != ''">
+                and a.sms_id = #{smsId}
+            </if>
+            <if test="smsSessionId != null and smsSessionId != ''">
+                and a.sms_session_id = #{smsSessionId}
+            </if>
+            <if test="smsTitle != null and smsTitle != ''">
+                and a.sms_title = #{smsTitle}
+            </if>
+            <if test="smsTemplate != null and smsTemplate != ''">
+                and a.sms_template = #{smsTemplate}
+            </if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.system.model.SysSmsTemplate" useGeneratedKeys="true" keyProperty="smsId">
+        insert into sys_sms_template(
+        	<trim suffixOverrides=",">
+                <if test="smsSessionId != null">`sms_session_id`,</if>
+                <if test="smsTitle != null">`sms_title`,</if>
+                <if test="smsTemplate != null">`sms_template`</if>
+			</trim>
+		) values (
+        	<trim suffixOverrides=",">
+                <if test="smsSessionId != null">#{smsSessionId},</if>
+                <if test="smsTitle != null">#{smsTitle},</if>
+                <if test="smsTemplate != null">#{smsTemplate}</if>
+			</trim>
+		)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.system.model.SysSmsTemplate">
+        update sys_sms_template
+        <set>
+			<if test="smsSessionId != null">`sms_session_id` = #{smsSessionId},</if>
+			<if test="smsTitle != null">`sms_title` = #{smsTitle},</if>
+			<if test="smsTemplate != null">`sms_template` = #{smsTemplate}</if>
+        </set>
+        where sms_id = #{smsId}
+    </update>
+
+    <delete id="deleteById">
+        delete from sys_sms_template where sms_id = #{sms_id}
+    </delete>
+    
+    <insert id="addSmsTemplete" parameterType="java.util.List">
+    	insert into sys_sms_template (
+			sms_session_id,
+			sms_title,
+			sms_template
+		) values 
+		<foreach collection="list" item="item" index="index" separator=",">
+		(
+			#{smsSessionId},
+			#{smsTitle},
+			#{smsTemplate}
+		)
+		</foreach>
+    </insert>
+    
+    <select id="findByTitleAndSessionId" resultType="cn.org.chtf.card.manage.system.model.SysSmsTemplate">
+        select
+			a.sms_id as smsId,
+			a.sms_session_id as smsSessionId,
+			a.sms_title as smsTitle,
+			a.sms_template as smsTemplate
+        from sys_sms_template as a
+        where a.sms_title = #{title} and a.sms_session_id=#{sessionId}
+    </select>
+</mapper>

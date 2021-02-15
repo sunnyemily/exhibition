@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>角色管理</title>
+<link rel="shortcut icon" href="/favicon.ico">
+<link href="../css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+<link href="../css/font-awesome.css?v=4.4.0" rel="stylesheet">
+<link href="../css/plugins/jsTree/style.min.css" rel="stylesheet">
+<link href="../css/animate.css" rel="stylesheet">
+<link href="../css/style.css?v=4.1.0" rel="stylesheet">
+<link href="../css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+<link rel="stylesheet" href="../js/plugins/layui/css/layui.css"  media="all">
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content  animated fadeInRight">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>角色管理</h5>
+          <div class="ibox-tools"> <a class="collapse-link"> <i class="fa fa-chevron-up"></i> </a> <a class="close-link"> <i class="fa fa-times"></i> </a> </div>
+        </div>        
+        <div class="ibox-content">
+            <div class="fixed-table-toolbar" style="height:50px;">
+              <div class="bars pull-left">
+                <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
+                  <button type="button" class="btn btn-outline btn-default" title="新建角色" id="addRole"> <i class="glyphicon glyphicon-plus" aria-hidden="true"></i> </button>
+                  <button type="button" class="btn btn-outline btn-default" title="批量删除" id="delAll"> <i class="glyphicon glyphicon-trash" aria-hidden="true"></i> </button>
+                </div>
+              </div>
+              <div class="columns columns-right btn-group pull-right">
+                <button class="btn btn-default btn-outline" type="button" name="search" title="搜索" id="search"> <i class="glyphicon glyphicon-search"></i> </button>
+                <button class="btn btn-default btn-outline" type="button" name="refresh" title="刷新" id="refresh"> <i class="glyphicon glyphicon-repeat"></i> </button>
+              </div>
+              <div class="pull-right search">
+                <input name="keyword" class="form-control input-outline" type="text" placeholder="请输入角色名称" id="keyword">
+              </div>
+            </div>
+          <table id="role-list" lay-filter="test">
+          </table>
+        </div>
+      </div>
+    </div>    
+  </div>
+</div>
+<div class="modal inmodal" id="role-model">
+	<div class="modal-content animated bounceInUp">
+      <div class="ibox-title">
+        <h5 id="edit-title">新增角色</h5>
+        <div class="ibox-tools"><a class="close-link" data-dismiss="modal"> <i class="fa fa-times"></i> </a> </div>
+      </div>
+      <div class="ibox-content">
+        <fieldset class="layui-elem-field layui-field-title">
+          <form class="layui-form layui-form-pane" action="">
+            <input id="roleId" name="roleId" type="hidden" value="0">
+            <div class="layui-form-item">
+              <label class="layui-form-label">角色名称</label>
+              <div class="layui-input-block">
+                <input type="text" id="roleName" name="roleName" autocomplete="off" placeholder="请输入角色名称" class="layui-input" lay-verify="required">
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label">请选择功能</label><br/>
+              <div style="clear:both;display:block;">
+                <div id="function-list">
+                </div>
+              </div>
+              <input name="functionId" type="hidden" value="">
+            </div>
+            <div class="layui-form-item">
+              <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="demo1">保存</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+              </div>
+            </div>
+          </form>
+        </fieldset>
+      </div>
+      </div>
+ </div>
+<!-- 全局js --> 
+<script src="../js/plugins/layui/layui.all.js" charset="utf-8"></script> 
+<script src="../js/jquery.min.js?v=2.1.4"></script> 
+<script src="../js/bootstrap.min.js?v=3.3.6"></script> 
+
+<!-- 自定义js --> 
+<script src="../js/content.js?v=1.0.0"></script> 
+<script src="../js/W.js?v=3.3.6"></script> 
+
+<!-- jsTree plugin javascript --> 
+<script src="../js/plugins/jsTree/jstree.min.js"></script>
+<style>
+        .jstree-open > .jstree-anchor > .fa-folder:before {
+            content: "\f07c";
+        }
+
+        .jstree-default .jstree-icon.none {
+            width: 0;
+        }
+    </style>
+<script>
+		var functionList;
+        $(document).ready(function () { 
+            var jstree = $('#function-list').jstree({
+                'core': {
+                    'data': null,
+					'multiple':true
+                },
+				"plugins" : ["checkbox" ],
+				"checkbox":{
+					"visible":true
+				}			
+            });
+			$('#function-list').jstree(true).get_all_checked = function(full) {
+				var tmp=new Array;
+				for(var i in this._model.data){
+						if((this.is_undetermined(i)||this.is_checked(i))&&i!="#"){tmp.push(full?this._model.data[i]:i);}
+				}
+				return tmp;
+			};
+			loadFunctionData();
+		 });
+		
+		function loadFunctionData(){
+			$(".loading").css("top",$(window).height() / 2 - 30);
+			displayLoading(true);
+			$.post("/manage/system/getAllForTree",{"functionId":0},
+			function(data){
+				if(data.status==1){//登陆成功
+					//加载用户信息
+					functionList = data.result;
+					loadTreeData();
+				}
+				else if(data.status==4){
+					window.location.href="/manage/nopermission.html";
+				}
+				else if(data.status==5){
+					alert(data.msg);
+					window.location.href="/manage/login.html";
+				}
+				else{
+					alert(data.msg);
+				}
+				hiddenLoading(true);
+			});
+		}
+		function loadTreeData(){
+			var treeNodes = "[";
+			for(var i = 0;i<functionList.length;i++){
+				if(i==0){
+					treeNodes+='{"id":"';
+				}
+				else{
+					treeNodes+=',{"id":"';
+				}
+				treeNodes+= functionList[i].functionId+'","parent":"';
+				treeNodes+= functionList[i].functionParentid+'","text":"',
+				treeNodes+=  functionList[i].functionName+'","functionUrl":"';
+				treeNodes+= functionList[i].functionUrl+'","functionOrder":';
+				treeNodes+= functionList[i].functionOrder+',"functionOrder":"'
+				treeNodes+= functionList[i].language+'"}';
+			}
+			treeNodes+="]";
+			treeNodes = treeNodes.replace(new RegExp('"null"',"gm"),"null");
+			treeNodes = treeNodes.replace(new RegExp('"0"',"gm"),'"#"');
+			var jsonNodes = JSON.parse(treeNodes);
+			$('#function-list').jstree(true).settings.core.data=jsonNodes;
+			$('#function-list').jstree(true).refresh();
+		}
+		
+		var table = layui.table;
+ 
+		//执行渲染
+		table.render({
+		  even:true//隔行背景
+		  ,elem: '#role-list' //指定原始表格元素选择器（推荐id选择器）
+		  ,height: 'full-220' //容器高度
+		  ,cols: [[{checkbox: true}
+    			,{field: 'roleId', title: 'ID', width: 80}
+    			,{field: 'roleName', title: '角色名',sort:true,width:200}
+				,{fixed: 'right', width:150, align:'center', toolbar: '#toolBar',title:'操作'} //这里的toolbar值是模板元素的选择器
+
+				]] //设置表头
+			  ,url: '/manage/system/getRoles'
+			  ,where: {
+				  keywords:$("#keyword").val(),
+				  field:'role_name',
+				  order:'ASC'
+			  }
+			  ,method: 'post' //如果无需自定义HTTP类型，可不加该参数
+			  //request: {} //如果无需自定义请求参数，可不加该参数
+			  ,response: {			  
+				  statusName: 'status' //数据状态的字段名称，默认：code
+				  ,statusCode: 1 //成功的状态码，默认：0
+				  ,dataName: 'result' //数据列表的字段名称，默认：data			  
+				  } //如果无需自定义数据响应名称，可不加该参数
+			  ,page:true
+			  ,limits:[10,20,30,40,50,60,70,80,90,100]
+			  ,limit:10
+			  ,loading:true
+			  ,id:'id'
+				  //,…… //更多参数参考右侧目录：基本参数选项
+		});
+		//监听工具条
+		table.on('tool(test)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+		  var data = obj.data; //获得当前行数据
+		  var layEvent = obj.event; //获得 lay-event 对应的值
+		  var tr = obj.tr; //获得当前行 tr 的DOM对象
+		 
+		  if(layEvent === 'del'){ //删除
+		  	deleteRoles(obj);
+		  } else if(layEvent === 'edit'){ //编辑
+			openEditRole(obj);
+		  }
+		});
+		table.on('sort(test)', function(obj){ //注：sort是排序事件名，test是table原始容器的属性 lay-filter="对应的值"
+		  console.log(obj.field); //当前排序的字段名
+		  console.log(obj.type); //当前排序类型：desc（降序）、asc（升序）、null（空对象，默认排序）
+		  console.log(this); //当前排序的 th 对象
+		  
+		  //尽管我们的 table 自带排序功能，但并没有请求服务端。
+		  //有些时候，你可能需要根据当前排序的字段，重新向服务端发送请求，如：
+		  table.reload('id', {
+			initSort: obj //记录初始排序，如果不设的话，将无法标记表头的排序状态。 layui 2.1.1 新增参数
+			,where: { //请求参数
+			  field: obj.field //排序字段
+			  ,order: obj.type //排序方式
+			}
+		  });
+		});
+		//重新加载数据
+		function reloadTableData(){
+			table.reload('id',{
+			  method:'post'
+			  ,url: '/manage/system/getRoles'
+			  ,where: {
+				  keywords:$("#keyword").val(),
+				  field:'roleName',
+				  order:'ASC'
+				  }
+			  
+			});
+		}
+		layui.use(['form'], function(){
+		  var form = layui.form;
+		 
+		  //自定义验证规则
+		  form.verify({
+			title: function(value){
+			  if(value.length < 2){
+				return '标题至少得2个字符啊';
+			  }
+			}
+		  });
+  
+		  //监听提交
+		  form.on('submit(demo1)', function(data){
+			  //JSON.stringify(data.field)
+			  var checkedNodes  =  $('#function-list').jstree(true).get_all_checked();
+			  var role ={
+				  roleId:$("#roleId").val(),
+				  roleName:$("#roleName").val(),
+				  functions:checkedNodes.join(',')
+			  }
+				displayLoading(true);
+				$.post("/manage/system/updateRole",$.param(role),
+				function(data){
+					if(data.status==1){						
+						//先更新本地数据
+						layer.msg('保存成功', {icon: 6});
+					}
+					else if(data.status==5){
+						layer.confirm(data.msg, {icon: 3, title:'提示'}, function(index){
+							  window.location.href="/manage/login.html";
+							  layer.close(index);
+							});
+					}
+					else{
+						layer.msg(data.msg, {icon: 6});
+					}
+					hiddenLoading(true);
+					$("#role-model").modal('hide');
+					reloadTableData();
+				});
+			return false;
+		  });  
+		});
+		function openAddRole(){
+			$('#function-list').jstree(true).uncheck_all();
+			$('#roleId').val('0');
+			$('#roleName').val("");
+			$("#role-model").modal({
+				keyboard: true
+			});
+		}
+		function openEditRole(obj){
+			if(obj.data.functions){
+				var functionList = obj.data.functions.split(',');
+				$('#function-list').jstree(true).check_all();
+				var nodes = $('#function-list').jstree(true).get_checked(true);
+				$('#function-list').jstree(true).uncheck_all();
+				nodes.forEach(function(value,index,array){
+					functionList.forEach(function(functionId,i,arryFunction){
+						if(value.id==functionId&&value.children.length==0){
+							$('#function-list').jstree(true).check_node(value);
+						}
+					});
+				});
+			}
+			else{
+				$('#function-list').jstree(true).uncheck_all();
+			}
+			$('#roleId').val(obj.data.roleId);
+			$('#roleName').val(obj.data.roleName);
+			$("#role-model").modal({
+				keyboard: true
+			});
+		}
+		function deleteRoles(obj){		
+			layer.confirm('删除此数据，会删除用户相关角色的关联数据和角色对应的功能数据，确认要删除此数据吗？', function(index){
+				layer.close(index);
+				var arrayRoleID = new Array();
+				if(obj){//删除单行
+					arrayRoleID.push(obj.data.roleId);
+				}
+				else{//删除选中行
+					var checkStatus = table.checkStatus('id');
+					if(checkStatus.data.length==0){
+						layer.msg('请先选择要删除的行',{icon:5});
+						return;
+					}
+					else{
+						checkStatus.data.forEach(function(item,index,dataList){
+							arrayRoleID.push(item.roleId);
+						});
+					}
+				}
+				displayLoading(true);
+				$.post("/manage/system/deleteRole",{roleIdList:arrayRoleID},
+					function(data){
+						if(data.status==1){						
+							//先更新本地数据
+							layer.msg('保存成功', {icon: 6});
+						}
+						else if(data.status==4){
+							window.location.href="/manage/nopermission.html";
+						}
+						else if(data.status==5){
+							layer.confirm(data.msg, {icon: 3, title:'提示'}, function(index){
+								  window.location.href="/manage/login.html";
+								  layer.close(index);
+								});
+						}
+						else{
+							layer.msg(data.msg, {icon: 6});
+						}
+						hiddenLoading(true);
+						$("#role-model").modal('hide');
+						reloadTableData();
+				});
+			});
+			
+		}
+		$("#addRole").on('click',openAddRole);
+		$("#refresh,#search").on("click",reloadTableData);
+		$("#delAll").on('click',function(){deleteRoles()});
+    </script> 
+	<script type="text/html" id="toolBar">
+	  <a class="layui-btn layui-btn-mini" lay-event="edit">编辑</a>
+	  <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
+	</script>
+</body>
+</html>

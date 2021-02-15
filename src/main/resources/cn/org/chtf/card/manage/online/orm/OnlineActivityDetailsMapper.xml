@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.online.dao.OnlineActivityDetailsMapper">
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.online.model.OnlineActivityDetails">
+        select
+			a.id as id,
+			a.parentid as parentid,
+			a.starttime as starttime,
+			concat(b.activitydate,' ',a.starttime) as startdatetime,
+			a.endtime as endtime,
+			case when a.endtime!='' then concat(b.activitydate,' ',a.endtime) else '' end as enddatetime,
+			a.title as title,
+			a.intro as intro,
+			a.address as address,
+			a.link as link,
+			a.roomid,a.acpicture,
+			a.orders as orders,ifnull(a.content,'') as content,a.zhuangtai,
+			a.liveaddress,a.videortmp,a.videoflv,a.videohls,a.videoudp
+        from online_activity_details as a
+        left join online_activity_manage as b on a.parentid=b.id
+        where a.id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.online.model.OnlineActivityDetails">
+        select
+			a.id as id,
+			a.parentid as parentid,
+			a.starttime as starttime,
+			a.endtime as endtime,
+			a.title as title,
+			a.intro as intro,
+			a.address as address,
+			a.link as link,
+			a.roomid,a.acpicture,
+			a.orders as orders,a.content,a.zhuangtai,
+			a.liveaddress,a.videortmp,a.videoflv,a.videohls,a.videoudp
+        from online_activity_details as a
+        <where>
+			<if test="id != null and id != ''">
+				and a.id = #{id}
+			</if>
+			<if test="parentid != null and parentid != ''">
+				and a.parentid = #{parentid}
+			</if>
+			<if test="starttime != null and starttime != ''">
+				and a.starttime = #{starttime}
+			</if>
+			<if test="endtime != null and endtime != ''">
+				and a.endtime = #{endtime}
+			</if>
+			<if test="title != null and title != ''">
+				and a.title = #{title}
+			</if>
+			<if test="intro != null and intro != ''">
+				and a.intro = #{intro}
+			</if>
+			<if test="address != null and address != ''">
+				and a.address = #{address}
+			</if>
+			<if test="link != null and link != ''">
+				and a.link = #{link}
+			</if>
+			<if test="orders != null and orders != ''">
+				and a.orders = #{orders}
+			</if>
+        </where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.online.model.OnlineActivityDetails">
+        select
+			a.id as id,
+			a.parentid as parentid,
+			a.starttime as starttime,
+			a.endtime as endtime,
+			a.title as title,
+			a.intro as intro,
+			a.address as address,
+			a.link as link,
+			a.roomid,a.acpicture,
+			a.orders as orders,a.content,a.zhuangtai,
+			a.liveaddress,a.videortmp,a.videoflv,a.videohls,a.videoudp
+        from online_activity_details as a
+        <where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="parentid != null and parentid != ''">
+                and a.parentid = #{parentid}
+            </if>
+            <if test="starttime != null and starttime != ''">
+                and a.starttime = #{starttime}
+            </if>
+            <if test="endtime != null and endtime != ''">
+                and a.endtime = #{endtime}
+            </if>
+            <if test="title != null and title != ''">
+                and a.title = #{title}
+            </if>
+            <if test="intro != null and intro != ''">
+                and a.intro = #{intro}
+            </if>
+            <if test="address != null and address != ''">
+                and a.address = #{address}
+            </if>
+            <if test="link != null and link != ''">
+                and a.link = #{link}
+            </if>
+            <if test="orders != null and orders != ''">
+                and a.orders = #{orders}
+            </if>
+        </where>
+        order by a.orders
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(*) FROM online_activity_details a
+		<where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="parentid != null and parentid != ''">
+                and a.parentid = #{parentid}
+            </if>
+            <if test="starttime != null and starttime != ''">
+                and a.starttime = #{starttime}
+            </if>
+            <if test="endtime != null and endtime != ''">
+                and a.endtime = #{endtime}
+            </if>
+            <if test="title != null and title != ''">
+                and a.title = #{title}
+            </if>
+            <if test="intro != null and intro != ''">
+                and a.intro = #{intro}
+            </if>
+            <if test="address != null and address != ''">
+                and a.address = #{address}
+            </if>
+            <if test="link != null and link != ''">
+                and a.link = #{link}
+            </if>
+            <if test="orders != null and orders != ''">
+                and a.orders = #{orders}
+            </if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.online.model.OnlineActivityDetails" useGeneratedKeys="true" keyProperty="id">
+        insert into online_activity_details(
+        	<trim suffixOverrides=",">
+                <if test="parentid != null">`parentid`,</if>
+                <if test="starttime != null">`starttime`,</if>
+                <if test="endtime != null">`endtime`,</if>
+                <if test="title != null">`title`,</if>
+                <if test="intro != null">`intro`,</if>
+                <if test="address != null">`address`,</if>
+                <if test="link != null">`link`,</if>
+                <if test="roomid != null">`roomid`,</if>
+                <if test="acpicture != null">`acpicture`,</if>
+                <if test="content != null">`content`,</if>
+                <if test="zhuangtai != null">`zhuangtai`,</if>
+                <if test="orders != null">`orders`,</if>
+                <if test="liveaddress != null">
+				        liveaddress,
+				      </if>
+				<if test="videortmp != null">
+				        videortmp,
+				      </if>
+				<if test="videoflv != null">
+				        videoflv,
+				      </if>
+				<if test="videohls != null">
+				        videohls,
+				      </if>
+				<if test="videoudp != null">
+				        videoudp
+				      </if>
+			</trim>
+		) values (
+        	<trim suffixOverrides=",">
+                <if test="parentid != null">#{parentid},</if>
+                <if test="starttime != null">#{starttime},</if>
+                <if test="endtime != null">#{endtime},</if>
+                <if test="title != null">#{title},</if>
+                <if test="intro != null">#{intro},</if>
+                <if test="address != null">#{address},</if>
+                <if test="link != null">#{link},</if>
+                <if test="roomid != null">#{roomid},</if>
+                <if test="acpicture != null">#{acpicture},</if>
+                <if test="content != null">#{content},</if>
+                <if test="zhuangtai != null">#{zhuangtai},</if>
+                <if test="orders != null">#{orders},</if>
+                <if test="liveaddress != null">
+				    #{liveaddress},
+				</if>
+				<if test="videortmp != null">
+				    #{videortmp},
+				</if>
+				<if test="videoflv != null">
+				    #{videoflv},
+				</if>
+				<if test="videohls != null">
+				    #{videohls},
+				</if>
+				<if test="videoudp != null">
+				    #{videoudp}
+				</if>
+			</trim>
+		)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.online.model.OnlineActivityDetails">
+        update online_activity_details
+        <set>
+			<if test="parentid != null">`parentid` = #{parentid},</if>
+			<if test="starttime != null">`starttime` = #{starttime},</if>
+			<if test="endtime != null">`endtime` = #{endtime},</if>
+			<if test="title != null">`title` = #{title},</if>
+			<if test="intro != null">`intro` = #{intro},</if>
+			<if test="address != null">`address` = #{address},</if>
+			<if test="link != null">`link` = #{link},</if>
+			<if test="roomid != null">`roomid` = #{roomid},</if>
+			<if test="acpicture != null">`acpicture` = #{acpicture},</if>
+			<if test="content != null">`content` = #{content},</if>
+			<if test="zhuangtai != null">`zhuangtai` = #{zhuangtai},</if>
+			<if test="orders != null">`orders` = #{orders},</if>
+			<if test="liveaddress != null">
+			   liveaddress = #{liveaddress},
+			</if>
+			<if test="videortmp != null">
+			   videortmp = #{videortmp},
+			</if>
+			<if test="videoflv != null">
+			   videoflv = #{videoflv},
+			</if>
+			<if test="videohls != null">
+			   videohls = #{videohls},
+			</if>
+			<if test="videoudp != null">
+			   videoudp = #{videoudp}
+			</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from online_activity_details where id = #{id}
+    </delete>
+    
+    
+    
+</mapper>

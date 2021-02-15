@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>修改参展商管理-展厅类型</title>
+		<meta content="webkit" name="renderer">
+		<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+		<meta content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" name="viewport"/>
+		<link rel="stylesheet" href="/manage/css/xadmin.css">
+		<link href="/manage/css/style.css?v=4.1.0" rel="stylesheet">
+		<link href="/manage/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="/manage/layui/css/layui.css"  media="all">
+	</head>
+	<body class="gray-bg">
+		<div class="modal inmodal" id="friendlink-model">
+			<div class="modal-content animated bounceInUp" id="vmUpdateEbsShowroomtype">
+				<div class="ibox-content">
+					<fieldset class="layui-elem-field layui-field-title" style="border-top:0px">
+						<form class="layui-form layui-form-pane" lay-filter='test1' action="">
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="name" style="width:130px"><span style='color:red'>*</span>展厅类型 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+
+										<input autocomplete="off" class="layui-input" id="name" name="name" lay-verify="required" type="text" v-model="ebsShowroomtype.name">
+
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="tollmehod" style="width:130px"><span style='color:red'>*</span>收费方式 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block radioborder">
+										<input type='radio' name='tollmehod' value='按个数' title='按个数'>
+										<input type='radio' name='tollmehod' value='按面积' title='按面积'>
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="tollmehod" style="width:130px"><span style='color:red'>*</span>是否室外 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block radioborder">
+										<input type='radio' name='isoutdoor' value='1' title='是'>
+										<input type='radio' name='isoutdoor' value='0' title='否'>
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="area" style="width:130px"><span style='color:red'>*</span>展厅价格 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<table style="margin-left:10px">
+											<tr>
+												<td>一个展位</td>
+												<td>
+												<input class="layui-input" style="width:70px" id="area" name="area" lay-verify="required" type="text" v-model="ebsShowroomtype.area">
+												</td>
+												<td>平方米 标准展位</td>
+												<td>
+												<input class="layui-input" style="width:70px" id="price1" name="price1" lay-verify="required" type="text" v-model="ebsShowroomtype.price1">
+												</td>
+												<td>元/个 ， 角位展位</td>
+												<td>
+												<input class="layui-input" style="width:70px" id="price2" name="price2" lay-verify="required" type="text" v-model="ebsShowroomtype.price2">
+												</td>
+												<td>元/个， 特装展位</td>
+												<td>
+												<input class="layui-input" style="width:70px" id="price3" name="price3" lay-verify="required" type="text" v-model="ebsShowroomtype.price3">
+												</td>
+												<td>元/平方米。</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="priceunit" style="width:130px"><span style='color:red'>*</span>价格单位 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block radioborder">
+										<input type='radio' name='priceunit' value='￥' title='￥'>
+										<input type='radio' name='priceunit' value='$' title='$'>
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="exhibitorsnumber" style="width:130px"><span style='color:red'>*</span>参展证数 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<table style="margin-left:10px">
+											<tr>
+												<td>每个展位可以办</td>
+												<td>
+												<input onkeyup="value=value.replace(/[^(\-)?\(0-9)+((0-9)))]/g,'')" class="layui-input" style="width:50px" id="exhibitorsnumber" name="exhibitorsnumber" lay-verify="required" type="text" v-model="ebsShowroomtype.exhibitorsnumber">
+												</td>
+												<td>个参展证</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="withdrawalsnumber" style="width:130px"><span style='color:red'>*</span>布撤展证数 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<table style="margin-left:10px">
+											<tr>
+												<td>每个展位可以办</td>
+												<td><input onkeyup="value=value.replace(/[^(\-)?\(0-9)+((0-9)))]/g,'')" class="layui-input" style="width:50px" id="withdrawalsnumber" lay-verify="required" name="withdrawalsnumber" type="text" v-model="ebsShowroomtype.withdrawalsnumber"></td>
+												<td>个布撤展证</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="boothlimit" style="width:130px"><span style='color:red'>*</span>特装展位限制 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<table style="margin-left:10px">
+											<tr>
+												<td> 最低起租面积不少于 </td>
+												<td>
+												<input class="layui-input" style="width:80px" id="boothlimit" name="boothlimit" lay-verify="required" type="text" v-model="ebsShowroomtype.boothlimit">
+												</td>
+												<td> 平方米 </td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="explanation" style="width:130px"> 填报说明 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<textarea class="layui-textarea" id="explanation" name="explanation" rows="4" v-model="ebsShowroomtype.explanation"></textarea>
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="remark" style="width:130px"> 备注 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<textarea class="layui-textarea" id="remark" name="remark" rows="4" v-model="ebsShowroomtype.remark"></textarea>
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="status" style="width:130px"><span style='color:red'>*</span>是否可用 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block radioborder">
+
+										<input type='radio' name='status' value='1' title='启用'>
+										<input type='radio' name='status' value='0' title='禁用'>
+
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<div class="layui-input-block">
+									<button class="layui-btn" lay-filter="edit" lay-submit="">
+										确认修改
+									</button>
+								</div>
+							</div>
+						</form>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+		<script charset="utf-8" src="/manage/js/jquery.min.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/layui/layui.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/xadmin.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/vue.js" type="text/javascript"></script>
+		<script src="/manage/js/bootstrap.min.js?v=3.3.6"></script>
+		<script src="/manage/js/manage/common.js"></script>
+		<script charset="UTF-8" type="text/javascript">
+			//loadHeight();
+			var editEbsShowroomtypeId = sessionStorage.getItem("editEbsShowroomtypeId");
+			vm = new Vue({
+				el : "#vmUpdateEbsShowroomtype",
+				data : {
+					ebsShowroomtype : {}
+				},
+				methods : {},
+				created : function() {
+					var _this = this;
+					$.ajax({
+						url : "/manage/Exhibitors/ebsShowroomtype/findById",
+						data : {
+							"id" : editEbsShowroomtypeId
+						},
+						dataType : "json",
+						type : "get",async:false, 
+						success : function(result) {
+							if (result.code === 200) {
+								_this.ebsShowroomtype = result.data;
+								$("input[name='status'][value='"+result.data.status+"']").attr("checked",true);
+								$("input[name='tollmehod'][value='"+result.data.tollmehod+"']").attr("checked",true);
+								$("input[name='isoutdoor'][value='"+result.data.isoutdoor+"']").attr("checked",true);
+								$("input[name='priceunit'][value='"+result.data.priceunit+"']").attr("checked",true);var form;
+								layui.use(['form', 'layer', 'laydate'], function() {
+									var form = layui.form, layer = layui.layer, laydate = layui.laydate;
+									form.render('', 'test1');
+									//监听提交
+									form.on('submit(edit)', function(data) {
+										//组装数据
+										data.field.id = editEbsShowroomtypeId;
+										//发异步，把数据提交给controller
+										$.ajax({
+											url : "/manage/Exhibitors/ebsShowroomtype/update",
+											data : JSON.stringify(data.field),
+											dataType : "json",
+											contentType : "application/json",
+											type : "post",
+											success : function(result) {
+												if (result.code === 200) {
+													layer.msg("修改成功", {
+														icon : 6,
+														time : 500
+													}, function() {
+														//关闭当前frame
+														xadmin.close();
+														// 可以对父窗口进行刷新
+														xadmin.father_reload();
+													});
+												} else {
+													layer.alert(result.msg);
+												}
+											}
+										});
+										return false;
+									});
+								});
+							} else {
+								layer.alert("获取修改参展商管理-展厅类型信息失败！");
+							}
+						}
+					});
+				}
+			});
+		</script>
+	</body>
+</html>

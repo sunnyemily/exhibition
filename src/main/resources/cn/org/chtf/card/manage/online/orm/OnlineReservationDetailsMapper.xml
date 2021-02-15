@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.online.dao.OnlineReservationDetailsMapper">
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.online.model.OnlineReservationDetails">
+        select
+			a.id as id,
+			a.session as session,
+			a.exhibitiondate as exhibitiondate,
+			a.name as name,
+			a.cardnumber as cardnumber,
+			a.phone as phone,
+			a.companyname as companyname,
+			a.country as country,
+			a.province as province,
+			a.city as city,
+			a.industry as industry,
+			a.informant as informant,
+			a.informantphone as informantphone,
+			a.verificationcode as verificationcode,
+			a.exhibitionarea as exhibitionarea,
+			a.secretkey as secretkey,
+			a.addtime as addtime,
+			a.status as status,a.type,a.createby
+        from online_reservation_details as a
+        where a.id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.online.model.OnlineReservationDetails">
+        select
+			a.id as id,
+			a.session as session,
+			a.exhibitiondate as exhibitiondate,
+			a.name as name,
+			a.cardnumber as cardnumber,
+			a.phone as phone,
+			a.companyname as companyname,
+			a.country as country,
+			a.province as province,
+			a.city as city,
+			a.industry as industry,
+			a.informant as informant,
+			a.informantphone as informantphone,
+			a.verificationcode as verificationcode,
+			a.exhibitionarea as exhibitionarea,
+			a.secretkey as secretkey,
+			a.addtime as addtime,
+			a.status as status,a.type,a.createby
+        from online_reservation_details as a
+        <where>
+			<if test="id != null and id != ''">
+				and a.id = #{id}
+			</if>
+			<if test="session != null and session != ''">
+				and a.session = #{session}
+			</if>
+			<if test="exhibitiondate != null and exhibitiondate != ''">
+				and a.exhibitiondate = #{exhibitiondate}
+			</if>
+			<if test="name != null and name != ''">
+				and a.name = #{name}
+			</if>
+			<if test="cardnumber != null and cardnumber != ''">
+				and a.cardnumber = #{cardnumber}
+			</if>
+			<if test="phone != null and phone != ''">
+				and a.phone = #{phone}
+			</if>
+			<if test="companyname != null and companyname != ''">
+				and a.companyname = #{companyname}
+			</if>
+			<if test="country != null and country != ''">
+				and a.country = #{country}
+			</if>
+			<if test="province != null and province != ''">
+				and a.province = #{province}
+			</if>
+			<if test="city != null and city != ''">
+				and a.city = #{city}
+			</if>
+			<if test="industry != null and industry != ''">
+				and a.industry = #{industry}
+			</if>
+			<if test="informant != null and informant != ''">
+				and a.informant = #{informant}
+			</if>
+			<if test="informantphone != null and informantphone != ''">
+				and a.informantphone = #{informantphone}
+			</if>
+			<if test="verificationcode != null and verificationcode != ''">
+				and a.verificationcode = #{verificationcode}
+			</if>
+			<if test="exhibitionarea != null and exhibitionarea != ''">
+				and a.exhibitionarea = #{exhibitionarea}
+			</if>
+			<if test="secretkey != null and secretkey != ''">
+				and a.secretkey = #{secretkey}
+			</if>
+			<if test="addtime != null and addtime != ''">
+				and a.addtime = #{addtime}
+			</if>
+			<if test="status != null and status != ''">
+				and a.status = #{status}
+			</if>
+			<if test="type != null and type != ''">
+				and a.type = #{type}
+			</if>
+			<if test="createby != null and createby != ''">
+				and a.createby = #{createby}
+			</if>
+			
+        </where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.online.model.OnlineReservationDetails">
+        select
+			a.id as id,
+			a.session as session,
+			a.exhibitiondate as exhibitiondate,
+			a.name as name,
+			a.cardnumber as cardnumber,
+			a.phone as phone,
+			a.companyname as companyname,
+			a.country as country,
+			a.province as province,
+			a.city as city,
+			a.industry as industry,
+			a.informant as informant,
+			a.informantphone as informantphone,
+			a.verificationcode as verificationcode,
+			ifnull(c.dic_cn_name,'') as exhibitionarea,
+			b.ticketnum as secretkey,
+			a.addtime as addtime,
+			a.status as status,a.type,a.createby
+        from online_reservation_details as a
+        inner join sys_tickets_details as b on a.id=b.reservationid
+        left join system_dictionaries as c on c.dicid=a.exhibitionarea
+        <where>
+        	<if test="keyword != null and keyword != ''">
+                and 
+                (
+                	a.name like concat ('%',#{keyword},'%')  
+                	or a.cardnumber like concat ('%',#{keyword},'%') 
+                	or a.phone like concat ('%',#{keyword},'%')
+                )
+            </if>
+            
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="exhibitiondate != null and exhibitiondate != ''">
+                and a.exhibitiondate = #{exhibitiondate}
+            </if>
+            <if test="name != null and name != ''">
+                and a.name = #{name}
+            </if>
+            <if test="cardnumber != null and cardnumber != ''">
+                and a.cardnumber = #{cardnumber}
+            </if>
+            <if test="phone != null and phone != ''">
+                and a.phone = #{phone}
+            </if>
+            <if test="companyname != null and companyname != ''">
+                and a.companyname = #{companyname}
+            </if>
+            <if test="country != null and country != ''">
+                and a.country = #{country}
+            </if>
+            <if test="province != null and province != ''">
+                and a.province = #{province}
+            </if>
+            <if test="city != null and city != ''">
+                and a.city = #{city}
+            </if>
+            <if test="industry != null and industry != ''">
+                and a.industry = #{industry}
+            </if>
+            <if test="informant != null and informant != ''">
+                and a.informant = #{informant}
+            </if>
+            <if test="informantphone != null and informantphone != ''">
+                and a.informantphone = #{informantphone}
+            </if>
+            <if test="verificationcode != null and verificationcode != ''">
+                and a.verificationcode = #{verificationcode}
+            </if>
+            <if test="exhibitionarea != null and exhibitionarea != ''">
+                and a.exhibitionarea = #{exhibitionarea}
+            </if>
+            <if test="secretkey != null and secretkey != ''">
+                and a.secretkey = #{secretkey}
+            </if>
+            <if test="addtime != null and addtime != ''">
+                and a.addtime = #{addtime}
+            </if>
+            <if test="status != null and status != ''">
+                and a.status = #{status}
+            </if>
+            <if test="type != null and type != ''">
+				and a.type = #{type}
+			</if>
+			<if test="createby != null and createby != ''">
+				and a.createby = #{createby}
+			</if>
+			
+        </where>
+        order by a.addtime desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(*) FROM online_reservation_details a
+        inner join sys_tickets_details as b on a.id=b.reservationid
+		<where>
+			<if test="keyword != null and keyword != ''">
+                and 
+                (
+                	a.name like concat ('%',#{keyword},'%')  
+                	or a.cardnumber like concat ('%',#{keyword},'%') 
+                	or a.phone like concat ('%',#{keyword},'%')
+                )
+            </if>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="exhibitiondate != null and exhibitiondate != ''">
+                and a.exhibitiondate = #{exhibitiondate}
+            </if>
+            <if test="name != null and name != ''">
+                and a.name = #{name}
+            </if>
+            <if test="cardnumber != null and cardnumber != ''">
+                and a.cardnumber = #{cardnumber}
+            </if>
+            <if test="phone != null and phone != ''">
+                and a.phone = #{phone}
+            </if>
+            <if test="companyname != null and companyname != ''">
+                and a.companyname = #{companyname}
+            </if>
+            <if test="country != null and country != ''">
+                and a.country = #{country}
+            </if>
+            <if test="province != null and province != ''">
+                and a.province = #{province}
+            </if>
+            <if test="city != null and city != ''">
+                and a.city = #{city}
+            </if>
+            <if test="industry != null and industry != ''">
+                and a.industry = #{industry}
+            </if>
+            <if test="informant != null and informant != ''">
+                and a.informant = #{informant}
+            </if>
+            <if test="informantphone != null and informantphone != ''">
+                and a.informantphone = #{informantphone}
+            </if>
+            <if test="verificationcode != null and verificationcode != ''">
+                and a.verificationcode = #{verificationcode}
+            </if>
+            <if test="exhibitionarea != null and exhibitionarea != ''">
+                and a.exhibitionarea = #{exhibitionarea}
+            </if>
+            <if test="secretkey != null and secretkey != ''">
+                and a.secretkey = #{secretkey}
+            </if>
+            <if test="addtime != null and addtime != ''">
+                and a.addtime = #{addtime}
+            </if>
+            <if test="status != null and status != ''">
+                and a.status = #{status}
+            </if>
+            <if test="type != null and type != ''">
+				and a.type = #{type}
+			</if>
+			<if test="createby != null and createby != ''">
+				and a.createby = #{createby}
+			</if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.online.model.OnlineReservationDetails" useGeneratedKeys="true" keyProperty="id">
+        insert into online_reservation_details(
+        	<trim suffixOverrides=",">
+                <if test="session != null">`session`,</if>
+                <if test="exhibitiondate != null">`exhibitiondate`,</if>
+                <if test="name != null">`name`,</if>
+                <if test="cardnumber != null">`cardnumber`,</if>
+                <if test="phone != null">`phone`,</if>
+                <if test="companyname != null">`companyname`,</if>
+                <if test="country != null">`country`,</if>
+                <if test="province != null">`province`,</if>
+                <if test="city != null">`city`,</if>
+                <if test="industry != null">`industry`,</if>
+                <if test="informant != null">`informant`,</if>
+                <if test="informantphone != null">`informantphone`,</if>
+                <if test="verificationcode != null">`verificationcode`,</if>
+                <if test="exhibitionarea != null">`exhibitionarea`,</if>
+                <if test="secretkey != null">`secretkey`,</if>
+                <if test="addtime != null">`addtime`,</if>
+                <if test="type != null">`type`,</if>
+                <if test="createby != null">`createby`,</if>
+                <if test="status != null">`status`</if>
+			</trim>
+		) values (
+        	<trim suffixOverrides=",">
+                <if test="session != null">#{session},</if>
+                <if test="exhibitiondate != null">#{exhibitiondate},</if>
+                <if test="name != null">#{name},</if>
+                <if test="cardnumber != null">#{cardnumber},</if>
+                <if test="phone != null">#{phone},</if>
+                <if test="companyname != null">#{companyname},</if>
+                <if test="country != null">#{country},</if>
+                <if test="province != null">#{province},</if>
+                <if test="city != null">#{city},</if>
+                <if test="industry != null">#{industry},</if>
+                <if test="informant != null">#{informant},</if>
+                <if test="informantphone != null">#{informantphone},</if>
+                <if test="verificationcode != null">#{verificationcode},</if>
+                <if test="exhibitionarea != null">#{exhibitionarea},</if>
+                <if test="secretkey != null">#{secretkey},</if>
+                <if test="addtime != null">#{addtime},</if>
+                <if test="type != null">#{type},</if>
+                <if test="createby != null">#{createby},</if>
+                <if test="status != null">#{status}</if>
+			</trim>
+		)
+    </insert>
+    
+    <update id="updateSecretKey" parameterType="map">
+    	update sys_receipt_code set useable=0 where secretkey=#{secretkey}
+    </update>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.online.model.OnlineReservationDetails">
+        update online_reservation_details
+        <set>
+			<if test="session != null">`session` = #{session},</if>
+			<if test="exhibitiondate != null">`exhibitiondate` = #{exhibitiondate},</if>
+			<if test="name != null">`name` = #{name},</if>
+			<if test="cardnumber != null">`cardnumber` = #{cardnumber},</if>
+			<if test="phone != null">`phone` = #{phone},</if>
+			<if test="companyname != null">`companyname` = #{companyname},</if>
+			<if test="country != null">`country` = #{country},</if>
+			<if test="province != null">`province` = #{province},</if>
+			<if test="city != null">`city` = #{city},</if>
+			<if test="industry != null">`industry` = #{industry},</if>
+			<if test="informant != null">`informant` = #{informant},</if>
+			<if test="informantphone != null">`informantphone` = #{informantphone},</if>
+			<if test="verificationcode != null">`verificationcode` = #{verificationcode},</if>
+			<if test="exhibitionarea != null">`exhibitionarea` = #{exhibitionarea},</if>
+			<if test="secretkey != null">`secretkey` = #{secretkey},</if>
+			<if test="addtime != null">`addtime` = #{addtime},</if>
+			<if test="type != null">`type` = #{type},</if>
+			<if test="createby != null">`createby` = #{createby},</if>
+			<if test="status != null">`status` = #{status}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from online_reservation_details where id = #{id};
+        delete from sys_tickets_details where reservationid = #{id};
+    </delete>
+    
+    
+    
+    
+</mapper>

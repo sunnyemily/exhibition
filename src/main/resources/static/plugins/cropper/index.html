@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>图片裁剪工具</title>
+  <script src="dist/browser.min.js"></script>
+  <script src="dist/cropper.min.js"></script>
+  <script src="dist/jquery.js"></script>
+  <script>
+  var selectTips = "请选择";
+  </script>
+  <script src="/script/common.js"></script>
+  <link rel="stylesheet" href="dist/cropper.min.css">
+  <link rel="stylesheet" href="../layui/css/layui.css">
+  <link rel="stylesheet" href="../../css/font-awesome-4.7.0/css/font-awesome.min.css">
+  <style>
+    .img-container img {
+      max-width: 100%;
+    }
+    #container{
+    background:url(images/bg.png);
+    margin:0;
+    padding:0;
+    min-height:400px;
+    }
+  </style>
+</head>
+<body>
+<div style="position:absolute;left:0px;bottom:0px;background-color:#fff;z-index:1;text-align:center;line-height:50px;width:100%">
+<div class="layui-btn-group">
+  <button type="button" class="layui-btn layui-btn-primary"  name="upload" id="upload">
+    <i class="fa fa-crop"> 裁剪并上传</i>
+  </button>
+  <button type="button" class="layui-btn layui-btn-primary" id="openPicture">
+    <i class="fa fa-folder-open"></i> 选择图片
+  </button>
+</div>
+<input type="file" name="file" id="file" style="display:none" />
+</div>
+<div id="container">
+  <img id="image" src="">	
+</div>
+<script src="js/index.js?id=1"></script>
+</body>
+</html>

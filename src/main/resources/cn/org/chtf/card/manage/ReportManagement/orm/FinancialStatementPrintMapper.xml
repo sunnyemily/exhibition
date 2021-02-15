@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.ReportManagement.dao.FinancialStatementPrintMapper">
+    <select id="getScatteredExhibitorsList" resultType="map">
+        SELECT
+			c.chinesename,
+			ifnull(e.booths,'') booths,
+			ifnull(e.boothsNumber,0) boothsNumber,
+			ifnull(e.boothsNumber*3,0) certificatesNumber,
+			ifnull(DATE(f.finance_office_audit_time),'') financeOfficeAuditTime
+		FROM
+			web_member a
+		INNER JOIN web_member_session b ON a.member_id = b.member_id AND b.id = #{session}
+		INNER JOIN ebs_companyinfo c ON b.orgnization_id = c.id AND c.useable = 1 AND c.session = b.id
+		INNER JOIN ebs_booth_audit f ON c.id = f.company_id AND f.session_id = b.id and f.finance_office_audit_status = 1
+		LEFT JOIN (
+			SELECT company_id, COUNT(*) boothsNumber, GROUP_CONCAT(name) booths FROM ebs_booth WHERE session = #{session} AND useable = 1 AND company_id != 0 GROUP BY company_id
+		) e ON c.id = e.company_id
+		WHERE a.member_type = 2 AND a.member_status = 0
+		<if test="startDate != null and startDate != ''">
+			AND DATE(f.finance_office_audit_time) >= #{startDate}
+		</if>
+		<if test="endDate != null and endDate != ''">
+			AND DATE(f.finance_office_audit_time) &lt;= #{endDate}
+		</if>
+        order by f.finance_office_audit_time desc
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="getScatteredExhibitorsListCount" resultType="int">
+		select count(*)
+		FROM
+			web_member a
+		INNER JOIN web_member_session b ON a.member_id = b.member_id AND b.id = #{session}
+		INNER JOIN ebs_companyinfo c ON b.orgnization_id = c.id AND c.useable = 1 AND c.session = b.id
+		INNER JOIN ebs_booth_audit f ON c.id = f.company_id AND f.session_id = b.id and f.finance_office_audit_status = 1
+		WHERE a.member_type = 2 AND a.member_status = 0
+		<if test="startDate != null and startDate != ''">
+			AND DATE(f.finance_office_audit_time) >= #{startDate}
+		</if>
+		<if test="endDate != null and endDate != ''">
+			AND DATE(f.finance_office_audit_time) &lt;= #{endDate}
+		</if>
+	</select>
+	
+    <select id="getTradingGroupList" resultType="map">
+        SELECT
+			c.name,
+			ifnull(e.booths,'') booths,
+			ifnull(e.boothsNumber,0) boothsNumber,
+			ifnull(e.boothsNumber*3,0) certificatesNumber
+		FROM
+			web_member a
+		INNER JOIN web_member_session b ON a.member_id = b.member_id AND b.id = #{session}
+		INNER JOIN pim_agent ON pim_agent.id = b.orgnization_id and isopen = 1 and type = 0
+		INNER JOIN ebs_tradinggroup c ON pim_agent.tradinggroupid = c.id
+		INNER JOIN ebs_companyinfo on c.id = ebs_companyinfo.tradinggroupid and ebs_companyinfo.useable = 1 and ebs_companyinfo.session = b.id
+		INNER JOIN ebs_booth_audit f ON ebs_companyinfo.id = f.company_id AND f.session_id = b.id and f.finance_office_audit_status = 1
+		LEFT JOIN (
+			SELECT tradinggroupid, COUNT(*) boothsNumber, GROUP_CONCAT(name) booths FROM ebs_booth WHERE SESSION = #{session} AND useable = 1 GROUP BY tradinggroupid
+		) e ON c.id = e.tradinggroupid
+		WHERE a.member_type = 0 AND a.member_status = 0
+		<if test="startDate != null and startDate != ''">
+			AND DATE(f.finance_office_audit_time) >= #{startDate}
+		</if>
+		<if test="endDate != null and endDate != ''">
+			AND DATE(f.finance_office_audit_time) &lt;= #{endDate}
+		</if>
+		GROUP BY c.id
+        order by c.orders,c.id
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="getTradingGroupListCount" resultType="int">
+		select count(DISTINCT c.id)
+		FROM
+			web_member a
+		INNER JOIN web_member_session b ON a.member_id = b.member_id AND b.id = #{session}
+		INNER JOIN pim_agent ON pim_agent.id = b.orgnization_id and isopen = 1 and type = 0
+		INNER JOIN ebs_tradinggroup c ON pim_agent.tradinggroupid = c.id
+		INNER JOIN ebs_companyinfo on c.id = ebs_companyinfo.tradinggroupid and ebs_companyinfo.useable = 1 and ebs_companyinfo.session = b.id
+		INNER JOIN ebs_booth_audit f ON ebs_companyinfo.id = f.company_id AND f.session_id = b.id and f.finance_office_audit_status = 1
+		WHERE a.member_type = 0 AND a.member_status = 0
+		<if test="startDate != null and startDate != ''">
+			AND DATE(f.finance_office_audit_time) >= #{startDate}
+		</if>
+		<if test="endDate != null and endDate != ''">
+			AND DATE(f.finance_office_audit_time) &lt;= #{endDate}
+		</if>
+	</select>
+	
+    <select id="getCarCertificatesList" resultType="map">
+        SELECT b.chinesename, COUNT(*) certificatesNumber FROM ebs_vehiclecard a
+		INNER JOIN cm_certificate_type b ON a.cardtype = b.id AND b.session = a.session AND b.type = 1 AND b.useable = 1
+		INNER JOIN ebs_companyinfo on a.companyid = ebs_companyinfo.id and ebs_companyinfo.useable = 1 and ebs_companyinfo.session = a.session
+		INNER JOIN ebs_booth_audit f ON ebs_companyinfo.id = f.company_id AND f.session_id = a.session
+		WHERE a.session = #{session}
+		<if test="startDate != null and startDate != ''">
+			AND DATE(f.finance_office_audit_time) >= #{startDate}
+		</if>
+		<if test="endDate != null and endDate != ''">
+			AND DATE(f.finance_office_audit_time) &lt;= #{endDate}
+		</if>
+		GROUP BY b.id ORDER BY b.orders
+    </select>
+</mapper>

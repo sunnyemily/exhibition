@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.system.dao.SysExhibitionMapper">
+
+	<select id="findById" resultType="cn.org.chtf.card.manage.system.model.SysExhibition">
+		select a.id,a.exhibitionname,a.url,a.useable,a.russianexhibitionname,a.japaneseexhibitionname,a.englishexhibitionname,a.hangulexhibitionname
+		from sys_exhibition as a
+		where a.id = #{id}
+	</select>
+	<select id="findByMap" resultType="cn.org.chtf.card.manage.system.model.SysExhibition">
+		select a.id,a.exhibitionname,a.url,a.useable,a.russianexhibitionname,a.japaneseexhibitionname,a.englishexhibitionname,a.hangulexhibitionname        
+		from sys_exhibition as a
+		<where>
+			<if test="id != null and id != ''">and a.id = #{id}</if>
+			<if test="exhibitionname != null and exhibitionname != ''">and a.exhibitionname like concat('%',#{exhibitionname},'%')</if>
+			<if test="russianexhibitionname != null and russianexhibitionname != ''">and a.russianexhibitionname like concat('%',#{russianexhibitionname},'%')</if>
+			<if test="japaneseexhibitionname != null and japaneseexhibitionname != ''">and a.japaneseexhibitionname like concat('%',#{japaneseexhibitionname},'%')</if>
+			<if test="englishexhibitionname != null and englishexhibitionname != ''">and a.englishexhibitionname like concat('%',#{englishexhibitionname},'%')</if>
+			<if test="hangulexhibitionname != null and hangulexhibitionname != ''">and a.hangulexhibitionname like concat('%',#{hangulexhibitionname},'%')</if>
+			<if test="url != null and url != ''">and a.url = #{url}</if>
+			<if test="useable != null and useable != ''">and a.useable = #{useable}</if>
+		</where>
+	</select>
+	<select id="list" resultType="cn.org.chtf.card.manage.system.model.SysExhibition">
+		select a.id,a.exhibitionname,a.url,a.useable,a.russianexhibitionname,a.japaneseexhibitionname,a.englishexhibitionname,a.hangulexhibitionname
+		from sys_exhibition as a
+		<where>
+			<if test="id != null and id != ''">and a.id =
+				#{id}</if>
+			<if test="exhibitionname != null and exhibitionname != ''">and a.exhibitionname like concat('%',#{exhibitionname},'%')</if>
+			<if test="russianexhibitionname != null and russianexhibitionname != ''">and a.russianexhibitionname like concat('%',#{russianexhibitionname},'%')</if>
+			<if test="japaneseexhibitionname != null and japaneseexhibitionname != ''">and a.japaneseexhibitionname like concat('%',#{japaneseexhibitionname},'%')</if>
+			<if test="englishexhibitionname != null and englishexhibitionname != ''">and a.englishexhibitionname like concat('%',#{englishexhibitionname},'%')</if>
+			<if test="hangulexhibitionname != null and hangulexhibitionname != ''">and a.hangulexhibitionname like concat('%',#{hangulexhibitionname},'%')</if>
+			<if test="url != null and url != ''">and a.url =
+				#{url}</if>
+			<if test="useable != null and useable != ''">and a.useable =
+				#{useable}</if>
+		</where>
+		order by a.id desc
+		limit #{index}, #{size}
+	</select>
+	<select id="listcount" resultType="int">
+		SELECT count(id)
+		FROM
+		sys_exhibition as a
+		<where>
+			<if test="id != null and id != ''">
+				and a.id = #{id}
+			</if>
+			<if test="exhibitionname != null and exhibitionname != ''">and exhibitionname like concat('%',#{exhibitionname},'%')</if>
+			<if test="russianexhibitionname != null and russianexhibitionname != ''">and a.russianexhibitionname like concat('%',#{russianexhibitionname},'%')</if>
+			<if test="japaneseexhibitionname != null and japaneseexhibitionname != ''">and a.japaneseexhibitionname like concat('%',#{japaneseexhibitionname},'%')</if>
+			<if test="englishexhibitionname != null and englishexhibitionname != ''">and a.englishexhibitionname like concat('%',#{englishexhibitionname},'%')</if>
+			<if test="hangulexhibitionname != null and hangulexhibitionname != ''">and a.hangulexhibitionname like concat('%',#{hangulexhibitionname},'%')</if>
+			<if test="url != null and url != ''">
+				and url = #{url}
+			</if>
+			<if test="useable != null and useable != ''">
+				and useable = #{useable}
+			</if>
+		</where>
+	</select>
+	<insert id="save" parameterType="cn.org.chtf.card.manage.system.model.SysExhibition" useGeneratedKeys="true" keyProperty="id">
+		insert into sys_exhibition(
+		<trim suffixOverrides=",">
+			<if test="exhibitionname != null">`exhibitionname`,</if>
+			<if test="russianexhibitionname != null">`russianexhibitionname`,</if>
+			<if test="japaneseexhibitionname != null">`japaneseexhibitionname`,</if>
+			<if test="englishexhibitionname != null">`englishexhibitionname`,</if>
+			<if test="hangulexhibitionname != null">`hangulexhibitionname`,</if>
+			<if test="url != null">`url`,</if>
+			<if test="useable != null">`useable`</if>
+		</trim>)
+		values (
+		<trim suffixOverrides=",">
+			<if test="exhibitionname != null">#{exhibitionname},</if>
+			<if test="russianexhibitionname != null">#{russianexhibitionname},</if>
+			<if test="japaneseexhibitionname != null">#{japaneseexhibitionname},</if>
+			<if test="englishexhibitionname != null">#{englishexhibitionname},</if>
+			<if test="hangulexhibitionname != null">#{hangulexhibitionname},</if>
+			<if test="url != null">#{url},</if>
+			<if test="useable != null">#{useable}</if>
+		</trim>)
+	</insert>
+	<update id="update" parameterType="cn.org.chtf.card.manage.system.model.SysExhibition">
+		update sys_exhibition
+		<set>
+			<if test="exhibitionname != null">`exhibitionname` = #{exhibitionname},</if>
+			<if test="russianexhibitionname != null">`russianexhibitionname` = #{russianexhibitionname},</if>
+			<if test="japaneseexhibitionname != null">`japaneseexhibitionname` = #{japaneseexhibitionname},</if>
+			<if test="englishexhibitionname != null">`englishexhibitionname` = #{englishexhibitionname},</if>
+			<if test="hangulexhibitionname != null">`hangulexhibitionname` = #{hangulexhibitionname},</if>
+			<if test="url != null">`url` = #{url},</if>
+			<if test="useable != null">`useable` = #{useable}</if>
+		</set>
+		where id = #{id}
+	</update>
+	<delete id="deleteById">delete
+		from sys_exhibition
+		where id = #{id}</delete>
+		
+	<select id="getList" resultType="map">
+		select a.id,a.exhibitionname,a.url,a.useable,a.russianexhibitionname,a.japaneseexhibitionname,a.englishexhibitionname,a.hangulexhibitionname
+		from sys_exhibition as a
+		<where>
+			<if test="id != null and id != ''">and a.id = #{id}</if>
+			<if test="exhibitionname != null and exhibitionname != ''">
+				and a.exhibitionname like concat('%',#{exhibitionname},'%')
+			</if>
+			<if test="russianexhibitionname != null and russianexhibitionname != ''">and a.russianexhibitionname like concat('%',#{russianexhibitionname},'%')</if>
+			<if test="japaneseexhibitionname != null and japaneseexhibitionname != ''">and a.japaneseexhibitionname like concat('%',#{japaneseexhibitionname},'%')</if>
+			<if test="englishexhibitionname != null and englishexhibitionname != ''">and a.englishexhibitionname like concat('%',#{englishexhibitionname},'%')</if>
+			<if test="hangulexhibitionname != null and hangulexhibitionname != ''">and a.hangulexhibitionname like concat('%',#{hangulexhibitionname},'%')</if>
+			<if test="url != null and url != ''">
+				and a.url = #{url}
+			</if>
+			<if test="useable != null and useable != ''">
+				and a.useable = #{useable}
+			</if>
+		</where>
+	</select>
+
+</mapper>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.ReportManagement.dao.RepeatExhibitorStatisticsTableMapper">
+	
+	<!-- 本届重复率 -->
+	<select id="repeatNumber" resultType="map">
+		SELECT CONCAT(repeatNumber/totalNumber*100,'%') repeatNumber FROM (
+			select COUNT(*) repeatNumber FROM (
+				SELECT chinesename,COUNT(*) repeatNumber FROM(
+					SELECT session,chinesename FROM ebs_companyinfo WHERE useable = 1 and chinesename != ''
+					<if test="session != null and session != ''">
+						AND session IN (${session})
+					</if>
+					GROUP BY `session`,`chinesename`
+				) a GROUP BY chinesename HAVING COUNT(*) = #{repeatCount}+1
+			) b
+		) c
+		LEFT JOIN (
+			SELECT COUNT(DISTINCT chinesename) totalNumber FROM ebs_companyinfo WHERE useable = 1 and chinesename != ''
+			<if test="session != null and session != ''">
+				AND session IN (${session})
+			</if>
+		) d ON 1=1
+	</select>
+	
+	<!-- 数据表  -->
+	<select id="selectInfoList" resultType="map">
+		select chinesename from (
+			SELECT session,chinesename FROM ebs_companyinfo WHERE useable = 1 and chinesename != ''
+			<if test="session != null and session != ''">
+				AND session IN (${session})
+			</if>
+			GROUP BY `session`,`chinesename`
+		) a GROUP BY `chinesename` HAVING COUNT(*) = #{repeatCount}+1
+		limit #{index}, #{size}
+	</select>
+	
+	<!-- 记录数 -->
+	<select id="ListCount" resultType="int">
+		select count(*) from (
+			select chinesename from (
+				SELECT session,chinesename FROM ebs_companyinfo WHERE useable = 1 and chinesename != ''
+				<if test="session != null and session != ''">
+					AND session IN (${session})
+				</if>
+				GROUP BY `session`,`chinesename`
+			) a GROUP BY `chinesename` HAVING COUNT(*) = #{repeatCount}+1
+		) b
+	</select>
+	
+	<!-- 导出  -->
+	<select id="queryExportInfo" resultType="map">
+		select chinesename from (
+			SELECT session,chinesename FROM ebs_companyinfo WHERE useable = 1 and chinesename != ''
+			<if test="session != null and session != ''">
+				AND session IN (${session})
+			</if>
+			GROUP BY `session`,`chinesename`
+		) a GROUP BY `chinesename` HAVING COUNT(*) = #{repeatCount}+1
+	</select>
+	
+	<!-- 重复企业信息列表  -->
+	<select id="repeatExhibitorTable" resultType="map">
+		SELECT
+			ebs_companyinfo.session,
+			ebs_companyinfo.id companyId,
+			ebs_companyinfo.chinesename companyName,
+			GROUP_CONCAT(DISTINCT ebs_tradinggroup.name) tradingGroupName,
+			GROUP_CONCAT(DISTINCT ebs_booth.name ORDER BY ebs_booth.name) boothName,
+			count(ebs_booth.id) boothNumber
+		FROM ebs_companyinfo
+		left join ebs_booth on ebs_companyinfo.session = ebs_booth.session and ebs_companyinfo.id = ebs_booth.company_id and ebs_booth.useable = 1
+		left join ebs_tradinggroup on ebs_booth.tradinggroupid = ebs_tradinggroup.id and ebs_companyinfo.session = ebs_tradinggroup.session
+		WHERE ebs_companyinfo.useable = 1 and ebs_companyinfo.chinesename = #{companyName}
+		<if test="session != null and session != ''">
+			AND ebs_companyinfo.session IN (${session})
+		</if>
+		GROUP BY ebs_companyinfo.session,ebs_companyinfo.chinesename
+		limit #{index}, #{size}
+	</select>
+	<select id="repeatExhibitorTableCount" resultType="int">
+		SELECT count(*) from (
+			SELECT
+				ebs_companyinfo.session,
+				ebs_companyinfo.id companyId,
+				ebs_companyinfo.chinesename companyName,
+				GROUP_CONCAT(DISTINCT ebs_tradinggroup.name) groupTradingGroupName,
+				GROUP_CONCAT(DISTINCT ebs_booth.name ORDER BY ebs_booth.name) boothName,
+				count(ebs_booth.id) boothNumber
+			FROM ebs_companyinfo
+			left join ebs_booth on ebs_companyinfo.session = ebs_booth.session and ebs_companyinfo.id = ebs_booth.company_id and ebs_booth.useable = 1
+			left join ebs_tradinggroup on ebs_booth.tradinggroupid = ebs_tradinggroup.id and ebs_companyinfo.session = ebs_tradinggroup.session
+			WHERE ebs_companyinfo.useable = 1 and ebs_companyinfo.chinesename = #{companyName}
+			<if test="session != null and session != ''">
+				AND ebs_companyinfo.session IN (${session})
+			</if>
+			GROUP BY ebs_companyinfo.session,ebs_companyinfo.chinesename
+		) a
+	</select>
+</mapper>

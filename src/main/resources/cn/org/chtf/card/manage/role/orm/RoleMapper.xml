@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.org.chtf.card.manage.role.dao.RoleMapper">
+  <resultMap id="BaseResultMap" type="cn.org.chtf.card.manage.role.pojo.Role">
+    <id column="role_id" jdbcType="INTEGER" property="roleId" />
+    <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+    <result column="functions" jdbcType="VARCHAR" property="functions" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    role_id, role_name
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from system_role
+    where role_id = #{roleId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey"  parameterType="java.util.List">
+  	delete from system_role_function where  role_id in 
+        <foreach collection="roleIdList" item="roleId" index="index"
+            open="(" close=")" separator=",">
+            #{roleId,jdbcType=INTEGER}
+        </foreach>;
+    delete from system_user_role
+    where role_id in  
+        <foreach collection="roleIdList" item="roleId" index="index"
+            open="(" close=")" separator=",">
+            #{roleId,jdbcType=INTEGER}
+        </foreach>;
+    delete from system_role
+    where role_id in  
+        <foreach collection="roleIdList" item="roleId" index="index"
+            open="(" close=")" separator=",">
+            #{roleId,jdbcType=INTEGER}
+        </foreach>;
+  </delete>
+  <insert id="insert" parameterType="cn.org.chtf.card.manage.role.pojo.Role">
+    insert into system_role (role_id, role_name)
+    values (#{roleId,jdbcType=INTEGER}, #{roleName,jdbcType=VARCHAR});
+    <if test="functionList != null">
+	INSERT INTO system_role_function(role_id,function_id)
+	VALUES	 
+	<foreach item="function" collection="functionList" separator="," open="" close=";">
+	(LAST_INSERT_ID(),#{function})
+	</foreach>
+	</if>
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="cn.org.chtf.card.manage.role.pojo.Role">
+    delete from system_role_function where  role_id = #{roleId,jdbcType=INTEGER};  
+    update system_role
+    set role_name = #{roleName,jdbcType=VARCHAR}
+    where role_id = #{roleId,jdbcType=INTEGER};
+    <if test="functionList != null">
+	INSERT INTO system_role_function(role_id,function_id)
+	VALUES
+	<foreach item="function" collection="functionList" separator="," open="" close=";">
+	(#{roleId,jdbcType=INTEGER},#{function})
+	</foreach>
+	</if>
+  </update>
+  <select id="getRoles"  parameterType="cn.org.chtf.card.support.util.PageModel"  resultMap="BaseResultMap">
+  	SELECT
+	role_id,
+	role_name,
+			(SELECT
+			GROUP_CONCAT(function_id)
+			FROM
+				system_role_function
+			WHERE
+				system_role_function.role_id = system_role.role_id
+		) AS functions
+	FROM
+		system_role
+	WHERE role_name LIKE '%${keywords}%'
+	ORDER BY ${field} ${order}
+	LIMIT #{start,jdbcType=INTEGER},
+	 #{limit,jdbcType=INTEGER};
+  </select>
+  <select id="getTotal"  parameterType="cn.org.chtf.card.support.util.PageModel"  resultType="java.lang.Integer">
+    select count(role_id) from system_role
+	WHERE role_name LIKE '%${keywords}%'
+	ORDER BY ${field} ${order}
+  </select>
+</mapper>

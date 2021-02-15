@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.product.dao.WebProductMapper">
+
+	<update id="resetStatusByCompanyId">
+		update web_product
+		<set>
+			product_status = 0,
+			remark = ''
+		</set>
+		<where>
+			company_id = #{companyId} and session = #{session}
+		</where>
+	</update>
+
+	<update id="auditByCompanyId">
+		update web_product set product_status = #{productStatus} where company_id = #{companyId} and session = #{session}
+	</update>
+	
+    <select id="findById" resultType="cn.org.chtf.card.manage.product.model.WebProduct">
+        select
+        	a.session,
+			a.product_id as productId,
+			a.company_id as companyId,
+			b.chinesename as companyName,
+			a.product_menu_id as productMenuId,
+			a.product_name as productName,
+			a.product_price as productPrice,
+			a.product_picture as productPicture,
+			a.product_pictures as productPictures,
+			a.product_video as productVideo,
+			a.product_num as productNum,
+			a.product_order as productOrder,
+			a.product_description as productDescription,
+			a.product_updatetime as productUpdatetime,
+			a.product_status as productStatus,
+			a.remark as remark,
+			a.memberid as memberid,
+			a.product_brand as productBrand,
+			a.product_priceunit as productPriceunit,
+			a.supplyquantity as supplyquantity,
+			a.url as url,
+			a.country as country,
+			a.province as province,
+			a.city as city,a.clickrates,
+			a.product_unit as productUnit,
+			ifnull(c.dic_cn_name,'') as priceunitname,
+			ifnull(d.dic_cn_name,'') as unitname,
+			ifnull(gj.name,'') as countryname,
+			ifnull(sf.name,'') as provincename,
+			ifnull(cs.name,'') as cityname
+        from web_product as a
+        inner join ebs_companyinfo as b on a.company_id=b.id
+        left join system_dictionaries as c on c.dicid=a.product_priceunit and c.dic_parentid=100
+        left join system_dictionaries as d on d.dicid=a.product_unit and d.dic_parentid=105
+        left join sys_country_area as gj on a.country=gj.id
+        left join sys_country_area as sf on a.province=sf.id
+        left join sys_country_area as cs on a.city = cs.id
+        where a.product_id = #{product_id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.product.model.WebProduct">
+        select
+        	a.session,
+			a.product_id as productId,
+			a.company_id as companyId,
+			b.chinesename as companyName,
+			a.product_menu_id as productMenuId,
+			a.product_name as productName,
+			a.product_price as productPrice,
+			a.product_picture as productPicture,
+			a.product_pictures as productPictures,
+			a.product_video as productVideo,
+			a.product_num as productNum,
+			a.product_order as productOrder,
+			a.product_description as productDescription,
+			a.product_updatetime as productUpdatetime,
+			a.product_status as productStatus,
+			a.remark as remark,
+			a.memberid as memberid,
+			a.product_brand as productBrand,
+			a.product_priceunit as productPriceunit,
+			a.supplyquantity as supplyquantity,
+			a.url as url,
+			a.country as country,
+			a.province as province,
+			a.city as city,
+			a.product_unit as productUnit
+        from web_product as a
+        inner join ebs_companyinfo as b on a.company_id=b.id
+        <where>
+        	<if test="productUnit != null and productUnit != ''">
+				and a.product_unit = #{productUnit}
+			</if>
+        	
+			<if test="memberid != null and memberid != ''">
+				and a.memberid = #{memberid}
+			</if>
+			<if test="productId != null and productId != ''">
+				and a.product_id = #{productId}
+			</if>
+			<if test="companyId != null and companyId != ''">
+				and a.company_id = #{companyId}
+			</if>
+			<if test="companyName != null and companyName != ''">
+				and a.company_name = #{companyName}
+			</if>
+			<if test="productMenuId != null and productMenuId != ''">
+				and a.product_menu_id = #{productMenuId}
+			</if>
+			<if test="productName != null and productName != ''">
+				and a.product_name = #{productName}
+			</if>
+			<if test="productPrice != null and productPrice != ''">
+				and a.product_price = #{productPrice}
+			</if>
+			<if test="productPicture != null and productPicture != ''">
+				and a.product_picture = #{productPicture}
+			</if>
+			<if test="productPictures != null and productPictures != ''">
+				and a.product_pictures = #{productPictures}
+			</if>
+			<if test="productVideo != null and productVideo != ''">
+				and a.product_video = #{productVideo}
+			</if>
+			<if test="productNum != null and productNum != ''">
+				and a.product_num = #{productNum}
+			</if>
+			<if test="productOrder != null and productOrder != ''">
+				and a.product_order = #{productOrder}
+			</if>
+			<if test="productDescription != null and productDescription != ''">
+				and a.product_description = #{productDescription}
+			</if>
+			<if test="productUpdatetime != null and productUpdatetime != ''">
+				and a.product_updatetime = #{productUpdatetime}
+			</if>
+			<if test="productStatus != null and productStatus != ''">
+				and a.product_status = #{productStatus}
+			</if>
+			<if test="session != null and session != ''">
+				and a.session = #{session}
+			</if>
+			<if test="productBrand != null and productBrand != ''">
+				and a.product_brand = #{productBrand}
+			</if>
+			<if test="productPriceunit != null and productPriceunit != ''">
+				and a.product_priceunit = #{productPriceunit}
+			</if>
+			<if test="supplyquantity != null and supplyquantity != ''">
+				and a.supplyquantity = #{supplyquantity}
+			</if>
+			<if test="url != null and url != ''">
+				and a.url = #{url}
+			</if>
+			<if test="country != null and country != ''">
+				and a.country = #{country}
+			</if>
+			<if test="province != null and province != ''">
+				and a.province = #{province}
+			</if>
+			<if test="city != null and city != ''">
+				and a.city = #{city}
+			</if>
+        </where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.product.model.WebProduct">
+        select
+        	a.session,
+        	a.product_status as productStatus,
+			a.product_id as productId,
+			a.company_id as companyId,
+			c.chinesename as companyName,
+			a.product_menu_id as productMenuId,
+			ifnull(b.dic_cn_name,'') as menuname,
+			a.product_name as productName,
+			a.product_price as productPrice,
+			a.product_picture as productPicture,
+			a.product_pictures as productPictures,
+			a.product_video as productVideo,
+			a.product_num as productNum,
+			a.product_order as productOrder,
+			a.product_description as productDescription,
+			a.product_updatetime as productUpdatetime,
+			a.remark,
+			a.memberid,
+			a.product_status as productStatus,
+			a.product_brand as productBrand,
+			a.product_priceunit as productPriceunit,
+			a.supplyquantity as supplyquantity,
+			a.url as url,
+			a.country as country,
+			a.province as province,
+			a.city as city,
+			a.product_unit as productUnit
+        from web_product as a
+        inner join ebs_companyinfo as c on a.company_id=c.id and c.session=#{session}
+        left join system_dictionaries as b on a.product_menu_id=b.dicid
+        <if test="userId != null and userId != 0">
+        	LEFT JOIN ebs_booth_apply ON ebs_booth_apply.company_id = c.id and `session_id` = #{session}
+			LEFT JOIN (SELECT apply_id,tradinggroup_id from ebs_booth_apply_list GROUP BY apply_id,tradinggroup_id) ebs_booth_apply_list ON ebs_booth_apply_list.apply_id = ebs_booth_apply.apply_id
+			LEFT JOIN (SELECT tradinggroupid from system_user_rights WHERE userid = #{userId} and `session` = #{session}) system_user_rights_b on ebs_booth_apply_list.tradinggroup_id = system_user_rights_b.tradinggroupid
+			LEFT JOIN (SELECT tradinggroupid from system_user_rights WHERE userid = #{userId} and `session` = #{session}) system_user_rights_a on c.tradinggroupid = system_user_rights_a.tradinggroupid
+        </if>
+        <where>
+        	<if test="userId != null and userId != 0">
+	        	(!isnull(system_user_rights_a.tradinggroupid) or !isnull(system_user_rights_b.tradinggroupid))
+	        	<if test="tradinggroupid != null and tradinggroupid != ''">
+	        		and (system_user_rights_a.tradinggroupid = #{tradinggroupid} or system_user_rights_b.tradinggroupid = #{tradinggroupid})
+	        	</if>
+        	</if>
+        	<if test="productUnit != null and productUnit != ''">
+				and a.product_unit = #{productUnit}
+			</if>
+            <if test="productId != null and productId != ''">
+                and a.product_id = #{productId}
+            </if>
+            <if test="memberid != null and memberid != ''">
+				and a.memberid = #{memberid}
+			</if>
+            <if test="companyId != null and companyId != ''">
+                and a.company_id = #{companyId}
+            </if>
+            <if test="companyName != null and companyName != ''">
+                and a.company_name like "%${companyName}%"
+            </if>
+            <if test="productMenuId != null and productMenuId != ''">
+                and a.product_menu_id = #{productMenuId}
+            </if>
+            <if test="productName != null and productName != ''">
+                and a.product_name like "%${productName}%"
+            </if>
+            <if test="productPrice != null and productPrice != ''">
+                and a.product_price = #{productPrice}
+            </if>
+            <if test="productPicture != null and productPicture != ''">
+                and a.product_picture = #{productPicture}
+            </if>
+            <if test="productPictures != null and productPictures != ''">
+                and a.product_pictures = #{productPictures}
+            </if>
+            <if test="productVideo != null and productVideo != ''">
+                and a.product_video = #{productVideo}
+            </if>
+            <if test="productNum != null and productNum != ''">
+                and a.product_num = #{productNum}
+            </if>
+            <if test="productOrder != null and productOrder != ''">
+                and a.product_order = #{productOrder}
+            </if>
+            <if test="productDescription != null and productDescription != ''">
+                and a.product_description = #{productDescription}
+            </if>
+            <if test="productUpdatetime != null and productUpdatetime != ''">
+                and a.product_updatetime = #{productUpdatetime}
+            </if>
+            <if test="productStatus != null and productStatus != ''">
+				and a.product_status = #{productStatus}
+			</if>
+			<if test="session != null and session != ''">
+				and a.session = #{session}
+			</if>
+			<if test="productBrand != null and productBrand != ''">
+				and a.product_brand = #{productBrand}
+			</if>
+			<if test="productPriceunit != null and productPriceunit != ''">
+				and a.product_priceunit = #{productPriceunit}
+			</if>
+			<if test="supplyquantity != null and supplyquantity != ''">
+				and a.supplyquantity = #{supplyquantity}
+			</if>
+			<if test="url != null and url != ''">
+				and a.url = #{url}
+			</if>
+			<if test="country != null and country != ''">
+				and a.country = #{country}
+			</if>
+			<if test="province != null and province != ''">
+				and a.province = #{province}
+			</if>
+			<if test="city != null and city != ''">
+				and a.city = #{city}
+			</if>
+        </where>
+        group by a.product_id
+        order by a.product_updatetime desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(distinct a.product_id) FROM web_product a
+		inner join ebs_companyinfo as c on a.company_id=c.id and c.session=#{session}
+		left join system_dictionaries as b on a.product_menu_id=b.dicid
+		<if test="userId != null and userId != 0">
+			LEFT JOIN ebs_booth_apply ON ebs_booth_apply.company_id = c.id and `session_id` = #{session}
+			LEFT JOIN (SELECT apply_id,tradinggroup_id from ebs_booth_apply_list GROUP BY apply_id,tradinggroup_id) ebs_booth_apply_list ON ebs_booth_apply_list.apply_id = ebs_booth_apply.apply_id
+			LEFT JOIN (SELECT tradinggroupid from system_user_rights WHERE userid = #{userId} and `session` = #{session}) system_user_rights_b on ebs_booth_apply_list.tradinggroup_id = system_user_rights_b.tradinggroupid
+			LEFT JOIN (SELECT tradinggroupid from system_user_rights WHERE userid = #{userId} and `session` = #{session}) system_user_rights_a on c.tradinggroupid = system_user_rights_a.tradinggroupid
+		</if>
+        <where>
+        	<if test="userId != null and userId != 0">
+	        	(!isnull(system_user_rights_a.tradinggroupid) or !isnull(system_user_rights_b.tradinggroupid))
+	        	<if test="tradinggroupid != null and tradinggroupid != ''">
+	        		and (system_user_rights_a.tradinggroupid = #{tradinggroupid} or system_user_rights_b.tradinggroupid = #{tradinggroupid})
+	        	</if>
+        	</if>
+        	<if test="productUnit != null and productUnit != ''">
+				and a.product_unit = #{productUnit}
+			</if>
+            <if test="productId != null and productId != ''">
+                and a.product_id = #{productId}
+            </if>
+            <if test="memberid != null and memberid != ''">
+				and a.memberid = #{memberid}
+			</if>
+            <if test="companyId != null and companyId != ''">
+                and a.company_id = #{companyId}
+            </if>
+            <if test="companyName != null and companyName != ''">
+                and a.company_name = #{companyName}
+            </if>
+            <if test="productMenuId != null and productMenuId != ''">
+                and a.product_menu_id = #{productMenuId}
+            </if>
+            <if test="productName != null and productName != ''">
+                and a.product_name like "%"#{productName,jdbcType=VARCHAR}"%"
+            </if>
+            <if test="productPrice != null and productPrice != ''">
+                and a.product_price = #{productPrice}
+            </if>
+            <if test="productPicture != null and productPicture != ''">
+                and a.product_picture = #{productPicture}
+            </if>
+            <if test="productPictures != null and productPictures != ''">
+                and a.product_pictures = #{productPictures}
+            </if>
+            <if test="productVideo != null and productVideo != ''">
+                and a.product_video = #{productVideo}
+            </if>
+            <if test="productNum != null and productNum != ''">
+                and a.product_num = #{productNum}
+            </if>
+            <if test="productOrder != null and productOrder != ''">
+                and a.product_order = #{productOrder}
+            </if>
+            <if test="productDescription != null and productDescription != ''">
+                and a.product_description = #{productDescription}
+            </if>
+            <if test="productUpdatetime != null and productUpdatetime != ''">
+                and a.product_updatetime = #{productUpdatetime}
+            </if>
+            <if test="productStatus != null and productStatus != ''">
+				and a.product_status = #{productStatus}
+			</if>
+			<if test="session != null and session != ''">
+				and a.session = #{session}
+			</if>
+			<if test="productBrand != null and productBrand != ''">
+				and a.product_brand = #{productBrand}
+			</if>
+			<if test="productPriceunit != null and productPriceunit != ''">
+				and a.product_priceunit = #{productPriceunit}
+			</if>
+			<if test="supplyquantity != null and supplyquantity != ''">
+				and a.supplyquantity = #{supplyquantity}
+			</if>
+			<if test="url != null and url != ''">
+				and a.url = #{url}
+			</if>
+			<if test="country != null and country != ''">
+				and a.country = #{country}
+			</if>
+			<if test="province != null and province != ''">
+				and a.province = #{province}
+			</if>
+			<if test="city != null and city != ''">
+				and a.city = #{city}
+			</if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.product.model.WebProduct" useGeneratedKeys="true" keyProperty="productId">
+        insert into web_product(
+        	<trim suffixOverrides=",">
+                <if test="companyId != null">`company_id`,</if>
+                <if test="companyName != null">`company_name`,</if>
+                <if test="productMenuId != null">`product_menu_id`,</if>
+                <if test="productName != null">`product_name`,</if>
+                <if test="productPrice != null">`product_price`,</if>
+                <if test="productPicture != null">`product_picture`,</if>
+                <if test="productPictures != null">`product_pictures`,</if>
+                <if test="productVideo != null">`product_video`,</if>
+                <if test="productNum != null">`product_num`,</if>
+                <if test="productOrder != null">`product_order`,</if>
+                <if test="productDescription != null">`product_description`,</if>
+                <if test="productStatus != null">`product_status`,</if>
+                <if test="session != null">`session`,</if>
+                <if test="remark != null">`remark`,</if>
+                <if test="memberid != null">`memberid`,</if>
+                <if test="productUpdatetime != null">`product_updatetime`,</if>
+                <if test="productBrand != null">`product_brand`,</if>
+                <if test="productPriceunit != null">`product_priceunit`,</if>
+                <if test="supplyquantity != null">`supplyquantity`,</if>
+                <if test="url != null">`url`,</if>
+                <if test="country != null">`country`,</if>
+                <if test="province != null">`province`,</if>
+                <if test="productUnit != null">`product_unit`,</if>
+                <if test="city != null">`city`</if>
+			</trim>
+		) values (
+        	<trim suffixOverrides=",">
+                <if test="companyId != null">#{companyId},</if>
+                <if test="companyName != null">#{companyName},</if>
+                <if test="productMenuId != null">#{productMenuId},</if>
+                <if test="productName != null">#{productName},</if>
+                <if test="productPrice != null">#{productPrice},</if>
+                <if test="productPicture != null">#{productPicture},</if>
+                <if test="productPictures != null">#{productPictures},</if>
+                <if test="productVideo != null">#{productVideo},</if>
+                <if test="productNum != null">#{productNum},</if>
+                <if test="productOrder != null">#{productOrder},</if>
+                <if test="productDescription != null">#{productDescription},</if>
+                <if test="productStatus != null">#{productStatus},</if>
+                <if test="session != null">#{session},</if>
+                <if test="remark != null">#{remark},</if>
+                <if test="memberid != null">#{memberid},</if>
+                <if test="productUpdatetime != null">#{productUpdatetime},</if>
+                <if test="productBrand != null">#{productBrand},</if>
+                <if test="productPriceunit != null">#{productPriceunit},</if>
+                <if test="supplyquantity != null">#{supplyquantity},</if>
+                <if test="url != null">#{url},</if>
+                <if test="country != null">#{country},</if>
+                <if test="province != null">#{province},</if>
+                <if test="productUnit != null">#{productUnit},</if>
+                <if test="city != null">#{city}</if>
+			</trim>
+		)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.product.model.WebProduct">
+        update web_product
+        <set>
+			<if test="companyId != null">`company_id` = #{companyId},</if>
+			<if test="companyName != null">`company_name` = #{companyName},</if>
+			<if test="productMenuId != null">`product_menu_id` = #{productMenuId},</if>
+			<if test="productName != null">`product_name` = #{productName},</if>
+			<if test="productPrice != null">`product_price` = #{productPrice},</if>
+			<if test="productPicture != null">`product_picture` = #{productPicture},</if>
+			<if test="productPictures != null">`product_pictures` = #{productPictures},</if>
+			<if test="productVideo != null">`product_video` = #{productVideo},</if>
+			<if test="productNum != null">`product_num` = #{productNum},</if>
+			<if test="productOrder != null">`product_order` = #{productOrder},</if>
+			<if test="productDescription != null">`product_description` = #{productDescription},</if>
+			<if test="productStatus != null">`product_status` = #{productStatus},</if>
+			<if test="session != null">`session` = #{session},</if>
+			<if test="remark != null">`remark` = #{remark},</if>
+			<if test="memberid != null">`memberid` = #{memberid},</if>
+			<if test="productUpdatetime != null">`product_updatetime` = #{productUpdatetime},</if>
+			<if test="productBrand != null">`product_brand` = #{productBrand},</if>
+			<if test="productPriceunit != null">`product_priceunit` = #{productPriceunit},</if>
+			<if test="supplyquantity != null">`supplyquantity` = #{supplyquantity},</if>
+			<if test="url != null">`url` = #{url},</if>
+			<if test="country != null">`country` = #{country},</if>
+			<if test="province != null">`province` = #{province},</if>
+			<if test="productUnit != null">`product_unit` = #{productUnit},</if>
+			<if test="city != null">`city` = #{city}</if>
+        </set>
+        where product_id = #{productId}
+    </update>
+
+    <delete id="deleteById">
+        delete from web_product where product_id = #{product_id}
+    </delete>
+    
+
+    <select id="webList" resultType="cn.org.chtf.card.manage.product.model.WebProduct">
+    SELECT
+        	a.session,
+        	a.product_status as productStatus,
+			a.product_id as productId,
+			a.company_id as companyId,
+			c.chinesename as companyName,
+			a.product_menu_id as productMenuId,
+			b.dic_cn_name as menuname,
+			a.product_name as productName,
+			a.product_price as productPrice,
+			a.product_picture as productPicture,
+			a.product_pictures as productPictures,
+			a.product_video as productVideo,
+			a.product_num as productNum,
+			a.product_order as productOrder,
+			a.product_description as productDescription,
+			a.product_updatetime as productUpdatetime,
+			a.remark,
+			a.memberid,
+			a.product_status as productStatus,
+			a.product_brand as productBrand,
+			a.product_priceunit as productPriceunit,
+			a.supplyquantity as supplyquantity,
+			a.url as url,
+			a.country as country,
+			a.province as province,
+			a.city as city,
+			a.product_unit as productUnit
+	FROM
+		web_product a
+    left join ebs_companyinfo as c on a.company_id=c.id and c.session=#{session}
+    left join system_dictionaries as b on a.product_menu_id=b.dicid
+	WHERE
+		a.`session` = #{session}
+    <if test="memberid != null and memberid != ''">
+		and a.memberid = #{memberid}
+	</if>
+	<if test="productStatus != null">
+		and a.product_status = #{productStatus}
+	</if>
+	<if test="productName != null and productName != ''">
+		and a.product_name   like   concat( '%'  ,  #{productName} , '%' )
+	</if>
+	<if test="companyName != null and companyName != ''">
+		and c.chinesename   like   concat( '%'  ,  #{companyName} , '%' )
+	</if>
+	order by a.product_order asc
+	limit #{page}, #{limit};
+    </select>
+    
+    <select id="webListcount" resultType="int">
+		SELECT
+        	count(*)
+		FROM
+			web_product a
+    	left join ebs_companyinfo as c on a.company_id=c.id and c.session=#{session}
+		WHERE
+			a.`session` = #{session}
+	    <if test="memberid != null and memberid != ''">
+			and a.memberid = #{memberid}
+		</if>
+	<if test="productStatus != null">
+		and a.product_status = #{productStatus}
+	</if>
+	<if test="productName != null and productName != ''">
+		and a.product_name   like   concat( '%'  ,  #{productName}, '%' );
+	</if>
+	<if test="companyName != null and companyName != ''">
+		and c.chinesename   like   concat( '%'  ,  #{companyName} , '%' )
+	</if>
+	</select>
+    
+    <select id="getTopProduct" resultType="cn.org.chtf.card.manage.product.model.WebProduct">
+    	select 
+			a.product_id as productId,
+			a.product_name as productName,
+			a.product_picture as productPicture
+		from web_product as a 
+		inner join ebs_companyinfo as c on a.company_id=c.id and c.session=#{session} and c.audit_status=2
+		where a.session = #{session} and a.product_status=1 
+		and ifnull(a.product_picture,'')!=''
+		order by rand() limit ${count} 
+    </select>
+    
+</mapper>

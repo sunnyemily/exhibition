@@ -1,0 +1,169 @@
+    <div class="modal inmodal" id="edit-model" style="display:none">
+		<div class="modal-content animated bounceInUp">
+			<div class="ibox-content">
+				<fieldset class="layui-elem-field layui-field-title" style="border-top:0px">
+					<form class="layui-form layui-form-pane" action="" id="editform">
+					    <input type="hidden" name="productId" value="0"  />
+					    <input type="hidden" name="session" value="${exhibitionSessionId}"  />
+					    <input type="hidden" name="productStatus" value="0"  />
+						<table width="100%"  class="layui-table form-content">
+							<tr class="papers-edit-bg"><td colspan="3" style="border-right: none;">Редактирование информации о продукте</td><td align="right"><a class="layui-icon layui-icon-close close"></a></td></tr>
+							<tr>
+								<td>*Редактирование информации о продукте</td>
+								<td width="40%" colspan="3"><input class="layui-input" autocomplete="off" id="productName" name="productName" type="text"  lay-verify="required"></td>
+								
+							</tr>
+							<tr>
+								<td>*Редактирование информации о продукте</td>
+								<td width="40%">
+								      <select name="productUnit" id="productUnit">
+										   <#list productMenu1 as menu>
+										  <option value="${menu.dicid}">${menu.dicCnName}</option>
+										  </#list>
+									  </select>   
+								</td>
+								<td>*К компании принадлежает </td>
+								<td>									
+							      <select name="companyId" id="companyId" lay-filter="companyId" lay-search="">
+							      <#if companys??>
+							      <#list companys as company>
+							        <option value="${company.id}">${company.chinesename}</option>
+							      </#list>
+							      </#if>
+							      <#if company??>
+							        <option value="${company.id}">${company.chinesename}</option></#if>
+							      </select>
+      							</td>
+							</tr>
+							<tr>
+								<td>*Цена</td>
+								<td><input class="layui-input" autocomplete="off" id="productPrice" name="productPrice" type="text"  lay-verify="required|number"></td>
+								<td>*Единица цены</td>
+								<td>
+									<div class="layui-input-inline">
+								      <select name="productPriceunit" id="productPriceunit">
+										   <#list productMenu2 as menu>
+										  <option value="${menu.dicid}">${menu.dicCnName}</option>
+										  </#list>
+									  </select>   
+								    </div>
+								</td>
+							</tr>
+							<tr>
+								<td>*Единица цены</td>
+								<td>
+									<div class="layui-input-inline">
+								      <select name="productMenuId" id="productMenuId">
+										  <#list productMenu as menu>
+										  <option value="${menu.dicid}">${menu.dicCnName}</option>
+										  </#list>
+									  </select>   
+								    </div>
+								</td>
+								<td>*Бренд</td>
+								<td><input class="layui-input" autocomplete="off" id="productBrand" name="productBrand" type="text"  lay-verify="required"></td>
+							</tr>
+							<tr>
+								<td>*Место происхождение </td>
+								<td colspan=3>
+									<div class="layui-input-inline">
+								      <select name="country" lay-verify="required" lay-filter="country">
+										  <option value="">Пожалуйста, выбирайте</option>
+									  </select>   
+								    </div>
+								    <div class="layui-input-inline">
+								      <select name="province" lay-verify="required" lay-filter="province">
+										  <option value="">Пожалуйста, выбирайте</option>
+									  </select>   
+								    </div>
+								    <div class="layui-input-inline">
+								      <select name="city" lay-verify="required">
+										  <option value="">Пожалуйста, выбирайте</option>
+									  </select>   
+									 </div>
+								</td>
+							</tr>
+							<tr>
+								<td>Спецификация</td>
+								<td>
+									<input autocomplete="off" class="layui-input" id="productNum" name="productNum" type="text">
+							   	</td>
+								<td>*Количество поставки</td>
+								<td><input class="layui-input" autocomplete="off" id="supplyquantity" name="supplyquantity" type="text"  lay-verify="required|number"></td>
+							</tr>
+							<tr>
+								<td>Адрес виртуального выставочного павильона</td>
+								<td colspan="3"><input class="layui-input" autocomplete="off" placeholder="Пожалуйста, заполните URL вашего виртуального выставочного зала" id="url" name="url" type="text" /></td>
+							</tr>
+							<tr>
+								<td>*Обложка</td>
+								<input type="hidden" name="productPicture" id="productPicture" value=""  lay-verify="required" lay-reqText="Необходимо загрузить обложку о компании" />
+								<td>
+									<button type="button" class="layui-btn" id="btnProductPicture" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>Загрузите картинки
+									</button>
+									<button type="button" class="layui-btn" id="btnProductPictureCropper">
+									  <i class="layui-icon">&#xe67c;</i>Ассистент по резке
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />Примечание: Формат jpg, размер загружаемого файла менее 2M. обложки 750*750 (ширина*высота) пикселей для страницы с перечнем товаров.
+									
+								</td>
+								<td colspan="2" class="prepic"><image src="" width="390" height="390" id="preproductPicture" /></td>
+							</tr>
+							<tr>
+								<td>Карусель картин</td>
+								<input type="hidden" name="productPictures" id="productPictures" value="" />
+								<td>
+									<button type="button" class="layui-btn" id="btnProductPictures" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>Загрузите картинки
+									</button>
+									<button type="button" class="layui-btn" id="btnProductPicturesCropper">
+									  <i class="layui-icon">&#xe67c;</i>Ассистент по резке
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />Примечание: Формат jpg, размер загружаемого файла менее 2M. обложки 750*750 (Ш*Н) пикселей. Загрузить максимум 3 изображения.</div>
+								</td>
+								<td colspan="2">
+									<div class="mutipic">
+									</div>
+								</td>
+							</tr>
+							<tr style="display:none">
+								<td>Видео о компании</td>
+								<input type="hidden" name="productVideo" id="productVideo" value="" />
+								<td>
+									<button type="button" class="layui-btn" id="btnProductVideo">
+									  <i class="layui-icon">&#xe67c;</i>Загрузить видео
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />Примечание: В формате - MP4, размером загруженного файла менее 20 МБ, в разрешении более 750*750 икселей, а в отношении ширины к высоты к высоте 1: 1.</div>
+								</td>
+								<td colspan="2" class="prepic" id="videoContainer"><image src="" width="390" height="265" id="preidphotopath" /></td>
+							</tr>
+							<tr>
+								<td>Описание продукта</td>
+								<td  colspan="4">
+              						<textarea name="productDescription" id="productDescription" rows="10" cols="80"  class="layui-input"></textarea>
+								</td>
+							</tr>
+							<tr class="papers-edit-bg">
+								<td colspan="4" align="center">
+									<button type="button" class="layui-btn layui-btn-primary close">Отмена</button>
+									<button type="reset" class="layui-btn layui-btn-primary" id="reset" style="display:none">Переустановить</button>
+									<button type="button"  lay-submit class="layui-btn"  lay-filter="update">Отправить</button>
+								</td>
+							</tr>
+							
+						</table>
+					</form>
+				</fieldset>
+			</div>
+		</div>
+	</div>
+	<div id="mutiPictureTemplate" style="display:none">
+	<div class="item">
+		<img src="" />
+		<div class="fc-upload-cover">
+			<i class="ivu-icon fa fa-eye"></i>
+			<i class="ivu-icon fa fa-trash"></i>
+		</div>
+	</div>
+	</div>

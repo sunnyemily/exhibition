@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.ReportManagement.dao.CertificateStatisticsTableMapper">
+	<select id="getStatisticalInfo" resultType="map">
+		SELECT * FROM(
+			SELECT
+				COUNT(DISTINCT if(ebs_personnelcard.country != 0, ebs_personnelcard.country, NULL)) country, -- 总国家数
+				IFNULL(SUM(if(cm_certificate_type.chinesename = '嘉宾证B',1,0)), 0) jiaBinB, -- 嘉宾B总数
+				IFNULL(SUM(if(cm_certificate_type.chinesename = '嘉宾证A',1,0)), 0) jiaBinA, -- 嘉宾A总数
+				IFNULL(SUM(if(cm_certificate_type.chinesename = '贵宾证',1,0)), 0) guiBin, -- 贵宾总数
+				IFNULL(SUM(if(cm_certificate_type.chinesename = '参展证',1,0)), 0) canZhanZheng, -- 参展证总数
+				IFNULL(SUM(if(cm_certificate_type.chinesename = '参展证' AND ebs_personnelcard.country != 900000,1,0)), 0) guoWaiCanZhanZheng, -- 国外参展证总数
+				IFNULL(SUM(if(cm_certificate_type.chinesename = '参展证' AND ebs_personnelcard.country  = 900000,1,0)), 0) guoNeiCanZhanZheng, -- 国内参展证总数
+				IFNULL(SUM(if(ebs_personnelcard.country = 900001,1,0)), 0) eLuoSiRenYuanZhengJian, -- 俄罗斯人员证件总数
+				IFNULL(SUM(if(ebs_personnelcard.country != 900000 AND ebs_personnelcard.country != 0,1,0)), 0) jingWaiRenYuanZhengJian, -- 境外人员证件数量
+				IFNULL(SUM(if(ebs_personnelcard.province in (710000,810000,820000),1,0)), 0) gangAoTaiRenYuanZhengJian, -- 港澳台人数
+				IFNULL(SUM(if(ebs_personnelcard.country = 900000 AND ebs_personnelcard.province NOT in (0,230000,710000,810000,820000),1,0)), 0) shengWaiRenShu, -- 省外人数
+				IFNULL(SUM(if(ebs_personnelcard.province = 230000,1,0)), 0) shengNeiRenShu, -- 省内人数
+				IFNULL(SUM(if(cm_certificate_type.chinesename = '记者证' AND ebs_personnelcard.country != 900000,1,0)), 0) guoWaiJiZhe, -- 国外记者
+				IFNULL(SUM(if(cm_certificate_type.chinesename = '记者证' AND ebs_personnelcard.country = 900000,1,0)), 0) guoNeiJiZhe, -- 国内记者
+				COUNT(DISTINCT if(cm_certificate_type.chinesename = '记者证', ebs_personnelcard.companyname, NULL)) meiTi -- 媒体数
+			FROM ebs_personnelcard
+			INNER JOIN cm_certificate_type ON ebs_personnelcard.cardtype = cm_certificate_type.id AND cm_certificate_type.useable = 1
+			AND ebs_personnelcard.status = 1 AND ebs_personnelcard.session = #{session}
+		) a
+		LEFT JOIN (
+			SELECT COUNT(DISTINCT cardnumber) guanZhong FROM online_reservation_details WHERE session = #{session} -- 观众数
+		) b ON 1 = 1
+		LEFT JOIN (
+			SELECT
+				IFNULL(SUM(if(country != 900000 AND country != 0, 1, 0)), 0) guoWaiCanZhanQiYe, -- 国外参展企业数量
+				IFNULL(SUM(if(country = 900000 AND province != 710000 AND province != 810000 AND province != 820000, 1, 0)), 0) guoNeiCanZhanQiYeBuHanGangAoTai, -- 国内参展企业数量（不含港澳台）
+				IFNULL(SUM(if(country = 900001, 1, 0)), 0) eLuoSiCanZhanQiYe, -- 俄罗斯参展企业数量
+				IFNULL(SUM(if(country = 900002, 1, 0)), 0) hanGuoCanZhanQiYe, -- 韩国参展企业数量
+				IFNULL(SUM(if(country = 900233, 1, 0)), 0) riBenCanZhanQiYe, -- 日本参展企业数量
+				IFNULL(SUM(if((country = 900000 AND province in (710000,810000,820000)), 1, 0)), 0) gangAoTaiCanZhanQiYe -- 港澳台参展企业数量
+			FROM ebs_companyinfo WHERE useable = 1 AND comany_type_id in (0,2) AND session = #{session}
+		) c ON 1 = 1
+	</select>
+</mapper>

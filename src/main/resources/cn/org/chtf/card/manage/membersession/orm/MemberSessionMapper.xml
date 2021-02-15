@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.org.chtf.card.manage.membersession.dao.MemberSessionMapper">
+  <resultMap id="BaseResultMap" type="cn.org.chtf.card.manage.membersession.pojo.MemberSession">
+    <result column="member_id" jdbcType="INTEGER" property="memberId" />
+    <result column="middleid" jdbcType="INTEGER" property="middleid" />
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="orgnization_id" jdbcType="INTEGER" property="orgnizationId" />
+  </resultMap>
+  <insert id="insert" parameterType="cn.org.chtf.card.manage.membersession.pojo.MemberSession">
+    insert into web_member_session (member_id, id, orgnization_id
+      )
+    values (#{memberId,jdbcType=INTEGER}, #{id,jdbcType=INTEGER}, #{orgnizationId,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.org.chtf.card.manage.membersession.pojo.MemberSession">
+    insert into web_member_session
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="memberId != null">
+        member_id,
+      </if>
+      <if test="id != null">
+        id,
+      </if>
+      <if test="orgnizationId != null">
+        orgnization_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="memberId != null">
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orgnizationId != null">
+        #{orgnizationId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="getMemberIdByOrgnizationId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select 
+    member_id
+    from web_member_session
+    where orgnization_id = #{orgnizationId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="getMemberSessionsByMemberId" resultType="cn.org.chtf.card.manage.membersession.pojo.MemberSession">
+  	select member_id as memberId,id,orgnization_id as orgnizationId from web_member_session where id=#{session} and orgnization_id=#{companyid}
+  </select>
+  
+  <select id="getMemberSessionsByMemId" resultType="map">
+  	select * from web_member_session where member_id=#{memberId}
+  </select>
+  
+  <select id="findByMap" resultType="cn.org.chtf.card.manage.membersession.pojo.MemberSession">
+  	select member_id as memberId,id,orgnization_id as orgnizationId from web_member_session where id=#{session} and orgnization_id=#{companyid} and member_id=#{memberid}
+  </select>
+  
+  <select id="getNonCurrentSession" resultType="map">
+  	select member_id,id,orgnization_id from web_member_session where id!=#{session} and orgnization_id=#{agentid} and member_id=#{memberid}
+  </select>
+  
+  <select id="delete" resultType="map">
+  	delete from web_member_session where 1=1 
+  	<if test="session != null and session!=''">
+  		and id=#{session} 
+  	</if>
+  	<if test="agentid != null and agentid!=''">
+  		and orgnization_id=#{agentid} 
+  	</if>
+  	<if test="memberid != null and memberid!=''">
+  		and member_id=#{memberid}
+  	</if>
+  </select>
+  
+  <select id="GetMemberSession" resultType="cn.org.chtf.card.manage.membersession.pojo.MemberSession">
+  	select middleid,member_id as memberId,id,orgnization_id as orgnizationId from web_member_session where id=#{oldsession} and member_id=#{memberid}
+  </select>
+  
+  <select id="GetLoginName" resultType="String">
+  	select ifnull(member_username,'') as loginname from web_member as a
+	inner join web_member_session as b on a.member_id=b.member_id and b.id=#{session}
+	where b.orgnization_id=#{orgid} and a.member_type=2
+  </select>
+      
+  <select id="GetJYTLoginName" resultType="String">
+  	select ifnull(loginname,'') as loginname from pim_agent as a
+	inner join web_member_session as b on a.id=b.orgnization_id and b.id=#{session}
+	inner join web_member as c on c.member_id=b.member_id
+	where a.tradinggroupid=#{tradinggroupid}
+	limit 1
+  </select>
+</mapper>

@@ -1,0 +1,793 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.org.chtf.card.manage.common.dao.CommonMapper">
+  
+  	<select id="GetIndustry" resultType="map">
+  		select id,chinese_name as name,russian_name,japanese_name,english_name,hangul_name from sys_industry where use_flag='Y' order by order_num desc 
+  	</select>
+  	
+  	<select id="GetCountry" resultType="map">
+  		select id,name from sys_country_area where use_flag='Y' 
+  		<if test="parentid!=null and parentid!=''">
+  			and parent_id=#{parentid}
+  		</if>
+  		<if test="parentid==null or parentid==''">
+  			and parent_id=0
+  		</if>
+  		order by order_num
+  	</select>
+  	
+  	<select id="GetCardType" resultType="map">
+  		select id,chinesename as name from cm_certificate_type where session=#{session}
+  		and isexhibitor=#{isexhibitor} and type=#{type} and useable=1 order by orders
+  	</select>
+
+	<select id="GetDaiBanYuanZhengJianLeiXing" resultType="map">
+		select id,chinesename as name,isexhibitor from cm_certificate_type where session=#{session}
+  		and useable=1 order by isexhibitor,orders
+	</select>
+	
+	
+	<select id="GetTradingGroup" resultType="map">
+		select DISTINCT ebs_tradinggroup.id,ebs_tradinggroup.name from ebs_tradinggroup
+		INNER JOIN system_user_rights ON ebs_tradinggroup.id = system_user_rights.tradinggroupid and ebs_tradinggroup.session = system_user_rights.session
+		and system_user_rights.userid = #{userId} and system_user_rights.session=#{session}
+		<where>
+			<if test="type!=null">
+				and ebs_tradinggroup.type=#{type}
+			</if>
+		</where>
+  		order by ebs_tradinggroup.orders,id desc
+	</select>
+	
+	<select id="GetTradingGroupForGreen" resultType="map">
+		select DISTINCT ebs_tradinggroup.id,ebs_tradinggroup.name from ebs_tradinggroup
+		INNER JOIN system_user_rights ON ebs_tradinggroup.id = system_user_rights.tradinggroupid
+		and system_user_rights.userid = #{userId} and system_user_rights.session=#{session}
+		where ebs_tradinggroup.session=#{session}		
+		and ebs_tradinggroup.type in (0,1)		
+  		order by ebs_tradinggroup.orders,id desc
+	</select>
+	
+	
+	<select id="GetExhibitionArea" resultType="map">
+		select ebs_tradinggroup.id,ebs_tradinggroup.name,engname,japanname,russianame,koreaname from ebs_tradinggroup
+		where ebs_tradinggroup.session=#{session} and ebs_tradinggroup.type=2	
+  		order by orders,id desc
+	</select>	
+	
+	<select id="GetPreviousTradingGroup" resultType="map">
+		select id,name from ebs_tradinggroup where 1=1 <!--session in (${session})-->
+  		and type=#{type} order by session desc,orders
+	</select>
+	
+	
+	<select id="GetAgent" resultType="map">
+		select c.name,c.id from web_member as a
+		inner join web_member_session as b on a.member_id=b.member_id 
+		inner join pim_agent as c on c.id=b.orgnization_id
+		where a.member_type=0 and b.id=#{session}
+	</select>	
+	
+	<select id="getDBYName" resultType="map">
+		select uid,uname,isback from vw_Frontend_user_integration
+	</select>	
+	
+	<select id="getCompanyTrading" resultType="map">
+		select case comany_type_id 
+			when 0 then '交易团'
+			when 1 then '记者'
+			when 2 then '零散展商'
+			when 3 then '布撤展商'
+			when 4 then '外宾'
+			when 5 then '采购商'
+			end as tjleixing,
+			ifnull(name,'') as jiaoyituan,chinesename as companyname,session from vw_companytrading
+			where session=#{session}
+	</select>
+	
+	<select id="GetUserRights" resultType="map">
+		select a.id as jytid,
+		a.name
+		,case when ifnull(b.userid,0)=0 then 0 else 1 end as zhuangtai,a.type from ebs_tradinggroup as a
+		left join system_user_rights as b on a.id=b.tradinggroupid and a.session=b.session and b.userid=#{userid}		
+		where a.session=#{session}
+		order by a.type,a.orders,a.id		
+	</select>
+	
+	<insert id="addUserRights" parameterType="java.util.List">
+		insert into system_user_rights (
+			userid,
+			session,
+			tradinggroupid
+		) values
+		<foreach collection="list" item="item" index="index" separator=",">
+		(
+			#{item.userid},
+			#{item.session},
+			#{item.tradinggroupid}				
+		)
+		</foreach>
+	</insert>
+	
+	<delete id="delUserRights">
+		delete from system_user_rights where 1=1 
+		<if test="userid!=null">
+			and userid=#{userid} 
+		</if>
+		<if test="session!=null">
+		and session=#{session}
+		</if>
+		<if test="tradinggroupid!=null">
+			and tradinggroupid = #{tradinggroupid}
+		</if>
+	</delete>
+	
+	<select id="GetUser" resultType="map">
+		select 
+		id, username, name, photo, email, phone, department, isall
+		from system_user where 1=1
+		<if test="userid!=null">
+			and id=#{userid}
+		</if>
+		<if test="isall!=null">
+			and isall=#{isall}
+		</if>
+	</select>
+	
+	<select id="GetGreenPersonCardCount" resultType="int">
+		select count(*) from ebs_personnelcard as a
+		inner join ebs_companyinfo as c on a.companyid=c.id
+		INNER JOIN system_user_rights ON c.tradinggroupid = system_user_rights.tradinggroupid
+		and system_user_rights.userid = #{userId} and system_user_rights.session=#{session}	
+		 where isgreen=#{isgreen} and a.session=#{session}
+	</select>
+	
+	<select id="GetZhengJianZhiZuoGetTradingGroup" resultType="map">
+		<if test="caozuotype==0"><!--制作-->
+			select a.id,concat(a.name,'-',shuliang) as name from ebs_tradinggroup as a
+			INNER JOIN system_user_rights ON a.id = system_user_rights.tradinggroupid
+			and system_user_rights.userid = #{userId} and system_user_rights.session=#{session}
+			left join (
+			select c.tradinggroupid,count(1) as shuliang from ebs_personnelcard as a
+			inner join ebs_companyinfo as c on c.id=a.companyid
+			inner join cm_certificate_type as b on a.cardtype=b.id and b.session=a.session
+			left join ebs_booth_audit as ba on ba.company_id=a.companyid and ba.session_id=a.session
+			where a.status=1 and b.isexhibitor = #{isexhibitor} and a.session=#{session} 
+			<if test="printstatus!=null and printstatus!=''">
+				and a.printstatus=#{printstatus}
+			</if>
+			and ba.exhibition_office_audit_status=1
+			and ba.finance_office_audit_status=1
+			group by c.tradinggroupid
+			) as b on a.id=b.tradinggroupid		
+			where a.type=#{type} and a.session=#{session} and ifnull(shuliang,0)!=0
+			order by a.orders
+		</if>
+		<if test="caozuotype==1"><!--塑封-->
+			select a.id,concat(a.name,'-',shuliang) as name from ebs_tradinggroup as a
+			INNER JOIN system_user_rights ON a.id = system_user_rights.tradinggroupid
+			and system_user_rights.userid = #{userId} and system_user_rights.session=#{session}
+			left join (
+			select c.tradinggroupid,count(1) as shuliang from ebs_personnelcard as a
+			inner join ebs_companyinfo as c on c.id=a.companyid
+			inner join cm_certificate_type as b on a.cardtype=b.id and b.session=a.session
+			where a.status=1 and b.isexhibitor = #{isexhibitor} and a.session=#{session} and a.printstatus=2 
+			<if test="isplastic!=null and isplastic!=''">
+				and a.isplastic=#{isplastic}
+			</if>			
+			group by c.tradinggroupid
+			) as b on a.id=b.tradinggroupid		
+			where a.type=#{type} and a.session=#{session} and ifnull(shuliang,0)!=0
+			order by a.orders
+		</if>
+	</select>
+	
+	<select id="GetAgentCertificateReview" resultType="map">
+		<if test="type==0"><!--人员证件审核-->
+			select b.member_id as memberid,concat(b.member_company,'【',b.companyname,'】-',count(*)) as membername from ebs_personnelcard as a
+			inner join cm_certificate_type as c on c.id=a.cardtype and a.session=c.session and c.isexhibitor=0
+			inner join (
+				select a.member_id,a.member_type,p.companyname,a.member_company from web_member as a
+				inner join web_member_session as b on a.member_id=b.member_id and b.id=#{session}
+				inner join pim_agent as p on p.id=b.orgnization_id
+			) as b on a.agent=b.member_id and (b.member_type=0 or b.member_type=1)
+			inner join vw_agentstatus as v on v.memberid=a.agent and v.makeevidence=1
+			where a.session=#{session} and a.isback=1 
+			<if test="status!=null and status!=''">
+				and a.status=#{status}
+			</if>
+			<if test="printstatus!=null and printstatus!=''">
+				and a.printstatus=#{printstatus}
+			</if>
+			<if test="verificationstatus!=null and verificationstatus!=''">
+				and a.verificationstatus=#{verificationstatus}
+			</if>
+			<if test="cardnature!=null and cardnature!=''">
+				and a.cardnature=#{cardnature}
+			</if>
+			<if test="cardtype!=null and cardtype!=''">
+				and a.cardtype=#{cardtype}
+			</if>
+			group by b.member_id
+			order by convert(b.member_company using gbk)
+		</if>
+		<if test="type==1"><!--车辆证件审核-->
+			select b.member_id as memberid,concat(b.member_company,'【',b.companyname,'】-',count(*)) as membername from ebs_vehiclecard as a
+			inner join cm_certificate_type as c on c.id=a.cardtype and a.session=c.session and c.isexhibitor=0
+			inner join (
+				select a.member_id,a.member_type,p.companyname,a.member_company from web_member as a
+				inner join web_member_session as b on a.member_id=b.member_id and b.id=#{session}
+				inner join pim_agent as p on p.id=b.orgnization_id
+			) as b on a.agent=b.member_id and (b.member_type=0 or b.member_type=1)
+			inner join vw_agentstatus as v on v.memberid=a.agent and v.makeevidence=1
+			where a.session=#{session} and a.isback=1
+			<if test="status!=null and status!=''">
+				and a.status=#{status}
+			</if>
+			<if test="printstatus!=null and printstatus!=''">
+				and a.printstatus=#{printstatus}
+			</if>
+			<if test="verificationstatus!=null and verificationstatus!=''">
+				and a.verificationstatus=#{verificationstatus}
+			</if>
+			<if test="cardnature!=null and cardnature!=''">
+				and a.cardnature=#{cardnature}
+			</if>
+			<if test="cardtype!=null and cardtype!=''">
+				and a.cardtype=#{cardtype}
+			</if>
+			group by b.member_id
+			order by convert(b.member_company using gbk)
+		</if>
+		<if test="type==2"><!--人员证件制作-->
+			select b.member_id as memberid,concat(b.member_company,'【',b.companyname,'】-',count(*)) as membername from ebs_personnelcard as a
+			inner join cm_certificate_type as c on c.id=a.cardtype and a.session=c.session and c.isexhibitor=0
+			inner join (
+				select a.member_id,a.member_type,p.companyname,a.member_company from web_member as a
+				inner join web_member_session as b on a.member_id=b.member_id and b.id=#{session}
+				inner join pim_agent as p on p.id=b.orgnization_id
+			) as b on a.agent=b.member_id and (b.member_type=0 or b.member_type=1)
+			where a.session=#{session} 
+			<if test="status!=null and status!=''">
+				and a.status=#{status}
+			</if>
+			<if test="printstatus!=null and printstatus!=''">
+				and a.printstatus=#{printstatus}
+			</if>
+			<if test="verificationstatus!=null and verificationstatus!=''">
+				and a.verificationstatus=#{verificationstatus}
+			</if>
+			<if test="cardnature!=null and cardnature!=''">
+				and a.cardnature=#{cardnature}
+			</if>
+			<if test="cardtype!=null and cardtype!=''">
+				and a.cardtype=#{cardtype}
+			</if>
+			group by b.member_id
+			order by convert(b.member_company using gbk)
+		</if>
+		<if test="type==4"><!--人员证件制作塑封-->
+			select b.member_id as memberid,concat(b.member_company,'【',b.companyname,'】-',count(*)) as membername from ebs_personnelcard as a
+			inner join cm_certificate_type as c on c.id=a.cardtype and a.session=c.session and isexhibitor = 0
+			inner join (
+				select a.member_id,a.member_type,p.companyname,a.member_company from web_member as a
+				inner join web_member_session as b on a.member_id=b.member_id and b.id=#{session}
+				inner join pim_agent as p on p.id=b.orgnization_id
+			) as b on a.agent=b.member_id and (b.member_type=0 or b.member_type=1)
+			where a.session=#{session} 
+			<if test="status!=null and status!=''">
+				and a.status=#{status}
+			</if>
+			<if test="printstatus!=null and printstatus!=''">
+				and a.printstatus=#{printstatus}
+			</if>
+			<if test="verificationstatus!=null and verificationstatus!=''">
+				and a.verificationstatus=#{verificationstatus}
+			</if>
+			<if test="cardnature!=null and cardnature!=''">
+				and a.cardnature=#{cardnature}
+			</if>
+			<if test="isplastic!=null and isplastic!=''">
+				and a.isplastic=#{isplastic}
+			</if>
+			<if test="cardtype!=null and cardtype!=''">
+				and a.cardtype=#{cardtype}
+			</if>
+			group by b.member_id
+			order by convert(b.member_company using gbk)
+		</if>
+		<if test="type==3"><!--人员证件查询-->
+			<if test="ZJLX==1000">
+				select  member_id as memberid,concat(member_company,'【',companyname,'】-',count(*)) as membername from (
+					select 'car' as a,a.id,b.member_id,b.member_company,b.companyname,
+					a.status,a.printstatus,a.verificationstatus,a.cardnature,a.isplastic,a.isforensics
+					from ebs_vehiclecard as a
+					inner join cm_certificate_type as c on c.id=a.cardtype and a.session=c.session
+					inner join (
+						select a.member_id,a.member_type,p.companyname,a.member_company from web_member as a
+						inner join web_member_session as b on a.member_id=b.member_id and b.id=1
+						inner join pim_agent as p on p.id=b.orgnization_id
+					) as b on a.agent=b.member_id and (b.member_type=0 or b.member_type=1)
+					where a.session=1	
+					and c.type=1	
+				UNION
+				select 'person' as a,a.id,b.member_id,b.member_company,b.companyname,
+				a.status,a.printstatus,a.verificationstatus,a.cardnature,a.isplastic,a.isforensics
+				 from ebs_personnelcard as a
+					inner join cm_certificate_type as c on c.id=a.cardtype and a.session=c.session
+					inner join (
+						select a.member_id,a.member_type,p.companyname,a.member_company from web_member as a
+						inner join web_member_session as b on a.member_id=b.member_id and b.id=1
+						inner join pim_agent as p on p.id=b.orgnization_id
+					) as b on a.agent=b.member_id and (b.member_type=0 or b.member_type=1)
+					where a.session=1
+				 ) as a where 1=1
+			</if>
+			<if test="ZJLX==3">
+				select b.member_id as memberid,concat(b.member_company,'【',b.companyname,'】-',count(*)) as membername 
+				from ebs_vehiclecard as a
+				inner join cm_certificate_type as c on c.id=a.cardtype and a.session=c.session
+				inner join (
+					select a.member_id,a.member_type,p.companyname,a.member_company from web_member as a
+					inner join web_member_session as b on a.member_id=b.member_id and b.id=#{session}
+					inner join pim_agent as p on p.id=b.orgnization_id
+				) as b on a.agent=b.member_id and (b.member_type=0 or b.member_type=1)
+				where a.session=#{session}	
+				and c.type=1				
+			</if>
+			<if test="ZJLX==1 or ZJLX==2">
+				select b.member_id as memberid,concat(b.member_company,'【',b.companyname,'】-',count(*)) as membername from ebs_personnelcard as a
+				inner join cm_certificate_type as c on c.id=a.cardtype and a.session=c.session
+				inner join (
+					select a.member_id,a.member_type,p.companyname,a.member_company from web_member as a
+					inner join web_member_session as b on a.member_id=b.member_id and b.id=#{session}
+					inner join pim_agent as p on p.id=b.orgnization_id
+				) as b on a.agent=b.member_id and (b.member_type=0 or b.member_type=1)
+				where a.session=#{session}
+				<if test="ZJLX!=null and ZJLX==1">
+					and c.isexhibitor=1
+				</if>
+				<if test="ZJLX!=null and ZJLX==2">
+					and c.type=0 and c.isexhibitor=0
+				</if>
+			</if>
+			
+			<if test="status!=null and status!=''">
+				and a.status=#{status}
+			</if>
+			<if test="printstatus!=null and printstatus!=''">
+				and a.printstatus=#{printstatus}
+			</if>
+			<if test="verificationstatus!=null and verificationstatus!=''">
+				and a.verificationstatus=#{verificationstatus}
+			</if>
+			<if test="cardnature!=null and cardnature!=''">
+				and a.cardnature=#{cardnature}
+			</if>
+			<if test="isplastic!=null and isplastic!=''">
+				and a.isplastic=#{isplastic}
+			</if>
+			<if test="isforensics!=null and isforensics!=''">
+				and a.isforensics=#{isforensics}
+			</if>			
+			group by member_id
+		</if>
+		<if test="type==5"><!--车辆证件制作-->
+			select b.member_id as memberid,concat(b.member_company,'【',b.companyname,'】-',count(*)) as membername  from ebs_vehiclecard as a
+			inner join cm_certificate_type as c on c.id=a.cardtype and a.session=c.session and c.isexhibitor=0
+			inner join (
+				select a.member_id,a.member_type,p.companyname,a.member_company from web_member as a
+				inner join web_member_session as b on a.member_id=b.member_id and b.id=#{session}
+				inner join pim_agent as p on p.id=b.orgnization_id
+			) as b on a.agent=b.member_id and (b.member_type=0 or b.member_type=1)
+			where a.session=#{session} 
+			<if test="status!=null and status!=''">
+				and a.status=#{status}
+			</if>
+			<if test="printstatus!=null and printstatus!=''">
+				and a.printstatus=#{printstatus}
+			</if>
+			<if test="verificationstatus!=null and verificationstatus!=''">
+				and a.verificationstatus=#{verificationstatus}
+			</if>
+			<if test="cardnature!=null and cardnature!=''">
+				and a.cardnature=#{cardnature}
+			</if>
+			<if test="isplastic!=null and isplastic!=''">
+				and a.isplastic=#{isplastic}
+			</if>
+			<if test="cardtype!=null and cardtype!=''">
+				and a.cardtype=#{cardtype}
+			</if>
+			group by b.member_id
+			order by convert(b.member_company using gbk)
+		</if>
+		<if test="type==6"><!--车辆证件塑封-->
+			select b.member_id as memberid,concat(b.member_company,'【',b.companyname,'】-',count(*)) as membername from ebs_vehiclecard as a
+			inner join cm_certificate_type as c on c.id=a.cardtype and a.session=c.session and c.isexhibitor=0
+			inner join (
+				select a.member_id,a.member_type,p.companyname,a.member_company from web_member as a
+				inner join web_member_session as b on a.member_id=b.member_id and b.id=#{session}
+				inner join pim_agent as p on p.id=b.orgnization_id
+			) as b on a.agent=b.member_id and (b.member_type=0 or b.member_type=1)
+			where a.session=#{session} 
+			<if test="status!=null and status!=''">
+				and a.status=#{status}
+			</if>
+			<if test="printstatus!=null and printstatus!=''">
+				and a.printstatus=#{printstatus}
+			</if>
+			<if test="verificationstatus!=null and verificationstatus!=''">
+				and a.verificationstatus=#{verificationstatus}
+			</if>
+			<if test="cardnature!=null and cardnature!=''">
+				and a.cardnature=#{cardnature}
+			</if>
+			<if test="isplastic!=null and isplastic!=''">
+				and a.isplastic=#{isplastic}
+			</if>
+			<if test="cardtype!=null and cardtype!=''">
+				and a.cardtype=#{cardtype}
+			</if>
+			group by b.member_id
+			order by convert(b.member_company using gbk)
+		</if>
+	</select>
+	
+	<select id="GetPendingDocuments" resultType="map">
+		<if test="type==0"><!--人员-->
+			select concat(a.companyname,'-',count(*)) as companynamecount,concat(companyname,'|',b.id,'|',a.agent) as companyname from ebs_personnelcard as a
+			inner join cm_certificate_type as b on a.cardtype=b.id and b.session=a.session
+			inner join ebs_companyinfo as c on c.chinesename=a.companyname and a.session=c.session and c.comany_type_id!=0 and c.comany_type_id!=1
+			where a.isback=1 
+			<if test="status!=null and status!=''">
+				and a.status=#{status}
+			</if>
+			<if test="printstatus!=null and printstatus!=''">
+				and a.printstatus=#{printstatus}
+			</if>
+			<if test="verificationstatus!=null and verificationstatus!=''">
+				and a.verificationstatus=#{verificationstatus}
+			</if>
+			<if test="cardnature!=null and cardnature!=''">
+				and a.cardnature=#{cardnature}
+			</if>
+			<if test="isplastic!=null and isplastic!=''">
+				and a.isplastic=#{isplastic}
+			</if>
+			<if test="isforensics!=null and isforensics!=''">
+				and a.isforensics=#{isforensics}
+			</if>	
+			and a.session=#{session} and b.chinesename=#{cardtypename}
+			group by a.companyname
+			order by convert(a.companyname using gbk)
+		</if>
+		<if test="type==1"><!--车辆-->
+			select concat(a.companyname,'-',count(*)) as companynamecount,companyname from ebs_vehiclecard as a
+			inner join cm_certificate_type as b on a.cardtype=b.id 
+			where a.isback=1 and a.session=#{session} and b.chinesename=#{cardtypename}
+			<if test="status!=null">
+				and a.status=#{status}
+			</if>
+			<if test="printstatus!=null">
+				and a.printstatus=#{printstatus}
+			</if>
+			<if test="verificationstatus!=null and verificationstatus!=''">
+				and a.verificationstatus=#{verificationstatus}
+			</if>
+			<if test="cardnature!=null and cardnature!=''">
+				and a.cardnature=#{cardnature}
+			</if>
+			<if test="isplastic!=null and isplastic!=''">
+				and a.isplastic=#{isplastic}
+			</if>
+			<if test="isforensics!=null and isforensics!=''">
+				and a.isforensics=#{isforensics}
+			</if>	
+			group by a.companyname
+			order by convert(a.companyname using gbk)
+		</if>
+		<if test="type==2">
+			select a.companyname as companynamecount,concat(companyname,'|',b.id) as companyname from ebs_personnelcard as a
+			inner join cm_certificate_type as b on a.cardtype=b.id and b.session=a.session
+			inner join ebs_companyinfo as c on c.chinesename=a.companyname and a.session=c.session and c.comany_type_id!=0 and c.comany_type_id!=1
+			where  a.session=#{session} and b.chinesename=#{cardtypename}
+			<if test="status!=null and status!=''">
+				and a.status=#{status}
+			</if>
+			<if test="printstatus!=null and printstatus!=''">
+				and a.printstatus=#{printstatus}
+			</if>
+			<if test="verificationstatus!=null and verificationstatus!=''">
+				and a.verificationstatus=#{verificationstatus}
+			</if>
+			<if test="cardnature!=null and cardnature!=''">
+				and a.cardnature=#{cardnature}
+			</if>
+			<if test="isplastic!=null and isplastic!=''">
+				and a.isplastic=#{isplastic}
+			</if>
+			<if test="isforensics!=null and isforensics!=''">
+				and a.isforensics=#{isforensics}
+			</if>	
+			group by a.companyname
+		</if>
+		<if test="type==3">
+			select a.companyname as companynamecount,concat(companyname,'|',b.id) as companyname from ebs_personnelcard as a
+			inner join cm_certificate_type as b on a.cardtype=b.id and b.session=a.session
+			inner join ebs_companyinfo as c on c.chinesename=a.companyname and a.session=c.session and c.comany_type_id!=0 and c.comany_type_id!=1
+			where  a.session=#{session} and b.chinesename=#{cardtypename}
+			<if test="status!=null and status!=''">
+				and a.status=#{status}
+			</if>
+			<if test="printstatus!=null and printstatus!=''">
+				and a.printstatus=#{printstatus}
+			</if>
+			<if test="verificationstatus!=null and verificationstatus!=''">
+				and a.verificationstatus=#{verificationstatus}
+			</if>
+			<if test="cardnature!=null and cardnature!=''">
+				and a.cardnature=#{cardnature}
+			</if>
+			<if test="isplastic!=null and isplastic!=''">
+				and a.isplastic=#{isplastic}
+			</if>
+			<if test="isforensics!=null and isforensics!=''">
+				and a.isforensics=#{isforensics}
+			</if>	
+			group by a.companyname
+		</if>
+	</select>
+	
+	<select id="GetDocumentsToBePrinted" resultType="map">
+		<if test="type==0">
+			select concat(a.companyname,'-',count(*)) as companynamecount,concat(companyname,'|',b.id) as companyname from ebs_personnelcard as a
+			inner join cm_certificate_type as b on a.cardtype=b.id and b.session=a.session
+			inner join ebs_companyinfo as c on c.chinesename=a.companyname and a.session=c.session and c.comany_type_id!=0 and c.comany_type_id!=1
+			where a.status=1 and a.printstatus=0 and a.session=#{session} and b.chinesename=#{cardtypename}
+			group by a.companyname
+		</if>
+		<!--塑封-->
+		<if test="type==1">
+			select concat(a.companyname,'-',count(*)) as companynamecount,concat(companyname,'|',b.id) as companyname from ebs_personnelcard as a
+			inner join cm_certificate_type as b on a.cardtype=b.id and b.session=a.session
+			inner join ebs_companyinfo as c on c.chinesename=a.companyname and a.session=c.session and c.comany_type_id!=0 and c.comany_type_id!=1
+			where a.status=1 and a.printstatus=2 and a.isplastic=0 and a.session=#{session} and b.chinesename=#{cardtypename}
+			group by a.companyname
+		</if>
+	</select>
+	
+	<select id="GetTicketNumber" resultType="String">		
+		select secretkey from sys_receipt_code where type=#{type} and useable=1 order by secretkey limit 1;	
+	</select>
+	
+	<update id="updatereceiptcode"  parameterType="String">
+		update sys_receipt_code set useable=0 where secretkey=#{piaohao};
+	</update>
+
+	<select id="GetCardTypesForPrint" resultType="map">
+		select id,chinesename from cm_certificate_type where 
+		session=#{session} 
+		and useable=#{useable}
+		and type=#{type} 
+		order by isexhibitor desc,type
+	</select>
+	
+	<select id="GetCompanyList" resultType="map">
+		select id,chinesename from ebs_companyinfo where session=#{session} and comany_type_id in (0,2,7) and audit_status=2 order by convert(chinesename using gbk)
+	</select>
+	
+	
+	
+	<select id="GetTencentFileCount" resultType="int">
+		select count(*) from online_tencent_file where act=#{act} and localpath=#{localpath} and zhujianid=#{zhujianid}
+	</select>
+	<insert id="AddTencentFile">
+		insert into online_tencent_file (act,localpath,zhujianid,zhujian) values (
+		#{act},#{localpath},#{zhujianid},#{zhujian}
+		)
+	</insert>
+	<select id="GetWaitingUploadTencent" resultType="map">
+		select ifnull(localpath,'') as localpath,id from online_tencent_file where zhuangtai='N' order by rand() limit 1
+	</select>
+
+	<update id="updateZhuangTai">
+		update online_tencent_file 
+		<set>
+		<if test="zhuangtai!=null">
+			zhuangtai=#{zhuangtai},
+		</if>
+		<if test="fileid!=null">
+			fileid=#{fileid},
+		</if>		
+		</set>
+		where id=#{id}
+	</update>
+	
+	<select id="GetCanShu" resultType="map">
+		select zhujianid,zhujian,act from online_tencent_file where id=#{id}
+	</select>
+	
+	<update id="updateVideo">
+		update ${act} set videourl=#{url} where ${zhujian}=#{zhujianid};
+		update online_tencent_file set zhuangtai='Y' where id=#{id};
+	</update>
+	
+	<insert id="addMarkLog">
+		insert into sys_forensic_log (act,primaryid,phone,createby) values (#{act},#{primaryid},#{phone},#{createby})
+	</insert>	
+	
+	<insert id="AddCardPushInfo">
+		insert into sys_card_to_push (session,ticketnum,name,islimit,limits,isvip,startdate,enddate,picture,idno) 
+		values 
+		(#{session},#{ticketnum},#{name},#{islimit},#{limits},#{isvip},#{startdate},#{enddate},#{picture},#{idno})
+	</insert>
+	
+	<select id="GetWaitingToPush" resultType="map">
+		select 
+		id,
+		session,		
+		ifnull(ticketNum,'') as ticketNum,
+		ifnull(name,'') as name,
+		islimit as isLimit,
+		limits,
+		idno,
+		isvip as isVip,
+		ifnull(startdate,'') as startDate,
+		ifnull(enddate,'') as endDate,
+		ifnull(picture,'') as picture,
+		zhuangtai,
+		pushcount
+		from sys_card_to_push where zhuangtai=#{type} limit 1;
+	</select>
+	
+	<select id="GetWaitingToPushALL" resultType="map">
+		select 
+		id,
+		session,		
+		ifnull(ticketNum,'') as ticketNum,
+		ifnull(name,'') as name,
+		islimit as isLimit,
+		limits,
+		idno,
+		isvip as isVip,
+		ifnull(startdate,'') as startDate,
+		ifnull(enddate,'') as endDate,
+		ifnull(picture,'') as picture,
+		zhuangtai,
+		pushcount
+		from sys_card_to_push where zhuangtai='N';
+	</select>
+	
+	<update id="updateCardStatus">
+		update sys_card_to_push set zhuangtai='W' where zhuangtai='N'
+	</update>
+	
+	<update id="updateCardPushZhuangTai"  parameterType="map">
+		update sys_card_to_push set 
+		zhuangtai=#{zhuangtai} 
+		<if test='zhuangtai!=null and zhuangtai=="Y"'>
+			,sendtime=now()
+		</if>
+		<if test='zhuangtai!=null and zhuangtai!="W"'>
+			,pushcount=pushcount+1
+		</if>
+		where id=#{id}
+	</update>
+	
+	<select id="GetSMSInfo" resultType="int">
+		select count(*) from sys_forensic_sms_log where memberid=#{iagent} and session=#{sessionId}
+	</select>
+	
+	<select id="GetMemberType" resultType="map">
+		select a.member_type as membertype,b.orgnization_id as zhujianid from web_member as a
+		inner join web_member_session as b on a.member_id=b.member_id and b.id=#{sessionId}
+		where a.member_status=0 and a.member_id=#{iagent}
+	</select>
+	
+	<insert id="Addsys_forensic_sms_log">
+		insert into sys_forensic_sms_log (memberid,session) values (#{iagent},#{sessionId})
+	</insert>
+	
+	<select id="CarriedOut">
+		ALTER  TABLE ebs_booth_apply CHANGE  company_id companyid int;
+		ALTER  TABLE cm_certificate_type CHANGE  chinesename chinese_name varchar(100);
+		ALTER  TABLE sys_country_area CHANGE  name na_me varchar(200);
+		ALTER  TABLE sys_operation_log CHANGE  isback is_back int;
+		ALTER  TABLE web_basic CHANGE  menu_id menuid int;
+	</select>
+	
+	<select id="ExcuteCommand" resultType="map">
+		${value}
+	</select>
+	
+	<update id="updatePersonStatusALL">
+		update ebs_personnelcard set printstatus=#{printstatus},printtype=#{printtype},printtime=#{printtime},makecardtime=#{makecardtime} where id in (${id})
+	</update>
+	
+	
+	<!--测试用-->
+	<select id="GetPersonList" resultType="map">
+		select id,imagepath from ebs_personnelcard where session = (select session from ebs_personnelcard order by id desc limit 1)
+	</select>
+	
+	<select id="GetPersonPicForTest" resultType="map">
+		<if test="type==1">
+			select imagepath,SUBSTRING_INDEX(imagepath,'/',-1) as filename from ebs_personnelcard where companyname in ('深圳思玺科技有限公司','深圳市通悦门控有限公司')
+		</if>
+		<if test="type==2">
+			select concat('d:/image',imagepath) as imagepath,SUBSTRING_INDEX(imagepath,'/',-1) as filename,
+			concat('d:\\image1',replace(replace(imagepath,SUBSTRING_INDEX(imagepath,'/',-1),''),'/','\\')) as newpath from ebs_personnelcard where session=1 
+		</if>
+		<if test="type==3">
+			select iccode,name,cardnumber,0 as a,0 as b,0 as c,'20201017' as s,'20201022' as e,
+			concat(iccode,'.jpg') as newfilename,imagepath from ebs_personnelcard where session=1 and 
+			printstatus=2 and printtime>'2020-10-17 16:15:56'  and cardtype!=28
+			and iccode not in (select haoma from _xfhr where zhuangtai=2)
+		</if>
+	</select>
+	
+	<select id="zhajihao" resultType="map">
+		select doors from sys_access_control where times>#{starttime} and times &lt; #{endtime} group by doors order by doors
+	</select>
+	
+	
+	
+	<select id="zhajidata" resultType="map">
+		select #{doors},ifnull((
+		select count(*) from sys_access_control as a
+		inner join online_reservation_details as b on a.ticketnum=b.secretkey and b.type=1
+		where a.times>#{starttime} and a.times&lt;#{endtime} and a.ticketnum!=''  and doors=#{doors} group by doors),0) as vip,(
+		ifnull((
+		select count(*)  from sys_access_control as a
+		inner join online_reservation_details as b on a.ticketnum=b.secretkey and b.type=0
+		where a.times>#{starttime} and a.times&lt;#{endtime} and  a.ticketnum!=''  and doors=#{doors} group by doors),0) +
+		ifnull((select count(*) from sys_access_control where ticketnum in (
+		20010023900,20010023899,20010023898,20010023897,20010023896,20010023895,20010023894,20010023893,20010023892,20010023891,20010023890,20010023889
+		) and doors=#{doors} and times >#{starttime} and times&lt;#{endtime}),0) + 
+		ifnull((select count(*) from sys_access_control as a
+		where LENGTH(a.ticketnum)>11 and doors=#{doors} and times>#{starttime} and times&lt;#{endtime}),0)
+	) as putong,ifnull((
+		select count(*)  from sys_access_control as a
+		inner join ebs_personnelcard as b on a.ticketnum=b.iccode and b.session=1 and ifnull(iccode,'')!=''
+		where a.times>#{starttime} and a.times&lt;#{endtime} and a.ticketnum!=''  and doors=#{doors} group by doors),0) as zhengjian
+	</select>
+	
+	<select id="zhajishijiandata" resultType="map">
+		select #{doors},ifnull((
+		select count(*) from sys_access_control as a
+		inner join online_reservation_details as b on a.ticketnum=b.secretkey
+		where a.times>#{starttime} and a.times&lt;#{endtime} and a.ticketnum!='' and doors=#{doors} group by doors),0)+
+		ifnull((select count(*) from sys_access_control where ticketnum in (
+		20010023900,20010023899,20010023898,20010023897,20010023896,20010023895,20010023894,20010023893,20010023892,20010023891,20010023890,20010023889
+		) and doors=#{doors} and times >#{starttime} and times&lt;#{endtime}),0) + 
+		ifnull((select count(*) from sys_access_control as a
+		where LENGTH(a.ticketnum)>11 and doors=#{doors} and times>#{starttime} and times&lt;#{endtime}),0) as yuyue
+		,ifnull((
+		select count(*)  from sys_access_control as a
+		inner join ebs_personnelcard as b on a.ticketnum=b.iccode and b.session=1 and ifnull(iccode,'')!=''
+		where a.times>#{starttime} and a.times&lt;#{endtime} and a.ticketnum!=''  and doors=#{doors} group by doors),0) as zhengjian
+	</select>
+	
+	<select id="GetCardTypeData" resultType="map">
+		select a.id,ifnull(b.shuliang,0) as shuliang from cm_certificate_type as a
+		left join (
+		select cardtype,count(*) as shuliang from sys_access_control as a inner join ebs_personnelcard as b on a.ticketnum=b.iccode and b.session=1 and ifnull(iccode,'')!='' 
+		and cardtype=#{cardtype} where a.ticketnum!='' and a.times>#{starttime} and a.times &lt; #{endtime} group by cardtype 
+		) as b on a.id=b.cardtype
+		where a.id=#{cardtype}
+	</select>
+	
+	<select id="getcompanybooth" resultType="map">
+		select a.chinesename as companyname,a.id,'' as boothname from ebs_companyinfo as a
+		left join ebs_tradinggroup as e on e.id=a.tradinggroupid
+		left join sys_industry as b on a.industryid=b.id
+		left join sys_country_area as c on c.id=a.country
+		left join sys_country_area as d on d.id=a.province
+		 where a.session=1 and a.comany_type_id in (0,2)
+		order by a.id
+	</select>
+	<!--测试用-->
+
+</mapper>

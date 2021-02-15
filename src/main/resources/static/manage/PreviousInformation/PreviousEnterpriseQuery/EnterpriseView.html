@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>修改企业信息</title>
+		<meta content="webkit" name="renderer">
+		<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+		<meta content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" name="viewport"/>
+		<link rel="stylesheet" href="/manage/css/xadmin.css">
+		<link href="/manage/css/style.css?v=4.1.0" rel="stylesheet">
+		<link href="/manage/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="/manage/layui/css/layui.css"  media="all">
+	</head>
+	<body class="gray-bg">
+		<div class="modal inmodal" id="friendlink-model">
+			<div class="modal-content animated bounceInUp" id="vmUpdateEbsCompanyinfo">
+				<div class="ibox-content">
+					<fieldset class="layui-elem-field layui-field-title" style="border-top:0px">
+						<form class="layui-form layui-form-pane" action="">
+							<table cellspacing="0" bordercolordark="#ffffff" cellpadding="5" width="100%" align="center" class="table table-hover">
+								<tbody>
+									<tr style="display:none;">
+										<td height="25" colspan="2" align="left" valign="middle" class="black12"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;企业详细信息 </td>
+									</tr>
+									<tr style="display:">
+										<td height="20" align="right" valign="middle" bgcolor="#f6f6f6" class="black12">用户名：</td>
+										<td height="20" align="left" valign="middle" bgcolor="#FFFFFF" class="black12" colspan="3"><span id="textBoxUserCode" style="display:inline-block;width:300px;"></span></td>
+									</tr>
+									<tr>
+										<td height="20" align="right" valign="middle" bgcolor="#f6f6f6">单位名称（中文）：</td>
+										<td height="20" align="left" valign="middle" bgcolor="#FFFFFF" colspan="3"><span id="textBoxName" style="display:inline-block;width:300px;"></span>&nbsp;&nbsp;</td>
+									</tr>
+									<tr>
+										<td height="20" align="right" valign="middle" bgcolor="#f6f6f6">单位名称（英文）：</td>
+										<td height="20" align="left" valign="middle" bgcolor="#FFFFFF" colspan="3"><span id="textBoxNameEN" style="display:inline-block;width:300px;"></span>&nbsp;&nbsp;</td>
+									</tr>
+									<tr>
+										<td height="20" align="right" valign="middle" bgcolor="#f6f6f6">单位名称（俄文）：</td>
+										<td height="20" align="left" valign="middle" bgcolor="#FFFFFF" colspan="3"><span id="textBoxNameEW" style="display:inline-block;width:300px;"></span>&nbsp;&nbsp;</td>
+									</tr>
+									<tr>
+										<td height="20" align="right" valign="middle" bgcolor="#f6f6f6">单位地址（中文）：</td>
+										<td height="20" align="left" valign="middle" bgcolor="#FFFFFF" colspan="3"><span id="textBoxAddress" style="display:inline-block;width:300px;"></span>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+									</tr>
+									<tr>
+										<td height="20" align="right" valign="middle" bgcolor="#f6f6f6">单位地址（英文）：</td>
+										<td height="20" align="left" valign="middle" bgcolor="#FFFFFF" colspan="3"><span id="textBoxAddressEN" style="display:inline-block;width:300px;"></span>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+									</tr>
+									<tr>
+										<td height="20" align="right" valign="middle" bgcolor="#f6f6f6" width="14%">邮编：</td>
+										<td height="20" align="left" valign="middle" bgcolor="#FFFFFF" width="38%"><span id="textBoxPostCode" style="display:inline-block;width:300px;"></span>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+										<td height="20" align="right" valign="middle" bgcolor="#f6f6f6" width="10%">手机/电话：</td>
+										<td height="20" align="left" valign="middle" bgcolor="#FFFFFF" width="38%"><span id="textBoxMobile"></span><span id="textBoxTelphone"></span>&nbsp;</td>
+									</tr>
+									<tr>
+										<td height="20" align="right" valign="middle" bgcolor="#f6f6f6">传真：</td>
+										<td height="20" align="left" valign="middle" bgcolor="#FFFFFF"><span id="textBoxFax" style="display:inline-block;width:300px;"></span>&nbsp;</td>
+										<td height="20" align="right" valign="middle" bgcolor="#f6f6f6">网址：</td>
+										<td height="20" align="left" valign="middle" bgcolor="#FFFFFF"><span id="textBoxWebSiteURL" style="display:inline-block;width:300px;"></span>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+									</tr>
+									<tr>
+										<td height="20" align="right" valign="middle" bgcolor="#f6f6f6">电子邮箱：</td>
+										<td height="20" align="left" valign="middle" bgcolor="#FFFFFF"><span id="textBoxEmail" style="display:inline-block;width:300px;"></span>&nbsp;</td>
+										<td height="20" align="right" valign="middle" bgcolor="#f6f6f6">所在省份：</td>
+										<td height="20" align="left" valign="middle" bgcolor="#FFFFFF"><span id="dropDownListProvince"></span><span id="dropDownListCity"></span>&nbsp;&nbsp; </td>
+									</tr>
+
+									<tr>
+										<td height="20" align="right" valign="middle" bgcolor="#f6f6f6">联系人：</td>
+										<td height="20" align="left" valign="middle" bgcolor="#FFFFFF"><span id="textBoxContacter" style="display:inline-block;width:300px;"></span>&nbsp;&nbsp;&nbsp;&nbsp;
+										<input name="textBoxUserType" type="text" value="0" id="textBoxUserType" style="display:none;">
+										</td>
+										<td height="20" align="right" valign="middle" bgcolor="#f6f6f6">联系人职务：</td>
+										<td height="20" align="left" valign="middle" bgcolor="#FFFFFF"><span id="textBoxDuty" style="display:inline-block;width:300px;"></span>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+									</tr>
+									<tr>
+
+										<td height="20" align="right" valign="middle" bgcolor="#f6f6f6">负责人：</td>
+										<td height="20" align="left" valign="middle" bgcolor="#FFFFFF" colspan="3"><span id="textBoxLawPerson" style="display:inline-block;width:300px;"></span>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+										<td height="20" align="right" valign="middle" bgcolor="#f6f6f6" style="display:none">机构代码：</td>
+										<td height="20" align="left" valign="middle" bgcolor="#FFFFFF" style="display:none"><span id="textBoxOrgnizeCode" style="display:inline-block;width:300px;"></span>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+									</tr>
+									<tr>
+										<td height="20" align="right" valign="middle" bgcolor="#f6f6f6">行业分类：</td>
+										<td height="20" align="left" valign="middle" bgcolor="#FFFFFF" colspan="3"><span id="dropDownListTrade" style="display:inline-block;width:300px;"></span>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+									</tr>
+									<tr>
+										<td height="20" align="right" valign="middle" bgcolor="#f6f6f6">经营范围：</td>
+										<td height="20" align="left" valign="middle" bgcolor="#FFFFFF" colspan="3"><span id="textBoxOperationRange"></span>&nbsp;</td>
+									</tr>
+									<tr>
+										<td height="20" align="right" valign="middle" bgcolor="#f6f6f6">希望结识客户：</td>
+										<td height="20" align="left" valign="middle" bgcolor="#FFFFFF" colspan="3"><span id="textBoxPrestige"></span>&nbsp;</td>
+									</tr>
+									<tr>
+										<td height="20" align="right" valign="middle" bgcolor="#f6f6f6">企业简介：</td>
+										<td height="20" align="left" valign="middle" bgcolor="#FFFFFF" colspan="3"><span id="textBoxCompanyProfile"></span>&nbsp;</td>
+									</tr>
+									<tr>
+										<td height="20" align="right" valign="middle" bgcolor="#f6f6f6">采购意向：</td>
+										<td height="20" align="left" valign="middle" bgcolor="#FFFFFF" colspan="3"><span id="textBoxPurchaseIntention"></span>&nbsp;</td>
+									</tr>
+									<tr>
+										<td height="20" align="right" valign="middle" bgcolor="#f6f6f6">营业执照：</td>
+										<td height="20" align="left" valign="middle" bgcolor="#FFFFFF" colspan="3"><img id="preview" onclick="SeeImage(this.src)" src="" style="height:530px;width:400px;border-width:0px;">
+										<input name="textBoxlicencePath" type="text" id="textBoxlicencePath" style="width:300px;display:none;">
+										</td>
+									</tr>
+									
+									<tr>
+										<td height="20" align="right" valign="middle" bgcolor="#f6f6f6">相关文件：</td>
+										<td height="20" align="left" valign="middle" bgcolor="#FFFFFF" colspan="3">
+										<input name="textBoxAffixPath" type="text" id="textBoxAffixPath" style="width:300px;display:none;">
+										</td>
+									</tr>
+									<tr>
+										<td height="20" align="right" valign="middle" bgcolor="#f6f6f6">参展企业性质：</td>
+										<td height="20" align="left" valign="middle" bgcolor="#FFFFFF" colspan="3"><span id="RadioButtonListMemberType">
+											</span></td>
+									</tr>
+									<tr>
+										<td colspan="4" style="height:32px;text-align:center;">
+										<button class="layui-btn layui-btn-primary" onclick="xadmin.close();" style="width: 100px;">
+										返回
+									</button>
+										&nbsp; </td>
+									</tr>
+								</tbody>
+							</table>
+						</form>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+		<script charset="utf-8" src="/manage/js/jquery.min.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/layui/layui.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/xadmin.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/vue.js" type="text/javascript"></script>
+		<script src="/manage/js/bootstrap.min.js?v=3.3.6"></script>
+		<script src="/manage/js/manage/common.js"></script>
+		<script charset="UTF-8" type="text/javascript">
+			var editEbsCompanyinfoId = sessionStorage.getItem("viewEbsCompanyinfoId");
+			vm = new Vue({
+				el : "#vmUpdateEbsCompanyinfo",
+				data : {
+					ebsCompanyinfo : {}
+				},
+				methods : {},
+				created : function() {
+					var _this = this;
+					$.ajax({
+						url : "/manage/Exhibitors/ebsCompanyinfo/findFirstById",
+						data : {
+							"id" : editEbsCompanyinfoId
+						},
+						dataType : "json",
+						type : "get",
+						success : function(result) {
+							if (result.code === 1) {
+								_this.ebsCompanyinfo = result.data;		
+								$("#textBoxUserCode").html(result.data.loginname);						
+								$("#textBoxName").html(result.data.chinesename);
+								$("#textBoxNameEN").html(result.data.engname);
+								$("#textBoxNameEW").html(result.data.russianname);
+								$("#textBoxAddress").html(result.data.chineseaddress);
+								$("#textBoxAddressEN").html(result.data.engaddress);
+								$("#textBoxPostCode").html(result.data.postcode);
+								$("#textBoxMobile").html(result.data.phone);
+								$("#textBoxFax").html(result.data.fax);
+								$("#textBoxWebSiteURL").html(result.data.website);
+								$("#textBoxEmail").html(result.data.email);
+								$("#dropDownListProvince").html(result.data.countryAndprovince);
+								$("#textBoxContacter").html(result.data.contactperson);
+								$("#textBoxDuty").html(result.data.jobtitle);
+								$("#textBoxLawPerson").html(result.data.principal);
+								$("#textBoxOrgnizeCode").html(result.data.organizationcode);
+								$("#dropDownListTrade").html(result.data.hyname);
+								$("#textBoxOperationRange").html(result.data.busscope);
+								$("#textBoxPrestige").html(result.data.hopecustomers);
+								$("#textBoxCompanyProfile").html(result.data.companyprofile);
+								$("#textBoxPurchaseIntentionte").html(result.data.purchaseintention);
+								$("#textBoxlicencePath").html(result.data.buslicensepath);
+								$("#preview").attr("src",result.data.buslicensepath);
+								$("#textBoxAffixPath").val(result.data.relateddocumentspath);
+								$("#RadioButtonListMemberType").html(result.data.xzname);
+							} else {
+								layer.alert("获取企业信息失败！");
+							}
+						}
+					});
+				}
+			});
+			layui.use(['form', 'layer', 'laydate'], function() {
+				var form = layui.form, layer = layui.layer, laydate = layui.laydate;
+				//监听提交
+				form.on('submit(edit)', function(data) {
+					//组装数据
+					data.field.id = editEbsCompanyinfoId;
+					//发异步，把数据提交给controller
+					$.ajax({
+						url : "/manage/Exhibitors/ebsCompanyinfo/update",
+						data : JSON.stringify(data.field),
+						dataType : "json",
+						contentType : "application/json",
+						type : "post",
+						success : function(result) {
+							if (result.code === 1) {
+								layer.msg("修改成功", {
+									icon : 6,
+									time : 500
+								}, function() {
+									//关闭当前frame
+									xadmin.close();
+									// 可以对父窗口进行刷新
+									xadmin.father_reload();
+								});
+							} else {
+								layer.alert(result.msg);
+							}
+						}
+					});
+					return false;
+				});
+			});
+		</script>
+	</body>
+</html>

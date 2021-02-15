@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.Exhibitors.dao.EbsSendMessageLogMapper">
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsSendMessageLog">
+        select
+			a.id as id,
+			a.type as type,
+			a.number as number,
+			a.receiver as receiver,
+			a.content as content,
+			a.addtime as addtime,
+			a.sendcode
+        from ebs_send_message_log as a
+        where a.id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsSendMessageLog">
+        select
+			a.id as id,
+			a.type as type,
+			a.number as number,
+			a.receiver as receiver,
+			a.content as content,
+			a.addtime as addtime,
+			a.sendcode
+        from ebs_send_message_log as a
+        <where>
+			<if test="id != null and id != ''">
+				and a.id = #{id}
+			</if>
+			<if test="type != null and type != ''">
+				and a.type = #{type}
+			</if>
+			<if test="number != null and number != ''">
+				and a.number = #{number}
+			</if>
+			<if test="receiver != null and receiver != ''">
+				and a.receiver = #{receiver}
+			</if>
+			<if test="content != null and content != ''">
+				and a.content = #{content}
+			</if>
+			<if test="sendcode != null and sendcode != ''">
+				and a.sendcode = #{sendcode}
+			</if>
+        </where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsSendMessageLog">
+        select
+			a.id as id,
+			a.type as type,
+			a.number as number,
+			a.receiver as receiver,
+			a.content as content,
+			a.addtime as addtime,
+			a.sendcode
+        from ebs_send_message_log as a
+        <where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="type != null and type != ''">
+                and a.type = #{type}
+            </if>
+            <if test="number != null and number != ''">
+                and a.number = #{number}
+            </if>
+            <if test="receiver != null and receiver != ''">
+                and a.receiver = #{receiver}
+            </if>
+            <if test="content != null and content != ''">
+                and a.content = #{content}
+            </if>
+			<if test="startTime != null and startTime != ''">
+				and date(a.addtime) >= #{startTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				and date(a.addtime) &lt;= #{endTime}
+			</if>
+			<if test="sendcode != null and sendcode != ''">
+				and a.sendcode = #{sendcode}
+			</if>
+        </where>
+        order by a.addtime desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(id) FROM ebs_send_message_log a
+		<where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="type != null and type != ''">
+                and a.type = #{type}
+            </if>
+            <if test="number != null and number != ''">
+                and a.number = #{number}
+            </if>
+            <if test="receiver != null and receiver != ''">
+                and a.receiver = #{receiver}
+            </if>
+            <if test="content != null and content != ''">
+                and a.content = #{content}
+            </if>
+			<if test="startTime != null and startTime != ''">
+				and date(a.addtime) >= #{startTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+				and date(a.addtime) &lt;= #{endTime}
+			</if>
+			<if test="sendcode != null and sendcode != ''">
+				and a.sendcode = #{sendcode}
+			</if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.Exhibitors.model.EbsSendMessageLog" useGeneratedKeys="true" keyProperty="id">
+        insert into ebs_send_message_log(
+        	<trim suffixOverrides=",">
+                <if test="type != null">`type`,</if>
+                <if test="number != null">`number`,</if>
+                <if test="receiver != null">`receiver`,</if>
+                <if test="content != null">`content`,</if>
+                <if test="sendcode != null">`sendcode`,</if>
+                <if test="addtime != null">`addtime`</if>
+			</trim>
+		) values (
+        	<trim suffixOverrides=",">
+                <if test="type != null">#{type},</if>
+                <if test="number != null">#{number},</if>
+                <if test="receiver != null">#{receiver},</if>
+                <if test="content != null">#{content},</if>
+                <if test="sendcode != null">#{sendcode},</if>
+                <if test="addtime != null">#{addtime}</if>
+			</trim>
+		)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.Exhibitors.model.EbsSendMessageLog">
+        update ebs_send_message_log
+        <set>
+			<if test="type != null">`type` = #{type},</if>
+			<if test="number != null">`number` = #{number},</if>
+			<if test="receiver != null">`receiver` = #{receiver},</if>
+			<if test="content != null">`content` = #{content},</if>
+			<if test="sendcode != null">`sendcode` = #{sendcode},</if>
+			<if test="addtime != null">`addtime` = #{addtime}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from ebs_send_message_log where id = #{id}
+    </delete>
+</mapper>

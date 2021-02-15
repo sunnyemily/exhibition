@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>修改</title>
+		<meta content="webkit" name="renderer">
+		<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+		<meta content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" name="viewport"/>
+		<link rel="stylesheet" href="/manage/css/xadmin.css">
+		<link href="/manage/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="/manage/layui/css/layui.css"  media="all">
+		<link href="/manage/css/style.css?v=4.1.0" rel="stylesheet">
+		<link href="/css/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+		
+		
+	</head>
+	<body class="gray-bg">
+		<div class="modal inmodal" id="friendlink-model">
+			<div class="modal-content animated bounceInUp" id="vmUpdateWebProduct">
+				<div class="ibox-content">
+					<fieldset class="layui-elem-field layui-field-title" style="border-top:0px">
+						<form class="layui-form layui-form-pane" lay-filter="test1" action="">
+							<div class="layui-form-item" style="display:none">
+								<label class="layui-form-label" for="companyId">所属公司id</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" class="layui-input" id="companyId" name="companyId" lay-verify="required" type="text" v-model="webProductx.companyId">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="companyName" style="width:130px"><span style="color:red">*</span>所属公司名称</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" class="layui-input" readonly id="companyName" name="companyName" lay-verify="required" type="text" v-model="webProductx.companyName">
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="productMenuId"><span style="color:red">*</span>所属栏目</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<select class="layui-input" id="productMenuId" name="productMenuId">
+
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="productName"><span style="color:red">*</span>产品名称</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" class="layui-input" id="productName" name="productName" lay-verify="required" type="text" v-model="webProductx.productName">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="productName"><span style="color:red">*</span>产品单位</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<select id="productUnit" name="productUnit" lay-reqText="必须选择产品单位" lay-verify="required">
+
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="productBrand"><span style="color:red">*</span>品牌</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" id="Div$column.attrnameDiv">
+										<input lay-verify="required" lay-reqtext="品牌为必填项" id="productBrand" name="productBrand" autocomplete="off" class="layui-input" type="text" v-model="webProductx.productBrand">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="productNum">规格</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" class="layui-input" id="productNum" name="productNum" type="text" v-model="webProductx.productNum">
+										<input autocomplete="off" class="layui-input" id="productId" name="productId" lay-verify="required" type="hidden" v-model="webProductx.productId">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="productPrice"><span style="color:red">*</span>产品价格</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" class="layui-input" id="productPrice" name="productPrice" lay-verify="required" type="text" v-model="webProductx.productPrice">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="productPriceunit"><span style="color:red">*</span>价格单位</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" id="Div$column.attrnameDiv">
+										<select id="productPriceunit" name="productPriceunit" lay-reqText="必须选择价格单位" lay-verify="required">
+
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="supplyquantity">供应数量</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" id="Div$column.attrnameDiv">
+										<input id="supplyquantity" name="supplyquantity" autocomplete="off" class="layui-input" type="text" v-model="webProductx.supplyquantity">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="country"><span style="color:red">*</span>产地</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" id="Div$column.attrnameDiv">
+										<table width="80%">
+											<tr>
+												<td id="countryTd"><select id="country" lay-reqText="必须选择国家" lay-verify="required"  lay-filter="country" name="country"></select></td>
+												<td><select id="province" lay-verify="required" lay-reqText="必须选择省份" lay-filter="province" name="province"></select></td>
+												<td><select id="city" name="city" ></select></td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="url" style="width:130px">虚拟展厅地址</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" id="Div$column.attrnameDiv">
+										<input id="url" name="url" autocomplete="off" class="layui-input" type="text" v-model="webProductx.url">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<table>
+									<tr>
+										<td valign="top"><label class="layui-form-label" for="companyname"><span style="color:red">*</span>封面图</label>
+										<div class="layui-input-inline layui-show-xs-block" style="width:70%">
+											<input type="hidden" class="layui-input" v-model="webProductx.productPicture" autocomplete="off" id="productPicture" name="productPicture" lay-reqText="必须上传封面图" lay-verify="required">
+											<button type="button" class="layui-btn" id="btnproductPicture">
+												<i class="layui-icon">&#xe67c;</i>裁剪助手
+											</button>
+											<br>
+											<span style="color:red;font-size:16px">格式为jpg，上传文件小于2M。logo尺寸750*750（宽*高）像素，用于产品列表页的产品展示。</span>
+										</div></td>
+										<td style="padding:5px"><img src="" onclick="SeeImage(this.src)" width="390" height="390" id="preproductPicture"></td>
+									</tr>
+								</table>
+							</div>
+
+							<table class="layui-table">
+								<tr>
+									<td valign="top" style="width:50%">
+										<label class="layui-form-label" for="companyname"><span style="color:red">*</span>轮播图片</label>
+									<div class="layui-input-inline layui-show-xs-block" style="width:70%">
+										<input class="layui-input" autocomplete="off" id="productPictures" name="productPictures" type="hidden">
+										<button type="button" class="layui-btn" id="btnproductPictures">
+											<i class="layui-icon">&#xe67c;</i>裁剪助手
+										</button>
+										<br>
+										<span style="color:red;font-size:16px">格式为JPG，上传文件小于2M，尺寸750*750（宽*高）像素，上传图片不超过3张。</span>
+									</div></td>
+									<td style="padding:5px"><div class="mutipic"></div></td>
+								</tr>
+							</table>
+
+							<div class="layui-form-item layui-hide">
+								<label class="layui-form-label" for="productVideo">产品视频</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" style="display:none" class="layui-input" id="productVideo" name="productVideo" type="text" v-model="webProductx.productVideo">
+									</div>
+									<div class="layui-input-inline radioborder" style="height:70px;padding-left:5px">
+										<button type="button" class="layui-btn" id="uploadPictrue2">
+											<i class="layui-icon">&#xe67c;</i>上传视频
+										</button>
+										
+										<button type="button" class="layui-btn layui-btn-primary" style="display:none" id="yulan2">
+											预览
+										</button><br>
+										<span style="color:red;font-size:16px">格式为MP4、FLV、MPG，上传文件小于20M，视频分辨率>=640*360，视频码率>=800kbps。</span>
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="productOrder">排序</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input onkeyup="value=value.replace(/[^(\-)?\(0-9)+((0-9)))]/g,'')" autocomplete="off" class="layui-input" id="productOrder" name="productOrder" lay-verify="required" type="text" v-model="webProductx.productOrder">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="productDescription">产品细节</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<textarea id="productDescription" name="productDescription" cols="20" rows="2" class="ckeditor"></textarea>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="remark">审核拒绝理由</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<textarea class="layui-textarea" id="remark" name="remark" rows="4" v-model="webProductx.remark"></textarea>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="companyname" style="width:130px"><span style='color:red'>*</span>审核</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block radioborder" style="width:80%">
+										<input type="radio" value="1" checked id="status1" title="审核通过" name="productStatus">
+										<input type="radio" value="-1" name="productStatus" id="status-1" title="审核拒绝">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<div class="layui-input-block">
+									<button class="layui-btn" lay-filter="edit" lay-submit="">
+										确认修改
+									</button>
+									<input type="hidden" id="txtproductMenuId">
+									<input type="hidden" id="txtproductStatus">
+									<input id="txtcountry" type="hidden">
+									<input id="txtcity" type="hidden">
+									<input id="txtarea" type="hidden">
+									<input id="txtproductPriceunit" type="hidden">
+									<input id="txtproductUnit" type="hidden">
+									<input id="txtproductDescriptionx" type="hidden">
+								</div>
+							</div>
+						</form>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+		<div id="mutiPictureTemplate" style="display:none">
+			<div class="item">
+				<img style="width:100px" src="" />
+				<div class="fc-upload-cover">
+					<i class="ivu-icon fa fa-eye"></i>
+					<i class="ivu-icon fa fa-trash"></i>
+				</div>
+			</div>
+		</div>
+		<script charset="utf-8" src="/manage/js/jquery.min.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/layui/layui.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/xadmin.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/vue.js?ss=111" type="text/javascript"></script>
+		<script src="/manage/plugins/ckeditor/ckeditor.js" charset="utf-8"></script>
+		
+		<script src="/manage/js/manage/common.js"></script>
+		
+		<script charset="UTF-8" type="text/javascript">
+		var myeditor;
+			$(document).ready(function() {
+				 myeditor=CKEDITOR.replace('productDescription');
+			});
+
+			var editWebProductId = sessionStorage.getItem("editWebProductId");
+			vm = new Vue({
+				el : "#vmUpdateWebProduct",
+				data : {
+					webProduct : {}
+				},
+				methods : {
+					
+				},
+				created : function() {					
+					var _this = this;
+					$.ajax({
+						url : "/manage/Product/webProduct/findById",
+						data : {
+							"product_id" : editWebProductId
+						},
+						dataType : "json",
+						type : "get",
+						async : false,
+						success : function(result) {
+							if (result.code === 1) {
+								_this.webProduct = result.data;
+								_this.webProductx = JSON.parse( JSON.stringify(result.data) );
+								//console.log(result.data);
+								
+								
+								$("#txtcountry").val(result.data.country);
+								$("#txtarea").val(result.data.province);
+								$("#txtcity").val(result.data.city);
+								$("#txtproductPriceunit").val(result.data.productPriceunit);
+								$("#txtproductMenuId").val(result.data.productMenuId);
+								$("#txtproductUnit").val(result.data.productUnit);
+															
+								if (result.data.productPicture != '') {
+									$("#preproductPicture").attr("src", result.data.productPicture);
+								}
+								else{
+									$("#preproductPicture").attr("src","/images/null200x200.jpg");
+								}
+								if (result.data.productVideo != '') {
+									$("#yulan2").show();
+									$("#yulan2").attr("onclick", "window.open('" + result.data.productVideo + "')");
+								}
+								$("#txtproductStatus").val(result.data.productStatus);
+
+								var productPictures = eval(result.data.productPictures);
+								if(typeof productPictures!="undefined")
+								for(var i = 0;i<productPictures.length;i++){
+									if(productPictures[i]!=null){
+										$("#mutiPictureTemplate img").attr("src",productPictures[i]);
+										var templateHtml = $("#mutiPictureTemplate").html();
+										var item = $(templateHtml);
+										$(".mutipic").append(item);
+									}
+								}
+								$("#productDescription").html(result.data.productDescription);
+								//CKEDITOR.instances.productDescription.setData(result.data.productDescription);
+							} else {
+								layer.alert("获取修改信息失败！");
+							}
+						}
+					});
+				}
+			});
+			var form;
+			layui.use(['form', 'layer', 'laydate'], function() {
+				var form = layui.form;
+				var  layer = layui.layer, laydate = layui.laydate;
+				addLisenter();
+				
+				myeditor.setData($('#productDescription').val());
+				
+				loadZiDianByParentID_Select(form, $("#txtproductPriceunit").val(), 100, "productPriceunit");
+				loadZiDianByParentID_Select(form, $("#txtproductUnit").val(), 105, "productUnit");
+
+				loadZiDianByParentID_Select(form, $("#txtproductMenuId").val(), 90, "productMenuId");
+
+				loadCountry(form, $("#txtcountry").val(), $("#txtarea").val(), $("#txtcity").val(), "country", "province", "city");
+
+				form.on('select(country)', function(data) {
+					loadProvinceChange(form, $("#country").val(), '', "province");
+					form.render(null, 'test1');
+				});
+				form.on('select(province)', function(data) {
+					loadCity(form, $("#province").val(), '', "city");
+					form.render(null, 'test1');
+				});
+
+				var radio = document.getElementsByName("productStatus");
+				var radioLength = radio.length;
+				for (var i = 0; i < radioLength; i++) {
+					if ($("#txtproductStatus").val() == radio[i].value) {
+						$(radio[i]).next().click();
+					}
+				}
+
+				form.render('', 'test1');
+
+				//监听提交
+				form.on('submit(edit)', function(data) {
+					//组装数据
+					data.field.id = editWebProductId;
+					data.field.productDescription = myeditor.document.getBody().getHtml();//CKEDITOR.instances.productDescription.getData();
+					//console.log($("#remark").val());
+					if (data.field.productStatus == -1 && $("#remark").val() == '') {
+						layer.alert("请填写审核拒绝理由");
+						return false;
+					}
+
+					var imagepaths = new Array();
+						var yb = 0;
+						$(".mutipic img").each(function(){
+							var imagepath = $(this).attr("src");
+							if (imagepath != '') {
+								imagepaths[yb] = imagepath;
+								yb++;
+							}
+						});
+					if(imagepaths.length==0){
+						layer.alert("至少上传1张产品轮播图");
+						return false;
+					}
+					if(imagepaths.length>3){
+						layer.alert("最多上传3张产品轮播图");
+						return false;
+					}
+					data.field.productPictures = JSON.stringify(imagepaths);
+					//console.log(imagepaths);
+					//return false;
+					//发异步，把数据提交给controller
+					$.ajax({
+						url : "/manage/Product/webProduct/updateBackstage",
+						data : JSON.stringify(data.field),
+						dataType : "json",
+						contentType : "application/json",
+						type : "post",
+						success : function(result) {
+							if (result.code === 1) {
+								layer.msg("修改成功", {
+									icon : 6,
+									time : 500
+								}, function() {
+									//关闭当前frame
+									xadmin.close();
+									// 可以对父窗口进行刷新
+									xadmin.father_reload();
+								});
+							} else {
+								if (result.status == 5) {
+									layer.alert(result.msg);
+									parent.window.location.href = '/manage/login.html';
+								}
+								layer.alert(result.msg);
+							}
+						}
+					});
+					return false;
+				});
+			});
+			function shuaxin(){
+				form.render('', 'test1');
+			}
+
+			layui.use('upload', function() {
+				var upload = layui.upload;
+
+				//上传图片
+				var uploadPictrue = upload.render({
+					accept : 'video',
+					size : 20480,
+					exts : 'mp4|flv|mpg',
+					elem : '#uploadPictrue2',
+					url : '/updatePictureLimit',
+					before : function(obj) {
+						layer.load();
+						//上传loading
+					},
+					done : function(res) {
+						layer.closeAll('loading');
+						if (res.status == 1) {
+							$("#productVideo").val(res.result);
+							$("#yulan2").attr("onclick", "window.open('" + res.result + "')");
+							layer.msg('上传成功', {
+								icon : 6
+							});
+						} else {
+							layer.msg(res.msg, {
+								shift : 6
+							});
+						}
+					},
+					error : function() {
+						//请求异常回调
+						layer.msg('接口异常', {
+							shift : 6
+						});
+						layer.closeAll('loading');
+					}
+				});
+			});
+
+		</script>
+		<script src="/manage/js/manage/crop.js"></script>
+	</body>
+</html>

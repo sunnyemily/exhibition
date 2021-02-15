@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.org.chtf.card.manage.wechatuser.dao.WechatUserMapper">
+  <resultMap id="BaseResultMap" type="cn.org.chtf.card.manage.wechatuser.pojo.WechatUser">
+    <id column="uid" jdbcType="INTEGER" property="uid" />
+    <result column="unionid" jdbcType="VARCHAR" property="unionid" />
+    <result column="openid" jdbcType="VARCHAR" property="openid" />
+    <result column="routine_openid" jdbcType="VARCHAR" property="routineOpenid" />
+    <result column="member_id" jdbcType="INTEGER" property="memberId" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="headimgurl" jdbcType="VARCHAR" property="headimgurl" />
+    <result column="sex" jdbcType="TINYINT" property="sex" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="language" jdbcType="VARCHAR" property="language" />
+    <result column="province" jdbcType="VARCHAR" property="province" />
+    <result column="country" jdbcType="VARCHAR" property="country" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="groupid" jdbcType="SMALLINT" property="groupid" />
+    <result column="tagid_list" jdbcType="VARCHAR" property="tagidList" />
+    <result column="subscribe" jdbcType="TINYINT" property="subscribe" />
+    <result column="subscribe_time" jdbcType="INTEGER" property="subscribeTime" />
+    <result column="add_time" jdbcType="INTEGER" property="addTime" />
+    <result column="session_key" jdbcType="VARCHAR" property="sessionKey" />
+    <result column="user_type_id" jdbcType="INTEGER" property="userTypeId" />
+    <result column="user_type" jdbcType="VARCHAR" property="userType" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="cardnumber" jdbcType="VARCHAR" property="cardnumber" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="companyid" jdbcType="INTEGER" property="companyid" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    uid, unionid, openid, routine_openid, member_id, nickname, headimgurl, sex, city, 
+    language, province, country, remark, groupid, tagid_list, subscribe, subscribe_time, 
+    add_time, session_key, user_type_id, user_type, name, cardnumber, phone,companyid
+  </sql>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from wechat_user
+    where uid = #{uid,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByRoutineOpenid" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from wechat_user
+    where routine_openid = #{routineOpenid,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="getUserInfoByCompanyid" parameterType="java.lang.Integer" resultType="cn.org.chtf.card.manage.wechatuser.pojo.WechatUser">
+    select 
+		uid, unionid, openid, routine_openid as routineOpenid, member_id as memberId, nickname, headimgurl, sex, city, 
+	    language, province, country, remark, groupid, tagid_list as tagidList, subscribe, subscribe_time as subscribeTime, 
+	    add_time as addTime, session_key as sessionKey, user_type_id as userTypeId, user_type as userType, ifnull(name,'') as name, ifnull(cardnumber,'') as cardnumber, phone,companyid
+		from wechat_user where companyid = #{companyid}
+  </select>
+  
+  <select id="isExists" parameterType="java.lang.Integer" resultType="int">
+    select 
+    count(*)
+    from wechat_user
+    where companyid = #{companyid,jdbcType=INTEGER}
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from wechat_user
+    where uid = #{uid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.org.chtf.card.manage.wechatuser.pojo.WechatUser">
+    insert into wechat_user (uid, unionid, openid, 
+      routine_openid, member_id, nickname, 
+      headimgurl, sex, city, 
+      language, province, country, 
+      remark, groupid, tagid_list, 
+      subscribe, subscribe_time, add_time, 
+      session_key, user_type_id, user_type, 
+      name, cardnumber, phone,companyid
+      )
+    values (#{uid,jdbcType=INTEGER}, #{unionid,jdbcType=VARCHAR}, #{openid,jdbcType=VARCHAR}, 
+      #{routineOpenid,jdbcType=VARCHAR}, #{memberId,jdbcType=INTEGER}, #{nickname,jdbcType=VARCHAR}, 
+      #{headimgurl,jdbcType=VARCHAR}, #{sex,jdbcType=TINYINT}, #{city,jdbcType=VARCHAR}, 
+      #{language,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{groupid,jdbcType=SMALLINT}, #{tagidList,jdbcType=VARCHAR}, 
+      #{subscribe,jdbcType=TINYINT}, #{subscribeTime,jdbcType=INTEGER}, #{addTime,jdbcType=INTEGER}, 
+      #{sessionKey,jdbcType=VARCHAR}, #{userTypeId,jdbcType=INTEGER}, #{userType,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{cardnumber,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},#{companyid,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.org.chtf.card.manage.wechatuser.pojo.WechatUser">
+    insert into wechat_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="uid != null">
+        uid,
+      </if>
+      <if test="unionid != null">
+        unionid,
+      </if>
+      <if test="openid != null">
+        openid,
+      </if>
+      <if test="routineOpenid != null">
+        routine_openid,
+      </if>
+      <if test="memberId != null">
+        member_id,
+      </if>
+      <if test="nickname != null">
+        nickname,
+      </if>
+      <if test="headimgurl != null">
+        headimgurl,
+      </if>
+      <if test="sex != null">
+        sex,
+      </if>
+      <if test="city != null">
+        city,
+      </if>
+      <if test="language != null">
+        language,
+      </if>
+      <if test="province != null">
+        province,
+      </if>
+      <if test="country != null">
+        country,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="groupid != null">
+        groupid,
+      </if>
+      <if test="tagidList != null">
+        tagid_list,
+      </if>
+      <if test="subscribe != null">
+        subscribe,
+      </if>
+      <if test="subscribeTime != null">
+        subscribe_time,
+      </if>
+      <if test="addTime != null">
+        add_time,
+      </if>
+      <if test="sessionKey != null">
+        session_key,
+      </if>
+      <if test="userTypeId != null">
+        user_type_id,
+      </if>
+      <if test="userType != null">
+        user_type,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="cardnumber != null">
+        cardnumber,
+      </if>
+      <if test="companyid != null">
+        companyid,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="uid != null">
+        #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="unionid != null">
+        #{unionid,jdbcType=VARCHAR},
+      </if>
+      <if test="openid != null">
+        #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="routineOpenid != null">
+        #{routineOpenid,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null">
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="nickname != null">
+        #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="headimgurl != null">
+        #{headimgurl,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=TINYINT},
+      </if>
+      <if test="city != null">
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="language != null">
+        #{language,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null">
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null">
+        #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="groupid != null">
+        #{groupid,jdbcType=SMALLINT},
+      </if>
+      <if test="tagidList != null">
+        #{tagidList,jdbcType=VARCHAR},
+      </if>
+      <if test="subscribe != null">
+        #{subscribe,jdbcType=TINYINT},
+      </if>
+      <if test="subscribeTime != null">
+        #{subscribeTime,jdbcType=INTEGER},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=INTEGER},
+      </if>
+      <if test="sessionKey != null">
+        #{sessionKey,jdbcType=VARCHAR},
+      </if>
+      <if test="userTypeId != null">
+        #{userTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="userType != null">
+        #{userType,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="cardnumber != null">
+        #{cardnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="companyid != null">
+        #{companyid,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.org.chtf.card.manage.wechatuser.pojo.WechatUser">
+    update wechat_user
+    <set>
+      <if test="unionid != null">
+        unionid = #{unionid,jdbcType=VARCHAR},
+      </if>
+      <if test="openid != null">
+        openid = #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="routineOpenid != null">
+        routine_openid = #{routineOpenid,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null">
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="nickname != null">
+        nickname = #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="headimgurl != null">
+        headimgurl = #{headimgurl,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        sex = #{sex,jdbcType=TINYINT},
+      </if>
+      <if test="city != null">
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="language != null">
+        language = #{language,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null">
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null">
+        country = #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="groupid != null">
+        groupid = #{groupid,jdbcType=SMALLINT},
+      </if>
+      <if test="tagidList != null">
+        tagid_list = #{tagidList,jdbcType=VARCHAR},
+      </if>
+      <if test="subscribe != null">
+        subscribe = #{subscribe,jdbcType=TINYINT},
+      </if>
+      <if test="subscribeTime != null">
+        subscribe_time = #{subscribeTime,jdbcType=INTEGER},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=INTEGER},
+      </if>
+      <if test="sessionKey != null">
+        session_key = #{sessionKey,jdbcType=VARCHAR},
+      </if>
+      <if test="userTypeId != null">
+        user_type_id = #{userTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="userType != null">
+        user_type = #{userType,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="cardnumber != null">
+        cardnumber = #{cardnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="companyid != null">
+        companyid = #{companyid,jdbcType=INTEGER},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where uid = #{uid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByRoutineOpenidSelective" parameterType="cn.org.chtf.card.manage.wechatuser.pojo.WechatUser">
+    update wechat_user
+    <set>
+      <if test="unionid != null">
+        unionid = #{unionid,jdbcType=VARCHAR},
+      </if>
+      <if test="openid != null">
+        openid = #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="routineOpenid != null">
+        routine_openid = #{routineOpenid,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null">
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="nickname != null">
+        nickname = #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="headimgurl != null">
+        headimgurl = #{headimgurl,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        sex = #{sex,jdbcType=TINYINT},
+      </if>
+      <if test="city != null">
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="language != null">
+        language = #{language,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null">
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null">
+        country = #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="groupid != null">
+        groupid = #{groupid,jdbcType=SMALLINT},
+      </if>
+      <if test="tagidList != null">
+        tagid_list = #{tagidList,jdbcType=VARCHAR},
+      </if>
+      <if test="subscribe != null">
+        subscribe = #{subscribe,jdbcType=TINYINT},
+      </if>
+      <if test="subscribeTime != null">
+        subscribe_time = #{subscribeTime,jdbcType=INTEGER},
+      </if>
+      <if test="addTime != null">
+        add_time = #{addTime,jdbcType=INTEGER},
+      </if>
+      <if test="sessionKey != null">
+        session_key = #{sessionKey,jdbcType=VARCHAR},
+      </if>
+      <if test="userTypeId != null">
+        user_type_id = #{userTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="userType != null">
+        user_type = #{userType,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="cardnumber != null">
+        cardnumber = #{cardnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="companyid != null">
+        companyid = #{companyid,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where routine_openid = #{routineOpenid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.org.chtf.card.manage.wechatuser.pojo.WechatUser">
+    update wechat_user
+    set unionid = #{unionid,jdbcType=VARCHAR},
+      openid = #{openid,jdbcType=VARCHAR},
+      routine_openid = #{routineOpenid,jdbcType=VARCHAR},
+      member_id = #{memberId,jdbcType=INTEGER},
+      nickname = #{nickname,jdbcType=VARCHAR},
+      headimgurl = #{headimgurl,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=TINYINT},
+      city = #{city,jdbcType=VARCHAR},
+      language = #{language,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      country = #{country,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      groupid = #{groupid,jdbcType=SMALLINT},
+      tagid_list = #{tagidList,jdbcType=VARCHAR},
+      subscribe = #{subscribe,jdbcType=TINYINT},
+      subscribe_time = #{subscribeTime,jdbcType=INTEGER},
+      add_time = #{addTime,jdbcType=INTEGER},
+      session_key = #{sessionKey,jdbcType=VARCHAR},
+      user_type_id = #{userTypeId,jdbcType=INTEGER},
+      companyid = #{companyid,jdbcType=INTEGER},
+      user_type = #{userType,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      cardnumber = #{cardnumber,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR}
+    where uid = #{uid,jdbcType=INTEGER}
+  </update>
+</mapper>

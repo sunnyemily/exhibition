@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="../css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="../css/animate.css" rel="stylesheet">
+    <link href="../css/style.css?v=4.1.0" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../js/plugins/layui/css/layui.css"  media="all">
+    
+  </head>
+
+  <body>
+  <div class="col-sm-6">
+<div class="ibox-title">
+      <h5 id="edit-title">编辑单页内容</h5>
+</div>
+<div class="ibox-content">
+<fieldset class="layui-elem-field layui-field-title">
+<form class="layui-form layui-form-pane">
+  <input id="menuId" name="menuId" type="hidden" value="0">
+  <input id="editType" name="editType" type="hidden" value="1" />
+  <div class="layui-form-item" id="tupian" style="display:none">
+    <label class="layui-form-label">图片</label>
+    <div class="layui-input-inline">
+      <input id="basicPicture" name="basicPicture" type="text" class="layui-input" value="">
+    </div>
+    <div class="layui-input-inline" style="width:114px;">
+      <button type="button" class="layui-btn" id="uploadPictrue">
+        <i class="layui-icon">&#xe67c;</i>上传图片
+      </button>
+    </div>
+    <div class="layui-input-inline" style="width:114px;display:none">
+      <button type="button" class="layui-btn" id="browseServer">
+        <i class="layui-icon">&#xe67c;</i>浏览服务器
+      </button>
+    </div>
+  </div>
+  <div class="layui-form-item" id="zhaiyao">
+    <label class="layui-form-label">摘要</label>
+    <div class="layui-input-block">
+    <textarea name="basicIntro" id="basicIntro" rows="3" cols="80"  class="layui-textarea"></textarea>
+    </div>
+  </div>
+  <div class="layui-form-item" id="neirong" style="display:none">  
+    <label class="layui-form-label">内容</label>  
+    <div class="layui-input-block"> 
+	  <textarea name="basicContent" id="basicContent" rows="10" cols="80"  class="layui-input">
+	  </textarea>
+	</div>
+	  
+  </div>
+  <div class="layui-form-item">
+    <div class="layui-input-block">
+      <button class="layui-btn" lay-submit="" lay-filter="demo1">保存</button>
+      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+    </div>
+  </div>
+</form>
+</fieldset>
+</div>
+</div>
+  </body>
+  <script src="../js/jquery.min.js?v=2.1.4"></script> 
+  <script src="../js/plugins/layui/layui.all.js" charset="utf-8"></script> 
+  <script src="../plugins/ckeditor/ckeditor.js" charset="utf-8"></script>
+  
+  <script>
+  var cid;
+  parent.layer.load(2, {shade:0.8});
+  $(document).ready(function(){
+	  cid = $(".page-tabs-content",window.parent.document).children(".active").data("cid");
+	  $("#menuId").val(cid);
+	  
+	  if(cid==248 || cid==253){//预约参展规则
+	  	 $("#tupian").hide();	  	 
+	  }else if(cid==247 || cid==250){
+	  	 $("#zhaiyao").hide();
+	  	 $("#neirong").hide();
+	  } else if(cid==249){
+	  	$("#tupian").hide();
+	  }
+	  
+	  loadBasic(cid);
+  });
+  function loadBasic(menuId){
+	  $.post('/manage/basic/getBasic/'+cid,function(data){  
+		parent.layer.closeAll('loading');
+		if(data.status==1){
+			if(data.result){
+				$("#basicPicture").val(data.result.basicPicture);
+				$("#basicIntro").val(data.result.basicIntro);
+				$("#basicContent").val(data.result.basicContent);
+				$("#editType").val(0);
+				CKEDITOR.instances.basicContent.setData($('#basicContent').val());
+
+			}
+			else{
+				parent.layer.msg(data.msg, {icon: 1});
+			}
+		}
+		else if(data.status==4){
+			window.location.href="/manage/nopermission.html";
+		}
+		else if(data.status==5){
+			parent.layer.msg(data.msg, {icon: 1});
+			window.location.href="/manage/login.html";
+		}
+		else{
+			parent.layer.msg(data.msg, {icon: 1});
+		}
+	});
+  }
+  CKEDITOR.replace('basicContent');
+  
+	layui.use(['form'], function(){
+	  var form = layui.form;
+	 
+	  //自定义验证规则
+	  form.verify({
+		title: function(value){
+		  if(value.length < 2){
+			return '标题至少得2个字符啊';
+		  }
+		}
+	  });
+	
+	  //监听提交
+	  form.on('submit(demo1)', function(data){
+		  //JSON.stringify(data.field)
+		updateBasic();
+		//alert(CKEDITOR.instances.basicContent.getData());
+		return false;
+	  });  
+	});
+	function updateBasic(){
+		$("#basicContent").val(CKEDITOR.instances.basicContent.getData());
+		$.post('/manage/basic/updateBasic/'+cid,$("form").serialize(),function(data){
+			if(data.status==1){//登陆成功
+				parent.layer.msg(data.msg, {icon: 1});
+				loadBasic(cid);
+			}
+			else if(data.status==4){
+				window.location.href="/manage/nopermission.html";
+			}
+			else if(data.status==5){
+				parent.layer.msg(data.msg, {icon: 1});
+				window.location.href="/manage/login.html";
+			}
+			else{
+				parent.layer.msg(data.msg, {icon: 1});
+			}
+		});
+	}
+		layui.use('upload', function(){
+  		var upload = layui.upload;
+   
+  		//上传图片
+		var uploadPictrue = upload.render({
+			accept:'images'
+			,size:1024
+			,exts:'jpg|jpeg|png|gif|bmp'
+			,elem: '#uploadPictrue' //绑定元素
+			,url: '/manage/uploadPicture' //上传接
+			,before: function(obj){
+				layer.load(); //上传loading
+			}
+			,done: function(res){
+				if(res.status==1){
+					$("#basicPicture").val(res.result);
+					layer.msg('上传成功', {icon: 6});
+				}
+				else if(res.status==4){
+					window.location.href="/manage/nopermission.html";
+				}
+				else if(res.status==5){
+					layer.confirm(res.msg, {icon: 3, title:'提示'}, function(index){
+						  window.location.href="/manage/login.html";
+						  layer.close(index);
+						});
+				}
+			    else{
+				 layer.msg(res.msg, {shift: 6});
+			    }
+				layer.closeAll('loading');
+			}
+			,error: function(){
+			  //请求异常回调
+			  	layer.msg('接口异常', {shift: 6});
+				layer.closeAll('loading');
+			}
+		  });//上传图片
+		});
+		$("#browseServer").on("click",function(){
+			layer.open({
+				  title:'文件浏览器',
+				  area: ['80%', '80%'],
+				  type: 2, 
+				  content: ['/manage/plugins/wxFile/browser.html?formName=basicPicture', 'no'] //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: 
+				}); 
+		});
+		$("#basicPicture").on("dblclick",function(){
+			layer.open({
+			  title:'图片预览',
+			  type: 1, 
+			  content: '<img src="'+$(this).val()+'" width="300" />' //这里content是一个普通的String
+			});
+		});
+   </script>
+</html>

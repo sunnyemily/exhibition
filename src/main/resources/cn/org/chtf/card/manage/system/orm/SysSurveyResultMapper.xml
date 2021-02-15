@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.system.dao.SysSurveyResultMapper">
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.system.model.SysSurveyResult">
+        select
+			a.surveyid as surveyid,
+			a.answerid as answerid,
+			a.remark as remark,
+			a.userid as userid,
+			a.companyid as companyid,a.questionid
+        from sys_survey_result as a
+        where a.surveyid = #{surveyid}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.system.model.SysSurveyResult">
+        select
+			a.surveyid as surveyid,
+			a.answerid as answerid,
+			a.remark as remark,
+			a.userid as userid,
+			a.companyid as companyid,a.questionid
+        from sys_survey_result as a
+        <where>
+			<if test="surveyid != null and surveyid != ''">
+				and a.surveyid = #{surveyid}
+			</if>
+			<if test="answerid != null and answerid != ''">
+				and a.answerid = #{answerid}
+			</if>
+			<if test="remark != null and remark != ''">
+				and a.remark = #{remark}
+			</if>
+			<if test="userid != null and userid != ''">
+				and a.userid = #{userid}
+			</if>
+			<if test="companyid != null and companyid != ''">
+				and a.companyid = #{companyid}
+			</if>
+			<if test="questionid != null and questionid != ''">
+				and a.questionid = #{questionid}
+			</if>
+        </where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.system.model.SysSurveyResult">
+        select
+			a.surveyid as surveyid,
+			a.answerid as answerid,
+			a.remark as remark,
+			a.userid as userid,
+			a.companyid as companyid,a.questionid
+        from sys_survey_result as a
+        <where>
+            <if test="surveyid != null and surveyid != ''">
+                and a.surveyid = #{surveyid}
+            </if>
+            <if test="answerid != null and answerid != ''">
+                and a.answerid = #{answerid}
+            </if>
+            <if test="remark != null and remark != ''">
+                and a.remark = #{remark}
+            </if>
+            <if test="userid != null and userid != ''">
+                and a.userid = #{userid}
+            </if>
+            <if test="companyid != null and companyid != ''">
+                and a.companyid = #{companyid}
+            </if>
+            <if test="questionid != null and questionid != ''">
+				and a.questionid = #{questionid}
+			</if>
+        </where>
+        order by a.id desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(*) FROM sys_survey_result a
+		<where>
+            <if test="surveyid != null and surveyid != ''">
+                and a.surveyid = #{surveyid}
+            </if>
+            <if test="answerid != null and answerid != ''">
+                and a.answerid = #{answerid}
+            </if>
+            <if test="remark != null and remark != ''">
+                and a.remark = #{remark}
+            </if>
+            <if test="userid != null and userid != ''">
+                and a.userid = #{userid}
+            </if>
+            <if test="companyid != null and companyid != ''">
+                and a.companyid = #{companyid}
+            </if>
+            <if test="questionid != null and questionid != ''">
+				and a.questionid = #{questionid}
+			</if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.system.model.SysSurveyResult">
+        insert into sys_survey_result(
+        	<trim suffixOverrides=",">
+                <if test="surveyid != null">`surveyid`,</if>
+                <if test="answerid != null">`answerid`,</if>
+                <if test="remark != null">`remark`,</if>
+                <if test="userid != null">`userid`,</if>
+                <if test="questionid != null">`questionid`,</if>
+                <if test="companyid != null">`companyid`</if>
+			</trim>
+		) values (
+        	<trim suffixOverrides=",">
+                <if test="surveyid != null">#{surveyid},</if>
+                <if test="answerid != null">#{answerid},</if>
+                <if test="remark != null">#{remark},</if>
+                <if test="userid != null">#{userid},</if>
+                <if test="questionid != null">#{questionid},</if>
+                <if test="companyid != null">#{companyid}</if>
+			</trim>
+		)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.system.model.SysSurveyResult">
+        update sys_survey_result
+        <set>
+			<if test="answerid != null">`answerid` = #{answerid},</if>
+			<if test="remark != null">`remark` = #{remark},</if>
+			<if test="userid != null">`userid` = #{userid},</if>
+			<if test="questionid != null">`questionid` = #{questionid},</if>
+			<if test="companyid != null">`companyid` = #{companyid}</if>
+        </set>
+        where surveyid = #{surveyid}
+    </update>
+
+    <delete id="deleteById">
+        delete from sys_survey_result where surveyid = #{surveyid}
+    </delete>
+    
+    <select id="GetQuestionInfoBySurveyID" resultType="map">
+    	select id,cntitle,showtype,code,parentid from sys_survey_question where parentid=#{surveyid} and useable=1 order by orders asc
+    </select>
+    
+    <select id="GetAnswerInfoByQuestionID" resultType="map">
+    	select cnanswername,a.id,case when ifnull(b.answerid,0)>0 then 1 else 0 end as res,ifnull(b.remark,'') as remark from sys_survey_answer as a 
+		left join sys_survey_result as b on a.id=b.answerid and b.companyid=#{companyid}
+		where a.questionid=#{questionid} and a.useable=1 order by a.orders 
+    </select>
+    
+    <select id="GetAnswerTongJiInfoByQuestionID" resultType="map">
+    	select concat(cnanswername,'：',ifnull(bili,'0.00%')) as answerpercent from sys_survey_answer as a
+		left join (
+			select sid,qid,answerid as aid,concat(round((dacount/wtcount)*100,2),'%') as bili from ( 
+			select surveyid as sid,questionid as qid,count(1) as wtcount from sys_survey_result where ifnull(remark,'')='' group by surveyid,questionid
+			) as a
+			left join (
+			select surveyid,questionid,answerid,count(1) as dacount from sys_survey_result where ifnull(remark,'')='' group by surveyid,questionid,answerid
+			) as b on a.sid=b.surveyid and a.qid=b.questionid
+			where qid=#{questionid}
+			GROUP BY sid,qid,answerid
+		) as b on a.id=b.aid
+		where a.questionid=#{questionid}
+		order by a.orders
+    </select>
+    
+</mapper>

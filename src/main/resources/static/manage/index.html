@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html> 
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <title>网上证件申报管理系统 - 控制台</title>
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link href="css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css?v=4.1.0" rel="stylesheet">
+    <link rel="stylesheet" href="js/plugins/layui/css/layui.css"  media="all">
+    <script type="text/javascript"></script>
+</head>
+
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
+    <div id="wrapper">
+        <!--左侧导航开始-->
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="nav-close"><i class="fa fa-times-circle"></i>
+            </div>
+            <div class="sidebar-collapse">
+                <ul class="nav" id="side-menu">
+                <!--用户资料区域开始-->
+                    <li class="nav-header">
+                        <div class="dropdown profile-element">
+                            <span><img alt="image" class="img-circle" src="img/profile_small.jpg" width=64 /></span>
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <span class="clear">
+                               <span class="block m-t-xs"><strong class="font-bold manage-name"></strong></span>
+                               <span class="text-muted text-xs block manage-role"><b class="caret"></b></span>
+                                </span>
+                            </a>
+                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                <li><a class="J_menuItem" href="user/edithead.html">修改头像</a>
+                                </li>
+                                <li><a class="J_menuItem" href="user/edit_profile.html">个人资料</a>
+                                </li>
+                                <li><a class="J_menuItem" href="user/edit_password.html">修改密码</a>
+                                </li>
+                                <!-- <li><a class="J_menuItem" href="mailbox.html">信箱</a>
+                                </li> -->
+                                <li class="divider"></li>
+                                <li><a id="loginout" class="loginout" href="#">安全退出</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="logo-element">
+                        	<i class="fa fa-user"></i>
+						</div>
+                    </li>
+                    <!--用户资料区域结束-->
+
+                </ul>
+            </div>
+        </nav>
+        <!--左侧导航结束-->
+        <!--右侧部分开始-->
+        <div id="page-wrapper" class="gray-bg dashbard-1">
+            <div class="row border-bottom">
+                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                    <div class="navbar-header"><a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+                        
+                    </div>
+                    <ul class="nav navbar-top-links navbar-right">                     
+                        <li class="dropdown">
+                            <a onClick="displayLanguage(this)">
+                                <i class="fa fa-language"></i><span id="language-txt">中文</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <div class="skin-setttings">
+                                    <div class="title" id="language">语言版本设置</div>
+                                    
+                                </div>
+                            </ul>
+                        </li>                       
+                        <li class="dropdown hidden-xs">
+                            <a class="right-sidebar-toggle" aria-expanded="false">
+                                <i class="fa fa-tasks"></i> 主题
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="row content-tabs">
+                <button class="roll-nav roll-left J_tabLeft"><i class="fa fa-backward"></i>
+                </button>
+                <nav class="page-tabs J_menuTabs">
+                    <div class="page-tabs-content">
+                        <a href="javascript:;" class="active J_menuTab" data-id="index_v1.html">首页</a>
+                    </div>
+                </nav>
+                <button class="roll-nav roll-right J_tabRight"><i class="fa fa-forward"></i>
+                </button>
+                <div class="btn-group roll-nav roll-right">
+                    <button class="dropdown J_tabClose" data-toggle="dropdown">关闭操作<span class="caret"></span>
+
+                    </button>
+                    <ul role="menu" class="dropdown-menu dropdown-menu-right">
+                        <li class="J_tabShowActive"><a>定位当前选项卡</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li class="J_tabCloseAll"><a>关闭全部选项卡</a>
+                        </li>
+                        <li class="J_tabCloseOther"><a>关闭其他选项卡</a>
+                        </li>
+                    </ul>
+                </div>
+                <a href="#" class="roll-nav roll-right J_tabExit loginout"><i class="fa fa fa-sign-out"></i> 退出</a>
+            </div>
+            <div class="row J_mainContent" id="content-main">
+                <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="" frameborder="0" data-id="index_v1.html" seamless></iframe>
+            </div>
+            <div class="footer">
+                <div class="pull-right">Copyright &copy; <script language="javascript">document.write((new Date()).getFullYear());</script> <a href="#" target="_blank">chtf</a> All Rights Reserved
+                </div>
+            </div>
+        </div>
+        <!--右侧部分结束-->
+        <!--右侧边栏开始-->
+        <div id="right-sidebar">
+            <div class="sidebar-container">
+                <ul class="nav nav-tabs navs-3">
+                    <li class="active">
+                        <a data-toggle="tab" href="#tab-1">
+                            <i class="fa fa-gear"></i> 主题
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div id="tab-1" class="tab-pane active">
+                        <div class="sidebar-title">
+                            <h3> <i class="fa fa-comments-o"></i> 主题设置</h3>
+                            <small><i class="fa fa-tim"></i> 你可以从这里选择和预览主题的布局和样式，这些设置会被保存在本地，下次打开的时候会直接应用这些设置。</small>
+                        </div>
+                        <div class="skin-setttings">
+                            <div class="title">主题设置</div>
+                            <div class="setings-item">
+                                <span>收起左侧菜单</span>
+                                <div class="switch">
+                                    <div class="onoffswitch">
+                                        <input type="checkbox" name="collapsemenu" class="onoffswitch-checkbox" id="collapsemenu">
+                                        <label class="onoffswitch-label" for="collapsemenu">
+                                            <span class="onoffswitch-inner"></span>
+                                            <span class="onoffswitch-switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="setings-item">
+                                <span>固定顶部</span>
+
+                                <div class="switch">
+                                    <div class="onoffswitch">
+                                        <input type="checkbox" name="fixednavbar" class="onoffswitch-checkbox" id="fixednavbar">
+                                        <label class="onoffswitch-label" for="fixednavbar">
+                                            <span class="onoffswitch-inner"></span>
+                                            <span class="onoffswitch-switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="setings-item">
+                                <span>
+                        固定宽度
+                    </span>
+
+                                <div class="switch">
+                                    <div class="onoffswitch">
+                                        <input type="checkbox" name="boxedlayout" class="onoffswitch-checkbox" id="boxedlayout">
+                                        <label class="onoffswitch-label" for="boxedlayout">
+                                            <span class="onoffswitch-inner"></span>
+                                            <span class="onoffswitch-switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="title">皮肤选择</div>
+                            <div class="setings-item default-skin nb">
+                                <span class="skin-name ">
+                         <a href="#" class="s-skin-0">
+                             默认皮肤
+                         </a>
+                    </span>
+                            </div>
+                            <div class="setings-item blue-skin nb">
+                                <span class="skin-name ">
+                        <a href="#" class="s-skin-1">
+                            蓝色主题
+                        </a>
+                    </span>
+                            </div>
+                            <div class="setings-item yellow-skin nb">
+                                <span class="skin-name ">
+                        <a href="#" class="s-skin-3">
+                            黄色/紫色主题
+                        </a>
+                    </span>
+                            </div>
+                        </div>
+                    </div>                    
+                </div>
+
+            </div>
+        </div>
+        <!--右侧边栏结束-->        
+    </div>
+
+    <!-- 全局js -->
+    <script src="js/jquery.min.js?v=2.1.4"></script>
+    <script src="js/bootstrap.min.js?v=3.3.6"></script>
+    <script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="js/plugins/layer/layer.min.js"></script>
+
+    <!-- 自定义js -->
+    <script src="js/hplus.js?v=4.1.0"></script>
+    <script type="text/javascript" src="js/contabs.js"></script>
+    <script src="js/W.js?v=4.1.0"></script>
+	<script type="text/javascript">
+	var authorizedFunctions;
+	var user;
+	$(document).ready(function(){
+		loadUserInfo();
+		logout();
+	});
+	function loadUserInfo(){
+		$(".loading").css("top",$(window).height() / 2 - 30);
+		displayLoading(false);
+		$.post("/manage/getUser",
+		function(data){
+			if(data.status==1){//登陆成功
+				//加载用户信息
+				user = data.result;
+				authorizedFunctions = data.result.permissions;
+				addLanguageMenu();
+				if($.trim(data.result.photo)!=""){					
+					$(".img-circle").attr("src", data.result.photo);
+				}
+				$(".manage-name").text(data.result.name);
+				$(".manage-role").html(data.result.rolename+"<b class=\"caret\"></b>");
+			}
+			else if(data.status==4){
+				window.location.href="/manage/nopermission.html";
+			}
+			else if(data.status==5){
+				layer.confirm(data.msg, {icon: 3, title:'提示'}, function(index){
+					  //do something
+					  window.location.href="/manage/login.html";
+					  layer.close(index);
+					});
+			}
+			else{
+				layer.alert(data.msg, function(index){		  
+					  layer.close(index);
+					});
+				}					
+			hiddenLoading(false);
+		});
+	}
+	function logout()
+	{
+		$(".loginout").on("click",function(){
+		//询问框
+		parent.layer.confirm('确认要退出系统吗？', {
+			btn: ['退出','取消'], //按钮
+			shade: true, //不显示遮罩
+			opacity: 0.5
+		}, function(){
+			$.post("/manage/logout",
+					function(data){
+						if(data.status==1){
+							//加载用户信息
+							window.location.href="/manage/login.html";
+						}
+						else if(data.status==5){
+							layer.confirm(data.msg, {icon: 3, title:'提示'}, function(index){
+								  //do something
+								  window.location.href="/manage/login.html";
+								  layer.close(index);
+								});
+						}
+						else{
+							layer.alert(data.msg, function(index){
+								  layer.close(index);
+								});
+							}
+						hiddenLoading(false);
+					});
+		}, function(){
+			layer.msg('您取消了退出系统操作', {shift: 6});
+		});
+	});
+	}
+	function addLanguageMenu(){
+		for(i=0;i<authorizedFunctions.length;i++){
+			if(authorizedFunctions[i].functionParentid==0)
+			{
+				var languageItem = $("#languageItem").html();
+				languageItem = languageItem.replace("{$functionIco}", authorizedFunctions[i].functionIco);
+				languageItem = languageItem.replace("{$functionId}", authorizedFunctions[i].functionId);
+				languageItem = languageItem.replace("{$language}", authorizedFunctions[i].language);
+				$("#language").after(languageItem);
+			}
+		}
+		loadLanguageState();
+		loadMenu();
+	}
+    // 收起左侧菜单
+    function langugaeClick (o) {
+        if ($(o).find("input").is(':checked')) {
+			$(o).find("input").prop('checked', false)
+            if (localStorageSupport) {
+                localStorage.setItem("language", '1');//取消所有语言，代表默认选择中文
+            }
+
+        } else {
+			$("#KR").prop('checked', false);
+			$("#RU").prop('checked', false);
+			$("#CN").prop('checked', false);
+			$("#JP").prop('checked', false);
+			$("#EN").prop('checked', false);
+			$(o).find("input").prop('checked', 'checked');
+            if (localStorageSupport) {
+                localStorage.setItem("language", $(o).find("input").val());
+            }
+        }
+		loadLanguageState();
+	}
+	function loadLanguageState(){
+		if (localStorageSupport) {
+			switch(localStorage.getItem("language")){
+				case '2':
+					$("#language-txt").html("日文");
+					$("#JP").prop('checked', 'checked');
+					break;
+				case '3':
+					$("#language-txt").html("英文");
+					$("#EN").prop('checked', 'checked');
+					break;
+				default:
+					$("#language-txt").html("中文");
+					$("#CN").prop('checked', 'checked');
+					break;
+			}
+		}
+		else{
+			$("#language-txt").html("中文");
+			$("#CN").prop('checked', 'checked');
+		}
+		loadMenu();
+	}
+	//显示、隐藏语言菜单
+	function displayLanguage(o){
+		if($(o).next().css("display")=="block"){			
+			$(o).next().css("display","none");
+		}
+		else{
+			$(o).next().css("display","block");
+		}
+	}
+	//加载左侧菜单
+	function loadMenu(){
+		$("#side-menu").children().not(".nav-header").remove();
+		var rootID = $("#language").parent().find("input[type=checkbox]:checked").val();
+		$("#side-menu").append(getChildMenu(rootID,0));
+		initFrame();
+	}
+	function getChildMenu(parentID,grade){
+		var cssArray = new Array("nav-second-level","nav-third-level","nav-fouth-level");
+		var thisGrade="";
+		authorizedFunctions.forEach(function(obj,index,array){
+			if(obj.functionParentid==parentID&&!obj.functionIsInterface){
+				var nextGrade = getChildMenu(obj.functionId,grade+1);
+				//1.设置url
+				if(obj.functionUrl==null||obj.functionUrl==""){
+					url = "#";
+					target = "";
+				}
+				else{
+					url = obj.functionUrl;
+					target = " class=\"J_menuItem\"  data-index=\""+obj.functionId+"\"  data-cid=\""+obj.functionMenuId+"\" ";
+				}
+				var headIco="",footIco="";
+				//2.设置图标
+				if(grade==0){
+					headIco = "<i class=\"fa fa-"+obj.functionIco+"\"></i> <span class=\"nav-label\">";
+					footIco = "</span>";
+				}
+				//3.设置本项html
+				if(nextGrade==""){
+					thisGrade += "<li><a href=\""+url+"\""+target+">"+headIco+obj.functionName+footIco+"</a></li>";
+				}
+				else{
+					thisGrade += "<li><a href=\""+url+"\""+target+">"+headIco+obj.functionName+footIco+"<span class=\"fa arrow\"></span></a>"+nextGrade+"</li>";
+				}
+			}
+		});
+		//4.加外套
+		if(thisGrade!=""&&grade>0){
+			thisGrade = "<ul class=\"nav "+cssArray[grade-1]+"\">"+thisGrade+"</ul>";
+		}
+		return thisGrade;
+	} 
+	</script>
+    <script type="text/html">
+    <li>
+		<a href="#"><i class="fa fa-edit"></i> <span class="nav-label">法律法规</span><span class="fa arrow"></span></a>
+		<ul class="nav nav-second-level">
+			<li><a class="J_menuItem" href="form_basic.html">基本表单</a></li>
+			<li>
+				<a href="#">文件上传 <span class="fa arrow"></span></a>
+				<ul class="nav nav-third-level">
+					<li><a class="J_menuItem" href="form_avatar.html">头像裁剪上传</a>	</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+    </script>
+    <script id="languageItem" type="text/html">
+	<div class="setings-item language">
+		<span><img src="img/{$functionIco}.png" width="20"></span>
+		<div class="switch"  onclick="langugaeClick(this)">
+			<div class="onoffswitch">
+				<input type="checkbox" name="language" class="onoffswitch-checkbox" id="{$language}" value="{$functionId}">
+				<label class="onoffswitch-label">
+					<span class="onoffswitch-inner"></span>
+					<span class="onoffswitch-switch"></span>
+				</label>
+			</div>
+		</div>
+	</div>
+    </script>
+    <!-- 第三方插件 -->
+    <script src="js/plugins/pace/pace.min.js"></script>
+	<div class="layer"></div>
+	<div class="loading">
+	  <div class="sk-spinner sk-spinner-wave">
+	    <div class="sk-rect1"></div>
+	    <div class="sk-rect2"></div>
+	    <div class="sk-rect3"></div>
+	    <div class="sk-rect4"></div>
+	    <div class="sk-rect5"></div>
+	  </div>正在通讯
+	</div>
+</body>
+
+</html>

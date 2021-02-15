@@ -1,0 +1,576 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.Exhibitors.dao.EbsVehiclecardMapper">
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsVehiclecard">
+        select a.id,a.session,a.companyname,a.drivername,a.platenumber,a.cardtype,d.chinesename as cardtypename,a.drivinglicense,a.remark,a.agent,vw.uname as agentname,a.status,a.addtime,a.companyid
+        ,a.printstatus        
+        ,case printstatus 
+				when 0 then '未打印'
+				when 1 then '打印中'
+				when 2 then '已打印'
+		end	as printstatusname,a.printtime
+		,a.printtype
+		,case printtype when -1 then ''
+		when 0 then '正常打印' 
+		when 1 then 'IC卡打印' end printtypename
+        ,a.cardnature
+        ,case when cardnature=0 then '网络' else '现场' end as cardnaturename
+        ,a.makecardtime,
+		a.isforensics as isforensics,
+		a.forensicstime as forensicstime,
+		a.certificatenumber as certificatenumber,
+		a.printnumber as printnumber,a.reviewremark,a.isplastic,a.isback,a.plastictime       
+        from ebs_vehiclecard as a        
+        inner join cm_certificate_type as d on d.type=1 and a.cardtype=d.id
+        left join vw_Frontend_user_integration as vw on vw.isback=a.isback and vw.uid=a.agent
+        where a.id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsVehiclecard">
+        select a.id,a.session,a.companyname,a.companyid,a.drivername,a.platenumber,a.cardtype,a.drivinglicense,a.remark,a.agent,vw.uname as agentname,a.status,a.addtime,b.chinesename as typename
+        ,a.printstatus        
+        ,case printstatus 
+				when 0 then '未打印'
+				when 1 then '打印中'
+				when 2 then '已打印'
+		end	as printstatusname
+		,a.printtype
+		,case printtype when -1 then ''
+		when 0 then '正常打印' 
+		when 1 then 'IC卡打印' end printtypename,a.printtime
+        ,a.cardnature
+        ,case when cardnature=0 then '网络' else '现场' end as cardnaturename
+        ,a.makecardtime,
+		a.isforensics as isforensics,
+		a.forensicstime as forensicstime,
+		a.certificatenumber as certificatenumber,
+		a.printnumber as printnumber,a.reviewremark,a.isplastic from ebs_vehiclecard as a        
+        inner join cm_certificate_type as b on b.type=1 and a.cardtype=b.id
+        left join vw_Frontend_user_integration as vw on vw.isback=a.isback and vw.uid=a.agent
+        <where>
+                <if test="id != null and id != ''">
+                    and a.id = #{id}
+                </if>
+                <if test="session != null and session != ''">
+                    and a.session = #{session}
+                </if>
+                <if test="companyname != null and companyname != ''">
+                    and a.companyname like concat('%',#{companyname},'%')
+                </if>
+                <if test="companyid != null and companyid != ''">
+                    and a.companyid = #{companyid}
+                </if>
+                <if test="drivername != null and drivername != ''">
+                    and a.drivername = #{drivername}
+                </if>
+                <if test="platenumber != null and platenumber != ''">
+                    and a.platenumber = #{platenumber}
+                </if>
+                <if test="cardtype != null and cardtype != ''">
+                    and a.cardtype = #{cardtype}
+                </if>
+                <if test="drivinglicense != null and drivinglicense != ''">
+                    and a.drivinglicense = #{drivinglicense}
+                </if>
+                <if test="remark != null and remark != ''">
+                    and a.remark = #{remark}
+                </if>
+                <if test="agent != null and agent != ''">
+                    and a.agent = #{agent}
+                </if>
+                <if test="status != null and status != ''">
+                    and a.status = #{status}
+                </if>
+    			<if test="isback != null and isback != ''">and a.isback = #{isback} </if>
+    			<if test="printstatus != null and printstatus != ''">and a.printstatus = #{printstatus} </if>    			
+    			<if test="printtype != null and printtype != ''">and a.printtype = #{printtype} </if>
+    			<if test="cardnature != null and cardnature != ''">and a.cardnature = #{cardnature} </if>
+    			<if test="makecardtime != null and makecardtime != ''">and a.makecardtime = #{makecardtime} </if>
+                <if test="addtime != null and addtime != ''">
+                    and a.addtime = #{addtime}
+                </if>
+			<if test="isforensics != null and isforensics != ''">
+				and a.isforensics = #{isforensics}
+			</if>
+			<if test="forensicstime != null and forensicstime != ''">
+				and a.forensicstime = #{forensicstime}
+			</if>
+			<if test="certificatenumber != null and certificatenumber != ''">
+				and a.certificatenumber = #{certificatenumber}
+			</if>
+			<if test="printnumber != null and printnumber != ''">
+				and a.printnumber = #{printnumber}
+			</if>
+			<if test="isplastic != null and isplastic != ''">
+				and a.isplastic = #{isplastic}
+			</if>
+                    </where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsVehiclecard">
+        select ifnull(j.name,'') as jiaoyituan,a.id,a.session,companyname,a.companyid,a.drivername,a.platenumber,a.cardtype,a.drivinglicense,a.remark,a.agent,vw.uname as agentname,a.status,a.addtime,b.chinesename as typename,
+        vw.uname
+        ,a.printstatus        
+        ,case printstatus 
+				when 0 then '未打印'
+				when 1 then '打印中'
+				when 2 then '已打印'
+		end	as printstatusname
+		,a.printtype
+		,case printtype when -1 then ''
+		when 0 then '正常打印' 
+		when 1 then 'IC卡打印' end printtypename,a.printtime
+        ,a.cardnature
+        ,case when cardnature=0 then '网络' else '现场' end as cardnaturename
+        ,a.makecardtime,
+        b.chinesename as cardtypename,
+        b.engname,
+        b.japanname,
+        b.russianame,
+        b.koreaname,
+		a.isforensics as isforensics,
+		a.forensicstime as forensicstime,
+		a.certificatenumber as certificatenumber,
+		a.printnumber as printnumber,a.reviewremark,a.isplastic,ifnull(s.middleid,'') as middleid        
+        from ebs_vehiclecard as a
+        inner join cm_certificate_type as b on b.type=1 and a.cardtype=b.id
+        <if test="leixing != null and leixing != ''">
+        left join vw_agentstatus as m on m.memberid=a.agent
+        </if>
+        left join vw_Frontend_user_integration as vw on vw.isback=a.isback and vw.uid=a.agent
+        left join ebs_companyinfo as d on d.chinesename=a.companyname and a.session=d.session
+        left join ebs_tradinggroup as j on j.id=d.tradinggroupid
+        left join web_member_session as s on s.member_id=a.agent and s.id=#{session}
+        <where>
+        	<if test="leixing != null and leixing != ''">
+        		and ifnull(m.makeevidence,1)=1
+        	</if>
+    		<if test="id != null and id != ''">and a.id =
+                    #{id}
+                </if>
+                <if test="session != null and session != ''">and a.session =
+                    #{session}
+                </if>
+                <if test="companyname != null and companyname != ''">and a.companyname like concat('%',#{companyname},'%')</if>
+                <if test="companyid != null and companyid != ''">
+                    and a.companyid = #{companyid}
+                </if>
+                <if test="drivername != null and drivername != ''">and a.drivername like concat('%',#{drivername},'%')
+                </if>
+                <if test="platenumber != null and platenumber != ''">and a.platenumber like concat('%',#{platenumber},'%')
+                </if>
+                <if test="cardtype != null and cardtype != ''">and a.cardtype =
+                    #{cardtype}
+                </if>
+                <if test="drivinglicense != null and drivinglicense != ''">and a.drivinglicense =
+                    #{drivinglicense}
+                </if>
+                <if test="remark != null and remark != ''">and a.remark =
+                    #{remark}
+                </if>
+                <if test="agent != null and agent != ''">and a.agent =
+                    #{agent}
+                </if>
+                <if test="status != null and status != ''">and a.status = #{status} </if>
+                <if test="isback != null and isback != ''">and a.isback = #{isback} </if>
+                <if test="printstatus != null and printstatus != ''">and a.printstatus = #{printstatus} </if>    			
+    			<if test="printtype != null and printtype != ''">and a.printtype = #{printtype} </if>
+    			<if test="cardnature != null and cardnature != ''">and a.cardnature = #{cardnature} </if>
+    			<if test="makecardtime != null and makecardtime != ''">and a.makecardtime = #{makecardtime} </if>
+                <if test="addtime != null and addtime != ''">and a.addtime =
+                    #{addtime}
+                </if>
+			<if test="isforensics != null and isforensics != ''">
+				and a.isforensics = #{isforensics}
+			</if>
+			<if test="forensicstime != null and forensicstime != ''">
+				and a.forensicstime = #{forensicstime}
+			</if>
+			<if test="certificatenumber != null and certificatenumber != ''">
+				and a.certificatenumber = #{certificatenumber}
+			</if>
+			<if test="printnumber != null and printnumber != ''">
+				and a.printnumber = #{printnumber}
+			</if>
+			<if test="isplastic != null and isplastic != ''">
+				and a.isplastic = #{isplastic}
+			</if>
+                    </where>
+        order by j.orders,a.id desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(*) 
+		FROM 
+		ebs_vehiclecard as a
+		inner join cm_certificate_type as b on b.type=1 and a.cardtype=b.id
+		<if test="leixing != null and leixing != ''">
+        left join vw_agentstatus as m on m.memberid=a.agent
+        </if>
+		<where>
+			<if test="leixing != null and leixing != ''">
+        		and ifnull(m.makeevidence,1)=1
+        	</if>
+                <if test="id != null and id != ''">and a.id =
+                    #{id}
+                </if>
+                <if test="session != null and session != ''">and a.session =
+                    #{session}
+                </if>
+                <if test="companyname != null and companyname != ''">and a.companyname like concat('%',#{companyname},'%')</if>
+                <if test="companyid != null and companyid != ''">
+                    and a.companyid = #{companyid}
+                </if>
+                <if test="drivername != null and drivername != ''">and a.drivername like concat('%',#{drivername},'%')
+                </if>
+                <if test="platenumber != null and platenumber != ''">and a.platenumber like concat('%',#{platenumber},'%')
+                </if>
+                <if test="cardtype != null and cardtype != ''">and a.cardtype =
+                    #{cardtype}
+                </if>
+                <if test="drivinglicense != null and drivinglicense != ''">and a.drivinglicense =
+                    #{drivinglicense}
+                </if>
+                <if test="remark != null and remark != ''">and a.remark =
+                    #{remark}
+                </if>
+                <if test="agent != null and agent != ''">and a.agent =
+                    #{agent}
+                </if>
+                <if test="status != null and status != ''">and a.status = #{status} </if>
+                <if test="isback != null and isback != ''">and a.isback = #{isback} </if>
+                <if test="printstatus != null and printstatus != ''">and a.printstatus = #{printstatus} </if>    			
+    			<if test="printtype != null and printtype != ''">and a.printtype = #{printtype} </if>
+    			<if test="cardnature != null and cardnature != ''">and a.cardnature = #{cardnature} </if>
+    			<if test="makecardtime != null and makecardtime != ''">and a.makecardtime = #{makecardtime} </if>
+                <if test="addtime != null and addtime != ''">and a.addtime =
+                    #{addtime}
+                </if>
+			<if test="isforensics != null and isforensics != ''">
+				and a.isforensics = #{isforensics}
+			</if>
+			<if test="forensicstime != null and forensicstime != ''">
+				and a.forensicstime = #{forensicstime}
+			</if>
+			<if test="certificatenumber != null and certificatenumber != ''">
+				and a.certificatenumber = #{certificatenumber}
+			</if>
+			<if test="printnumber != null and printnumber != ''">
+				and a.printnumber = #{printnumber}
+			</if>
+			<if test="isplastic != null and isplastic != ''">
+				and a.isplastic = #{isplastic}
+			</if>
+                    </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.Exhibitors.model.EbsVehiclecard"            useGeneratedKeys="true" keyProperty="id">
+        insert into ebs_vehiclecard(<trim suffixOverrides=",">
+    <if test="session != null">`session`,</if>                                   
+                                    <if test="drivername != null">`drivername`,</if>
+                                    <if test="platenumber != null">`platenumber`,</if>
+                                    <if test="cardtype != null">`cardtype`,</if>
+                                    <if test="drivinglicense != null">`drivinglicense`,</if>
+                                    <if test="remark != null">`remark`,</if>
+                                    <if test="agent != null">`agent`,</if>
+                                    <if test="status != null">`status`,</if>
+                                    <if test="isback != null">`isback`,</if>
+                                    <if test="printstatus != null">`printstatus`,</if>
+                                    <if test="printtype != null">`printtype`,</if>
+                                    <if test="cardnature != null">`cardnature`,</if>
+                                    <if test="makecardtime != null">`makecardtime`,</if>
+                                    <if test="companyid != null">`companyid`,</if>
+                                    <if test="companyname != null">`companyname`,</if>
+                                    <if test="addtime != null">`addtime`,</if>
+                                    <if test="isforensics != null">`isforensics`,</if>
+					                <if test="forensicstime != null">`forensicstime`,</if>
+					                <if test="certificatenumber != null">`certificatenumber`,</if>
+					                <if test="reviewremark != null">`reviewremark`,</if>
+					                <if test="printnumber != null">`printnumber`</if>
+                    </trim>)
+        values (<trim suffixOverrides=",">
+    								<if test="session != null">#{session},</if>
+                                    <if test="drivername != null">#{drivername},</if>
+                                    <if test="platenumber != null">#{platenumber},</if>
+                                    <if test="cardtype != null">#{cardtype},</if>
+                                    <if test="drivinglicense != null">#{drivinglicense},</if>
+                                    <if test="remark != null">#{remark},</if>
+                                    <if test="agent != null">#{agent},</if>
+                                    <if test="status != null">#{status},</if>
+                                    <if test="isback != null">#{isback},</if>
+                                    <if test="printstatus != null">#{printstatus},</if>
+                                    <if test="printtype != null">#{printtype},</if>
+                                    <if test="cardnature != null">#{cardnature},</if>
+                                    <if test="makecardtime != null">#{makecardtime},</if>
+                                    <if test="companyid != null">#{companyid},</if>
+                                    <if test="companyname != null">#{companyname},</if>
+                                    <if test="addtime != null">#{addtime},</if>
+					                <if test="isforensics != null">#{isforensics},</if>
+					                <if test="forensicstime != null">#{forensicstime},</if>
+					                <if test="certificatenumber != null">#{certificatenumber},</if>
+					                <if test="reviewremark != null">#{reviewremark},</if>
+					                <if test="printnumber != null">#{printnumber}</if>
+                    </trim>)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.Exhibitors.model.EbsVehiclecard">
+        update ebs_vehiclecard
+        <set>
+			<if test="session != null">`session` = #{session},</if>
+			<if test="companyid != null">`companyid` = #{companyid},</if>
+			<if test="drivername != null">`drivername` = #{drivername},</if>
+			<if test="platenumber != null">`platenumber` = #{platenumber},</if>
+			<if test="cardtype != null">`cardtype` = #{cardtype},</if>
+			<if test="drivinglicense != null">`drivinglicense` = #{drivinglicense},</if>
+			<if test="remark != null">`remark` = #{remark},</if>
+			<if test="agent != null">`agent` = #{agent},</if>
+            <if test="status != null">`status` = #{status},</if>
+            <if test="isback != null">`isback` = #{isback},</if>
+            <if test="printstatus != null">`printstatus` = #{printstatus},</if>
+            <if test="printtype != null">`printtype` = #{printtype},</if>
+            <if test="printtime != null">`printtime` = #{printtime},</if>
+            <if test="cardnature != null">`cardnature` = #{cardnature},</if>
+            <if test="makecardtime != null">`makecardtime` = #{makecardtime},</if>
+            <if test="companyname != null">`companyname` = #{companyname},</if>
+			<if test="addtime != null">`addtime` = #{addtime},</if>
+			<if test="isforensics != null">`isforensics` = #{isforensics},</if>
+			<if test="forensicstime != null">`forensicstime` = #{forensicstime},</if>
+			<if test="certificatenumber != null">`certificatenumber` = #{certificatenumber},</if>
+			<if test="reviewremark != null">`reviewremark` = #{reviewremark},</if>
+			<if test="isplastic != null">`isplastic` = #{isplastic},</if>
+			<if test="plastictime != null">`plastictime` = #{plastictime},</if>
+			<if test="printnumber != null">`printnumber` = #{printnumber}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from ebs_vehiclecard
+        where id = #{id}
+    </delete>
+    
+    <delete id="deleteByMap">
+    	delete from ebs_vehiclecard
+	   where agent=#{memberid} and session=#{session}
+    </delete>
+    
+    <delete id="deleteByIdAndMemberId">
+    	delete from ebs_vehiclecard
+	   where agent=#{memberId} and id = #{id}
+    </delete>
+    
+	 <delete id="delete">
+	   delete from ebs_vehiclecard
+	   where agent=#{memberId} and id in  
+	       <foreach collection="idList" item="id" index="index"
+	           open="(" close=")" separator=",">
+	           #{id,jdbcType=VARCHAR}
+	       </foreach>;
+	 </delete>
+	 <select id="takeAwayReport" resultType="map">
+	 SELECT 
+		ebs_vehiclecard.id,
+		ebs_vehiclecard.companyname,
+		ebs_vehiclecard.platenumber,
+		ebs_vehiclecard.drivername,
+		ebs_vehiclecard.printnumber,
+		cm_certificate_type.chinesename,
+		cm_certificate_type.engname,
+		cm_certificate_type.japanname,
+		cm_certificate_type.koreaname,
+		cm_certificate_type.russianame
+		FROM ebs_vehiclecard
+		LEFT JOIN cm_certificate_type on ebs_vehiclecard.cardtype=cm_certificate_type.id
+		LEFT JOIN ebs_companyinfo ON ebs_companyinfo.chinesename=ebs_vehiclecard.companyname and ebs_companyinfo.session=ebs_vehiclecard.session
+		WHERE agent=#{memberId}
+		AND printstatus=2
+		<if test="makecardtime != null and makecardtime != ''">
+		AND makecardtime<![CDATA[ <= ]]>#{makecardtime}
+		</if>
+		<if test="sessionId != null and sessionId != ''">
+		AND ebs_vehiclecard.`session`=#{sessionId}
+		</if>
+		<if test="awayStatus != null and awayStatus != '' and awayStatus != -1">
+		AND isforensics=#{awayStatus}
+		</if>
+		<if test="cardType != null and cardType != ''">
+		AND cardtype=#{cardType}
+		</if>
+	 </select>
+	 <select id="updatePrintNumber" resultType="Integer">
+	 	UPDATE ebs_vehiclecard SET printnumber=#{printNumber}
+		WHERE agent=#{memberId}
+		AND printstatus=2
+		<if test="makecardtime != null and makecardtime != ''">
+		AND makecardtime<![CDATA[ <= ]]>#{makecardtime}
+		</if>
+		<if test="sessionId != null and sessionId != ''">
+		AND ebs_vehiclecard.`session`=#{sessionId}
+		</if>
+		<if test="awayStatus != null and awayStatus != ''">
+		AND isforensics=#{awayStatus}
+		</if>
+		<if test="cardType != null and cardType != ''">
+		AND cardtype=#{cardType}
+		</if>
+	 </select>
+	 
+	 <update id="updatePrintNumberByMap">
+		UPDATE ebs_vehiclecard a
+		INNER JOIN cm_certificate_type b ON a.cardtype = b.id
+		SET printnumber=#{printnumber}
+		WHERE
+			b.type = 1
+		and a.status = 1
+		AND b.session = #{session}
+		AND b.useable = 1
+		AND a.cardtype = #{cardtype}
+		AND a.agent = #{agentId}
+		<if test="isforensics != null and isforensics != ''">
+			AND a.isforensics = #{isforensics}
+		</if>
+		AND DATE_ADD(a.makecardtime,INTERVAL #{evidenceDelay} MINUTE)<![CDATA[ <= ]]> now()
+	 </update>
+	 
+	 <select id="getHistoryCarCard" resultType="map">
+	 SELECT
+		ebs_vehiclecard.id,
+		sys_session.sessionid as sessionname,
+		ebs_vehiclecard.`platenumber`,
+		ebs_vehiclecard.companyname,
+		ebs_vehiclecard.drivinglicense,
+		cm_certificate_type.chinesename,
+		cm_certificate_type.engname,
+		cm_certificate_type.japanname,
+		cm_certificate_type.koreaname,
+		cm_certificate_type.russianame
+	FROM
+		ebs_vehiclecard
+	LEFT JOIN sys_session ON sys_session.id = ebs_vehiclecard.`session`
+	LEFT JOIN cm_certificate_type on ebs_vehiclecard.cardtype=cm_certificate_type.id
+	WHERE ebs_vehiclecard.agent=#{memberId} 
+	AND ebs_vehiclecard.`session`!=#{sessionId} 
+	AND `platenumber` LIKE concat('%',#{platenumber},'%') 
+	<if test="companyname != null and companyname != ''">
+	AND `companyname` LIKE concat('%',#{companyname},'%') 
+	</if>
+	AND (cm_certificate_type.chinesename =#{cardname} 
+		OR cm_certificate_type.engname =#{cardname}
+		OR cm_certificate_type.japanname =#{cardname}
+		OR cm_certificate_type.koreaname =#{cardname} 
+		OR cm_certificate_type.russianame =#{cardname}
+		)
+	 GROUP BY ebs_vehiclecard.`platenumber`
+	 ORDER BY ebs_vehiclecard.id DESC
+	LIMIT #{start,jdbcType=INTEGER},#{limit,jdbcType=INTEGER};
+	 </select>
+	 <select id="getHistoryCarCardCount" resultType="int">
+	 SELECT
+		count(*)
+	FROM(
+	 SELECT
+		count(*)
+	FROM
+		ebs_vehiclecard
+	LEFT JOIN cm_certificate_type on ebs_vehiclecard.cardtype=cm_certificate_type.id
+	WHERE agent=#{memberId} 
+	AND ebs_vehiclecard.`session`!=#{sessionId}  
+	AND `platenumber` LIKE concat('%',#{platenumber},'%') 
+	<if test="companyname != null and companyname != ''">
+	AND `companyname` LIKE concat('%',#{companyname},'%') 
+	</if>
+	AND (cm_certificate_type.chinesename =#{cardname} 
+		OR cm_certificate_type.engname =#{cardname}
+		OR cm_certificate_type.japanname =#{cardname}
+		OR cm_certificate_type.koreaname =#{cardname} 
+		OR cm_certificate_type.russianame =#{cardname}
+		)
+	 GROUP BY ebs_vehiclecard.`platenumber`) AS car
+	 </select>
+	 
+	 
+	 <select id="VehicleIDMarkList" resultType="map">
+	 	select * from (
+			select ifnull(s.middleid,'') as middleid,a.agent,a.forensicstime,a.id,ifnull(t.name,'') as jytname,vw.uname as agentname,a.companyname,
+			cc.chinesename as cardtypename,a.drivername,a.platenumber,
+			case when a.companyid=0 then '' else a.companyid end as companyid,fl.phone
+			 from ebs_vehiclecard as a
+			inner join cm_certificate_type as cc on cc.id=a.cardtype and cc.type=1
+			left join ebs_companyinfo as c on c.chinesename=a.companyname and a.session=c.session
+			left join ebs_tradinggroup as t on t.id=c.tradinggroupid
+			left join vw_Frontend_user_integration as vw on vw.isback=a.isback and vw.uid=a.agent
+			left join web_member_session as s on s.member_id=a.agent and s.id=#{session}
+			left join (select primaryid,max(phone) as phone from sys_forensic_log where act='person' group by primaryid) as fl on fl.primaryid=a.id
+			where a.printstatus=#{printstatus} and a.session=#{session} and a.isforensics=#{isforensics}
+			and a.isplastic=#{isplastic}
+		) as a where 1=1 
+		<if test="middleid != null and middleid != ''">
+			AND a.middleid = #{middleid}
+		</if>
+		<if test="drivername != null and drivername != ''">
+			AND a.drivername = #{drivername}
+		</if>
+		<if test="platenumber != null and platenumber != ''">
+			AND a.platenumber = #{platenumber}
+		</if>
+		<if test="agentname != null and agentname != ''">
+			AND a.agentname = #{agentname}
+		</if>
+		<if test="agent != null and agent != ''">
+			AND a.agent = #{agent}
+		</if>
+		order by a.id desc	
+		limit #{index}, #{size}
+	 </select>
+	 
+	 <select id="VehicleIDMarkListCount" resultType="int">
+	 	select count(*) from (
+			select ifnull(s.middleid,'') as middleid,a.agent,a.id,ifnull(t.name,'') as jytname,vw.uname as agentname,a.companyname,
+			cc.chinesename as cardtypename,a.drivername,a.platenumber,
+			case when a.companyid=0 then '' else a.companyid end as companyid
+			 from ebs_vehiclecard as a
+			inner join cm_certificate_type as cc on cc.id=a.cardtype and cc.type=1
+			left join ebs_companyinfo as c on c.chinesename=a.companyname and a.session=c.session
+			left join ebs_tradinggroup as t on t.id=c.tradinggroupid
+			left join vw_Frontend_user_integration as vw on vw.isback=a.isback and vw.uid=a.agent
+			left join web_member_session as s on s.member_id=a.agent and s.id=#{session}
+			where a.printstatus=#{printstatus} and a.session=#{session} and a.isforensics=#{isforensics}
+			and a.isplastic=#{isplastic}
+		) as a where 1=1 
+		<if test="middleid != null and middleid != ''">
+			AND a.middleid = #{middleid}
+		</if>
+		<if test="agent != null and agent != ''">
+			AND a.agent = #{agent}
+		</if>
+		<if test="drivername != null and drivername != ''">
+			AND a.drivername = #{drivername}
+		</if>
+		<if test="platenumber != null and platenumber != ''">
+			AND a.platenumber = #{platenumber}
+		</if>
+		<if test="agentname != null and agentname != ''">
+			AND a.agentname = #{agentname}
+		</if>
+	 </select>
+	 
+	 <select id="loadCount" resultType="map">
+	 	SELECT
+			COUNT(DISTINCT ebs_vehiclecard.companyname) EnterprisesNumber,
+			COUNT(ebs_vehiclecard.id) certificatesTotalNumber,
+			IFNULL(SUM(CASE WHEN status = 0 THEN 1 ELSE 0 END), 0) pendingAuditNumber,
+			IFNULL(SUM(CASE WHEN status = -1 THEN 1 ELSE 0 END), 0) failedAuditNumber,
+			IFNULL(SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END), 0) ReviewedCertificatesNumber,
+			IFNULL(SUM(CASE WHEN printstatus = 2 THEN 1 ELSE 0 END), 0) Printed,
+			IFNULL(SUM(CASE WHEN (status = 1 and isplastic = 1 and printstatus = 0) THEN 1 ELSE 0 END), 0) noPrinted,
+			IFNULL(SUM(CASE WHEN isback = 0 THEN 1 ELSE 0 END), 0) greenChannelCertificatesNumber
+		FROM ebs_vehiclecard
+		INNER JOIN cm_certificate_type ON cm_certificate_type.type = 1 AND ebs_vehiclecard.cardtype = cm_certificate_type.id
+		INNER JOIN vw_agentstatus ON vw_agentstatus.memberid = ebs_vehiclecard.agent AND vw_agentstatus.makeevidence = 1
+		WHERE ebs_vehiclecard.session = #{session}
+	 </select>
+</mapper>

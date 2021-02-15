@@ -1,0 +1,669 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.PreviousInformation.dao.PimAgentMapper">
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.PreviousInformation.model.PimAgent">
+        select
+			a.id as id,
+			a.loginname as loginname,
+			a.loginpass as loginpass,
+			a.name as name,
+			a.sex as sex,
+			case when a.sex=0 then '男' else '女' end as sexname,
+			a.companyname as companyname,
+			a.tel as tel,
+			a.phone as phone,
+			a.jobtitle as jobtitle,
+			a.areaphone as areaphone,
+			a.onsitecertification as onsitecertification,
+			case when a.onsitecertification=0 then '否' else '是' end as onsitecertificationname,
+			a.makeevidence as makeevidence,
+			case when a.makeevidence=0 then '否' else '是' end as makeevidencename,
+			a.uploadvehiclelicense as uploadvehiclelicense,
+			case when a.uploadvehiclelicense=0 then '否' else '是' end as uploadvehiclelicensename,
+			a.imagepath as imagepath,
+			a.isopen as isopen,
+			case when a.isopen=0 then '不允许' else '允许' end as isopenname,
+			a.addtime as addtime,
+			a.createuser as createuser,
+			a.tradinggroupid as tradinggroupid,ifnull(b.cardtypes,'') as cardtypes,a.type
+        from pim_agent as a
+        inner join (
+        	select a.member_id,b.id,b.orgnization_id from web_member as a
+			inner join web_member_session as b on a.member_id=b.member_id and b.id=#{session}
+			where a.member_type in (0,1)
+        ) as m on m.orgnization_id=a.id
+        left join vw_AgentType as b on a.id=b.agentid and b.rounds=m.id
+        where a.id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.PreviousInformation.model.PimAgent">
+        select
+			a.id as id,
+			a.loginname as loginname,
+			a.loginpass as loginpass,
+			a.name as name,
+			a.sex as sex,
+			case when a.sex=0 then '男' else '女' end as sexname,
+			a.companyname as companyname,
+			a.tel as tel,
+			a.phone as phone,
+			a.jobtitle as jobtitle,
+			a.areaphone as areaphone,
+			a.onsitecertification as onsitecertification,
+			case when a.onsitecertification=0 then '否' else '是' end as onsitecertificationname,
+			a.makeevidence as makeevidence,
+			case when a.makeevidence=0 then '否' else '是' end as makeevidencename,
+			a.uploadvehiclelicense as uploadvehiclelicense,
+			case when a.uploadvehiclelicense=0 then '否' else '是' end as uploadvehiclelicensename,
+			a.imagepath as imagepath,
+			a.isopen as isopen,
+			case when a.isopen=0 then '不允许' else '允许' end as isopenname,
+			a.addtime as addtime,
+			a.createuser as createuser,
+			a.tradinggroupid as tradinggroupid,ifnull(b.cardtypes,'') as cardtypes,a.type
+        from pim_agent as a
+        inner join (
+        	select a.member_id,b.id,b.orgnization_id from web_member as a
+			inner join web_member_session as b on a.member_id=b.member_id and b.id=#{session}
+			where a.member_type in (0,1)
+        ) as m on m.orgnization_id=a.id
+        left join vw_AgentType as b on a.id=b.agentid and b.rounds=m.id
+        <where>
+        	 <if test="session != null and session != ''">
+                and m.id = #{session}
+            </if>
+			<if test="id != null and id != ''">
+				and a.id = #{id}
+			</if>
+			<if test="loginname != null and loginname != ''">
+				and a.loginname like concat('%',#{loginname},'%')
+			</if>
+			<if test="loginpass != null and loginpass != ''">
+				and a.loginpass = #{loginpass}
+			</if>
+			<if test="name != null and name != ''">
+				and a.name like concat('%',#{name},'%')
+			</if>
+			<if test="sex != null and sex != ''">
+				and a.sex = #{sex}
+			</if>
+			<if test="companyname != null and companyname != ''">
+				and a.companyname like concat('%',#{companyname},'%')
+			</if>
+			<if test="tel != null and tel != ''">
+				and a.tel = #{tel}
+			</if>
+			<if test="phone != null and phone != ''">
+				and a.phone = #{phone}
+			</if>
+			<if test="jobtitle != null and jobtitle != ''">
+				and a.jobtitle = #{jobtitle}
+			</if>
+			<if test="areaphone != null and areaphone != ''">
+				and a.areaphone = #{areaphone}
+			</if>
+			<if test="onsitecertification != null and onsitecertification != ''">
+				and a.onsitecertification = #{onsitecertification}
+			</if>
+			<if test="makeevidence != null and makeevidence != ''">
+				and a.makeevidence = #{makeevidence}
+			</if>
+			<if test="uploadvehiclelicense != null and uploadvehiclelicense != ''">
+				and a.uploadvehiclelicense = #{uploadvehiclelicense}
+			</if>
+			<if test="imagepath != null and imagepath != ''">
+				and a.imagepath = #{imagepath}
+			</if>
+			<if test="isopen != null and isopen != ''">
+				and a.isopen = #{isopen}
+			</if>
+			<if test="addtime != null and addtime != ''">
+				and a.addtime = #{addtime}
+			</if>
+			<if test="createuser != null and createuser != ''">
+				and a.createuser = #{createuser}
+			</if>
+			<if test="tradinggroupid != null and tradinggroupid != ''">
+				and a.tradinggroupid = #{tradinggroupid}
+			</if>
+        </where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.PreviousInformation.model.PimAgent">
+        select
+			a.id as id,
+			m.member_id as memberid,
+			a.loginname as loginname,
+			a.loginpass as loginpass,
+			a.name as name,
+			a.sex as sex,
+			case when a.sex=0 then '男' else '女' end as sexname,
+			a.companyname as companyname,
+			a.tel as tel,
+			a.phone as phone,
+			a.jobtitle as jobtitle,
+			a.areaphone as areaphone,
+			a.onsitecertification as onsitecertification,
+			case when a.onsitecertification=0 then '否' else '是' end as onsitecertificationname,
+			a.makeevidence as makeevidence,
+			case when a.makeevidence=0 then '否' else '是' end as makeevidencename,
+			a.uploadvehiclelicense as uploadvehiclelicense,
+			case when a.uploadvehiclelicense=0 then '否' else '是' end as uploadvehiclelicensename,
+			a.imagepath as imagepath,
+			a.isopen as isopen,
+			case when a.isopen=0 then '不允许' else '允许' end as isopenname,
+			a.addtime as addtime,
+			a.createuser as createuser,
+			ifnull(s.username,'') as createusername,
+			a.tradinggroupid as tradinggroupid,
+			t.name as tradinggroupname,
+			ifnull(b.cardtypes,'') as cardtypes,
+			ifnull(b.cardtypenames,'') as cardtypenames,
+			m.member_id,
+			a.type			
+        from pim_agent as a
+        inner join (
+        	select a.member_id,b.id,b.orgnization_id from web_member as a
+			inner join web_member_session as b on a.member_id=b.member_id and b.id=#{session}
+			where  a.member_type in (0,1)
+        ) as m on m.orgnization_id=a.id
+        left join system_user as s on a.createuser=s.id
+        left join ebs_tradinggroup as t on t.id=a.tradinggroupid
+        left join vw_AgentType as b on a.id=b.agentid and b.rounds=m.id
+        <where>        	
+        	<if test="kbzj != null and kbzj != ''">
+                and concat(',',b.cardtypes,',') like concat('%,',#{kbzj},'|%')
+            </if>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="session != null and session != ''">
+                and m.id = #{session}
+            </if>
+            <if test="loginname != null and loginname != ''">
+                and a.loginname like concat('%',#{loginname},'%')
+            </if>
+            <if test="loginpass != null and loginpass != ''">
+                and a.loginpass = #{loginpass}
+            </if>
+            <if test="name != null and name != ''">
+                and a.name like concat('%',#{name},'%')
+            </if>
+            <if test="tradinggroupname != null and tradinggroupname != ''">
+                and t.name like concat('%',#{tradinggroupname},'%')
+            </if>
+            
+            <if test="sex != null and sex != ''">
+                and a.sex = #{sex}
+            </if>
+            <if test="companyname != null and companyname != ''">
+                and a.companyname like concat('%',#{companyname},'%')
+            </if>
+            <if test="tel != null and tel != ''">
+                and a.tel = #{tel}
+            </if>
+            <if test="phone != null and phone != ''">
+                and a.phone = #{phone}
+            </if>
+            <if test="jobtitle != null and jobtitle != ''">
+                and a.jobtitle = #{jobtitle}
+            </if>
+            <if test="areaphone != null and areaphone != ''">
+                and a.areaphone = #{areaphone}
+            </if>
+            <if test="onsitecertification != null and onsitecertification != ''">
+                and a.onsitecertification = #{onsitecertification}
+            </if>
+            <if test="makeevidence != null and makeevidence != ''">
+                and a.makeevidence = #{makeevidence}
+            </if>
+            <if test="uploadvehiclelicense != null and uploadvehiclelicense != ''">
+                and a.uploadvehiclelicense = #{uploadvehiclelicense}
+            </if>
+            <if test="imagepath != null and imagepath != ''">
+                and a.imagepath = #{imagepath}
+            </if>
+            <if test="isopen != null and isopen != ''">
+                and a.isopen = #{isopen}
+            </if>
+            <if test="addtime != null and addtime != ''">
+                and a.addtime = #{addtime}
+            </if>
+            <if test="createuser != null and createuser != ''">
+                and a.createuser = #{createuser}
+            </if>
+            <if test="tradinggroupid != null and tradinggroupid != ''">
+                and a.tradinggroupid = #{tradinggroupid}
+            </if>
+        </where>
+        order by t.orders,a.id desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(*) FROM pim_agent a
+		inner join (
+        	select a.member_id,b.id,b.orgnization_id from web_member as a
+			inner join web_member_session as b on a.member_id=b.member_id
+			where a.member_status=0 and a.member_type in (0,1)
+        ) as m on m.orgnization_id=a.id
+		left join system_user as s on a.createuser=s.id
+		left join ebs_tradinggroup as t on t.id=a.tradinggroupid
+		left join vw_AgentType as b on a.id=b.agentid and b.rounds=m.id
+		<where>
+			<if test="kbzj != null and kbzj != ''">
+                and concat(',',b.cardtypes,',') like concat('%,',#{kbzj},'|%')
+            </if>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="session != null and session != ''">
+                and m.id = #{session}
+            </if>
+            <if test="loginname != null and loginname != ''">
+                and a.loginname like concat('%',#{loginname},'%')
+            </if>
+            <if test="loginpass != null and loginpass != ''">
+                and a.loginpass = #{loginpass}
+            </if>
+            <if test="name != null and name != ''">
+                and a.name like concat('%',#{name},'%')
+            </if>
+            <if test="tradinggroupname != null and tradinggroupname != ''">
+                and t.name like concat('%',#{tradinggroupname},'%')
+            </if>
+            <if test="sex != null and sex != ''">
+                and a.sex = #{sex}
+            </if>
+            <if test="companyname != null and companyname != ''">
+                and a.companyname like concat('%',#{companyname},'%')
+            </if>
+            <if test="tel != null and tel != ''">
+                and a.tel = #{tel}
+            </if>
+            <if test="phone != null and phone != ''">
+                and a.phone = #{phone}
+            </if>
+            <if test="jobtitle != null and jobtitle != ''">
+                and a.jobtitle = #{jobtitle}
+            </if>
+            <if test="areaphone != null and areaphone != ''">
+                and a.areaphone = #{areaphone}
+            </if>
+            <if test="onsitecertification != null and onsitecertification != ''">
+                and a.onsitecertification = #{onsitecertification}
+            </if>
+            <if test="makeevidence != null and makeevidence != ''">
+                and a.makeevidence = #{makeevidence}
+            </if>
+            <if test="uploadvehiclelicense != null and uploadvehiclelicense != ''">
+                and a.uploadvehiclelicense = #{uploadvehiclelicense}
+            </if>
+            <if test="imagepath != null and imagepath != ''">
+                and a.imagepath = #{imagepath}
+            </if>
+            <if test="isopen != null and isopen != ''">
+                and a.isopen = #{isopen}
+            </if>
+            <if test="addtime != null and addtime != ''">
+                and a.addtime = #{addtime}
+            </if>
+            <if test="createuser != null and createuser != ''">
+                and a.createuser = #{createuser}
+            </if>
+            <if test="tradinggroupid != null and tradinggroupid != ''">
+                and a.tradinggroupid = #{tradinggroupid}
+            </if>
+        </where>
+	</select>
+	
+    <insert id="save" parameterType="cn.org.chtf.card.manage.PreviousInformation.model.PimAgent" useGeneratedKeys="true" keyProperty="id">
+        insert into pim_agent(
+        	<trim suffixOverrides=",">
+                <if test="loginname != null">`loginname`,</if>
+                <if test="loginpass != null and loginpass!=''">`loginpass`,</if>
+                <if test="name != null">`name`,</if>
+                <if test="sex != null">`sex`,</if>
+                <if test="companyname != null">`companyname`,</if>
+                <if test="tel != null">`tel`,</if>
+                <if test="phone != null">`phone`,</if>
+                <if test="jobtitle != null">`jobtitle`,</if>
+                <if test="areaphone != null">`areaphone`,</if>
+                <if test="onsitecertification != null">`onsitecertification`,</if>
+                <if test="makeevidence != null">`makeevidence`,</if>
+                <if test="uploadvehiclelicense != null">`uploadvehiclelicense`,</if>
+                <if test="imagepath != null">`imagepath`,</if>
+                <if test="isopen != null">`isopen`,</if>
+                <if test="addtime != null">`addtime`,</if>
+                <if test="createuser != null">`createuser`,</if>
+                <if test="type != null">`type`,</if>
+                <if test="tradinggroupid != null">`tradinggroupid`</if>
+			</trim>
+		) values (
+        	<trim suffixOverrides=",">
+                <if test="loginname != null">#{loginname},</if>
+                <if test="loginpass != null and loginpass!=''">#{loginpass},</if>
+                <if test="name != null">#{name},</if>
+                <if test="sex != null">#{sex},</if>
+                <if test="companyname != null">#{companyname},</if>
+                <if test="tel != null">#{tel},</if>
+                <if test="phone != null">#{phone},</if>
+                <if test="jobtitle != null">#{jobtitle},</if>
+                <if test="areaphone != null">#{areaphone},</if>
+                <if test="onsitecertification != null">#{onsitecertification},</if>
+                <if test="makeevidence != null">#{makeevidence},</if>
+                <if test="uploadvehiclelicense != null">#{uploadvehiclelicense},</if>
+                <if test="imagepath != null">#{imagepath},</if>
+                <if test="isopen != null">#{isopen},</if>
+                <if test="addtime != null">#{addtime},</if>
+                <if test="createuser != null">#{createuser},</if>
+                <if test="type != null">#{type},</if>
+                <if test="tradinggroupid != null">#{tradinggroupid}</if>
+			</trim>
+		)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.PreviousInformation.model.PimAgent">
+        update pim_agent
+        <set>
+			<if test="loginname != null">`loginname` = #{loginname},</if>
+			<if test="loginpass != null and loginpass!=''">`loginpass` = #{loginpass},</if>
+			<if test="name != null">`name` = #{name},</if>
+			<if test="sex != null">`sex` = #{sex},</if>
+			<if test="companyname != null">`companyname` = #{companyname},</if>
+			<if test="tel != null">`tel` = #{tel},</if>
+			<if test="phone != null">`phone` = #{phone},</if>
+			<if test="jobtitle != null">`jobtitle` = #{jobtitle},</if>
+			<if test="areaphone != null">`areaphone` = #{areaphone},</if>
+			<if test="onsitecertification != null">`onsitecertification` = #{onsitecertification},</if>
+			<if test="makeevidence != null">`makeevidence` = #{makeevidence},</if>
+			<if test="uploadvehiclelicense != null">`uploadvehiclelicense` = #{uploadvehiclelicense},</if>
+			<if test="imagepath != null">`imagepath` = #{imagepath},</if>
+			<if test="isopen != null">`isopen` = #{isopen},</if>
+			<if test="addtime != null">`addtime` = #{addtime},</if>
+			<if test="createuser != null">`createuser` = #{createuser},</if>
+			<if test="type != null">`type` = #{type},</if>
+			<if test="tradinggroupid != null">`tradinggroupid` = #{tradinggroupid}</if>
+        </set>
+        <if test="id != null and id != 0">
+        	where id = #{id}
+        </if>
+    </update>
+
+    <delete id="deleteById">
+        delete from pim_agent where id = #{id}
+    </delete>
+    
+    <delete id="deleteTypeByAgentId">
+        delete from pim_agenttype where agentid = #{id}
+    </delete>
+    
+    <delete id="deleteTypeByAgentIdAndSession">
+        delete from pim_agenttype where agentid = #{id} and rounds=#{session}
+    </delete>
+    
+    <insert id="saveAgentType" parameterType="java.util.List">
+    	insert into pim_agenttype (
+			agentid,
+			cardtype,
+			quantity,
+			rounds
+		) values 
+		<foreach collection="list" item="item" index="index" separator=",">
+		(
+			#{item.agentid},
+			#{item.cardtype},
+			#{item.quantity},
+			#{item.rounds}
+		)
+		</foreach>
+    </insert>
+    
+    <select id="getPimAgentTypeByAgentID" resultType="cn.org.chtf.card.manage.PreviousInformation.model.PimAgenttype">
+    	select agentid,cardtype,quantity from pim_agenttype where agentid=#{id}
+    </select>
+     <select id="getAgentByMemberIdAndSessionId" resultType="cn.org.chtf.card.manage.PreviousInformation.model.PimAgent">
+        select
+			a.id as id,
+			a.loginname as loginname,
+			a.loginpass as loginpass,
+			a.name as name,
+			a.sex as sex,
+			case when a.sex=0 then '男' else '女' end as sexname,
+			a.companyname as companyname,
+			a.tel as tel,
+			a.phone as phone,
+			a.jobtitle as jobtitle,
+			a.areaphone as areaphone,
+			a.onsitecertification as onsitecertification,
+			case when a.onsitecertification=0 then '否' else '是' end as onsitecertificationname,
+			a.makeevidence as makeevidence,
+			case when a.makeevidence=0 then '否' else '是' end as makeevidencename,
+			a.uploadvehiclelicense as uploadvehiclelicense,
+			case when a.uploadvehiclelicense=0 then '否' else '是' end as uploadvehiclelicensename,
+			a.imagepath as imagepath,
+			a.isopen as isopen,
+			case when a.isopen=0 then '不允许' else '允许' end as isopenname,
+			a.addtime as addtime,
+			a.createuser as createuser,
+			a.tradinggroupid as tradinggroupid
+        from pim_agent as a
+        where a.id = (select orgnization_id from web_member_session where member_id=#{memberId} and id=#{sessionId})
+    </select>
+    
+    <select id="Previouslist" resultType="cn.org.chtf.card.manage.PreviousInformation.model.PimAgent">
+        select
+        	m.id as session,
+        	ss.sessionid as sessionname,
+			a.id as id,
+			m.member_id as memberid,
+			a.loginname as loginname,
+			a.loginpass as loginpass,
+			a.name as name,
+			a.sex as sex,
+			case when a.sex=0 then '男' else '女' end as sexname,
+			a.companyname as companyname,
+			a.tel as tel,
+			a.phone as phone,
+			a.jobtitle as jobtitle,
+			a.areaphone as areaphone,
+			a.onsitecertification as onsitecertification,
+			case when a.onsitecertification=0 then '否' else '是' end as onsitecertificationname,
+			a.makeevidence as makeevidence,
+			case when a.makeevidence=0 then '否' else '是' end as makeevidencename,
+			a.uploadvehiclelicense as uploadvehiclelicense,
+			case when a.uploadvehiclelicense=0 then '否' else '是' end as uploadvehiclelicensename,
+			a.imagepath as imagepath,
+			a.isopen as isopen,
+			case when a.isopen=0 then '不允许' else '允许' end as isopenname,
+			a.addtime as addtime,
+			a.createuser as createuser,
+			s.username as createusername,
+			a.tradinggroupid as tradinggroupid,
+			t.name as tradinggroupname,
+			ifnull(b.cardtypes,'') as cardtypes,
+			ifnull(b.cardtypenames,'') as cardtypenames,
+			m.member_id,
+			a.type			
+        from pim_agent as a
+        inner join (
+        	select a.member_id,b.id,b.orgnization_id from web_member as a
+			inner join web_member_session as b on a.member_id=b.member_id 
+			<if test="oldsession != null and oldsession != ''">
+                and b.id = #{oldsession}
+            </if>
+            <if test="oldsession == null or oldsession == ''">
+                and b.id != #{session}
+            </if>
+			where  a.member_type in (0,1)
+        ) as m on m.orgnization_id=a.id
+        inner join sys_session as ss on ss.id=m.id
+        inner join system_user as s on a.createuser=s.id
+        left join ebs_tradinggroup as t on t.id=a.tradinggroupid
+        left join vw_AgentType as b on a.id=b.agentid and b.rounds=m.id
+        <where>        	
+        	<if test="kbzj != null and kbzj != ''">
+                and concat(',',b.cardtypes,',') like concat('%,',#{kbzj},'|%')
+            </if>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+             <if test="oldsession != null and oldsession != ''">
+                and m.id = #{oldsession}
+            </if>
+            <if test="oldsession == null or oldsession == ''">
+                and m.id != #{session}
+            </if>
+            <if test="loginname != null and loginname != ''">
+                and a.loginname like concat('%',#{loginname},'%')
+            </if>
+            <if test="loginpass != null and loginpass != ''">
+                and a.loginpass = #{loginpass}
+            </if>
+            <if test="name != null and name != ''">
+                and a.name like concat('%',#{name},'%')
+            </if>
+            <if test="tradinggroupname != null and tradinggroupname != ''">
+                and t.name like concat('%',#{tradinggroupname},'%')
+            </if>
+            
+            <if test="sex != null and sex != ''">
+                and a.sex = #{sex}
+            </if>
+            <if test="companyname != null and companyname != ''">
+                and a.companyname like concat('%',#{companyname},'%')
+            </if>
+            <if test="tel != null and tel != ''">
+                and a.tel = #{tel}
+            </if>
+            <if test="phone != null and phone != ''">
+                and a.phone = #{phone}
+            </if>
+            <if test="jobtitle != null and jobtitle != ''">
+                and a.jobtitle = #{jobtitle}
+            </if>
+            <if test="areaphone != null and areaphone != ''">
+                and a.areaphone = #{areaphone}
+            </if>
+            <if test="onsitecertification != null and onsitecertification != ''">
+                and a.onsitecertification = #{onsitecertification}
+            </if>
+            <if test="makeevidence != null and makeevidence != ''">
+                and a.makeevidence = #{makeevidence}
+            </if>
+            <if test="uploadvehiclelicense != null and uploadvehiclelicense != ''">
+                and a.uploadvehiclelicense = #{uploadvehiclelicense}
+            </if>
+            <if test="imagepath != null and imagepath != ''">
+                and a.imagepath = #{imagepath}
+            </if>
+            <if test="isopen != null and isopen != ''">
+                and a.isopen = #{isopen}
+            </if>
+            <if test="addtime != null and addtime != ''">
+                and a.addtime = #{addtime}
+            </if>
+            <if test="createuser != null and createuser != ''">
+                and a.createuser = #{createuser}
+            </if>
+            <if test="tradinggroupid != null and tradinggroupid != ''">
+                and a.tradinggroupid = #{tradinggroupid}
+            </if>
+        </where>
+        order by t.orders,a.id desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="PreviouslistCount" resultType="int">
+        select
+			count(*)			
+        from pim_agent as a
+        inner join (
+        	select a.member_id,b.id,b.orgnization_id from web_member as a
+			inner join web_member_session as b on a.member_id=b.member_id 
+			<if test="oldsession != null and oldsession != ''">
+                and b.id = #{oldsession}
+            </if>
+            <if test="oldsession == null or oldsession == ''">
+                and b.id != #{session}
+            </if>
+			where  a.member_type in (0,1)
+        ) as m on m.orgnization_id=a.id
+        inner join sys_session as ss on ss.id=m.id
+        inner join system_user as s on a.createuser=s.id
+        left join ebs_tradinggroup as t on t.id=a.tradinggroupid
+        left join vw_AgentType as b on a.id=b.agentid and b.rounds=m.id
+        <where>        	
+        	<if test="kbzj != null and kbzj != ''">
+                and concat(',',b.cardtypes,',') like concat('%,',#{kbzj},'|%')
+            </if>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+             <if test="oldsession != null and oldsession != ''">
+                and m.id = #{oldsession}
+            </if>
+            <if test="oldsession == null or oldsession == ''">
+                and m.id != #{session}
+            </if>
+            <if test="loginname != null and loginname != ''">
+                and a.loginname like concat('%',#{loginname},'%')
+            </if>
+            <if test="loginpass != null and loginpass != ''">
+                and a.loginpass = #{loginpass}
+            </if>
+            <if test="name != null and name != ''">
+                and a.name like concat('%',#{name},'%')
+            </if>
+            <if test="tradinggroupname != null and tradinggroupname != ''">
+                and t.name like concat('%',#{tradinggroupname},'%')
+            </if>
+            
+            <if test="sex != null and sex != ''">
+                and a.sex = #{sex}
+            </if>
+            <if test="companyname != null and companyname != ''">
+                and a.companyname like concat('%',#{companyname},'%')
+            </if>
+            <if test="tel != null and tel != ''">
+                and a.tel = #{tel}
+            </if>
+            <if test="phone != null and phone != ''">
+                and a.phone = #{phone}
+            </if>
+            <if test="jobtitle != null and jobtitle != ''">
+                and a.jobtitle = #{jobtitle}
+            </if>
+            <if test="areaphone != null and areaphone != ''">
+                and a.areaphone = #{areaphone}
+            </if>
+            <if test="onsitecertification != null and onsitecertification != ''">
+                and a.onsitecertification = #{onsitecertification}
+            </if>
+            <if test="makeevidence != null and makeevidence != ''">
+                and a.makeevidence = #{makeevidence}
+            </if>
+            <if test="uploadvehiclelicense != null and uploadvehiclelicense != ''">
+                and a.uploadvehiclelicense = #{uploadvehiclelicense}
+            </if>
+            <if test="imagepath != null and imagepath != ''">
+                and a.imagepath = #{imagepath}
+            </if>
+            <if test="isopen != null and isopen != ''">
+                and a.isopen = #{isopen}
+            </if>
+            <if test="addtime != null and addtime != ''">
+                and a.addtime = #{addtime}
+            </if>
+            <if test="createuser != null and createuser != ''">
+                and a.createuser = #{createuser}
+            </if>
+            <if test="tradinggroupid != null and tradinggroupid != ''">
+                and a.tradinggroupid = #{tradinggroupid}
+            </if>
+        </where>        
+    </select>
+    
+</mapper>

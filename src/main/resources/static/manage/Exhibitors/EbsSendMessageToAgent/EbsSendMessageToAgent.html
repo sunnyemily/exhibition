@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>参展商管理-短信通知代办员</title>
+    <meta content="webkit" name="renderer">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" name="viewport"/>
+    <link rel="stylesheet" href="/manage/css/xadmin.css">
+    <link rel="stylesheet" href="/manage/css/font.css">
+    <link href="/manage/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+	<link href="/manage/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+	<link href="/manage/css/animate.css" rel="stylesheet">
+	<link href="/manage/css/style.css?v=4.1.0" rel="stylesheet">
+	<link href="/manage/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <script charset="utf-8" src="/manage/js/jquery.min.js" type="text/javascript"></script>
+    <script charset="utf-8" src="/manage/layui/layui.js" type="text/javascript"></script>
+    <script charset="utf-8" src="/manage/js/xadmin.js" type="text/javascript"></script>
+    <script charset="utf-8" src="/manage/js/vue.js" type="text/javascript"></script>
+</head>
+<body>
+<div class="wrapper wrapper-content  animated fadeInRight">
+  <div class="row" id="vmEbsBooth">
+    <div class="col-sm-12">
+      <div class="ibox float-e-margins">
+        <div class="ibox-title">
+          <h5>代办员列表</h5>
+          <div class="ibox-tools"> <a class="collapse-link"> <i class="fa fa-chevron-up"></i> </a> <a class="close-link"> <i class="fa fa-times"></i> </a> </div>
+        </div>        
+        <div class="ibox-content">
+            <div class="fixed-table-toolbar" style="height:50px;">
+              <div class="bars pull-left">
+                <button type="button" class="btn btn-primary" onclick="showBatchSendMessageModal()" style="padding-left: 10px;">批量发送短信</button>
+                <button type="button" class="btn btn-primary" onclick="sendMessageLog()" style="padding-left: 10px;">查看已发送短信记录</button>
+              </div>
+              <div class="columns columns-right btn-group pull-right">
+                <button class="btn btn-default btn-outline" type="button" name="search" title="搜索" onclick="reloadTableData()" id="search"> <i class="glyphicon glyphicon-search"></i> </button>
+              </div>
+              <div class="pull-right search" style="padding-right:10px">
+				<table>
+					<tr>
+						<td>代办员姓名：</td>
+						<td>
+							<input class="form-control input-outline" style="width: 140px;" autocomplete="off" type="text" placeholder="请输入代办员姓名" id="kerWord">
+						</td>
+					</tr>
+				</table>
+			  </div>
+              <div class="pull-right search" style="padding-right:10px;">
+				<table>
+					<tr>
+						<td>代办员是否开通：</td>
+						<td>
+							<select class="form-control input-outline" onchange="reloadTableData()" id="isOpen">
+								<option value="" selected>全部</option>
+								<option value="0">未开通</option>
+								<option value="1">已开通</option>
+							</select>
+						</td>
+					</tr>
+				</table>
+			  </div>
+              <div class="pull-right search" style="padding-right:10px;">
+				<table>
+					<tr>
+						<td>是否与交易团关联：</td>
+						<td>
+							<select class="form-control input-outline" onchange="reloadTableData()" id="isAssociatedWithTradingGroup">
+								<option value="" selected>全部</option>
+								<option value="0">不关联</option>
+								<option value="1">关联</option>
+							</select>
+						</td>
+					</tr>
+				</table>
+			  </div>
+            </div>
+            <table id="test" lay-filter="test"></table>
+        </div>
+      </div>
+    </div>    
+  </div>
+</div>
+<div id="batchSendMessageDiv" hidden="hidden" style="padding: 20px;">
+	<fieldset class="layui-elem-field layui-field-title">
+		<form class="layui-form layui-form-pane" action="">
+			<div class="layui-form-item">
+				<label class="layui-form-label" for="contactPerson">接收企业</label>
+				<div class="layui-input-block" style="margin-left: 120px;">
+					<div class="layui-input-inline layui-show-xs-block" style="width: 100%;">
+						<input autocomplete="off" readonly="readonly" class="layui-input" id="receivers" type="text">
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label" for="content" style="height: 100px;line-height: 70px;"><span style='color:red'>*</span>短信内容</label>
+				<div class="layui-input-block" style="margin-left: 120px;">
+					<div class="layui-input-inline layui-show-xs-block" style="width: 100%;">
+						<textarea autocomplete="off" class="layui-textarea" id="batchSendMessageDivContent"></textarea>
+					</div>
+				</div>
+			</div>
+		</form>
+	</fieldset>
+</div>
+<div id="sendMessageDiv" hidden="hidden" style="padding: 20px;">
+	<fieldset class="layui-elem-field layui-field-title">
+		<form class="layui-form layui-form-pane" action="">
+			<div class="layui-form-item">
+				<label class="layui-form-label" for="agentName">代办员姓名</label>
+				<div class="layui-input-block" style="margin-left: 120px;">
+					<div class="layui-input-inline layui-show-xs-block" style="width: 100%;">
+						<input autocomplete="off" readonly="readonly" class="layui-input" id="agentName" name="agentName" lay-verify="required" type="text">
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label" for="number"><span style='color:red'>*</span>手机号码</label>
+				<div class="layui-input-block" style="margin-left: 120px;">
+					<div class="layui-input-inline layui-show-xs-block" style="width: 100%;">
+						<input autocomplete="off" class="layui-input" id="number" name="number" lay-verify="required" type="text">
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<label class="layui-form-label" for="content" style="height: 100px;line-height: 70px;"><span style='color:red'>*</span>短信内容</label>
+				<div class="layui-input-block" style="margin-left: 120px;">
+					<div class="layui-input-inline layui-show-xs-block" style="width: 100%;">
+						<textarea autocomplete="off" class="layui-textarea" id="content" name="content" lay-verify="required"></textarea>
+					</div>
+				</div>
+			</div>
+		</form>
+	</fieldset>
+</div>
+<div hidden="true" id="sendMessageLogDiv">
+	<div class="layui-inline" style="width: 100%; margin-top: 6px;padding-right: 6px;">
+		<div class="columns columns-right btn-group pull-right">
+			<button class="btn btn-default btn-outline" type="button" title="查询" onclick="querySendMessageLog()"> <i class="glyphicon glyphicon-search"></i> </button>
+		</div>
+		<div class="pull-right search" style="padding-right:10px">
+			<table>
+				<tr>
+					<td>日期：&emsp;</td>
+					<td>
+						<input style="padding-left: 6px;" class="form-control input-outline" autocomplete="off" type="text" placeholder="开始日期" id="startTime">
+					</td>
+					<td>&emsp;--&emsp;</td>
+					<td>
+						<input class="form-control input-outline" autocomplete="off" type="text" placeholder="结束日期" id="endTime">
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<table id="sendMessageLogTable" lay-filter="sendMessageLogTable"></table>
+</div>
+<script type="text/html" id="barDemo">
+	<a class="layui-btn layui-btn-xs" lay-event="sendMessage">发短信通知</a>
+</script>
+<script src="/manage/js/bootstrap.min.js?v=3.3.6"></script> 
+<script src="/manage/js/content.js?v=1.0.0"></script> 
+</body>
+<script type="text/javascript">
+var table;
+var sendMessageLogTable;
+layui.use(['table', 'laydate'], function(){
+	table = layui.table;
+    var laydate = layui.laydate;
+    laydate.render({
+        elem: '#startTime'
+    });
+    laydate.render({
+        elem: '#endTime'
+    });
+    table.render({
+		elem: '#test'
+		,url: '/manage/Exhibitors/ebsSendMessageToAgent/list'		
+		,response: {
+			statusCode: 1 
+		}
+		,page: true
+		,even: true //开启隔行背景
+		,cols: [[ //表头
+			{type:'checkbox'}
+			,{type:'numbers',title:'序号'}
+			,{align:'center', field: 'agentName', title: '代办员姓名'}
+			,{align:'center', field: 'companyName', title: '所属单位'}
+			,{align:'center', field: 'telephone', title: '电话'}
+			,{align:'center', field: 'mobilephone', title: '手机'}
+			,{align:'center', field: 'status', width:200, title:'发送通知', toolbar: '#barDemo'}
+		]]
+	});	
+    sendMessageLogTable = table.render({
+		elem: '#sendMessageLogTable'
+		,url: ''		
+		,response: {
+			statusCode: 1 
+		}
+		,where: {
+			type: "通知代办员"
+		}
+		,page: true
+		,even: true
+		,cols: [[
+			{type:'checkbox'}
+			,{type:'numbers',title:'序号'}
+			,{align:'center', field: 'number', title: '手机号'}
+			,{align:'center', field: 'receiver', title: '代办员'}
+			,{align:'center', field: 'content', title: '内容'}
+			,{align:'center', field: 'addtime', title: '时间', templet:'<div>{{ layui.util.toDateString(d.addtime) }}</div>'}
+		]]
+	});	
+	//监听工具条
+	table.on('tool(test)', function(obj){
+	    var data = obj.data;
+	    if(obj.event === 'sendMessage'){
+	    	showSendMessageModal(data);
+	    }
+	});
+});
+//查询已发短信日志
+function querySendMessageLog(){
+	sendMessageLogTable.reload({
+		url: '/manage/Exhibitors/ebsSendMessageLog/list'
+		,where: {
+			startTime: $("#startTime").val()
+			,endTime: $("#endTime").val()
+		}
+	});
+}
+//查看已发送短信
+function sendMessageLog(){
+	$("#startTime").val('');
+	$("#endTime").val('');
+	sendMessageLogTable.reload({
+		url: '/manage/Exhibitors/ebsSendMessageLog/list'
+		,where: {
+			startTime: $("#startTime").val()
+			,endTime: $("#endTime").val()
+		}
+	});
+	layer.open({
+		type: 1
+		,area: ['90%', '90%']
+		,content: $("#sendMessageLogDiv")
+		,title: '发送短信日志'
+	})
+}
+//展示发送短信窗口
+function showSendMessageModal(data){
+	$("#agentName").val(data.agentName);
+	$("#number").val(data.mobilephone);
+	$("#content").val('');
+	layer.open({
+		type: 1
+		,area: ['50%', '470px']
+		,content: $("#sendMessageDiv")
+		,title: '发送短信'
+		,btn: ['发送']
+		,btn1: function(index){
+			if($("#number").val() == null || $("#number").val()==""){
+				layer.alert("请先填写手机号码");
+				return;
+			}
+			if($("#content").val() == null || $("#content").val()==""){
+				layer.alert("请先填写要发送的短信内容");
+				return;
+			}
+			$.ajax({
+				type: 'post'
+				,url: '/manage/Exhibitors/ebsSendMessage/sendMessage'
+				,data: {
+					receiver: $("#agentName").val()
+					,number: $("#number").val()
+					,content: $("#content").val()
+					,type: "通知代办员"
+				}
+				,success: function(r){
+					if(r.code==1){
+						layer.alert("发送成功");
+						layer.close(index);
+					}else{
+						layer.alert(r.msg);
+					}
+				}
+			})
+		}
+		,btnAlign: 'c'
+	});
+}
+//展示批量发送短信窗口
+function showBatchSendMessageModal(){
+	$("#batchSendMessageDivContent").val('');
+	var checkStatus = table.checkStatus('test');
+	if(checkStatus.data.length==0){
+		layer.msg('请先选择要发送的企业',{icon:5});
+		return;
+	}else{
+		var receiversNumbers = "";
+		var receivers = "";
+		var agentNames = "";
+		checkStatus.data.forEach(function(item,index,dataList){
+			receivers+=item.agentName+"("+item.mobilephone+"),";
+			receiversNumbers+=item.mobilephone+",";
+			agentNames+=item.agentName+",";
+		});
+		receivers = receivers.substring(0,receivers.length-1);
+		receiversNumbers = receiversNumbers.substring(0,receiversNumbers.length-1);
+		agentNames = agentNames.substring(0,agentNames.length-1);
+		$("#receivers").val(receivers);
+		layer.open({
+			type: 1
+			,area: ['80%', '360px']
+			,content: $("#batchSendMessageDiv")
+			,title: '批量发送短信'
+			,btn: ['发送']
+			,btn1: function(index){
+				if($("#batchSendMessageDivContent").val() == null || $("#batchSendMessageDivContent").val()==""){
+					layer.alert("请先填写要发送的短信内容");
+					return;
+				}
+				$.ajax({
+					type: 'post'
+					,url: '/manage/Exhibitors/ebsSendMessage/sendMessage'
+					,data: {
+						number: receiversNumbers
+						,content: $("#batchSendMessageDivContent").val()
+						,type: "通知代办员"
+						,receiver: agentNames
+					}
+					,success: function(r){
+						if(r.code==1){
+							layer.alert("发送成功");
+							layer.close(index);
+						}else{
+							layer.alert(r.msg);
+						}
+					}
+				})
+			}
+			,btnAlign: 'c'
+		});
+	}
+}
+//重新加载数据
+function reloadTableData() {
+	table.reload('test', {
+		where : {
+			isOpen : $("#isOpen").val(),
+			isAssociatedWithTradingGroup : $("#isAssociatedWithTradingGroup").val(),
+			agentName : $("#kerWord").val()
+		}
+	});
+}
+</script>
+</html>

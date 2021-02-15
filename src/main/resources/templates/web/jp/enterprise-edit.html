@@ -1,0 +1,268 @@
+    <div class="modal inmodal" id="edit-model" style="display:none">
+		<div class="modal-content animated bounceInUp">
+			<div class="ibox-content">
+				<fieldset class="layui-elem-field layui-field-title" style="border-top:0px">
+					<form class="layui-form layui-form-pane" action="" id="editform">
+					    <input type="hidden" name="id" id="id" value="0"  />
+					    <input type="hidden" name="session" value="${exhibitionSessionId}"  />
+					    <input type="hidden" name="applyId" value="0"  />
+						<table width="100%"  class="layui-table form-content">
+							<tr class="papers-edit-bg"><td colspan="3" style="border-right: none;">参加企業の追加</td><td align="right"><a class="layui-icon layui-icon-close close"></a></td></tr>
+							  <tr>
+							    <td><span>*</span>会社名（中国語）</td>
+							    <td colspan="3">
+							      <input type="text" name="chinesename" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>会社名（英語）</td>
+							    <td colspan="3">
+							      <input type="text" name="engname" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>会社名（ロシア語）</td>
+							    <td colspan="3">
+							      <input type="text" name="russianname" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>会社住所（中国語）</td>
+							    <td colspan="3">
+							      <input type="text" name="chineseaddress" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>会社住所（英語）</td>
+							    <td colspan="3">
+							      <input type="text" name="engaddress" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>郵便番号</td>
+							    <td colspan="3">
+							      <input type="text" name="postcode" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>携帯電話</td>
+							    <td colspan="3">
+							      <input type="text" name="phone" required  lay-verify="required" placeholder="携帯電話番号を入力してください" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>電話</td>
+							    <td colspan="3">
+							      <input type="text" name="tel" required  lay-verify="required" placeholder="連絡先電話番号を入力してください" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>ファックス</td>
+							    <td colspan="3">
+							      <input type="text" name="fax" required  placeholder="ファックス番号を入力してください" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>URL</td>
+							    <td colspan="3">
+							      <input type="text" name="website" required placeholder="URLを入力してください" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>*メールアドレス</td>
+							    <td colspan="3">
+							      <input type="text" name="email"  lay-verify="email" placeholder="メールアドレスを入力してください" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>国／地域</td>
+							    <td colspan="3">
+								    <div class="layui-input-inline">
+								      <select name="country" lay-verify="required" lay-filter="country">
+										  <option value="">選択してください</option>
+									  </select>   
+								    </div>
+								    <div class="layui-input-inline">
+								      <select name="province" lay-verify="required" lay-filter="province">
+										  <option value="">選択してください</option>
+									  </select>   
+								    </div>
+								    <div class="layui-input-inline">
+								      <select name="city" lay-verify="required">
+										  <option value="">選択してください</option>
+									  </select>   
+									 </div>
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>責任者</td>
+							    <td colspan="3">
+							      <input type="text" name="principal" required  lay-verify="required" placeholder="責任者氏名を記入してください" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>担当者</td>
+							    <td colspan="3">
+							      <input type="text" name="contactperson" placeholder="担当者氏名を記入してください" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>担当者職務</td>
+							    <td colspan="3">
+							      <input type="text" name="jobtitle" placeholder="担当者の職務を記入してください" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>業界分野</td>
+							    <td colspan="3">
+							      <select name="industryid" lay-verify="">
+							    	<#list industries as industry>
+							    	<option value="${industry.id}">${industry.chineseName}</option>
+							    	</#list>
+								  </select>
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>参加企業の性質</td>
+							    <td colspan="3">
+							    	<#list companytypes as type>
+							      <input type="radio" name="exhibitorsNatureId" value="${type.id}" title="${type.chineseName}">
+							      </#list>
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>営業分野</td>
+							    <td colspan="3">
+							      <textarea name="busscope" placeholder="企業の営業分野を記入してください" class="layui-textarea"></textarea>
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>取引先とのマッチングを希望する</td>
+							    <td colspan="3">
+							      <textarea name="hopecustomers" placeholder="希望する取引先を記入してください" class="layui-textarea"></textarea>
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>企業紹介</td>
+							    <td colspan="3">
+							      <textarea name="companyprofile" placeholder="企業紹介を記入してください" class="layui-textarea"></textarea>
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>購入意向</td>
+							    <td colspan="3">
+							      <textarea name="purchaseintention" required  lay-verify="required" placeholder="購入意向を記入してください" class="layui-textarea"></textarea>
+							    </td>
+							  </tr>
+							<tr>
+								<td>＊企業ロゴ</td>
+								<input type="hidden" name="companylogo" id="companylogo" value=""  />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnCompanylogo" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>上传图片
+									</button>
+									<button type="button" class="layui-btn" id="btnCompanylogoCropper">
+									  <i class="layui-icon">&#xe67c;</i>トリミングサポート
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />注意：フォーマットはJPG、アップロードファイルは最大100Kまで。ロゴサイズは200×200（横×縦）。</div>
+								</td>
+								<td colspan="2" class="prepic"><image src="" width="200" height="200" id="precompanylogo" /></td>
+							</tr>
+							<tr>
+								<td>*営業許可証</td>
+								<input type="hidden" name="buslicensepath" id="buslicensepath" value=""  lay-verify="required" lay-reqText="必须上传营业执照"  />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="idpic" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>上传图片
+									</button>
+									<button type="button" class="layui-btn" id="btnBuslicensepathCropper">
+									  <i class="layui-icon">&#xe67c;</i>トリミングサポート
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />注意：フォーマットはJPG、アップロードファイルは最大２メガまで。営業許可証サイズは800×1060（横×縦）。</div>
+								</td>
+								<td colspan="2" class="prepic"><image src="" width="390" height="516" id="prebuslicensepath" /></td>
+							</tr>
+							<tr>
+								<td>*企業の表紙</td>
+								<input type="hidden" name="companypicture" id="companypicture" value=""  lay-verify="required" lay-reqText="必须上传企业封面"  />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnCompanyPicture" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>上传图片
+									</button>
+									<button type="button" class="layui-btn" id="btnCompanypictureCropper">
+									  <i class="layui-icon">&#xe67c;</i>トリミングサポート
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />注意：フォーマットはJPG、アップロードファイルは最大2メガ、企業表紙サイズは750×422（横×縦）。</div>
+								</td>
+								<td colspan="2" class="prepic"><image src="" width="390" height="219" id="precompanypicture" /></td>
+							</tr>
+							<tr>
+								<td>宣伝用ショートムービー</td>
+								<input type="hidden" name="companyvideo" id="companyvideo" value="" />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnCompanyVideo">
+									  <i class="layui-icon">&#xe67c;</i>上传视频
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />注意：格式为MP4，上传文件小于20M。尺寸大于750*422，宽高比例为16：9。</div>
+								</td>
+								<td colspan="2" class="prepic" id="videoContainer"><image src="" width="390" height="219" id="prebuslicensepath" /></td>
+							</tr>
+							<tr>
+								<td>*ローテーションバナー画像</td>
+								<input type="hidden" name="companypictures" id="companypictures" value=""  />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnCompanyPictures" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>上传图片
+									</button>
+									<button type="button" class="layui-btn" id="btnCompanypicturesCropper">
+									  <i class="layui-icon">&#xe67c;</i>トリミングサポート
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />注意：フォーマットはJPG、アップロードファイルは最大2メガ・画像3枚まで。ローテーションバナーのサイズは750×433（横×縦）にしてください。</div>
+								</td>
+								<td colspan="2">
+									<div class="mutipic">
+									</div>
+								</td>
+							</tr>
+							<tr>
+							    <td>バーチャルブースのアドレス</td>
+							    <td colspan="3">
+							      <input type="text" name="url" placeholder="请输入虚拟展厅地址" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							<tr class="papers-edit-bg"><td colspan="3" style="border-right: none;">展位申请及分配</td><td align="right"></td></tr>
+							
+							  <tr>
+							    <td><span>*</span>出展する商品</td>
+							    <td colspan="3">
+							      <input type="text" name="exhibits" lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							<tr>
+								<td>*展位分配</td>
+							    <td colspan="3" id="roomAndBooth">
+							    </td>
+							</tr>
+							<tr class="papers-edit-bg">
+								<td colspan="4" align="center">
+									<button type="button" class="layui-btn layui-btn-primary close">取消</button>
+									<button type="reset" class="layui-btn layui-btn-primary" id="reset" style="display:none">リセット</button>
+									<button type="button"  lay-submit class="layui-btn"  lay-filter="update" id="submit">送信</button>
+								</td>
+							</tr>
+							
+						</table>
+					</form>
+				</fieldset>
+			</div>
+		</div>
+	</div>
+	<div id="mutiPictureTemplate" style="display:none">
+	<div class="item">
+		<img src="" />
+		<div class="fc-upload-cover">
+			<i class="ivu-icon fa fa-eye"></i>
+			<i class="ivu-icon fa fa-trash"></i>
+		</div>
+	</div>
+	</div>

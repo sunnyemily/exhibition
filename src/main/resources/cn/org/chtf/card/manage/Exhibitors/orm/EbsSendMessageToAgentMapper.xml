@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.Exhibitors.dao.EbsSendMessageToAgentMapper">
+
+    <select id="list" resultType="map">
+        SELECT
+			d.name agentName,
+			d.companyname companyName,
+			d.tel telephone,
+			d.phone mobilephone
+		FROM web_member a
+		inner JOIN web_member_session b on a.member_id = b.member_id
+		inner join pim_agent d on b.orgnization_id = d.id
+		WHERE (a.member_type = 0 or a.member_type = 1) and b.id = #{session}
+        <if test="isOpen != null and isOpen != ''">
+            and d.isopen = #{isOpen}
+        </if>
+        <if test='isAssociatedWithTradingGroup == "0"'>
+            and d.tradinggroupid = 0
+        </if>
+        <if test='isAssociatedWithTradingGroup == "1"'>
+            and !isnull(d.tradinggroupid) and d.tradinggroupid != 0
+        </if>
+        <if test="agentName != null and agentName != ''">
+            and d.name like concat ('%',#{agentName},'%')
+        </if>
+        order by d.addtime desc
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(a.member_id)
+		FROM web_member a
+		inner JOIN web_member_session b on a.member_id = b.member_id
+		inner join pim_agent d on b.orgnization_id = d.id
+		WHERE (a.member_type = 0 or a.member_type = 1) and b.id = #{session}
+        <if test="isOpen != null and isOpen != ''">
+            and d.isopen = #{isOpen}
+        </if>
+        <if test='isAssociatedWithTradingGroup == "0"'>
+            and d.tradinggroupid = 0
+        </if>
+        <if test='isAssociatedWithTradingGroup == "1"'>
+            and !isnull(d.tradinggroupid) and d.tradinggroupid != 0
+        </if>
+        <if test="agentName != null and agentName != ''">
+            and d.name like concat ('%',#{agentName},'%')
+        </if>
+	</select>
+
+</mapper>

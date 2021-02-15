@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>证件统计表</title>
+	<meta content="webkit" name="renderer">
+	<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+	<meta content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" name="viewport" />
+	<link href="/manage/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+	<link href="/manage/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+	<link href="/manage/css/style.css?v=4.1.0" rel="stylesheet">
+	<script charset="utf-8" src="/manage/layui/layui.js" type="text/javascript"></script>
+	<script charset="utf-8" src="/manage/js/jquery.min.js" type="text/javascript"></script>
+</head>
+<body>
+	<div class="ibox-title">
+		<h5>证件统计表</h5>
+		<div class="ibox-tools">
+			<a class="collapse-link"> <i class="fa fa-chevron-up"></i> </a><a class="close-link"> <i class="fa fa-times"></i> </a>
+		</div>
+	</div>
+	<div class="ibox-content">
+		<div class="fixed-table-toolbar" style="height:50px;">
+			<div class="bars pull-left">
+				<div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
+					<button class="btn btn-default btn-outline" type="button" name="refresh" onclick="location.reload()" title="刷新" id="refresh">
+						<i class="glyphicon glyphicon-repeat"></i>
+					</button>
+				</div>
+			</div>
+			<div class="columns columns-right btn-group pull-right">
+				<button class="btn btn-default btn-outline" type="button" name="selectSession" title="搜索" onclick="queryDataList()">
+					<i class="glyphicon glyphicon-search"></i>
+				</button>
+			</div>
+			<div class="pull-right search" style="padding-right:10px">
+				<table>
+					<tr>
+						<td>届次：</td>
+						<td>
+							<select class="form-control input-outline" id="sessionId"></select>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+	
+	<table width=50%; style="text-align:center" align="center" border="1">
+		<tr>
+			<td width=70%>总国家数：</td>
+			<td name="country">0</td>
+		</tr>
+		<tr>
+			<td>嘉宾B总数：</td>
+			<td name="jiaBinB">0</td>
+		</tr>
+		<tr>
+			<td>嘉宾A总数：</td>
+			<td name="jiaBinA">0</td>
+		<tr>
+			<td>贵宾总数：</td>
+			<td name="guiBin">0</td>
+		</tr>
+		<tr>
+			<td>参展证总数： </td>
+			<td name="canZhanZheng">0</td>
+		<tr>
+			<td>国外参展证总数： </td>
+			<td name="guoWaiCanZhanZheng">0</td>
+		</tr>
+		<tr>
+			<td>国内参展证总数：</td>
+			<td name="guoNeiCanZhanZheng">0</td>
+		<tr>
+			<td>俄罗斯人员证件总数：</td>
+			<td name="eLuoSiRenYuanZhengJian">0</td>
+		</tr>
+		<tr>
+			<td>境外人员证件数量：</td>
+			<td name="jingWaiRenYuanZhengJian">0</td>
+		<tr>
+			<td>港澳台人数：</td>
+			<td name="gangAoTaiRenYuanZhengJian">0</td>
+		</tr>
+		<tr>
+			<td>省外人数（国内，不含港澳台）：</td>
+			<td name="shengWaiRenShu">0</td>
+		<tr>
+			<td>省内人数：</td>
+			<td name="shengNeiRenShu">0</td>
+		</tr>
+		<tr>
+			<td>国外参展企业数量：</td>
+			<td name="guoWaiCanZhanQiYe">0</td>
+		</tr>
+		<tr>
+			<td>国内参展企业数量（不含港澳台）：</td>
+			<td name="guoNeiCanZhanQiYeBuHanGangAoTai">0</td>
+		</tr>
+		<tr>
+			<td>俄罗斯参展企业数量 ：</td>
+			<td name="eLuoSiCanZhanQiYe">0</td>
+		</tr>
+		<tr>
+			<td>韩国参展企业数量：</td>
+			<td name="hanGuoCanZhanQiYe">0</td>
+		</tr>
+		<tr>
+			<td>日本参展企业数量 ：</td>
+			<td name="riBenCanZhanQiYe">0</td>
+		</tr>
+		<tr>
+			<td>港澳台参展企业数量 ： </td>
+			<td name="gangAoTaiCanZhanQiYe">0</td>
+		</tr>
+		<tr>
+			<td>国外记者：</td>
+			<td name="guoWaiJiZhe">0</td>
+		</tr>
+		<tr>
+			<td>国内记者： </td>
+			<td name="guoNeiJiZhe">0</td>
+		</tr>
+		<tr>
+			<td>专业合作媒体总数：</td>
+			<td name="meiTi">0</td>
+		</tr>
+		<tr>
+			<td>专业观众总数：</td>
+			<td name="guanZhong">0</td>
+		</tr>
+	</table>
+</body>
+<script type="text/javascript">
+layui.use(['form'], function() {
+	var $ = layui.jquery,form = layui.form;
+	//加载届次
+	$.get("/manage/certificateStatisticsTable/getAllSession", function(r){
+		if(r.code===1){
+			var str = '<option value=""></option>';
+			r.data.forEach(function(item){
+				str+='<option value="'+item.id+'">'+item.site_name+'</option>';
+			})
+			$("#sessionId").html(str);
+		}else{
+			layer.alert(r.msg);
+		}
+	});
+	window.queryDataList = function(){
+		$.ajax({
+			url : "/manage/certificateStatisticsTable/getStatisticalInfo",
+			data : {
+				"session" : $("#sessionId").val()
+			},
+			dataType : "json",
+			type : "get",
+			contentType : "application/json",
+			success :function(r){
+				if(r.code===1){
+					for (var key in r.data)
+				    {
+				        $("td[name="+key+"]").html(r.data[key]);
+				    }
+				}else{
+					layer.alert(r.msg);
+				}
+			}
+		});
+	}
+});
+
+</script>
+</html>

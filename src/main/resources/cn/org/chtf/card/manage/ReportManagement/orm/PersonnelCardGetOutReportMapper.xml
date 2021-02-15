@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.ReportManagement.dao.PersonnelCardGetOutReportMapper">
+	<select id="getTradingGroupList" resultType="map">
+		select d.name, d.name agentName, d.id agentId, c.name tradingGroupName, a.member_id memberId
+		FROM web_member a
+		LEFT JOIN web_member_session b ON a.member_id = b.member_id
+		inner JOIN pim_agent d ON b.orgnization_id = d.id
+		inner JOIN ebs_tradinggroup c ON d.tradinggroupid = c.id
+		inner JOIN ebs_personnelcard e on e.agent = a.member_id
+		WHERE a.member_type = 0 AND a.member_status = 0
+		AND b.id = #{session} AND c.session = #{session} AND e.session = #{session} AND d.type = 0 and e.status = 1
+		AND DATE_ADD(e.makecardtime,INTERVAL #{evidenceDelay} MINUTE)<![CDATA[ <= ]]> now()
+		<if test="name != null and name != ''">
+			and d.name like concat('%',#{name},'%')
+		</if>
+		group by d.id
+		order by c.orders
+	</select>
+	
+	<select id="getCertificatTypeByAgentID" resultType="map">
+		select b.id, b.chinesename from pim_agenttype a
+		inner join cm_certificate_type b on a.cardtype = b.id
+		WHERE a.agentid = #{agentId} and b.session = #{session} and b.useable = 1 and b.type = #{cardtype}
+	</select>
+	
+	<select id="getCertificatTypeByMemberID" resultType="map">
+		select c.id, c.chinesename from web_member a
+		inner join web_member_certificate_type b on a.member_type = b.member_type
+		inner join cm_certificate_type c on b.card_type_id = c.id
+		WHERE a.member_id = #{memberId} and b.session_id = #{session} and c.session = #{session} and c.useable = 1 and c.type = #{cardtype}
+	</select>
+	
+	<select id="getTradingGroupListCount" resultType="int">
+		select count(distinct d.id)
+		FROM web_member a
+		LEFT JOIN web_member_session b ON a.member_id = b.member_id
+		LEFT JOIN ebs_tradinggroup c ON b.orgnization_id = c.id
+		LEFT JOIN pim_agent d ON d.tradinggroupid = c.id
+		LEFT JOIN ebs_personnelcard e on e.agent = d.id
+		WHERE a.member_type = 0 AND a.member_status = 0 AND !isnull(d.id) AND !isnull(e.id)
+		AND b.id = #{session} AND c.session = #{session} AND d.session = #{session}
+		AND e.session = #{session} AND d.type = 0
+	 	AND DATE_ADD(e.makecardtime,INTERVAL #{evidenceDelay} MINUTE)<![CDATA[ <= ]]> now()
+		<if test="name != null and name != ''">
+			and d.name like concat('%',#{name},'%')
+		</if>		
+	</select>
+	
+	<select id="getScatteredExhibitorsList" resultType="map">
+		select c.chinesename name, c.id companyId, a.member_id memberId
+		FROM web_member a
+		LEFT JOIN web_member_session b ON a.member_id = b.member_id
+		LEFT JOIN ebs_companyinfo c ON b.orgnization_id = c.id
+		LEFT JOIN ebs_personnelcard d on d.agent = a.member_id
+		WHERE a.member_type = 2 AND a.member_status = 0 AND !isnull(c.id) AND !isnull(d.id) AND DATE_ADD(d.makecardtime,INTERVAL #{evidenceDelay} MINUTE)<![CDATA[ <= ]]> now()
+		AND b.id = #{session} AND c.useable = 1 AND c.session = #{session} AND d.session = #{session}
+		<if test="name != null and name != ''">
+			and c.chinesename like concat('%',#{name},'%')
+		</if>
+		group by c.id
+	</select>
+	
+	<select id="getScatteredExhibitorsListCount" resultType="int">
+		select count(distinct c.id)
+		FROM web_member a
+		LEFT JOIN web_member_session b ON a.member_id = b.member_id
+		LEFT JOIN ebs_companyinfo c ON b.orgnization_id = c.id
+		LEFT JOIN ebs_personnelcard d on d.agent = a.member_id
+		WHERE a.member_type = 2 AND a.member_status = 0 AND !isnull(c.id) AND !isnull(d.id) AND DATE_ADD(d.makecardtime,INTERVAL #{evidenceDelay} MINUTE)<![CDATA[ <= ]]> now()
+		AND b.id = #{session} AND c.useable = 1 AND c.session = #{session} AND d.session = #{session}
+		<if test="name != null and name != ''">
+			and c.chinesename like concat('%',#{name},'%')
+		</if>
+	</select>
+	
+	<select id="getForeignGuestList" resultType="map">
+		select c.companyname name, c.id companyId, a.member_id memberId
+		FROM web_member a
+		LEFT JOIN web_member_session b ON a.member_id = b.member_id
+		LEFT JOIN ebs_guestbexhibition c ON b.orgnization_id = c.id
+		LEFT JOIN ebs_personnelcard d on d.agent = a.member_id
+		WHERE a.member_type = 4 AND a.member_status = 0 AND !isnull(c.id) AND !isnull(d.id)
+		AND b.id = #{session} AND c.session = #{session} AND d.session = #{session} AND c.type = 0 AND DATE_ADD(d.makecardtime,INTERVAL #{evidenceDelay} MINUTE)<![CDATA[ <= ]]> now()
+		<if test="name != null and name != ''">
+			and c.companyname like concat('%',#{name},'%')
+		</if>
+		group by c.id
+	</select>
+	
+	<select id="getForeignGuestListCount" resultType="int">
+		select count(distinct c.id)
+		FROM web_member a
+		LEFT JOIN web_member_session b ON a.member_id = b.member_id
+		LEFT JOIN ebs_guestbexhibition c ON b.orgnization_id = c.id
+		LEFT JOIN ebs_personnelcard d on d.agent = a.member_id
+		WHERE a.member_type = 4 AND a.member_status = 0 AND !isnull(c.id) AND !isnull(d.id)
+		AND b.id = #{session} AND c.session = #{session} AND d.session = #{session} AND c.type = 0 AND DATE_ADD(d.makecardtime,INTERVAL #{evidenceDelay} MINUTE)<![CDATA[ <= ]]> now()
+		<if test="name != null and name != ''">
+			and c.companyname like concat('%',#{name},'%')
+		</if>
+	</select>
+	
+	<select id="getMoveCompanyList" resultType="map">
+		select c.companyname name, c.id companyId, a.member_id memberId
+		FROM web_member a
+		LEFT JOIN web_member_session b ON a.member_id = b.member_id
+		LEFT JOIN ebs_guestbexhibition c ON b.orgnization_id = c.id
+		LEFT JOIN ebs_personnelcard d on d.agent = a.member_id
+		WHERE a.member_type = 3 AND a.member_status = 0 AND !isnull(c.id) AND !isnull(d.id)
+		AND b.id = #{session} AND c.session = #{session} AND d.session = #{session} AND c.type = 1 AND DATE_ADD(d.makecardtime,INTERVAL #{evidenceDelay} MINUTE)<![CDATA[ <= ]]> now()
+		<if test="name != null and name != ''">
+			and c.companyname like concat('%',#{name},'%')
+		</if>
+		group by c.id
+	</select>
+	
+	<select id="getMoveCompanyListCount" resultType="int">
+		select count(distinct c.id)
+		FROM web_member a
+		LEFT JOIN web_member_session b ON a.member_id = b.member_id
+		LEFT JOIN ebs_guestbexhibition c ON b.orgnization_id = c.id
+		LEFT JOIN ebs_personnelcard d on d.agent = a.member_id
+		WHERE a.member_type = 3 AND a.member_status = 0 AND !isnull(c.id) AND !isnull(d.id)
+		AND b.id = #{session} AND c.session = #{session} AND d.session = #{session} AND c.type = 1 AND DATE_ADD(d.makecardtime,INTERVAL #{evidenceDelay} MINUTE)<![CDATA[ <= ]]> now()
+		<if test="name != null and name != ''">
+			and c.companyname like concat('%',#{name},'%')
+		</if>
+	</select>
+	
+	<select id="getPersonnelCardList" resultType="map">
+		select name,CASE WHEN sex = 0 THEN '男' ELSE '女' END sexname,companyname,boothcode from ebs_personnelcard
+		where session = #{session} and agent = #{agent} and cardtype = #{cardtype} and isforensics = #{isforensics} AND DATE_ADD(makecardtime,INTERVAL #{evidenceDelay} MINUTE)<![CDATA[ <= ]]> now() and status = 1
+	</select>
+	
+	<update id="updateCardPrintNumber">
+		update ebs_personnelcard set printnumber = #{printnumber}
+		where session = #{session} and agent = #{agent} and cardtype = #{cardtype} and isforensics = #{isforensics} AND DATE_ADD(makecardtime,INTERVAL #{evidenceDelay} MINUTE)<![CDATA[ <= ]]> now() and status = 1
+	</update>
+</mapper>

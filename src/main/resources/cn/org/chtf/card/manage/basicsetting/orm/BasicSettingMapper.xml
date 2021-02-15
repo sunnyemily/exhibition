@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.org.chtf.card.manage.basicsetting.dao.BasicSettingDAO">
+  <resultMap id="BaseResultMap" type="cn.org.chtf.card.manage.basicsetting.pojo.BasicSetting">
+    <id column="bs_id" jdbcType="INTEGER" property="bsId" />
+    <result column="bs_sitename" jdbcType="VARCHAR" property="bsSitename" />
+    <result column="bs_keyword" jdbcType="LONGVARCHAR" property="bsKeyword" />
+    <result column="bs_description" jdbcType="LONGVARCHAR" property="bsDescription" />
+    <result column="bs_domain" jdbcType="VARCHAR" property="bsDomain" />
+    <result column="bs_address" jdbcType="VARCHAR" property="bsAddress" />
+    <result column="bs_tel" jdbcType="VARCHAR" property="bsTel" />
+    <result column="bs_icp" jdbcType="VARCHAR" property="bsIcp" />
+    <result column="bs_ga_num" jdbcType="VARCHAR" property="bsGaNum" />
+    <result column="bs_eamil" jdbcType="VARCHAR" property="bsEamil" />
+    <result column="bs_mail_email" jdbcType="VARCHAR" property="bsMailEmail" />
+    <result column="bs_mail_password" jdbcType="VARCHAR" property="bsMailPassword" />
+    <result column="bs_pop3" jdbcType="VARCHAR" property="bsPop3" />
+    <result column="bs_smtp" jdbcType="VARCHAR" property="bsSmtp" />
+    <result column="bs_imap" jdbcType="VARCHAR" property="bsImap" />
+    <result column="bs_music" jdbcType="VARCHAR" property="bsMusic" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    bs_id, bs_sitename, bs_keyword, bs_description, bs_domain, bs_address, bs_tel, bs_icp, 
+    bs_ga_num, bs_eamil, bs_mail_email, bs_mail_password, bs_pop3, bs_smtp, bs_imap,bs_music
+  </sql>
+  <insert id="insert" parameterType="cn.org.chtf.card.manage.basicsetting.pojo.BasicSetting">
+    insert into web_basic_setting
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="bsId != null">
+        bs_id,
+      </if>
+      <if test="bsSitename != null">
+        bs_sitename,
+      </if>
+      <if test="bsKeyword != null">
+        bs_keyword,
+      </if>
+      <if test="bsDescription != null">
+        bs_description,
+      </if>
+      <if test="bsDomain != null">
+        bs_domain,
+      </if>
+      <if test="bsAddress != null">
+        bs_address,
+      </if>
+      <if test="bsTel != null">
+        bs_tel,
+      </if>
+      <if test="bsIcp != null">
+        bs_icp,
+      </if>
+      <if test="bsGaNum != null">
+        bs_ga_num,
+      </if>
+      <if test="bsEamil != null">
+        bs_eamil,
+      </if>
+      <if test="bsMailEmail != null">
+        bs_mail_email,
+      </if>
+      <if test="bsMailPassword != null">
+        bs_mail_password,
+      </if>
+      <if test="bsPop3 != null">
+        bs_pop3,
+      </if>
+      <if test="bsSmtp != null">
+        bs_smtp,
+      </if>
+      <if test="bsImap != null">
+        bs_imap,
+      </if>
+      <if test="bsMusic != null">
+        bs_music,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="bsId != null">
+        #{bsId,jdbcType=INTEGER},
+      </if>
+      <if test="bsSitename != null">
+        #{bsSitename,jdbcType=VARCHAR},
+      </if>
+      <if test="bsKeyword != null">
+        #{bsKeyword,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="bsDescription != null">
+        #{bsDescription,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="bsDomain != null">
+        #{bsDomain,jdbcType=VARCHAR},
+      </if>
+      <if test="bsAddress != null">
+        #{bsAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="bsTel != null">
+        #{bsTel,jdbcType=VARCHAR},
+      </if>
+      <if test="bsIcp != null">
+        #{bsIcp,jdbcType=VARCHAR},
+      </if>
+      <if test="bsGaNum != null">
+        #{bsGaNum,jdbcType=VARCHAR},
+      </if>
+      <if test="bsEamil != null">
+        #{bsEamil,jdbcType=VARCHAR},
+      </if>
+      <if test="bsMailEmail != null">
+        #{bsMailEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="bsMailPassword != null">
+        #{bsMailPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="bsPop3 != null">
+        #{bsPop3,jdbcType=VARCHAR},
+      </if>
+      <if test="bsSmtp != null">
+        #{bsSmtp,jdbcType=VARCHAR},
+      </if>
+      <if test="bsImap != null">
+        #{bsImap,jdbcType=VARCHAR},
+      </if>
+      <if test="bsMusic != null">
+        #{bsMusic,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <delete id="delete" parameterType="java.lang.Integer">
+    delete from web_basic_setting
+    where bs_id = #{bsId,jdbcType=INTEGER}
+  </delete>
+  <update id="update" parameterType="cn.org.chtf.card.manage.basicsetting.pojo.BasicSetting">
+    update web_basic_setting
+    <set>
+      <if test="bsSitename != null">
+        bs_sitename = #{bsSitename,jdbcType=VARCHAR},
+      </if>
+      <if test="bsKeyword != null">
+        bs_keyword = #{bsKeyword,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="bsDescription != null">
+        bs_description = #{bsDescription,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="bsDomain != null">
+        bs_domain = #{bsDomain,jdbcType=VARCHAR},
+      </if>
+      <if test="bsAddress != null">
+        bs_address = #{bsAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="bsTel != null">
+        bs_tel = #{bsTel,jdbcType=VARCHAR},
+      </if>
+      <if test="bsIcp != null">
+        bs_icp = #{bsIcp,jdbcType=VARCHAR},
+      </if>
+      <if test="bsGaNum != null">
+        bs_ga_num = #{bsGaNum,jdbcType=VARCHAR},
+      </if>
+      <if test="bsEamil != null">
+        bs_eamil = #{bsEamil,jdbcType=VARCHAR},
+      </if>
+      <if test="bsMailEmail != null">
+        bs_mail_email = #{bsMailEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="bsMailPassword != null">
+        bs_mail_password = #{bsMailPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="bsPop3 != null">
+        bs_pop3 = #{bsPop3,jdbcType=VARCHAR},
+      </if>
+      <if test="bsSmtp != null">
+        bs_smtp = #{bsSmtp,jdbcType=VARCHAR},
+      </if>
+      <if test="bsImap != null">
+        bs_imap = #{bsImap,jdbcType=VARCHAR},
+      </if>
+      <if test="bsMusic != null">
+        bs_music = #{bsMusic,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where bs_id = #{bsId,jdbcType=INTEGER}
+  </update>
+  <select id="select" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from web_basic_setting
+    where bs_id = #{bsId,jdbcType=INTEGER}
+  </select>
+</mapper>

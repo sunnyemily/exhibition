@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.Volunteer.dao.VolVolunteerMapper">
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.Volunteer.model.VolVolunteer">
+        select
+			a.id as id,
+			a.session as session,
+			a.officeid as officeid,b.dic_cn_name as officename,
+			a.departmentid as departmentid,c.dic_cn_name as departmentname,
+			a.languageid as languageid,d.dic_cn_name as languagename,
+			a.postdate as postdate,
+			a.name as name,
+			a.contactinfo as contactinfo,
+			a.college as college,
+			a.studentnumber as studentnumber,
+			a.sex as sex,case when a.sex=0 then '男' else '女' end as sexname,
+			a.height as height,
+			a.bodyweight as bodyweight,
+			a.waist as waist,
+			a.teamleader as teamleader,
+			a.addtime as addtime
+        from vol_volunteer as a
+        inner join system_dictionaries as b on a.officeid=b.dicid
+        inner join system_dictionaries as c on a.departmentid=c.dicid
+        inner join system_dictionaries as d on a.languageid=d.dicid
+        where a.id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.Volunteer.model.VolVolunteer">
+        select
+			a.id as id,
+			a.session as session,
+			a.officeid as officeid,b.dic_cn_name as officename,
+			a.departmentid as departmentid,c.dic_cn_name as departmentname,
+			a.languageid as languageid,d.dic_cn_name as languagename,
+			a.postdate as postdate,
+			a.name as name,
+			a.contactinfo as contactinfo,
+			a.college as college,
+			a.studentnumber as studentnumber,
+			a.sex as sex,case when a.sex=0 then '男' else '女' end as sexname,
+			a.height as height,
+			a.bodyweight as bodyweight,
+			a.waist as waist,
+			a.teamleader as teamleader,
+			a.addtime as addtime
+        from vol_volunteer as a
+        inner join system_dictionaries as b on a.officeid=b.dicid
+        inner join system_dictionaries as c on a.departmentid=c.dicid
+        inner join system_dictionaries as d on a.languageid=d.dicid
+        <where>
+			<if test="id != null and id != ''">
+				and a.id = #{id}
+			</if>
+			<if test="session != null and session != ''">
+				and a.session = #{session}
+			</if>
+			<if test="officeid != null and officeid != ''">
+				and a.officeid = #{officeid}
+			</if>
+			<if test="departmentid != null and departmentid != ''">
+				and a.departmentid = #{departmentid}
+			</if>
+			<if test="languageid != null and languageid != ''">
+				and a.languageid = #{languageid}
+			</if>
+			<if test="postdate != null and postdate != ''">
+				and a.postdate = #{postdate}
+			</if>
+			<if test="name != null and name != ''">
+				and a.name = #{name}
+			</if>
+			<if test="contactinfo != null and contactinfo != ''">
+				and a.contactinfo = #{contactinfo}
+			</if>
+			<if test="college != null and college != ''">
+				and a.college = #{college}
+			</if>
+			<if test="studentnumber != null and studentnumber != ''">
+				and a.studentnumber = #{studentnumber}
+			</if>
+			<if test="sex != null and sex != ''">
+				and a.sex = #{sex}
+			</if>
+			<if test="height != null and height != ''">
+				and a.height = #{height}
+			</if>
+			<if test="bodyweight != null and bodyweight != ''">
+				and a.bodyweight = #{bodyweight}
+			</if>
+			<if test="waist != null and waist != ''">
+				and a.waist = #{waist}
+			</if>
+			<if test="teamleader != null and teamleader != ''">
+				and a.teamleader = #{teamleader}
+			</if>
+			<if test="addtime != null and addtime != ''">
+				and a.addtime = #{addtime}
+			</if>
+        </where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.Volunteer.model.VolVolunteer">
+        select
+			a.id as id,
+			a.session as session,
+			a.officeid as officeid,b.dic_cn_name as officename,
+			a.departmentid as departmentid,c.dic_cn_name as departmentname,
+			a.languageid as languageid,d.dic_cn_name as languagename,
+			a.postdate as postdate,
+			a.name as name,
+			a.contactinfo as contactinfo,
+			a.college as college,
+			a.studentnumber as studentnumber,
+			a.sex as sex,case when a.sex=0 then '男' else '女' end as sexname,
+			a.height as height,
+			a.bodyweight as bodyweight,
+			a.waist as waist,
+			a.teamleader as teamleader,
+			a.addtime as addtime
+        from vol_volunteer as a
+        inner join system_dictionaries as b on a.officeid=b.dicid
+        inner join system_dictionaries as c on a.departmentid=c.dicid
+        inner join system_dictionaries as d on a.languageid=d.dicid
+        <where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="officeid != null and officeid != ''">
+                and a.officeid = #{officeid}
+            </if>
+            <if test="departmentid != null and departmentid != ''">
+                and a.departmentid = #{departmentid}
+            </if>
+            <if test="languageid != null and languageid != ''">
+                and a.languageid = #{languageid}
+            </if>
+            <if test="postdate != null and postdate != ''">
+                and a.postdate = #{postdate}
+            </if>
+            <if test="name != null and name != ''">
+                and a.name = #{name}
+            </if>
+            <if test="contactinfo != null and contactinfo != ''">
+                and a.contactinfo = #{contactinfo}
+            </if>
+            <if test="college != null and college != ''">
+                and a.college = #{college}
+            </if>
+            <if test="studentnumber != null and studentnumber != ''">
+                and a.studentnumber = #{studentnumber}
+            </if>
+            <if test="sex != null and sex != ''">
+                and a.sex = #{sex}
+            </if>
+            <if test="height != null and height != ''">
+                and a.height = #{height}
+            </if>
+            <if test="bodyweight != null and bodyweight != ''">
+                and a.bodyweight = #{bodyweight}
+            </if>
+            <if test="waist != null and waist != ''">
+                and a.waist = #{waist}
+            </if>
+            <if test="teamleader != null and teamleader != ''">
+                and a.teamleader = #{teamleader}
+            </if>
+            <if test="addtime != null and addtime != ''">
+                and a.addtime = #{addtime}
+            </if>
+        </where>
+        order by a.id desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(*) FROM vol_volunteer a
+		inner join system_dictionaries as b on a.officeid=b.dicid
+        inner join system_dictionaries as c on a.departmentid=c.dicid
+        inner join system_dictionaries as d on a.languageid=d.dicid
+		<where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="officeid != null and officeid != ''">
+                and a.officeid = #{officeid}
+            </if>
+            <if test="departmentid != null and departmentid != ''">
+                and a.departmentid = #{departmentid}
+            </if>
+            <if test="languageid != null and languageid != ''">
+                and a.languageid = #{languageid}
+            </if>
+            <if test="postdate != null and postdate != ''">
+                and a.postdate = #{postdate}
+            </if>
+            <if test="name != null and name != ''">
+                and a.name = #{name}
+            </if>
+            <if test="contactinfo != null and contactinfo != ''">
+                and a.contactinfo = #{contactinfo}
+            </if>
+            <if test="college != null and college != ''">
+                and a.college = #{college}
+            </if>
+            <if test="studentnumber != null and studentnumber != ''">
+                and a.studentnumber = #{studentnumber}
+            </if>
+            <if test="sex != null and sex != ''">
+                and a.sex = #{sex}
+            </if>
+            <if test="height != null and height != ''">
+                and a.height = #{height}
+            </if>
+            <if test="bodyweight != null and bodyweight != ''">
+                and a.bodyweight = #{bodyweight}
+            </if>
+            <if test="waist != null and waist != ''">
+                and a.waist = #{waist}
+            </if>
+            <if test="teamleader != null and teamleader != ''">
+                and a.teamleader = #{teamleader}
+            </if>
+            <if test="addtime != null and addtime != ''">
+                and a.addtime = #{addtime}
+            </if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.Volunteer.model.VolVolunteer" useGeneratedKeys="true" keyProperty="id">
+        insert into vol_volunteer(
+        	<trim suffixOverrides=",">
+                <if test="session != null">`session`,</if>
+                <if test="officeid != null">`officeid`,</if>
+                <if test="departmentid != null">`departmentid`,</if>
+                <if test="languageid != null">`languageid`,</if>
+                <if test="postdate != null">`postdate`,</if>
+                <if test="name != null">`name`,</if>
+                <if test="contactinfo != null">`contactinfo`,</if>
+                <if test="college != null">`college`,</if>
+                <if test="studentnumber != null">`studentnumber`,</if>
+                <if test="sex != null">`sex`,</if>
+                <if test="height != null">`height`,</if>
+                <if test="bodyweight != null">`bodyweight`,</if>
+                <if test="waist != null">`waist`,</if>
+                <if test="teamleader != null">`teamleader`,</if>
+                <if test="addtime != null">`addtime`</if>
+			</trim>
+		) values (
+        	<trim suffixOverrides=",">
+                <if test="session != null">#{session},</if>
+                <if test="officeid != null">#{officeid},</if>
+                <if test="departmentid != null">#{departmentid},</if>
+                <if test="languageid != null">#{languageid},</if>
+                <if test="postdate != null">#{postdate},</if>
+                <if test="name != null">#{name},</if>
+                <if test="contactinfo != null">#{contactinfo},</if>
+                <if test="college != null">#{college},</if>
+                <if test="studentnumber != null">#{studentnumber},</if>
+                <if test="sex != null">#{sex},</if>
+                <if test="height != null">#{height},</if>
+                <if test="bodyweight != null">#{bodyweight},</if>
+                <if test="waist != null">#{waist},</if>
+                <if test="teamleader != null">#{teamleader},</if>
+                <if test="addtime != null">#{addtime}</if>
+			</trim>
+		)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.Volunteer.model.VolVolunteer">
+        update vol_volunteer
+        <set>
+			<if test="session != null">`session` = #{session},</if>
+			<if test="officeid != null">`officeid` = #{officeid},</if>
+			<if test="departmentid != null">`departmentid` = #{departmentid},</if>
+			<if test="languageid != null">`languageid` = #{languageid},</if>
+			<if test="postdate != null">`postdate` = #{postdate},</if>
+			<if test="name != null">`name` = #{name},</if>
+			<if test="contactinfo != null">`contactinfo` = #{contactinfo},</if>
+			<if test="college != null">`college` = #{college},</if>
+			<if test="studentnumber != null">`studentnumber` = #{studentnumber},</if>
+			<if test="sex != null">`sex` = #{sex},</if>
+			<if test="height != null">`height` = #{height},</if>
+			<if test="bodyweight != null">`bodyweight` = #{bodyweight},</if>
+			<if test="waist != null">`waist` = #{waist},</if>
+			<if test="teamleader != null">`teamleader` = #{teamleader},</if>
+			<if test="addtime != null">`addtime` = #{addtime}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from vol_volunteer where id = #{id}
+    </delete>
+    
+    
+    
+</mapper>

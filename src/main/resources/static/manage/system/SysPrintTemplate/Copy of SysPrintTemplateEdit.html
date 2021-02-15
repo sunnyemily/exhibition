@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Demo</title>
+		<link rel="stylesheet" href="/manage/css/xadmin.css">
+	<link href="/manage/css/style.css?v=4.1.0" rel="stylesheet">
+	<link href="/manage/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="/manage/layui/css/layui.css"  media="all">
+		<script charset="utf-8" src="/manage/js/jquery.min.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/layui/layui.js" type="text/javascript"></script>
+		<script src="/manage/js/manage/common.js"></script>	
+		<script charset="utf-8" src="/manage/js/xadmin.js" type="text/javascript"></script>
+		
+		<style>			
+			.drag {
+				/*border: 1px #d3dbde solid;*/
+				position: absolute;
+				/*height: 400px;*/
+				/*background: #F2F6F8;*/
+				padding: 15px;				
+				cursor: move;
+				z-index: 1000;
+			}
+			table {
+				width: 390px;
+				border-top: 0px solid #d3dbde;
+				border-right: 0px solid #d3dbde;
+			}
+			th {
+				height: 37px;
+				line-height: 37px;
+				border-left: 0px solid #d3dbde;
+				border-bottom: 0px solid #d3dbde;
+			}
+
+			td {
+				border-bottom: 0px solid #d3dbde;
+				border-left: 0px solid #d3dbde;
+				padding: 5px;
+				text-indent: 5px;
+				text-align: center;
+				vertical-align: middle;
+				text-align: left;
+				width: 200px
+			}
+		</style>
+		
+	</head>
+<body>
+<div id="divcontent">
+
+</div>
+<div style="bottom:10px;left:10px;position: absolute;">
+	<table style="border:0px ">
+		<tr>
+			<td id="CardTypeDiv"><select id="cardtype" name="cardtype" class="layui-input" style="width:180px"></select></td>
+			<td><input type="button"  class="layui-btn" id="btn" onclick='save()' value=" 保 存 "></td>
+		</tr>
+	</table>
+</div>
+<input type="hidden" id="txtcardtypeid">
+<input type="hidden" id="txtid">
+</body>
+</html>
+<script>
+var editSysPrintTemplateId = sessionStorage.getItem("editSysPrintTemplateId");
+var editprintTemplate = sessionStorage.getItem("editprintTemplate");  
+var editCardTypeId = sessionStorage.getItem("editCardTypeId"); 
+$("#divcontent").html(editprintTemplate);
+$("#txtcardtypeid").val(editCardTypeId);
+$("#txtid").val(editSysPrintTemplateId);
+	 /*           $.ajax({
+	                url: "/manage/system/sysPrintTemplate/findById",
+	                data: {
+	                    "id": editSysPrintTemplateId
+	                },
+	                dataType: "json",
+	                type: "get",
+	                success: function (result) {
+	                    if (result.code === 1) {	                       
+	                        $("#txtcardtypeid").val(result.data.cardtypeid);
+	                        $("#divcontent").html(result.data.printTemplate);
+	                    } else {
+	                        layer.alert("获取修改信息失败！");
+	                    }
+	                }
+	            });
+	  */
+layui.use(['form', 'layer'], function () {
+  var form = layui.form, layer = layui.layer;
+  loadZhengJianLeiXing(form, $("#txtcardtypeid").val(), '');          
+});
+function save(){
+	var remark=$("#divcontent").html();
+	var cardtype=$("#cardtype").val();
+	if(cardtype==''){
+		$("#CardTypeDiv select").focus();
+    	layer.tips("证件类型不可为空", "#CardTypeDiv", {tips: 1});
+    	return;
+	}
+	var params = {};
+	params.printtemplate = remark;
+	params.cardtypeid=cardtype;
+	params.id=$("#txtid").val();
+	$.ajax({
+		url : "/manage/system/sysPrintTemplate/update",
+		data : JSON.stringify(params),
+		type : "post",
+		async: false,
+		contentType : "application/json",
+		success : function(result) {			
+			if (result.code === 1) {
+				layer.msg("更新成功", {icon: 6, time: 500}, function () {
+                     //关闭当前frame
+                     xadmin.close();
+                     // 可以对父窗口进行刷新
+                     xadmin.father_reload();
+                 });
+			} else {
+				layer.alert(result.msg);
+			}
+		}
+	});
+}
+</script>
+
+<script>
+			
+			//生成拖拽
+			function _Generate() {
+				var str = "<div class=\"drag\">  <span style=\"font-weight:bold;\">" + $("#txtTitle").val();
+				+"</span></div>";
+				$("#divcontent").html($("#divcontent").html() + str);
+				_Mone();
+			}
+
+			$(function() {
+				_Mone();
+			});			
+
+			//拖拽
+			function _Mone() {
+				var _move = false;
+				//移动标记
+				var _x, _y;
+				//鼠标离控件左上角的相对位置
+				var t;
+				//当前激活层的对象
+				var newz = 1;
+				//新对象的z-index
+				var oldz = 1;
+				//旧对象的z-index
+
+				$("div.drag").mousedown(function(e) {
+					_move = true;
+					newz = parseInt($(this).css("z-index"))
+					$(this).css({
+						"z-index" : newz + oldz
+					});
+					t = $(this);
+					//初始化当前激活层的对象
+					_x = e.pageX - parseInt($(this).css("left"));
+					//获得左边位置
+					_y = e.pageY - parseInt($(this).css("top"));
+					//获得上边位置
+					$(this).fadeTo(20, 0.5);
+					//点击后开始拖动并透明显示
+				});
+
+				$("div.drag").mousemove(function(e) {
+					if (_move) {
+						var x = e.pageX - _x;
+						//移动时根据鼠标位置计算控件左上角的绝对位置
+						var y = e.pageY - _y;
+						t.css({
+							top : y,
+							left : x
+						});
+						//控件新位置
+					}
+				}).mouseup(function(e) {
+
+					_move = false;
+					t.fadeTo("fast", 1);
+					//松开鼠标后停止移动并恢复成不透明
+					oldz = parseInt(t.css("z-index"));
+					//获得最后激活层的z-index
+				});
+
+				/*
+				 $(document).mousemove(function (e) {
+				 if (_move) {
+				 var x = e.pageX - _x;//移动时根据鼠标位置计算控件左上角的绝对位置
+				 var y = e.pageY - _y;
+				 t.css({ top: y, left: x });//控件新位置
+				 }
+				 }).mouseup(function (e) {
+
+				 _move = false;
+				 t.fadeTo("fast", 1);//松开鼠标后停止移动并恢复成不透明
+				 oldz = parseInt(t.css("z-index"));//获得最后激活层的z-index
+				 });*/
+			}
+		</script>

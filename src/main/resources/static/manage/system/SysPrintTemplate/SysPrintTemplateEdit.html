@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Demo</title>
+		<link rel="stylesheet" href="/manage/css/xadmin.css">
+	<link href="/manage/css/style.css?v=4.1.0" rel="stylesheet">
+	<link href="/manage/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="/manage/layui/css/layui.css"  media="all">
+		<script charset="utf-8" src="/manage/js/jquery.min.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/layui/layui.js" type="text/javascript"></script>
+		<script src="/manage/js/manage/common.js"></script>	
+		<script charset="utf-8" src="/manage/js/xadmin.js" type="text/javascript"></script>
+		
+		<style>			
+			#box {
+				width: 390px;
+				height: 117px;
+				position: absolute;
+				top: 10px;
+				left: 10px;
+				z-index: 1000;
+			}
+			#box1 {
+				width: 290px;
+				height: 378px;
+				position: absolute;
+				top: 140px;
+				left: 10px;
+				z-index: 1000;
+			}
+			#divcontent {
+
+				height: 100%;
+			}
+			img {
+				width: 100%;
+				height: 100%;
+				cursor: move;
+			}
+			table {
+				width: 100%;
+				height: 100%;
+				cursor: move;
+				border: 1px solid #e8e8e8;
+			}
+			th {
+				height: 37px;
+				width:30%;
+				line-height: 37px;
+				border-left: 0px solid #d3dbde;
+				border-bottom: 0px solid #d3dbde;
+			}
+			td {
+				border-bottom: 0px solid #d3dbde;
+				border-left: 0px solid #d3dbde;
+				padding: 5px;
+				text-indent: 5px;
+				text-align: center;
+				vertical-align: middle;
+				text-align: left;
+				width: 200px
+			}
+			#scale {
+				width: 5px;
+				height: 5px;
+				overflow: hidden;
+				cursor: se-resize;
+				position: absolute;
+				right: 0;
+				bottom: 0;
+				/*background-color: rgb(122, 191, 238);*/
+			}
+			#scale1 {
+				width: 5px;
+				height: 5px;
+				overflow: hidden;
+				cursor: se-resize;
+				position: absolute;
+				right: 0;
+				bottom: 0;
+				/*background-color: rgb(122, 191, 238);*/
+			}
+		</style>
+		
+	</head>
+<body>
+<div id="divcontent">
+
+</div>
+<div style="bottom:10px;left:10px;position: absolute;">
+	<table style="border:0px ">
+		<tr>
+			<td id="CardTypeDiv"><select id="cardtype" name="cardtype" class="layui-input" style="width:180px"></select></td>
+			<td><input type="button"  class="layui-btn" id="btn" onclick='save()' value=" 保 存 "></td>
+		</tr>
+	</table>
+</div>
+<input type="hidden" id="txtcardtypeid">
+<input type="hidden" id="txtid">
+</body>
+</html>
+<script>
+var editSysPrintTemplateId = sessionStorage.getItem("editSysPrintTemplateId");
+var editprintTemplate = sessionStorage.getItem("editprintTemplate");  
+var editCardTypeId = sessionStorage.getItem("editCardTypeId"); 
+$("#divcontent").html(editprintTemplate);
+$("#txtcardtypeid").val(editCardTypeId);
+$("#txtid").val(editSysPrintTemplateId);
+	 /*           $.ajax({
+	                url: "/manage/system/sysPrintTemplate/findById",
+	                data: {
+	                    "id": editSysPrintTemplateId
+	                },
+	                dataType: "json",
+	                type: "get",
+	                success: function (result) {
+	                    if (result.code === 1) {	                       
+	                        $("#txtcardtypeid").val(result.data.cardtypeid);
+	                        $("#divcontent").html(result.data.printTemplate);
+	                    } else {
+	                        layer.alert("获取修改信息失败！");
+	                    }
+	                }
+	            });
+	  */
+layui.use(['form', 'layer'], function () {
+  var form = layui.form, layer = layui.layer;
+  loadZhengJianLeiXing(form, $("#txtcardtypeid").val(), '');          
+});
+function save(){
+	var remark=$("#divcontent").html();
+	var cardtype=$("#cardtype").val();
+	if(cardtype==''){
+		$("#CardTypeDiv select").focus();
+    	layer.tips("证件类型不可为空", "#CardTypeDiv", {tips: 1});
+    	return;
+	}
+	var params = {};
+	params.printtemplate = remark;
+	params.cardtypeid=cardtype;
+	params.id=$("#txtid").val();
+	$.ajax({
+		url : "/manage/system/sysPrintTemplate/update",
+		data : JSON.stringify(params),
+		type : "post",
+		async: false,
+		contentType : "application/json",
+		success : function(result) {			
+			if (result.code === 1) {
+				layer.msg("更新成功", {icon: 6, time: 500}, function () {
+                     //关闭当前frame
+                     xadmin.close();
+                     // 可以对父窗口进行刷新
+                     xadmin.father_reload();
+                 });
+			} else {
+				layer.alert(result.msg);
+			}
+		}
+	});
+}
+</script>
+
+<script type="text/javascript">
+			// box是装图片的容器,fa是图片移动缩放的范围,scale是控制缩放的小图标
+			var box = document.getElementById("box");
+			var fa = document.getElementById('divcontent');
+			var scale = document.getElementById("scale");
+			// 图片移动效果
+			box.onmousedown = function(ev) {
+				var oEvent = ev;
+				// 浏览器有一些图片的默认事件,这里要阻止
+				oEvent.preventDefault();
+				var disX = oEvent.clientX - box.offsetLeft;
+				var disY = oEvent.clientY - box.offsetTop;
+				fa.onmousemove = function(ev) {
+					oEvent = ev;
+					oEvent.preventDefault();
+					var x = oEvent.clientX - disX;
+					var y = oEvent.clientY - disY;
+
+					// 图形移动的边界判断
+					x = x <= 0 ? 0 : x;
+					x = x >= fa.offsetWidth - box.offsetWidth ? fa.offsetWidth - box.offsetWidth : x;
+					y = y <= 0 ? 0 : y;
+					y = y >= fa.offsetHeight - box.offsetHeight ? fa.offsetHeight - box.offsetHeight : y;
+					box.style.left = x + 'px';
+					box.style.top = y + 'px';
+				}
+				// 图形移出父盒子取消移动事件,防止移动过快触发鼠标移出事件,导致鼠标弹起事件失效
+				fa.onmouseleave = function() {
+					fa.onmousemove = null;
+					fa.onmouseup = null;
+				}
+				// 鼠标弹起后停止移动
+				fa.onmouseup = function() {
+					fa.onmousemove = null;
+					fa.onmouseup = null;
+				}
+			}
+			// 图片缩放效果
+			scale.onmousedown = function(e) {
+				// 阻止冒泡,避免缩放时触发移动事件
+				e.stopPropagation();
+				e.preventDefault();
+				var pos = {
+					'w' : box.offsetWidth,
+					'h' : box.offsetHeight,
+					'x' : e.clientX,
+					'y' : e.clientY
+				};
+				fa.onmousemove = function(ev) {
+					ev.preventDefault();
+					// 设置图片的最小缩放为30*30
+					var w = Math.max(250, ev.clientX - pos.x + pos.w)
+					var h = Math.max(117, ev.clientY - pos.y + pos.h)
+					// console.log(w,h)
+
+					// 设置图片的最大宽高
+					w = w >= fa.offsetWidth - box.offsetLeft ? fa.offsetWidth - box.offsetLeft : w
+					h = h >= fa.offsetHeight - box.offsetTop ? fa.offsetHeight - box.offsetTop : h
+					box.style.width = w + 'px';
+					box.style.height = h + 'px';
+					// console.log(box.offsetWidth,box.offsetHeight)
+				}
+				fa.onmouseleave = function() {
+					fa.onmousemove = null;
+					fa.onmouseup = null;
+				}
+				fa.onmouseup = function() {
+					fa.onmousemove = null;
+					fa.onmouseup = null;
+				}
+			}
+			var box1 = document.getElementById("box1");
+			var scale1 = document.getElementById("scale1");
+			// 图片移动效果
+			box1.onmousedown = function(ev1) {
+				var oEvent1 = ev1;
+				// 浏览器有一些图片的默认事件,这里要阻止
+				oEvent1.preventDefault();
+				var disX1 = oEvent1.clientX - box1.offsetLeft;
+				var disY1 = oEvent1.clientY - box1.offsetTop;
+				fa.onmousemove = function(ev1) {
+					oEvent1 = ev1;
+					oEvent1.preventDefault();
+					var x1 = oEvent1.clientX - disX1;
+					var y1 = oEvent1.clientY - disY1;
+
+					// 图形移动的边界判断
+					x1 = x1 <= 0 ? 0 : x1;
+					x1 = x1 >= fa.offsetWidth - box1.offsetWidth ? fa.offsetWidth - box1.offsetWidth : x1;
+					y1 = y1 <= 0 ? 0 : y1;
+					y1 = y1 >= fa.offsetHeight - box1.offsetHeight ? fa.offsetHeight - box1.offsetHeight : y1;
+					box1.style.left = x1 + 'px';
+					box1.style.top = y1 + 'px';
+				}
+				// 图形移出父盒子取消移动事件,防止移动过快触发鼠标移出事件,导致鼠标弹起事件失效
+				fa.onmouseleave = function() {
+					fa.onmousemove = null;
+					fa.onmouseup = null;
+				}
+				// 鼠标弹起后停止移动
+				fa.onmouseup = function() {
+					fa.onmousemove = null;
+					fa.onmouseup = null;
+				}
+			}
+			// 图片缩放效果
+			scale1.onmousedown = function(e1) {
+				// 阻止冒泡,避免缩放时触发移动事件
+				e1.stopPropagation();
+				e1.preventDefault();
+				var pos1 = {
+					'w' : box1.offsetWidth,
+					'h' : box1.offsetHeight,
+					'x' : e1.clientX,
+					'y' : e1.clientY
+				};
+				fa.onmousemove = function(ev1) {
+					ev1.preventDefault();
+					// 设置图片的最小缩放为30*30
+					var w1 = Math.max(30, ev1.clientX - pos1.x + pos1.w)
+					var h1 = Math.max(30, ev1.clientY - pos1.y + pos1.h)
+					// console.log(w,h)
+
+					// 设置图片的最大宽高
+					w1 = w1 >= fa.offsetWidth - box1.offsetLeft ? fa.offsetWidth - box1.offsetLeft : w1
+					h1 = h1 >= fa.offsetHeight - box1.offsetTop ? fa.offsetHeight - box1.offsetTop : h1
+					box1.style.width = w1 + 'px';
+					box1.style.height = h1 + 'px';
+					// console.log(box.offsetWidth,box.offsetHeight)
+				}
+				fa.onmouseleave = function() {
+					fa.onmousemove = null;
+					fa.onmouseup = null;
+				}
+				fa.onmouseup = function() {
+					fa.onmousemove = null;
+					fa.onmouseup = null;
+				}
+			}
+
+		</script>

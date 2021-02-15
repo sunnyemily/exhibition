@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.ico"> <link href="css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+    <link href="css/font-awesome.css?v=4.4.0" rel="stylesheet">
+
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css?v=4.1.0" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+            <div class="col-sm-6">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <h5>系统信息</h5>
+                        <table class="table table-stripped small m-t-md">
+                            <tbody>
+                                <tr>
+                                    <td class="no-borders">
+                                        <i class="fa fa-circle text-navy"></i> 应用名：
+                                    </td>
+                                    <td class="no-borders" align="left" id="appName">IPPSA</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <i class="fa fa-circle text-navy"></i> 版本号：
+                                    </td>
+                                    <td align="left" id="appVersion">0.0.1-SNAPSHOT</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <i class="fa fa-circle text-navy"></i> 描述：
+                                    </td>
+                                    <td align="left" id="appDescription">中国反侵权假冒创新战略联盟-日本分联盟</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <h5>硬件支持概况</h5>
+                        <table class="table table-stripped small m-t-md">
+                            <tbody>
+                                <tr>
+                                    <td class="no-borders">
+                                        <i class="fa fa-circle text-navy"></i> 处理器数量：
+                                    </td>
+                                    <td class="no-borders" align="left" id="cpuCount">0</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <i class="fa fa-circle text-navy"></i> 内存大小：
+                                    </td>
+                                    <td align="left" id="memerySize">0</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <i class="fa fa-circle text-navy"></i> 磁盘大小：
+                                    </td>
+                                    <td align="left" id="diskSize">0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>磁盘使用情况</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="flot-chart">
+                            <div class="flot-chart-content" id="flot-pie-chart"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>内存使用情况</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+
+                        <div class="flot-chart">
+                            <div class="flot-chart-content" id="flot-line-chart-moving"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全局js -->
+    <script src="js/jquery.min.js?v=2.1.4"></script>
+    <script src="js/bootstrap.min.js?v=3.3.6"></script>
+
+
+
+    <!-- Flot -->
+    <script src="js/plugins/flot/jquery.flot.js"></script>
+    <script src="js/plugins/flot/jquery.flot.tooltip.min.js"></script>
+    <script src="js/plugins/flot/jquery.flot.resize.js"></script>
+    <script src="js/plugins/flot/jquery.flot.pie.js"></script>
+
+    <!-- 自定义js -->
+    <script src="js/content.js?v=1.0.0"></script>
+
+
+    <!-- Flot demo data -->
+    <script src="js/demo/flot-demo.js"></script>
+
+</body>
+
+</html>

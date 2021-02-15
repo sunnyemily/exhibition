@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.AuditRecord.dao.LogBoothauditMapper">
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.AuditRecord.model.LogBoothaudit">
+        select
+			a.id as id,
+			a.act as act,
+			a.reviewer as reviewer,
+			a.companyid as companyid,
+			a.remark as remark,
+			a.addtime as addtime,a.status
+        from log_boothaudit as a
+        where a.id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.AuditRecord.model.LogBoothaudit">
+        select
+			a.id as id,
+			a.act as act,
+			a.reviewer as reviewer,
+			a.companyid as companyid,
+			a.remark as remark,
+			a.addtime as addtime,a.status
+        from log_boothaudit as a
+        <where>
+			<if test="id != null and id != ''">
+				and a.id = #{id}
+			</if>
+			<if test="act != null and act != ''">
+				and a.act = #{act}
+			</if>
+			<if test="reviewer != null and reviewer != ''">
+				and a.reviewer = #{reviewer}
+			</if>
+			<if test="companyid != null and companyid != ''">
+				and a.companyid = #{companyid}
+			</if>
+			<if test="remark != null and remark != ''">
+				and a.remark = #{remark}
+			</if>
+			<if test="addtime != null and addtime != ''">
+				and a.addtime = #{addtime}
+			</if>
+			<if test="status != null and status != ''">
+				and a.status = #{status}
+			</if>
+        </where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.AuditRecord.model.LogBoothaudit">
+        select
+			a.id as id,
+			a.act as act,
+			a.reviewer as reviewer,
+			a.companyid as companyid,
+			a.remark as remark,
+			a.addtime as addtime,a.status
+        from log_boothaudit as a
+        <where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="act != null and act != ''">
+                and a.act = #{act}
+            </if>
+            <if test="reviewer != null and reviewer != ''">
+                and a.reviewer = #{reviewer}
+            </if>
+            <if test="companyid != null and companyid != ''">
+                and a.companyid = #{companyid}
+            </if>
+            <if test="remark != null and remark != ''">
+                and a.remark = #{remark}
+            </if>
+            <if test="addtime != null and addtime != ''">
+                and a.addtime = #{addtime}
+            </if>
+            <if test="status != null and status != ''">
+				and a.status = #{status}
+			</if>
+        </where>
+        order by a.id desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(*) FROM log_boothaudit a
+		<where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="act != null and act != ''">
+                and a.act = #{act}
+            </if>
+            <if test="reviewer != null and reviewer != ''">
+                and a.reviewer = #{reviewer}
+            </if>
+            <if test="companyid != null and companyid != ''">
+                and a.companyid = #{companyid}
+            </if>
+            <if test="remark != null and remark != ''">
+                and a.remark = #{remark}
+            </if>
+            <if test="addtime != null and addtime != ''">
+                and a.addtime = #{addtime}
+            </if>
+            <if test="status != null and status != ''">
+				and a.status = #{status}
+			</if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.AuditRecord.model.LogBoothaudit" useGeneratedKeys="true" keyProperty="id">
+        insert into log_boothaudit(
+        	<trim suffixOverrides=",">
+                <if test="act != null">`act`,</if>
+                <if test="reviewer != null">`reviewer`,</if>
+                <if test="companyid != null">`companyid`,</if>
+                <if test="status != null">`status`,</if>
+                <if test="remark != null">`remark`</if>
+			</trim>
+		) values (
+        	<trim suffixOverrides=",">
+                <if test="act != null">#{act},</if>
+                <if test="reviewer != null">#{reviewer},</if>
+                <if test="companyid != null">#{companyid},</if>
+                <if test="status != null">#{status},</if>
+                <if test="remark != null">#{remark}</if>
+			</trim>
+		)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.AuditRecord.model.LogBoothaudit">
+        update log_boothaudit
+        <set>
+			<if test="act != null">`act` = #{act},</if>
+			<if test="reviewer != null">`reviewer` = #{reviewer},</if>
+			<if test="companyid != null">`companyid` = #{companyid},</if>
+			<if test="status != null">`status` = #{status},</if>
+			<if test="remark != null">`remark` = #{remark}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from log_boothaudit where id = #{id}
+    </delete>
+    
+    
+    
+</mapper>

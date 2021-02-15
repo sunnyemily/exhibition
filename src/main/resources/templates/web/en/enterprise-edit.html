@@ -1,0 +1,268 @@
+    <div class="modal inmodal" id="edit-model" style="display:none">
+		<div class="modal-content animated bounceInUp">
+			<div class="ibox-content">
+				<fieldset class="layui-elem-field layui-field-title" style="border-top:0px">
+					<form class="layui-form layui-form-pane" action="" id="editform">
+					    <input type="hidden" name="id" id="id" value="0"  />
+					    <input type="hidden" name="session" value="${exhibitionSessionId}"  />
+					    <input type="hidden" name="applyId" value="0"  />
+						<table width="100%"  class="layui-table form-content">
+							<tr class="papers-edit-bg"><td colspan="3" style="border-right: none;">add exhibiting companies</td><td align="right"><a class="layui-icon layui-icon-close close"></a></td></tr>
+							  <tr>
+							    <td><span>*</span>company name(Chinese)</td>
+							    <td colspan="3">
+							      <input type="text" name="chinesename" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>company name (English)</td>
+							    <td colspan="3">
+							      <input type="text" name="engname" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>company name（Russian）</td>
+							    <td colspan="3">
+							      <input type="text" name="russianname" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>company address（Chinese）</td>
+							    <td colspan="3">
+							      <input type="text" name="chineseaddress" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>company address（English）</td>
+							    <td colspan="3">
+							      <input type="text" name="engaddress" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>zipcode</td>
+							    <td colspan="3">
+							      <input type="text" name="postcode" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>moblie phone </td>
+							    <td colspan="3">
+							      <input type="text" name="phone" required  lay-verify="required" placeholder="please input your mobile phone nubmer" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>Tel.</td>
+							    <td colspan="3">
+							      <input type="text" name="tel" required  lay-verify="required" placeholder="please input telephone number" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>fax</td>
+							    <td colspan="3">
+							      <input type="text" name="fax" required  placeholder="please input fax" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>website</td>
+							    <td colspan="3">
+							      <input type="text" name="website" required placeholder="please input your website" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>*E-mail</td>
+							    <td colspan="3">
+							      <input type="text" name="email"  lay-verify="email" placeholder="please input your E-mail " autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>country/region</td>
+							    <td colspan="3">
+								    <div class="layui-input-inline">
+								      <select name="country" lay-verify="required" lay-filter="country">
+										  <option value="">please choose</option>
+									  </select>   
+								    </div>
+								    <div class="layui-input-inline">
+								      <select name="province" lay-verify="required" lay-filter="province">
+										  <option value="">please choose</option>
+									  </select>   
+								    </div>
+								    <div class="layui-input-inline">
+								      <select name="city" lay-verify="required">
+										  <option value="">please choose</option>
+									  </select>   
+									 </div>
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>responsible person</td>
+							    <td colspan="3">
+							      <input type="text" name="principal" required  lay-verify="required" placeholder="please input responsible person's name" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>responsible person</td>
+							    <td colspan="3">
+							      <input type="text" name="jobtitle" placeholder="please input responsible person's name" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>contact person</td>
+							    <td colspan="3">
+							      <input type="text" name="contactperson" placeholder="please input contact person's name" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>industry classification</td>
+							    <td colspan="3">
+							      <select name="industryid" lay-verify="">
+							    	<#list industries as industry>
+							    	<option value="${industry.id}">${industry.englishName}</option>
+							    	</#list>
+								  </select>
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>company's nature</td>
+							    <td colspan="3">
+							    	<#list companytypes as type>
+							      <input type="radio" name="exhibitorsNatureId" value="${type.id}" title="englishName">
+							      </#list>
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>business scope</td>
+							    <td colspan="3">
+							      <textarea name="busscope" placeholder="please input business scope" class="layui-textarea"></textarea>
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>clients you hope to meet</td>
+							    <td colspan="3">
+							      <textarea name="hopecustomers" placeholder="please input clients you hope to meet" class="layui-textarea"></textarea>
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>company's profile</td>
+							    <td colspan="3">
+							      <textarea name="companyprofile" placeholder="please input company's profile" class="layui-textarea"></textarea>
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>purchasing intention</td>
+							    <td colspan="3">
+							      <textarea name="purchaseintention" required  lay-verify="required" placeholder="please input purchasing intention" class="layui-textarea"></textarea>
+							    </td>
+							  </tr>
+							<tr>
+								<td>company's LOGO</td>
+								<input type="hidden" name="companylogo" id="companylogo" value=""  />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnCompanylogo" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>upload photo
+									</button>
+									<button type="button" class="layui-btn" id="btnCompanylogoCropper">
+									  <i class="layui-icon">&#xe67c;</i>tailoring assistance
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />note: The format should be jpg, which is less than 100K. The logo size is 200*200 (width*height) pixels.</div>
+								</td>
+								<td colspan="2" class="prepic"><image src="" width="200" height="200" id="precompanylogo" /></td>
+							</tr>
+							<tr>
+								<td>*business license</td>
+								<input type="hidden" name="buslicensepath" id="buslicensepath" value=""  lay-verify="required" lay-reqText="mast upload business license"  />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="idpic" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>upload photo
+									</button>
+									<button type="button" class="layui-btn" id="btnBuslicensepathCropper">
+									  <i class="layui-icon">&#xe67c;</i>tailoring assistance
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />note: The format should be jpg, which is less than 2M. The business license size is 800*1060  (width*height) pixels.</div>
+								</td>
+								<td colspan="2" class="prepic"><image src="" width="390" height="516" id="prebuslicensepath" /></td>
+							</tr>
+							<tr>
+								<td>*cover picture</td>
+								<input type="hidden" name="companypicture" id="companypicture" value=""  lay-verify="required" lay-reqText="Must upload company cover"  />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnCompanyPicture" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>upload photo
+									</button>
+									<button type="button" class="layui-btn" id="btnCompanypictureCropper">
+									  <i class="layui-icon">&#xe67c;</i>tailoring assistance
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />note: The format should be jpg, which is less than 2M. The company cover size is 750*422  (width*height) pixels.</div>
+								</td>
+								<td colspan="2" class="prepic"><image src="" width="390" height="219" id="precompanypicture" /></td>
+							</tr>
+							<tr>
+								<td>promotional short video</td>
+								<input type="hidden" name="companyvideo" id="companyvideo" value="" />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnCompanyVideo">
+									  <i class="layui-icon">&#xe67c;</i>upload video
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />note: The format is MP4, which is less than 20M. size is 750*422  (width*height) pixels.</div>
+								</td>
+								<td colspan="2" class="prepic" id="videoContainer"><image src="" width="390" height="219" id="prebuslicensepath" /></td>
+							</tr>
+							<tr>
+								<td>*circulating photos</td>
+								<input type="hidden" name="companypictures" id="companypictures" value=""  />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnCompanyPictures" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>upload photo
+									</button>
+									<button type="button" class="layui-btn" id="btnCompanypicturesCropper">
+									  <i class="layui-icon">&#xe67c;</i>tailoring assistance
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />note: The format is jpg, which is less than 2M, up to 3 photos. The size of circulating photos should be 750*422 (width*height) pixels.</div>
+								</td>
+								<td colspan="2">
+									<div class="mutipic">
+									</div>
+								</td>
+							</tr>
+							<tr>
+							    <td>address of virtual exhibition hall</td>
+							    <td colspan="3">
+							      <input type="text" name="url" placeholder="input the virtual exhibition hall address" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							<tr class="papers-edit-bg"><td colspan="3" style="border-right: none;">booth application and allocation</td><td align="right"></td></tr>
+							
+							  <tr>
+							    <td><span>*</span>exhibits</td>
+							    <td colspan="3">
+							      <input type="text" name="exhibits" lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							<tr>
+								<td>*booth allocation</td>
+							    <td colspan="3" id="roomAndBooth">
+							    </td>
+							</tr>
+							<tr class="papers-edit-bg">
+								<td colspan="4" align="center">
+									<button type="button" class="layui-btn layui-btn-primary close">cancel</button>
+									<button type="reset" class="layui-btn layui-btn-primary" id="reset" style="display:none">reset</button>
+									<button type="button"  lay-submit class="layui-btn"  lay-filter="update" id="submit">submit</button>
+								</td>
+							</tr>
+							
+						</table>
+					</form>
+				</fieldset>
+			</div>
+		</div>
+	</div>
+	<div id="mutiPictureTemplate" style="display:none">
+	<div class="item">
+		<img src="" />
+		<div class="fc-upload-cover">
+			<i class="ivu-icon fa fa-eye"></i>
+			<i class="ivu-icon fa fa-trash"></i>
+		</div>
+	</div>
+	</div>

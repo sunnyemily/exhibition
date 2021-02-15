@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.online.dao.OnlineInquiryMapper">
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.online.model.OnlineInquiry">
+        select
+			a.id as id,
+			a.session as session,
+			a.memberid as memberid,
+			a.productmenuid as productmenuid,
+			a.name as name,
+			a.title as title,
+			a.quantity as quantity,
+			a.quantityunit as quantityunit,
+			a.tel as tel,
+			a.content as content,
+			a.addtime as addtime,
+			a.status as status,
+			a.remark as remark,
+			a.audittime as audittime,
+			a.audituser as audituser
+        from online_inquiry as a
+        where a.id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.online.model.OnlineInquiry">
+        select
+			a.id as id,
+			a.session as session,
+			a.memberid as memberid,
+			a.productmenuid as productmenuid,
+			ifnull(b.dic_cn_name,'') as menuname,
+			a.name as name,
+			a.title as title,
+			a.quantity as quantity,
+			a.quantityunit as quantityunit,
+			ifnull(c.dic_cn_name,'') as quantityunitname,
+			a.tel as tel,
+			a.content as content,
+			a.addtime as addtime,
+			a.status as status,
+			a.remark as remark,
+			a.audittime as audittime,
+			a.audituser as audituser
+        from online_inquiry as a
+        left join system_dictionaries as b on b.dicid=a.productmenuid and b.dic_parentid=90
+        left join system_dictionaries as c on c.dicid=a.quantityunit and c.dic_parentid=105
+        <where>
+			<if test="id != null and id != ''">
+				and a.id = #{id}
+			</if>
+			<if test="session != null and session != ''">
+				and a.session = #{session}
+			</if>
+			<if test="memberid != null and memberid != ''">
+				and a.memberid = #{memberid}
+			</if>
+			<if test="productmenuid != null and productmenuid != ''">
+				and a.productmenuid = #{productmenuid}
+			</if>
+			<if test="name != null and name != ''">
+				and a.name = #{name}
+			</if>
+			<if test="title != null and title != ''">
+				and a.title = #{title}
+			</if>
+			<if test="quantity != null and quantity != ''">
+				and a.quantity = #{quantity}
+			</if>
+			<if test="quantityunit != null and quantityunit != ''">
+				and a.quantityunit = #{quantityunit}
+			</if>
+			<if test="tel != null and tel != ''">
+				and a.tel = #{tel}
+			</if>
+			<if test="content != null and content != ''">
+				and a.content = #{content}
+			</if>
+			<if test="addtime != null and addtime != ''">
+				and a.addtime = #{addtime}
+			</if>
+			<if test="status != null and status != ''">
+				and a.status = #{status}
+			</if>
+			<if test="remark != null and remark != ''">
+				and a.remark = #{remark}
+			</if>
+			<if test="audittime != null and audittime != ''">
+				and a.audittime = #{audittime}
+			</if>
+			<if test="audituser != null and audituser != ''">
+				and a.audituser = #{audituser}
+			</if>
+        </where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.online.model.OnlineInquiry">
+        select
+			a.id as id,
+			a.session as session,
+			a.memberid as memberid,
+			a.productmenuid as productmenuid,
+			ifnull(b.dic_cn_name,'') as menuname,
+			a.name as name,
+			a.title as title,
+			a.quantity as quantity,
+			a.quantityunit as quantityunit,
+			ifnull(c.dic_cn_name,'') as quantityunitname,
+			a.tel as tel,
+			a.content as content,
+			date_format(a.addtime,'%Y-%m-%d') as addtime,
+			a.status as status,
+			a.remark as remark,
+			a.audittime as audittime,
+			a.audituser as audituser
+        from online_inquiry as a
+        left join system_dictionaries as b on b.dicid=a.productmenuid and b.dic_parentid=90
+        left join system_dictionaries as c on c.dicid=a.quantityunit and c.dic_parentid=105
+        <where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="memberid != null and memberid != ''">
+                and a.memberid = #{memberid}
+            </if>
+            <if test="productmenuid != null and productmenuid != ''">
+                and a.productmenuid = #{productmenuid}
+            </if>
+            <if test="name != null and name != ''">
+                and a.name = #{name}
+            </if>
+            <if test="title != null and title != ''">
+                and a.title = #{title}
+            </if>
+            <if test="quantity != null and quantity != ''">
+                and a.quantity = #{quantity}
+            </if>
+            <if test="quantityunit != null and quantityunit != ''">
+                and a.quantityunit = #{quantityunit}
+            </if>
+            <if test="tel != null and tel != ''">
+                and a.tel = #{tel}
+            </if>
+            <if test="content != null and content != ''">
+                and a.content = #{content}
+            </if>
+            <if test="addtime != null and addtime != ''">
+                and a.addtime = #{addtime}
+            </if>
+            <if test="status != null and status != ''">
+                and a.status = #{status}
+            </if>
+            <if test="remark != null and remark != ''">
+                and a.remark = #{remark}
+            </if>
+            <if test="audittime != null and audittime != ''">
+                and a.audittime = #{audittime}
+            </if>
+            <if test="audituser != null and audituser != ''">
+                and a.audituser = #{audituser}
+            </if>
+        </where>
+        order by a.id desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(*) FROM online_inquiry a
+		<where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="memberid != null and memberid != ''">
+                and a.memberid = #{memberid}
+            </if>
+            <if test="productmenuid != null and productmenuid != ''">
+                and a.productmenuid = #{productmenuid}
+            </if>
+            <if test="name != null and name != ''">
+                and a.name = #{name}
+            </if>
+            <if test="title != null and title != ''">
+                and a.title = #{title}
+            </if>
+            <if test="quantity != null and quantity != ''">
+                and a.quantity = #{quantity}
+            </if>
+            <if test="quantityunit != null and quantityunit != ''">
+                and a.quantityunit = #{quantityunit}
+            </if>
+            <if test="tel != null and tel != ''">
+                and a.tel = #{tel}
+            </if>
+            <if test="content != null and content != ''">
+                and a.content = #{content}
+            </if>
+            <if test="addtime != null and addtime != ''">
+                and a.addtime = #{addtime}
+            </if>
+            <if test="status != null and status != ''">
+                and a.status = #{status}
+            </if>
+            <if test="remark != null and remark != ''">
+                and a.remark = #{remark}
+            </if>
+            <if test="audittime != null and audittime != ''">
+                and a.audittime = #{audittime}
+            </if>
+            <if test="audituser != null and audituser != ''">
+                and a.audituser = #{audituser}
+            </if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.online.model.OnlineInquiry" useGeneratedKeys="true" keyProperty="id">
+        insert into online_inquiry(
+        	<trim suffixOverrides=",">
+                <if test="session != null">`session`,</if>
+                <if test="memberid != null">`memberid`,</if>
+                <if test="productmenuid != null">`productmenuid`,</if>
+                <if test="name != null">`name`,</if>
+                <if test="title != null">`title`,</if>
+                <if test="quantity != null">`quantity`,</if>
+                <if test="quantityunit != null">`quantityunit`,</if>
+                <if test="tel != null">`tel`,</if>
+                <if test="content != null">`content`,</if>
+                <if test="addtime != null">`addtime`,</if>
+                <if test="status != null">`status`,</if>
+                <if test="remark != null">`remark`,</if>
+                <if test="audittime != null">`audittime`,</if>
+                <if test="audituser != null">`audituser`</if>
+			</trim>
+		) values (
+        	<trim suffixOverrides=",">
+                <if test="session != null">#{session},</if>
+                <if test="memberid != null">#{memberid},</if>
+                <if test="productmenuid != null">#{productmenuid},</if>
+                <if test="name != null">#{name},</if>
+                <if test="title != null">#{title},</if>
+                <if test="quantity != null">#{quantity},</if>
+                <if test="quantityunit != null">#{quantityunit},</if>
+                <if test="tel != null">#{tel},</if>
+                <if test="content != null">#{content},</if>
+                <if test="addtime != null">#{addtime},</if>
+                <if test="status != null">#{status},</if>
+                <if test="remark != null">#{remark},</if>
+                <if test="audittime != null">#{audittime},</if>
+                <if test="audituser != null">#{audituser}</if>
+			</trim>
+		)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.online.model.OnlineInquiry">
+        update online_inquiry
+        <set>
+			<if test="session != null">`session` = #{session},</if>
+			<if test="memberid != null">`memberid` = #{memberid},</if>
+			<if test="productmenuid != null">`productmenuid` = #{productmenuid},</if>
+			<if test="name != null">`name` = #{name},</if>
+			<if test="title != null">`title` = #{title},</if>
+			<if test="quantity != null">`quantity` = #{quantity},</if>
+			<if test="quantityunit != null">`quantityunit` = #{quantityunit},</if>
+			<if test="tel != null">`tel` = #{tel},</if>
+			<if test="content != null">`content` = #{content},</if>
+			<if test="addtime != null">`addtime` = #{addtime},</if>
+			<if test="status != null">`status` = #{status},</if>
+			<if test="remark != null">`remark` = #{remark},</if>
+			<if test="audittime != null">`audittime` = #{audittime},</if>
+			<if test="audituser != null">`audituser` = #{audituser}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from online_inquiry where id = #{id}
+    </delete>
+    
+    <select id="GetInquiryList" resultType="cn.org.chtf.card.manage.online.model.OnlineInquiry">
+    	select
+			a.id as id,
+			a.session as session,
+			a.memberid as memberid,
+			a.productmenuid as productmenuid,
+			ifnull(b.dic_cn_name,'') as menuname,
+			a.name as name,
+			a.title as title,
+			a.quantity as quantity,
+			a.quantityunit as quantityunit,
+			ifnull(c.dic_cn_name,'') as quantityunitname,
+			a.tel as tel,
+			a.content as content,
+			a.addtime as addtime,
+			a.status as status,
+			a.remark as remark,
+			a.audittime as audittime,
+			a.audituser as audituser
+        from online_inquiry as a
+        left join system_dictionaries as b on b.dicid=a.productmenuid and b.dic_parentid=90
+        left join system_dictionaries as c on b.dicid=a.quantityunit and b.dic_parentid=105
+    	where a.status=2
+    	<if test="dicid!=null and dicid!=0">
+			and a.productmenuid = #{dicid}
+		</if>
+    	<if test="keywords!=null and keywords!=''">
+			and (a.title LIKE '%${keywords}%' or a.content like '%${keywords}%')
+		</if>
+		order by a.addtime desc
+    	LIMIT #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER};
+    </select>
+    <select id="GetInquiryListCount" resultType="int">
+    	select
+			count(*)
+        from online_inquiry as a
+        left join system_dictionaries as b on b.dicid=a.productmenuid and b.dic_parentid=90
+        left join system_dictionaries as c on b.dicid=a.quantityunit and b.dic_parentid=105
+    	where a.status=2
+    	<if test="dicid!=null and dicid!=0">
+			and a.productmenuid = #{dicid}
+		</if>
+    	<if test="keywords!=null and keywords!=''">
+			and (a.title LIKE '%${keywords}%' or a.content like '%${keywords}%')
+		</if>		
+    </select>
+</mapper>

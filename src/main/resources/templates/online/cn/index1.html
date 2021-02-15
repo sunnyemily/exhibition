@@ -1,0 +1,1053 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>绿博会线上展厅</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+
+<link href="css/nav.css" type="text/css" rel="stylesheet" />
+<link href="css/font-awesome.4.6.0.css" type="text/css" rel="stylesheet" />
+<link href="css/swiper.min.css" type="text/css" rel="stylesheet" />
+<link href="css/style.css" type="text/css" rel="stylesheet" />
+<link href="css/media.css" type="text/css" rel="stylesheet" />
+<link rel="stylesheet" href="css/jquery.mCustomScrollbar.css">
+<script src="js/jquery.min.js" type="text/javascript"></script>
+<script src="js/VerticalMenuJs.js" type="text/javascript"></script>
+<script src="js/Sweefty.js" type="text/javascript"></script>
+<script src="js/moaModal.minified.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/scroll.js" ></script>
+<script type="text/javascript">
+$(function(){
+	//一次纵向滚动一个
+	$('#marquee').kxbdSuperMarquee({
+		distance:57,
+		time:1,
+		isAuto:false,
+		btnGo:{up:'#goU',down:'#goD'},
+		direction:'up'
+	});	
+});
+</script>
+
+<!--视频播放器-->
+<link rel="stylesheet" href="video/css/ckin.css">
+
+</head>
+
+<body>
+
+<!--移动端菜单-->
+<div class="wap-header wap">
+	<div class="mobile">
+		<div class="mobile-inner">
+			<div class="mobile-inner-header">
+	    		<a href="#" class="wap-logo"><img src="images/logo.png"></a>
+		    	<div class="mobile-inner-header-icon mobile-inner-header-icon-out"><span></span><span></span><span></span></div>
+		    	<div class="wap-header-menu">
+					<a href="javascript:;" class="memico btn-mem">
+
+					</a>
+
+				</div>
+		    </div>
+		    <div class="mobile-inner-nav">
+		    	<div class="navMenubox">
+  					<div id="slimtest">
+    					<ul class="navMenu">
+    						<li>
+    							<div class="header-search">
+									<div class="sear-select">
+										<select name="" id="">
+											<option value="">找产品</option>
+											<option value="">找产品</option>
+										</select>
+										<input type="text" placeholder="输入关键词" class="text">
+										<button type="button" class="input">搜索</button>
+									</div>
+								</div>
+    						</li>	
+     						<li>
+     							<a href="#">首页</a>
+     						</li>
+     						<li>
+								<a href="#">在线活动</a>								
+							</li>
+							<li>
+								<a href="#">网上展馆</a>
+							</li>
+							<li>
+								<a href="#">供采对接</a>
+							</li>
+							<li>
+								<a href="#">联系我们</a>
+							</li>							
+    					</ul>
+  					</div>
+				</div>				
+		    </div>
+		</div>
+	</div>
+	<script>
+	$(document).ready(function(){
+		  $(".mobile-inner-header-icon").click(function(){
+		  	$(this).toggleClass("mobile-inner-header-icon-click mobile-inner-header-icon-out");
+		  	$(".mobile-inner-nav").slideToggle(250);
+		  });
+		  $(".mobile-inner-nav a").each(function( index ) {
+		  	$( this ).css({'animation-delay': (index/10)+'s'});
+		  });
+		});
+	</script>
+</div>
+<!--移动端菜单结束-->
+<div class="header pc">
+	<div class="box">
+		<div class="logo">
+			<a href=""><img src="images/logo.png" alt=""></a>
+		</div>
+		<div class="header-right">
+			<div class="toptext">
+				<p class="p1">中国 · 哈尔滨国际会展体育中心</p>
+				<p class="p2">2020年10月21日-25日</p>
+			</div>
+			<div class="header-search">
+				<div class="sear-select">
+					<select name="" id="">
+						<option value="">找产品</option>
+						<option value="">找产品</option>
+					</select>
+					<input type="text" placeholder="输入关键词" class="text">
+					<button type="button" class="input">搜索</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="menubox pc">
+	<div class="box">
+		<ul>
+			<li class="active">
+				<a href="#">首页</a>
+			</li>
+			<li>
+				<a href="#">在线活动</a>								
+			</li>
+			<li>
+				<a href="#">网上展馆</a>
+			</li>
+			<li>
+				<a href="#">供采对接</a>
+			</li>
+			<li>
+				<a href="#">联系我们</a>
+			</li>	
+		</ul>
+		<div class="menu-rlink">
+			<a href="javascript:;" class="login-a">登录</a>
+			<span>|</span>
+			<a href="javascript:;" class="reg-a">注册</a>
+		</div>
+	</div>
+</div>
+<div class="bannerbox">
+	<div class="bannerbox-div pc">
+		<div class="box">
+			<div class="banner-menu">
+				<ul>   
+					<li>
+						<a href="" class=""><img src="images/m-ico-1.png" alt="">大米</a>
+					</li>
+					<li>
+						<a href="" class=""><img src="images/m-ico-2.png" alt="">粮油</a>
+					</li>
+					<li>
+						<a href="" class=""><img src="images/m-ico-3.png" alt="">农业科技</a>
+					</li>
+					<li>
+						<a href="" class=""><img src="images/m-ico-4.png" alt="">食品加工包装机械</a>
+					</li>
+					<li>
+						<a href="" class=""><img src="images/m-ico-5.png" alt="">生物质综合利用设备</a>
+					</li>
+					<li>
+						<a href="" class=""><img src="images/m-ico-6.png" alt="">农业机设备</a>
+					</li>
+					<li>
+						<a href="" class=""><img src="images/m-ico-7.png" alt="">国内特色食品和进口食品</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="swiper-container home-banner">
+		<div class="swiper-wrapper">
+	 		<div class="swiper-slide" style="background-image:url(images/banner.jpg)">
+	 			<a href="">
+	 				<img src="images/banner.jpg" class="wap" alt="">
+	 			</a>
+	 		</div>		      	
+	 		<div class="swiper-slide" style="background-image:url(images/banner.jpg)">
+	 			<a href="">
+	 				<img src="images/banner.jpg" class="wap" alt="">
+	 			</a>
+	 		</div>
+	 		<div class="swiper-slide" style="background-image:url(images/banner.jpg)">
+	 			<a href="">
+	 				<img src="images/banner.jpg" class="wap" alt="">
+	 			</a>
+	 		</div>	
+	    </div>
+	    <!-- Add Pagination -->
+	    <div class="swiper-pagination"></div>    
+	</div>
+</div>
+<div class="box">
+	<div class="home-toplink">
+		<ul class="link1">
+			<li>
+				<a href="">开幕式直播</a>
+			</li>
+			<li><a href="">在线巡展</a></li>
+			<li><a href="">线上签约</a></li>
+			<li><a href="">在线会议</a></li>
+			<li><a href="">展商直播间</a></li>
+			<li><a href="">直播及回放</a></li>
+		</ul>
+		<ul class="link2">
+			<li>
+				<a href="">360全景展示</a>
+			</li>
+			<li><a href="">线上展厅</a></li>
+			<li><a href="">展品展示</a></li>
+			<li><a href="">展商展示</a></li>
+			<li><a href="">分类检索</a></li>
+			<li><a href="">线上导览</a></li>
+		</ul>
+		<ul class="link3">
+			<li>
+				<a href="">发布需求</a>
+			</li>
+			<li><a href="">供需配对</a></li>
+			<li><a href="">线上询盘</a></li>
+			<li><a href="">意向订单</a></li>
+			
+		</ul>
+	</div>
+</div>
+<div class="box">
+	<div class="home-bg">
+		<div class="home-zb-left">
+			<h3 class="h-title">活动直播及回放（日程）</h3>
+			<div class="zb-bg">
+				<div class="week-list">
+					<ul>
+						<li class="li1">
+							六<br>月
+						</li>
+						<li>
+							<a href="" class="active">
+								周一
+							    <p>15</p>
+							</a>
+						</li>
+						<li>
+							<a href="">
+								周二
+							    <p>16</p>
+							</a>
+						</li>
+						<li>
+							<a href="">
+								周三
+							    <p>17</p>
+							</a>
+						</li>
+						<li>
+							<a href="">
+								周四
+							    <p>18</p>
+							</a>
+						</li>
+						<li>
+							<a href="">
+								周五
+							    <p>19</p>
+							</a>
+						</li>
+					</ul>
+				</div>
+				<div class="zb-left-list" id="content-1">
+					<ul>
+						<li>
+							<p class="time">								
+                                08:30 开馆                         
+							</p>
+							
+						</li>
+						<li>
+							<p class="time">								
+                                10:00 到 11:00                            
+							</p>
+							<div class="text">
+								<a href="">
+									<h3>绿博会和大米节开幕式</h3>
+									<p class="zb-ing">线上直播中</p>
+									<div class="con">
+										峰会围绕区块链在第一产业垂直细分领域的赋能，以及有机立体业务大生态圈的建立和...
+									</div>
+								</a>
+							</div>
+						</li>
+						<li>
+							<p class="time">								
+                               14:00 到 16:30           
+							</p>
+							<div class="text">
+								<a href="">
+									<h3>绿博会和大米节开幕式</h3>
+									<p class="zb-old">往期回看</p>
+									<div class="con">
+										峰会围绕区块链在第一产业垂直细分领域的赋能，以及有机立体业务大生态圈的建立和...
+									</div>
+								</a>
+							</div>
+						</li>
+						<li>
+							<p class="time">								
+                               14:00 到 16:30           
+							</p>
+							<div class="text">
+								<a href="">
+									<h3>绿博会和大米节开幕式</h3>
+									<p class="zb-old">往期回看</p>
+									<div class="con">
+										峰会围绕区块链在第一产业垂直细分领域的赋能，以及有机立体业务大生态圈的建立和...
+									</div>
+								</a>
+							</div>
+						</li>
+						<li>
+							<p class="time">								
+                               14:00 到 16:30           
+							</p>
+							<div class="text">
+								<a href="">
+									<h3>绿博会和大米节开幕式</h3>
+									<p class="zb-old">往期回看</p>
+									<div class="con">
+										峰会围绕区块链在第一产业垂直细分领域的赋能，以及有机立体业务大生态圈的建立和...
+									</div>
+								</a>
+							</div>
+						</li>
+						<li>
+							<p class="time">								
+                               14:00 到 16:30           
+							</p>
+							<div class="text">
+								<a href="">
+									<h3>绿博会和大米节开幕式</h3>
+									<p class="zb-old">往期回看</p>
+									<div class="con">
+										峰会围绕区块链在第一产业垂直细分领域的赋能，以及有机立体业务大生态圈的建立和...
+									</div>
+								</a>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="home-zb-right">
+			<h3 class="h-title">活动直播及回放（日程）</h3>
+			<div class="zb-play-box">
+				<video poster="images/ckin.jpg" src="images/ckin.mp4" data-ckin="default" data-overlay="1" data-title=""></video>
+			</div>
+			<div class="zb-play-title">
+				<a href="">峰会围绕区块链在第一产业垂直细分领域的赋能</a>
+				<p>绿博会 2020-07-12</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="box">
+	<h3 class="h-title">
+		在线巡馆
+	</h3>
+	<div class="home-zxxg">
+		<ul>
+			<li>
+				<div class="pic"><a href="" class="mask"><img src="images/2.jpg" alt="" class="zoom-img"></a></div>
+				<p>
+					<a href="">A厅</a>
+				</p>
+			</li>
+			<li>
+				<div class="pic"><a href="" class="mask"><img src="images/2.jpg" alt="" class="zoom-img"></a></div>
+				<p>
+					<a href="">A厅</a>
+				</p>
+			</li>
+			<li>
+				<div class="pic"><a href="" class="mask"><img src="images/2.jpg" alt="" class="zoom-img"></a></div>
+				<p>
+					<a href="">A厅</a>
+				</p>
+			</li>
+			<li>
+				<div class="pic"><a href="" class="mask"><img src="images/2.jpg" alt="" class="zoom-img"></a></div>
+				<p>
+					<a href="">A厅</a>
+				</p>
+			</li>
+			<li>
+				<div class="pic"><a href="" class="mask"><img src="images/2.jpg" alt="" class="zoom-img"></a></div>
+				<p>
+					<a href="">A厅</a>
+				</p>
+			</li>
+			<li>
+				<div class="pic"><a href="" class="mask"><img src="images/2.jpg" alt="" class="zoom-img"></a></div>
+				<p>
+					<a href="">A厅</a>
+				</p>
+			</li>
+			<li>
+				<div class="pic"><a href="" class="mask"><img src="images/2.jpg" alt="" class="zoom-img"></a></div>
+				<p>
+					<a href="">A厅</a>
+				</p>
+			</li>
+			<li>
+				<div class="pic"><a href="" class="mask"><img src="images/2.jpg" alt="" class="zoom-img"></a></div>
+				<p>
+					<a href="">A厅</a>
+				</p>
+			</li>
+		</ul>
+	</div>
+</div>
+<div class="box">
+	<h3 class="h-title">360全景展示</h3>
+</div>
+<div class="cl"></div>
+<div class="h-360">
+	<iframe src="https://720yun.com/t/d3vkiwiqg2b?scene_id=34884547" width="100%" height="570" frameborder="0"></iframe>
+</div>
+<div class="home-xszt">
+	<div class="box">
+		<h3 class="h-title">线上展厅</h3>
+		<div class="swiper-container home-banner2 xszt-wap wap"><!--移动端滚动图-->
+			<div class="swiper-wrapper">
+		 		<div class="swiper-slide">
+		 			<a href="">
+		 				<img src="images/3.jpg" alt="">
+		 				<p>
+		 					大米节展厅
+		 				</p>
+		 			</a>
+		 		</div>		      	
+		 		<div class="swiper-slide">
+		 			<a href="">
+		 				<img src="images/3.jpg" alt="">
+		 				<p>
+		 					绿色、有机食品展厅
+		 				</p>
+		 			</a>
+		 		</div>
+		 		<div class="swiper-slide">
+		 			<a href="">
+		 				<img src="images/3.jpg" alt="">
+		 				<p>
+		 					国内特色食品展厅
+		 				</p>
+		 			</a>
+		 		</div>
+		    </div>
+		      
+		</div>
+		<div class="tab-wrapper pc">
+			<div class="xszt-left">
+				<ul class="tab-content">
+					<li>
+						<img src="images/3.jpg" alt="">
+					</li>
+					<li>
+						<img src="images/2.jpg" alt="">
+					</li>
+					<li>
+						<img src="images/1.jpg" alt="">
+					</li>
+					<li>
+						<img src="images/3.jpg" alt="">
+					</li>
+					<li>
+						<img src="images/3.jpg" alt="">
+					</li>
+					<li>
+						<img src="images/3.jpg" alt="">
+					</li>
+					<li>
+						<img src="images/3.jpg" alt="">
+					</li>
+					<li>
+						<img src="images/3.jpg" alt="">
+					</li>
+					
+				</ul>
+			</div>
+			<div class="xszt-right">
+				<h3 class="title">线上展厅</h3>
+				<div id="marquee">
+					<ul class="tab-menu">       
+						<li class="active">大米节展厅</li>
+						<li>绿色、有机食品展厅</li>
+						<li>国内特色食品展厅</li>
+						<li>食品加工与包装机械展厅</li>
+						<li>进口食品展厅</li>
+						<li>生产资料展厅</li>
+						<li>跨境电商展厅</li>
+						<li>农业科技和综合服务展厅</li>
+					</ul>
+				</div>
+				<div class="control">
+					
+					<a href="javascript:void(0);" id="goD"></a>
+					<a href="javascript:void(0);" id="goU"></a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="cl"></div>
+</div>
+
+<div class="box">
+	<div class="yzzs-title">
+		<span class="t">优质展商</span>
+		<a href="javascript:;" class="ref">换一批</a>
+		<div class="rsearch">
+			<i class="ico"></i>
+			<input type="text" class="text" placeholder="搜索相关展商">
+			<button class="input">搜索</button>
+		</div>
+	</div>
+	<div class="yzzs-list">
+		<ul>
+			<li>
+				<a href="">
+					<img src="images/1.png" alt="">
+				</a>
+			</li>
+			<li>
+				<a href="">
+					<img src="images/2.png" alt="">
+				</a>
+			</li>
+			<li>
+				<a href="">
+					<img src="images/3.png" alt="">
+				</a>
+			</li>
+			<li>
+				<a href="">
+					<img src="images/4.png" alt="">
+				</a>
+			</li>
+			<li>
+				<a href="">
+					<img src="images/5.png" alt="">
+				</a>
+			</li>
+			<li>
+				<a href="">
+					<img src="images/6.png" alt="">
+				</a>
+			</li>
+			<li>
+				<a href="">
+					<img src="images/1.png" alt="">
+				</a>
+			</li>
+			<li>
+				<a href="">
+					<img src="images/2.png" alt="">
+				</a>
+			</li>
+			<li>
+				<a href="">
+					<img src="images/3.png" alt="">
+				</a>
+			</li>
+			<li>
+				<a href="">
+					<img src="images/4.png" alt="">
+				</a>
+			</li>
+			<li>
+				<a href="">
+					<img src="images/5.png" alt="">
+				</a>
+			</li>
+			<li>
+				<a href="">
+					<img src="images/6.png" alt="">
+				</a>
+			</li>
+		</ul>
+	</div>
+	<div class="yzzs-title">
+		<span class="t">优质展品</span>
+		<a href="javascript:;" class="ref">换一批</a>
+		<div class="rsearch">
+			<i class="ico"></i>
+			<input type="text" class="text" placeholder="搜索相关展品">
+			<button class="input">搜索</button>
+		</div>
+	</div>
+	<div class="yzzp-list">
+		<ul>
+			<li>
+				<div class="pic">
+					<a href="">
+						<span><img src="images/7.png" alt=""></span>
+					</a>
+				</div>
+				<div class="tit">
+					<a href="">
+						这里是内容标题这里是内容标题这里是内容标题这里是内容标题
+					</a>
+				</div>
+			</li>
+			<li>
+				<div class="pic">
+					<a href="">
+						<span><img src="images/8.png" alt=""></span>
+					</a>
+				</div>
+				<div class="tit">
+					<a href="">
+						这里是内容标题这里是内容标题这里是内容标题这里是内容标题
+					</a>
+				</div>
+			</li>
+			<li>
+				<div class="pic">
+					<a href="">
+						<span><img src="images/9.png" alt=""></span>
+					</a>
+				</div>
+				<div class="tit">
+					<a href="">
+						这里是内容标题这里是内容标题这里是内容标题这里是内容标题
+					</a>
+				</div>
+			</li>
+			<li>
+				<div class="pic">
+					<a href="">
+						<span><img src="images/7.png" alt=""></span>
+					</a>
+				</div>
+				<div class="tit">
+					<a href="">
+						这里是内容标题这里是内容标题这里是内容标题这里是内容标题
+					</a>
+				</div>
+			</li>
+			<li>
+				<div class="pic">
+					<a href="">
+						<span><img src="images/8.png" alt=""></span>
+					</a>
+				</div>
+				<div class="tit">
+					<a href="">
+						这里是内容标题这里是内容标题这里是内容标题这里是内容标题
+					</a>
+				</div>
+			</li>
+			<li>
+				<div class="pic">
+					<a href="">
+						<span><img src="images/9.png" alt=""></span>
+					</a>
+				</div>
+				<div class="tit">
+					<a href="">
+						这里是内容标题这里是内容标题这里是内容标题这里是内容标题
+					</a>
+				</div>
+			</li>
+			<li>
+				<div class="pic">
+					<a href="">
+						<span><img src="images/7.png" alt=""></span>
+					</a>
+				</div>
+				<div class="tit">
+					<a href="">
+						这里是内容标题这里是内容标题这里是内容标题这里是内容标题
+					</a>
+				</div>
+			</li>
+			<li>
+				<div class="pic">
+					<a href="">
+						<span><img src="images/8.png" alt=""></span>
+					</a>
+				</div>
+				<div class="tit">
+					<a href="">
+						这里是内容标题这里是内容标题这里是内容标题这里是内容标题
+					</a>
+				</div>
+			</li>			
+		</ul>
+	</div>
+	<div class="home-gcdj">
+		<div class="title">
+			<span>供采对接</span>
+		</div>
+		<div class="gcdj-menu">
+			<a href="" class="active">全部</a>
+			<a href="" class="">绿色、有机食品</a>
+			<a href="" class="">绿色、有机食品</a>
+			<a href="" class="">绿色、有机食品</a>
+			<a href="" class="">绿色、有机食品</a>
+			<a href="" class="">绿色、有机食品</a>
+			<a href="" class="">绿色、有机食品</a>
+		</div>
+		<div class="gcdj-list">
+			<ul>
+				<li>
+					<div class="topbg"></div>
+					<div class="libg">
+						<div class="time">30分钟前发布</div>
+						<h3 class="tit">
+							<a href="">求购东北大米</a>
+						</h3>
+						<div class="number">1000吨</div>
+						<div class="text">
+							这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述
+						</div>
+						<div class="bot">
+							<span class="fl">绿色、有机食品</span>
+							<button class="input">获取联系方式</button>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="topbg"></div>
+					<div class="libg">
+						<div class="time">30分钟前发布</div>
+						<h3 class="tit">
+							<a href="">求购东北大米</a>
+						</h3>
+						<div class="number">1000吨</div>
+						<div class="text">
+							这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述
+						</div>
+						<div class="bot">
+							<span class="fl">绿色、有机食品</span>
+							<button class="input">获取联系方式</button>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="topbg"></div>
+					<div class="libg">
+						<div class="time">30分钟前发布</div>
+						<h3 class="tit">
+							<a href="">求购东北大米</a>
+						</h3>
+						<div class="number">1000吨</div>
+						<div class="text">
+							这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述
+						</div>
+						<div class="bot">
+							<span class="fl">绿色、有机食品</span>
+							<button class="input">获取联系方式</button>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="topbg"></div>
+					<div class="libg">
+						<div class="time">30分钟前发布</div>
+						<h3 class="tit">
+							<a href="">求购东北大米</a>
+						</h3>
+						<div class="number">1000吨</div>
+						<div class="text">
+							这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述
+						</div>
+						<div class="bot">
+							<span class="fl">绿色、有机食品</span>
+							<button class="input">获取联系方式</button>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="topbg"></div>
+					<div class="libg">
+						<div class="time">30分钟前发布</div>
+						<h3 class="tit">
+							<a href="">求购东北大米</a>
+						</h3>
+						<div class="number">1000吨</div>
+						<div class="text">
+							这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述
+						</div>
+						<div class="bot">
+							<span class="fl">绿色、有机食品</span>
+							<button class="input">获取联系方式</button>
+						</div>
+					</div>
+				</li>
+				<li>
+					<div class="topbg"></div>
+					<div class="libg">
+						<div class="time">30分钟前发布</div>
+						<h3 class="tit">
+							<a href="">求购东北大米</a>
+						</h3>
+						<div class="number">1000吨</div>
+						<div class="text">
+							这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述这里是描述
+						</div>
+						<div class="bot">
+							<span class="fl">绿色、有机食品</span>
+							<button class="input">获取联系方式</button>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<div class="cl"></div>
+
+<div id="Modal-login" class="block modal-home"><!--登录-->
+	<a class="close">Close Me</a>
+	<h3 class="tit">登录</h3>
+	<p class="titbot">
+		没有账号？ 请点击  <a href="javascript:;" class="reg-a">注册</a>
+	</p>
+	<ul>
+		<li>
+			<input type="text" class="text" placeholder="请输入手机号码">
+		</li>
+		<li>
+			<input type="text" class="text" placeholder="请输入密码">
+		</li>
+		<li>
+			<button class="input">登录</button>
+		</li>
+	</ul>
+</div>
+<div id="Modal-reg" class="block modal-home"><!--注册-->
+	<a class="close">Close Me</a>
+	<div id="reg-1" class="disb">
+		<h3 class="tit">注册</h3>
+		<p class="titbot">
+			已有账号？ 请点击  <a href="javascript:;" class="login-a">登录</a>
+		</p>
+		<ul>
+			<li>
+				<input type="text" class="text" placeholder="请输入常用手机号">
+			</li>
+			<li>
+				<input type="password" class="text" placeholder="请输入密码">
+			</li>
+			<li>
+				<input type="password" class="text" placeholder="请确认密码">
+			</li>
+			<li>
+				<input type="text" class="text2" placeholder="请输入短信验证码">
+				<button class="input2">发送验证码</button>
+			</li>
+			<li>
+				<button class="input" id="reg-next">下一步</button>
+			</li>
+		</ul>
+	</div>
+	<div class="reg-saoma disn" id="sm-box">
+		<h3 class="tit">授权</h3>
+		<div class="reg-sq-ewm">
+			<img src="images/shouquan.jpg" alt="">
+			<p>打开微信，扫描二维码</p>
+		</div>
+	</div>
+</div>
+<script>
+	$(document).ready(function(){
+		$(document).modal({
+		});	
+		$('.login-a').modal({
+			target : '#Modal-login',
+			speed : 300,
+			easing : 'easeInOutExpo',
+			animation : 'fade',
+			position: '100px auto',
+			overlayClose : true,
+			on : 'click',
+			close : '.close'
+		});
+	});
+	$(document).ready(function(){
+		$(document).modal({
+		});	
+		$('.reg-a').modal({
+			target : '#Modal-reg',
+			speed : 300,
+			easing : 'easeInOutExpo',
+			animation : 'fade',
+			position: '100px auto',
+			overlayClose : true,
+			on : 'click',
+			close : '.close'
+		});
+	});
+
+
+	$("#reg-next").click(function(){
+		$("#reg-1").addClass("disn").removeClass("disb");
+		$("#sm-box").addClass("disb").removeClass("disn");
+	});
+	
+
+
+</script>
+
+
+
+<div class="footer">
+	<div class="box">
+		<div class="footer-left">
+			<img src="images/footer-logo.png" alt="">
+			<div class="footer-link">
+				<a href="" class="sina"></a>
+				<a href="" class="wx">
+					<p>
+						<img src="images/ewm.jpg" alt="">
+					</p>
+				</a>
+				<a href="" class="qq"></a>
+			</div>
+		</div>
+		<div class="footer-div">
+			<h3 class="tit">主办单位：</h3>
+			黑龙江省人民政府<br>
+			哈尔滨市人民政府                            
+		</div>
+		<div class="footer-div">
+			<h3 class="tit">承办单位：</h3>
+			黑龙江省贸促会（省会展事务局）<br>
+			黑龙江省农业农村厅<br>
+			黑龙江省粮食局<br>
+			哈尔滨市农业农村局<br>
+			哈尔滨市贸促会                                                       
+		</div>
+		<div class="footer-div">
+			<h3 class="tit">联系我们：</h3>
+			招商电话：+86-451-82340100 <br>
+			传 真：+86-451-82345874 <br>
+			邮 箱：chn@gjcjzx.org.cn  <br> 
+			投诉电话：＋86-451-82340100<br> 
+            地 址：中国哈尔滨南岗区美顺街35号<br>
+            邮 编：150090
+                            
+		</div>
+		
+		<div class="cl"></div>
+	</div>
+	<div class="cl"></div>
+</div>
+<div class="copyright">
+	<div class="box">
+		<div class="backtop">
+			<a href="#0" class="cd-top">Top</a>
+		</div>
+
+		版权所有：黑龙江省国际博览发展促进中心    黑ICP备08002339号-3
+		<div class="cl"></div>
+	</div>
+	<div class="cl"></div>
+</div>
+<!--视频播放器-->
+<script src="video/js/ckin.js"></script>
+
+<!--滚动条js-->
+<script src="js/jquery.mCustomScrollbar.min.js"></script>	
+<script>
+	(function($){
+		$(window).load(function(){
+			
+			$("#content-1").mCustomScrollbar({
+				theme:"minimal"
+			});
+			
+		});
+	})(jQuery);
+</script>
+<!--滚动条js end-->
+<script src="js/backtop.js"></script>
+<script src="js/swiper.min.js"></script>
+<script>
+    var swiper = new Swiper('.home-banner', {
+      autoHeight: true, //enable auto height
+      spaceBetween: 1,
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+      
+    });
+    var swiper = new Swiper('.home-banner2', {
+      autoHeight: true, //enable auto height
+      spaceBetween: 1,
+      observer:true, 
+	  observeParents:true 
+      
+    });
+</script> 
+<script>
+	$(document).ready(function() {  
+	  var $wrapper = $('.tab-wrapper'),
+	      $allTabs = $wrapper.find('.tab-content > li'),
+	      $tabMenu = $wrapper.find('.tab-menu li'),
+	      $line = $('<div class="line"></div>').appendTo($tabMenu);
+	  
+	  $allTabs.not(':first-of-type').hide();  
+	  $tabMenu.filter(':first-of-type').find(':first').width('100%')
+	  
+	  $tabMenu.each(function(i) {
+	    $(this).attr('data-tab', 'tab'+i);
+	  });
+	  
+	  $allTabs.each(function(i) {
+	    $(this).attr('data-tab', 'tab'+i);
+	  });
+	  
+	  $tabMenu.on('click', function() {
+	    
+	    var dataTab = $(this).data('tab'),
+	        $getWrapper = $(this).closest($wrapper);
+	    
+	    $getWrapper.find($tabMenu).removeClass('active');
+	    $(this).addClass('active');
+	    
+	    $getWrapper.find('.line').width(0);
+	    $(this).find($line).animate({'width':'100%'}, 'fast');
+	    $getWrapper.find($allTabs).hide();
+	    $getWrapper.find($allTabs).filter('[data-tab='+dataTab+']').show();
+	  });
+
+	});
+</script> 
+</body>
+</html>

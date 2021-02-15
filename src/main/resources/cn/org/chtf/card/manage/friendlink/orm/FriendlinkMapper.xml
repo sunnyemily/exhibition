@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.org.chtf.card.manage.friendlink.dao.FriendlinkMapper">
+  <resultMap id="BaseResultMap" type="cn.org.chtf.card.manage.friendlink.pojo.Friendlink">
+    <id column="friendlink_id" jdbcType="INTEGER" property="friendlinkId" />
+    <result column="menu_id" jdbcType="INTEGER" property="menuId" />
+    <result column="friendlink_name" jdbcType="VARCHAR" property="friendlinkName" />
+    <result column="friendlink_address" jdbcType="VARCHAR" property="friendlinkAddress" />
+    <result column="friendlink_operator" jdbcType="VARCHAR" property="friendlinkOperator" />
+    <result column="friendlink_updatetime" jdbcType="TIMESTAMP" property="friendlinkUpdatetime" />
+    <result column="friendlink_order" jdbcType="INTEGER" property="friendlinkOrder" />
+    <result column="friendlink_picture" jdbcType="VARCHAR" property="friendlinkPicture" />
+    <result column="friendlink_picture2" jdbcType="VARCHAR" property="friendlinkPicture2" />
+    <result column="targets" jdbcType="VARCHAR" property="targets" />
+    <result column="firendcontent" jdbcType="VARCHAR" property="firendcontent" />
+    <result column="companyname" jdbcType="VARCHAR" property="companyName" />
+    <result column="videourl" jdbcType="VARCHAR" property="videourl" />
+    <result column="starttime" jdbcType="VARCHAR" property="starttime" />
+    <result column="endtime" jdbcType="VARCHAR" property="endtime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="zhuangtai" jdbcType="INTEGER" property="zhuangtai" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    friendlink_id, menu_id, friendlink_name, friendlink_address, friendlink_operator, 
+    friendlink_updatetime,friendlink_order,friendlink_picture,friendlink_picture2,targets,status,firendcontent,zhuangtai,videourl,
+    starttime,endtime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from web_friendlink
+    where friendlink_id = #{friendlinkId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="GetFirendLink" parameterType="java.lang.Integer" resultType="map">
+    select 
+    	ifnull(friendlink_id,'') as friendlinkId,
+		ifnull(menu_id,'') as  menuId,
+		ifnull(friendlink_name,'') as  friendlinkName,
+		ifnull(friendlink_address,'') as  friendlinkAddress,
+		ifnull(friendlink_operator,'') as  friendlinkOperator,
+		ifnull(friendlink_updatetime,'') as  friendlinkUpdatetime,
+		ifnull(friendlink_order,'') as  friendlinkOrder,
+		ifnull(friendlink_picture,'') as  friendlinkPicture,
+		ifnull(friendlink_picture2,'') as  friendlinkPicture2,
+		ifnull(targets,'') as  targets,
+		ifnull(status,'') as  status,
+		ifnull(firendcontent,'') as firendcontent,zhuangtai,ifnull(videourl,'') as videourl,
+		ifnull(starttime,'') as starttime,
+		ifnull(endtime,'') as endtime
+    from web_friendlink
+    where friendlink_id = #{friendlinkId,jdbcType=INTEGER}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from web_friendlink
+    where friendlink_id = #{friendlinkId,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insert" parameterType="cn.org.chtf.card.manage.friendlink.pojo.Friendlink" useGeneratedKeys="true" keyProperty="friendlinkId">
+    insert into web_friendlink (friendlink_id, menu_id, friendlink_name, 
+      friendlink_address, friendlink_operator, 
+      friendlink_updatetime, friendlink_order, 
+      friendlink_picture, friendlink_picture2,targets,status,zhuangtai,starttime,endtime,videourl)
+    values (#{friendlinkId,jdbcType=INTEGER}, #{menuId,jdbcType=INTEGER}, #{friendlinkName,jdbcType=VARCHAR}, 
+      #{friendlinkAddress,jdbcType=VARCHAR}, #{friendlinkOperator,jdbcType=VARCHAR}, 
+      #{friendlinkUpdatetime,jdbcType=TIMESTAMP}, #{friendlinkOrder,jdbcType=INTEGER}, 
+      #{friendlinkPicture,jdbcType=VARCHAR}, #{friendlinkPicture2,jdbcType=VARCHAR},
+      #{targets,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{zhuangtai,jdbcType=INTEGER},
+      #{starttime,jdbcType=VARCHAR},#{endtime,jdbcType=VARCHAR},#{videourl,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  <insert id="insertSelective" parameterType="cn.org.chtf.card.manage.friendlink.pojo.Friendlink" useGeneratedKeys="true" keyProperty="friendlinkId">
+    insert into web_friendlink
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="friendlinkId != null">
+        friendlink_id,
+      </if>
+      <if test="menuId != null">
+        menu_id,
+      </if>
+      <if test="friendlinkName != null">
+        friendlink_name,
+      </if>
+      <if test="friendlinkAddress != null">
+        friendlink_address,
+      </if>
+      <if test="friendlinkOperator != null">
+        friendlink_operator,
+      </if>
+      <if test="friendlinkUpdatetime != null">
+        friendlink_updatetime,
+      </if>
+      <if test="friendlinkOrder != null">
+        friendlink_order,
+      </if>
+      <if test="friendlinkPicture != null">
+        friendlink_picture,
+      </if>
+      <if test="friendlinkPicture2 != null">
+        friendlink_picture2,
+      </if>
+      <if test="targets != null">
+        targets,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="firendcontent != null">
+        firendcontent,
+      </if>
+      <if test="zhuangtai != null">
+        zhuangtai,
+      </if>
+      <if test="videourl != null">
+        videourl,
+      </if>
+      <if test="starttime != null">
+        starttime,
+      </if>
+      <if test="endtime != null">
+        endtime,
+      </if>
+     
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="friendlinkId != null">
+        #{friendlinkId,jdbcType=INTEGER},
+      </if>
+      <if test="menuId != null">
+        #{menuId,jdbcType=INTEGER},
+      </if>
+      <if test="friendlinkName != null">
+        #{friendlinkName,jdbcType=VARCHAR},
+      </if>
+      <if test="friendlinkAddress != null">
+        #{friendlinkAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="friendlinkOperator != null">
+        #{friendlinkOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="friendlinkUpdatetime != null">
+        #{friendlinkUpdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="friendlinkOrder != null">
+        #{friendlinkOrder,jdbcType=INTEGER},
+      </if>
+      <if test="friendlinkPicture != null">
+        #{friendlinkPicture,jdbcType=VARCHAR},
+      </if>
+      <if test="friendlinkPicture2 != null">
+        #{friendlinkPicture2,jdbcType=VARCHAR},
+      </if>
+      <if test="targets != null">
+        #{targets,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="firendcontent != null">
+        #{firendcontent,jdbcType=VARCHAR},
+      </if>
+      <if test="zhuangtai != null">
+        #{zhuangtai,jdbcType=INTEGER},
+      </if>
+      <if test="videourl != null">
+        #{videourl,jdbcType=VARCHAR},
+      </if>
+      <if test="starttime != null">
+        #{starttime,jdbcType=VARCHAR},
+      </if>
+      <if test="endtime != null">
+        #{endtime,jdbcType=VARCHAR},
+      </if>
+      
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="cn.org.chtf.card.manage.friendlink.pojo.Friendlink">
+    update web_friendlink
+    <set>
+      <if test="menuId != null">
+        menu_id = #{menuId,jdbcType=INTEGER},
+      </if>
+      <if test="friendlinkName != null">
+        friendlink_name = #{friendlinkName,jdbcType=VARCHAR},
+      </if>
+      <if test="friendlinkAddress != null">
+        friendlink_address = #{friendlinkAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="friendlinkOperator != null">
+        friendlink_operator = #{friendlinkOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="friendlinkUpdatetime != null">
+        friendlink_updatetime = #{friendlinkUpdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="friendlinkOrder != null">
+        friendlink_order = #{friendlinkOrder,jdbcType=INTEGER},
+      </if>
+      <if test="friendlinkPicture != null">
+        friendlink_picture = #{friendlinkPicture,jdbcType=VARCHAR},
+      </if>
+      <if test="friendlinkPicture2 != null">
+        friendlink_picture2 = #{friendlinkPicture2,jdbcType=VARCHAR},
+      </if>
+      <if test="targets != null">
+        targets = #{targets,jdbcType=VARCHAR},
+      </if>
+      <if test="firendcontent != null">
+        firendcontent = #{firendcontent,jdbcType=VARCHAR},
+      </if>
+      <if test="videourl != null">
+        videourl = #{videourl,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{friendlinkPicture2,jdbcType=INTEGER},
+      </if>
+      <if test="zhuangtai != null">
+        zhuangtai = #{zhuangtai,jdbcType=INTEGER},
+      </if>
+      <if test="starttime != null">
+        starttime = #{starttime,jdbcType=VARCHAR},
+      </if>
+      <if test="endtime != null">
+        endtime = #{endtime,jdbcType=VARCHAR},
+      </if>
+      <if test="videourl != null">
+        videourl = #{videourl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where friendlink_id = #{friendlinkId,jdbcType=INTEGER}
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterType="cn.org.chtf.card.manage.friendlink.pojo.Friendlink">
+    update web_friendlink
+    set menu_id = #{menuId,jdbcType=INTEGER},
+      friendlink_name = #{friendlinkName,jdbcType=VARCHAR},
+      friendlink_address = #{friendlinkAddress,jdbcType=VARCHAR},
+      friendlink_operator = #{friendlinkOperator,jdbcType=VARCHAR},
+      friendlink_updatetime = #{friendlinkUpdatetime,jdbcType=TIMESTAMP},
+      friendlink_order = #{friendlinkOrder,jdbcType=INTEGER},
+      friendlink_picture = #{friendlinkPicture,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      zhuangtai = #{zhuangtai,jdbcType=INTEGER},
+      targets = #{targets,jdbcType=VARCHAR},
+      firendcontent = #{firendcontent,jdbcType=VARCHAR},
+      friendlink_picture2 = #{friendlinkPicture2,jdbcType=VARCHAR},
+      starttime = #{starttime,jdbcType=VARCHAR},
+      endtime = #{endtime,jdbcType=VARCHAR},
+      videourl = #{videourl,jdbcType=VARCHAR}
+    where friendlink_id = #{friendlinkId,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getFriendlinks"  parameterType="cn.org.chtf.card.support.util.PageModel"  resultMap="BaseResultMap">
+  	SELECT
+    friendlink_id, menu_id, friendlink_name, friendlink_address, friendlink_operator, 
+    friendlink_updatetime,friendlink_order,friendlink_picture,friendlink_picture2,targets,status,firendcontent,b.chinesename as companyName,
+    a.zhuangtai,a.starttime,a.endtime,a.videourl
+	FROM
+		web_friendlink as a
+		left join ebs_companyinfo as b on a.friendlink_name=b.id
+	WHERE 
+      <if test="menuId != null and menuId!=0">
+        menu_id = #{menuId,jdbcType=INTEGER} AND 
+      </if>
+      friendlink_name LIKE '%${keywords}%'
+	ORDER BY friendlink_order asc
+	LIMIT #{start,jdbcType=INTEGER},
+	 #{limit,jdbcType=INTEGER};
+  </select>
+  <select id="getTotal"  parameterType="cn.org.chtf.card.support.util.PageModel"  resultType="java.lang.Integer">
+    select count(*) from web_friendlink
+	WHERE 
+      <if test="menuId != null and menuId!=0">
+        menu_id = #{menuId,jdbcType=INTEGER} AND 
+      </if>
+      friendlink_name LIKE '%${keywords}%'
+  </select> 
+  <delete id="deleteFriendlinks"  parameterType="java.util.List">
+    delete from web_friendlink
+    where friendlink_id in  
+        <foreach collection="friendlinkIdList" item="friendlinkId" index="index"
+            open="(" close=")" separator=",">
+            #{friendlinkId,jdbcType=VARCHAR}
+        </foreach>;
+  </delete> 
+  <select id="getHomeLink"  parameterType="java.lang.Integer"  resultMap="BaseResultMap">
+  	SELECT
+    <include refid="Base_Column_List" />
+	FROM
+		web_friendlink
+      <if test="_parameter != null and _parameter !=0">
+	WHERE 
+        menu_id in (select menu_id from web_menu where menu_parent_id= #{menuId,jdbcType=INTEGER})
+      </if>
+	ORDER BY friendlink_order DESC
+	LIMIT 28;
+  </select>
+  <select id="getBanner"  parameterType="java.lang.Integer"  resultMap="BaseResultMap">
+  	SELECT
+    <include refid="Base_Column_List" />
+	FROM
+		web_friendlink
+      <if test="_parameter != null and _parameter !=0">
+	WHERE 
+        menu_id = #{menuId,jdbcType=INTEGER}
+      </if>
+	ORDER BY friendlink_order DESC
+  </select>
+  <update id="alterMenu"  parameterType="cn.org.chtf.card.manage.common.pojo.AlterMenuParameter">
+    update web_friendlink set menu_id=#{menuId}
+    where friendlink_id in  
+        <foreach collection="idList" item="articleId" index="index"
+            open="(" close=")" separator=",">
+            #{articleId,jdbcType=VARCHAR}
+        </foreach>;
+  </update> 
+</mapper>

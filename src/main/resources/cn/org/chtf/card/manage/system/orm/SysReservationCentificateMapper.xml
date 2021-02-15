@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.system.dao.SysReservationCentificateMapper">
+	
+	<select id="list" resultType="map">
+		SELECT 
+			id,
+			session,
+			reserStartDate as reserStartDate,
+			reserEndDate as reserEndDate,
+			reservationNumber
+			 FROM sys_reservation_certificate
+			 limit #{index}, #{size}
+	</select>
+	
+	<select id="listcount" resultType="int">
+		SELECT 
+			count(*)
+			 FROM sys_reservation_certificate
+			 <where>
+			 <if test="id != null and id != ''">
+			 	id = #{id}
+			 </if>
+			 <if test="session != null and session != ''">
+                and session = #{session}
+            </if>
+            </where>;
+	</select>
+	
+	<select id="findById" resultType="map">
+		SELECT 
+			id,
+			session,
+			reserStartDate as reserStartDate,
+			reserEndDate as reserEndDate,
+			reservationNumber
+			 FROM sys_reservation_certificate
+			 where id = #{id};
+	</select>
+	
+	<delete id="deleteById">
+		DELETE FROM sys_reservation_certificate WHERE id=#{id};
+	</delete>
+	 
+	 
+	 <insert id="saveData" >
+	 	INSERT INTO sys_reservation_certificate 
+	 		(session,reserStartDate,reserEndDate,reservationNumber)
+	 		values(#{session},#{reserStartDate},#{reserEndDate},#{reservationNumber});
+	 </insert>
+	 
+	 <update id="updateData" >
+	 	UPDATE sys_reservation_certificate 
+	 	<set>
+			<if test="session != null">`session` = #{session},</if>
+			<if test="reserStartDate != null">`reserStartDate` = #{reserStartDate},</if>
+			<if test="reserEndDate != null">`reserEndDate` = #{reserEndDate},</if>
+			<if test="reservationNumber != null">`reservationNumber` = #{reservationNumber}</if>
+		</set>
+		where id = #{id}
+	 </update>
+	 
+	 <select id="selectDate" resultType="int">
+	 	SELECT 
+			count(*)			
+			 FROM sys_reservation_certificate
+			 <where> 
+			 		(#{reserStartDate} BETWEEN reserStartDate AND reserEndDate)
+				or (#{reserEndDate} BETWEEN reserStartDate AND reserEndDate)
+				or (#{reserStartDate} &lt; reserStartDate and #{reserEndDate} &gt; reserEndDate)
+				</where>;
+	</select>
+</mapper>

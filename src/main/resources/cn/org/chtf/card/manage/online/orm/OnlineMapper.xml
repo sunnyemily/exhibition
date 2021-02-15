@@ -1,0 +1,723 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.online.dao.OnlineMapper">
+	
+	<!--线上预约开放时间-->
+    <select id="GetAvailableDates" resultType="cn.org.chtf.card.manage.online.model.ReservationModel">
+    	select a.exhibitiondate,a.totalvotes,a.onlinevotes,0 as useable,
+		(a.totalvotes-onlinevotes) as dangtiantotal,ifnull(dangtiancount,0) as dangtiancount,ifnull(b.count,0) as tiqiancount from sys_reservation_setting as a
+		left join (
+			select exhibitiondate,count(*) as count from online_reservation_details 
+			where DATE_FORMAT(addtime,'%Y-%m-%d') &lt; DATE_FORMAT(now(),'%Y-%m-%d') and session=#{session} 
+			group by exhibitiondate
+		) as b on a.exhibitiondate=b.exhibitiondate
+		left join (
+			select DATE_FORMAT(addtime,'%Y-%m-%d') as dangtian,count(*) as dangtiancount from online_reservation_details 
+			where DATE_FORMAT(addtime,'%Y-%m-%d')=DATE_FORMAT(now(),'%Y-%m-%d') and 
+			exhibitiondate=DATE_FORMAT(now(),'%Y-%m-%d') and session=#{session} group by DATE_FORMAT(addtime,'%Y-%m-%d')
+		) as c on c.dangtian=a.exhibitiondate
+		where a.session=#{session} 
+		<if test="status!=null">
+			and a.status=#{status}
+		</if> 
+		and a.reserstartdate &lt;= DATE_FORMAT(now(),'%Y-%m-%d') 
+		and a.reserenddate>=DATE_FORMAT(now(),'%Y-%m-%d')
+		<if test="exhibitiondate!=null and exhibitiondate!=''">
+			and a.exhibitiondate=#{exhibitiondate}
+		</if>		
+		order by a.exhibitiondate
+    </select>
+    
+    <!--交易团展区信息-->
+    <select id="GetExhibitionInfo" resultType="cn.org.chtf.card.manage.online.model.ExhibitionInfoModel">
+    	select 
+    	name as exhibitionname,
+    	engname as exhibitionengname,
+    	japanname as exhibitionjapanname,
+    	russianame as exhibitionrussianame,
+    	koreaname as exhibitionkoreaname,
+    	id as exhibitionid, 
+    	type,
+    	smallimage,
+    	bigimage
+    	from ebs_tradinggroup 
+    	where session=#{session}
+    	<if test="type!=null">
+    		and type=#{type}
+    	</if>
+    	order by orders
+    	<if test="itop!=null">
+    		limit ${itop}
+    	</if> 
+    </select>
+    <!--字典定义的预约展区-->
+    <select id="GetDicForExhibition" resultType="cn.org.chtf.card.manage.online.model.ExhibitionInfoModel">
+    	select 
+		dic_cn_name as exhibitionname,
+    	dic_en_name as exhibitionengname,
+    	dic_jap_name as exhibitionjapanname,
+    	dic_rus_name as exhibitionrussianame,
+    	dic_kor_name as exhibitionkoreaname,
+    	dicid as exhibitionid, 
+    	2 as type,
+    	'' as smallimage,
+    	'' as bigimage
+ 		from system_dictionaries where dic_parentid=125 and useable=1 order by dic_order
+    </select>
+    <!--天气情况-->
+    <select id="getWeatherInfo" resultType="map">
+    	select 
+    	id,
+		days,
+		DATE_FORMAT(days,'%m月%d日') as monthday,
+		week,
+		citynm,
+		cityid,
+		temperature,
+		temperature_curr,
+		weather,
+		weather_curr,
+		weather_icon,
+		wind,
+		winp
+    	from online_weather_details where days=DATE_FORMAT(now(),'%Y-%m-%d') and cityid=#{cityid}
+    </select>
+    
+    <!--插入天气信息-->
+    <insert id="insertWeatherInfo" parameterType="cn.org.chtf.card.manage.online.model.WeatherInfo">
+    	INSERT INTO online_weather_details 
+    	(days, week, citynm, cityid, temperature, temperature_curr, weather, weather_curr, weather_icon, wind, winp) 
+    	VALUES
+    	(#{days}, #{week}, #{citynm}, #{cityid}, #{temperature}, #{temperature_curr}, #{weather}, #{weather_curr}, #{weather_icon}, #{wind}, #{winp})
+    </insert>
+    
+    <!--基础信息-->
+    <select id="GetBacicInfo" resultType="map">
+    	select ifnull(menu_id,'') as menuid, ifnull(basic_content,'') as content,
+		ifnull(basic_operator,'') as operator, ifnull(basic_picture,'') as picture, ifnull(basic_intro,'') as intro 
+		from web_basic where menu_id=#{menuid}
+    </select>
+    
+    <!--友情链接-->
+    <select id="GetFriendLink" resultType="map">
+    	select 
+		ifnull(friendlink_id,0) as id,ifnull(friendlink_name,'') as title,ifnull(friendlink_address,'') as link,ifnull(friendlink_picture,'') as picture,
+		ifnull(friendlink_picture2,'') as picture2,
+		ifnull(targets,'') as targets
+		 from web_friendlink where menu_id=#{menuid} and status=1 order by friendlink_order
+    </select>
+    
+    <select id="GetCompanyLink" resultType="map">
+    	select starttime,endtime,DATE_FORMAT(now(),'%Y-%m-%d %H:%i') as nowtime,ifnull(a.friendlink_address,'') as link,ifnull(a.videourl,'') as videourl,
+    	ifnull(b.companylogo,'') as companylogo,b.chinesename as companyname,ifnull(c.shuliang,0) as shuliang from web_friendlink as a
+		inner join ebs_companyinfo as b on a.friendlink_name=b.id
+		left join (select company_id,count(*) as shuliang from web_product where product_status=1 group by company_id) as c on c.company_id=a.friendlink_name
+		where a.menu_id=#{fid} and a.status=1
+		order by a.friendlink_order
+    </select>
+    
+    <!--验证指定证件号是否存在预约记录-->
+    <select id="isExistsByCardNumber" resultType="int">
+    	select count(*) from online_reservation_details where cardnumber=#{cardnumber} and session=#{session}
+    </select>
+    
+    <select id="GetReceipt" resultType="map">
+    	select ifnull(secretkey,'') as secretkey,ifnull(useable,0) as useable from sys_receipt_code where secretkey=#{secretkey} and type=#{type}
+    </select>
+    
+    <select id="GetTicketManage" resultType="map">
+    	select 
+		ifnull(islimit,0) as islimit, 
+		ifnull(limits,0) as limits, 
+		ifnull(isvip,0) as isvip, 
+		ifnull(startdate,'') as startdate, 
+		ifnull(enddate,'') as enddate
+		 from sys_tickets_manage where type = #{type}
+    </select>
+    
+    <insert id="insertTicketInfo" parameterType="map">
+    	INSERT INTO sys_tickets_details (session,ticketnum, type, islimit, limits, isvip, startdate, enddate,reservationid) 
+    	VALUES (
+    		#{session},#{ticketnum},#{type},#{islimit},#{limits},#{isvip},#{startdate},#{enddate},#{reservationid}
+    	)
+    </insert>
+    
+    <!--获取线上交易团-->
+    <select id="GetTopTradingGroups" resultType="map">
+    	select name,id,'' as shortname,'' as picture from ebs_tradinggroup where type=#{type} order by orders 
+    	<if test="itop!=null and itop!=''">
+    		limit ${itop}
+    	</if> 
+    </select>
+    
+    <select id="GetAppointmentInformation" resultType="map">
+    	select ifnull(b.id,0) as id,ifnull(a.name,'') as name,ifnull(a.cardnumber,'') cardnumber,
+    	ifnull(a.exhibitiondate,'') as exhibitiondate,
+    	ifnull(a.addtime,'') as addtime,a.type,a.status from online_reservation_details as a
+		inner join sys_tickets_details as b on a.id=b.reservationid
+		where a.session = #{session}  and a.createby=#{uid}
+		order by a.id desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="GetAppointmentInformationCount" resultType="int">
+    	select count(*) from online_reservation_details as a
+		inner join sys_tickets_details as b on a.id=b.reservationid
+		where a.session = #{session}  and a.createby=#{uid}
+    </select>
+    
+    <select id="GetTicketNumber" resultType="String">
+    	select ticketnum from sys_tickets_details where id=#{pid}
+    </select>
+    
+    <!--随机优质展商-->
+    <select id="GetCompanyList" resultType="map">
+    	select companylogo,id,chinesename from ebs_companyinfo 
+    	where session=#{session} 
+    	and comany_type_id in (0,2,7) 
+    	and audit_status=2 
+    	and ifnull(companylogo,'')!=''
+    	<if test="exhibitionid!=null">
+    		and tradinggroupid=#{exhibitionid}
+    	</if>
+    	order by rand() limit ${itop}
+    </select>
+    
+    <!--随机优质展品-->
+    <select id="GetProductList" resultType="map">
+    	select ifnull(a.product_picture,'') as productpicture,
+    	a.company_id as companyid,
+    	a.product_id as productid, 
+    	ifnull(a.product_name,'') as productname
+    	from web_product as a    	
+    	inner join ebs_companyinfo as b on a.company_id=b.id and b.audit_status=2    
+    	where a.product_status=1 
+    	and a.session=#{session}   
+    	and ifnull(a.product_picture,'')!='' 
+    	<if test="exhibitionid!=null">
+    		and b.tradinggroupid=#{exhibitionid}
+    	</if> 	
+    	<if test="companyid!=null">
+    		and a.company_id=#{companyid}
+    	</if> 
+        order by rand()               
+    	<if test="itop!=null">
+    		limit ${itop}
+    	</if>    	
+    </select>
+    
+    <select id="GetHaoMa" resultType="map">
+    	select secretkey from sys_receipt_code where type=2 and useable=1 order by secretkey desc limit 15000
+    </select>
+    
+    <update id="updateZT" >
+    	update sys_receipt_code set url=#{mi},useable=3 where secretkey=#{hao}
+    </update>
+    
+    <!--展商列表-->
+    <select id="getExhibitiorList" resultType="cn.org.chtf.card.manage.online.model.ExhibitorModel">
+    	select a.comany_type_id as companytypeid,a.id as companyid,ifnull(companylogo,'') as companylogo,
+    	ifnull(a.chinesename,'') as chinesename,
+    	ifnull(a.engname,'') as engname,
+    	ifnull(a.russianname,'') as russianname,
+    	ifnull(companyprofile,'') as companyprofile,case when length(ifnull(companyprofile,''))>90 then concat(left(companyprofile,90),'...') else ifnull(companyprofile,'') end as shortname,
+    	companypictures, 
+    	ifnull(url,'') as url,
+    	ifnull(b.name,'') as exhibitionname
+    	from ebs_companyinfo as a
+    	left join ebs_tradinggroup as b on a.tradinggroupid=b.id and b.session=#{session}
+    	left join (select company_id,count(*) as shuliang from web_product where product_status=1 group by company_id) as p on a.id=p.company_id
+		where a.comany_type_id in (0,2,7) and a.audit_status=2 and a.session=#{session}
+		<if test="country!=null and country!=''">
+			and a.country = #{country} 
+		</if>
+		<if test="province!=null and province!=''">
+			and a.province = #{province}
+		</if>
+		<if test="industry!=null and industry!=''">
+			and a.industryid = #{industry}
+		</if>
+		<if test="exhibition!=null and exhibition!=''">
+			and a.tradinggroupid = #{exhibition}
+		</if>
+		<if test="keywords!=null and keywords!=''">
+			and a.chinesename LIKE '%${keywords}%'
+		</if>
+		order by LENGTH(companylogo) desc,LENGTH(companypicture) desc,p.shuliang desc,a.clickrates desc
+		LIMIT #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER};
+    </select>
+    <select id="getExhibitiorListCount" resultType="int">
+    	select count(*)
+    	from ebs_companyinfo as a
+		where a.comany_type_id in (0,2,7) and a.audit_status=2 and a.session=#{session}
+		<if test="country!=null and country!=''">
+			and a.country = #{country}
+		</if>
+		<if test="province!=null and province!=''">
+			and a.province = #{province}
+		</if>
+		<if test="industry!=null and industry!=''">
+			and a.industryid = #{industry}
+		</if>
+		<if test="exhibition!=null and exhibition!=''">
+			and a.tradinggroupid = #{exhibition}
+		</if>
+		<if test="keywords!=null and keywords!=''">
+			and a.chinesename LIKE '%${keywords}%'
+		</if>		
+    </select>
+    
+    <!--查询填报的证件号码当前是否预约过-->
+    <select id="getTodayCountByCardNumber" resultType="int">
+    	select count(*) from online_reservation_details 
+    	where session=#{session} 
+    	and status=1 
+    	and cardnumber=#{cardnumber} 
+    	and exhibitiondate=#{exhibitiondate}
+    </select>
+    
+    <!---->
+    <update id="updateWechatUser">
+    	update wechat_user set user_type=#{usertype},user_type_id=#{usertypeid} where uid=#{uid} 
+    </update>
+    
+    <!--展品列表-->
+    <select id="getProductList" resultType="cn.org.chtf.card.manage.online.model.ProductModel">
+    	select ifnull(a.product_picture,'') as productpicture,
+    	a.company_id as companyid,
+    	a.product_id as productid, 
+    	ifnull(a.product_name,'') as productname
+    	from web_product as a    	
+    	inner join ebs_companyinfo as b on a.company_id=b.id and b.audit_status=2    	
+    	where a.product_status=1 and a.session=#{session} 
+    	<if test="companyid!=null and companyid!=''">
+			and a.company_id = #{companyid}
+		</if>  
+		<if test="menuId!=null">
+			and a.product_menu_id = #{menuId}
+		</if> 
+		<if test="country!=null and country!=''">
+			and a.country = #{country}
+		</if>
+		<if test="province!=null and province!=''">
+			and a.province = #{province}
+		</if>
+		<if test="industry!=null and industry!=''">
+			and b.industryid = #{industry}
+		</if>
+		<if test="exhibition!=null and exhibition!=''">
+			and b.tradinggroupid = #{exhibition}
+		</if>
+		<if test="keywords!=null and keywords!=''">
+			and a.product_name LIKE '%${keywords}%'
+		</if>
+		order by LENGTH(product_picture) desc,a.clickrates desc
+		LIMIT #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER};
+    </select>
+    <select id="getProductListCount" resultType="int">
+    	select count(*)
+    	from web_product as a    	
+    	inner join ebs_companyinfo as b on a.company_id=b.id and b.audit_status=2    	
+    	where a.product_status=1 and a.session=#{session}   
+    	<if test="companyid!=null and companyid!=''">
+			and a.company_id = #{companyid}
+		</if>  
+		<if test="menuId!=null">
+			and a.product_menu_id = #{menuId}
+		</if>
+		<if test="country!=null and country!=''">
+			and a.country = #{country}
+		</if>
+		<if test="province!=null and province!=''">
+			and a.province = #{province}
+		</if>
+		<if test="industry!=null and industry!=''">
+			and b.industryid = #{industry}
+		</if>
+		<if test="exhibition!=null and exhibition!=''">
+			and b.tradinggroupid = #{exhibition}
+		</if>
+		<if test="keywords!=null and keywords!=''">
+			and a.product_name LIKE '%${keywords}%'
+		</if>		
+    </select>
+    
+    <!--产品分类-->
+    <select id="GetProductMenus" resultType="map">
+    	select a.product_menu_id as menuid,c.dic_cn_name as menuname
+    	from web_product as a    	
+    	inner join ebs_companyinfo as b on a.company_id=b.id and b.audit_status=2    	
+			left join system_dictionaries as c on c.dicid=a.product_menu_id and c.dic_parentid=90
+    	where a.product_status=1 and a.session=#{sessionId}
+		and a.company_id=#{companyid} 
+		group by a.product_menu_id
+    </select>
+    
+    <!--收藏-->
+    <insert id="addFavorites" parameterType="map">
+    	INSERT INTO online_favorites (session, memberid, act, primaryid) 
+    	VALUES (#{session},#{memberid},#{act},#{primaryid})
+    </insert>
+    <!--取消收藏-->
+    <delete id="delFavorites">
+    	delete from online_favorites where memberid=#{memberid} and primaryid=#{primaryid} and act=#{act} and session=#{session}
+    </delete>
+    <!--验证是否收藏过-->
+    <select id="GetSCCount" resultType="int">
+    	select count(*) from online_favorites where memberid=#{memberid} and primaryid=#{primaryid} and act=#{act} and session=#{session}
+    </select>
+    
+    <!--点赞-->
+    <insert id="addAwesome" parameterType="map">
+    	INSERT INTO online_awesome (session, memberid, act, primaryid) 
+    	VALUES (#{session},#{memberid},#{act},#{primaryid})
+    </insert>
+    <!--取消点赞-->
+    <delete id="delAwesome">
+    	delete from online_awesome where memberid=#{memberid} and primaryid=#{primaryid} and act=#{act} and session=#{session}
+    </delete>
+    <!--验证是否点赞过-->
+    <select id="GetDZCount" resultType="int">
+    	select count(*) from online_awesome where 1=1
+    	<if test="memberid!=null and memberid!=0">
+    	 and memberid=#{memberid} 
+    	</if>
+    	and primaryid=#{primaryid} 
+    	and act=#{act} 
+    	and session=#{session}
+    </select>
+    <!--更新企业点击量-->
+    <update id="updateCompany">
+    	update ebs_companyinfo set clickrates=clickrates+1 where id=#{primaryid}
+    </update>
+    
+    <!--更新产品点击量-->
+    <update id="updateProduct">
+    	update web_product set clickrates=clickrates+1 where product_id=#{primaryid}
+    </update>
+    
+    <!--在线询盘信息-->
+    <select id="GetOnlineInquiry" resultType="map">
+    	select
+			a.id as id,
+			a.session as session,
+			a.memberid as memberid,
+			a.productmenuid as productmenuid,
+			ifnull(b.dic_cn_name,'') as menuname,			
+			a.title as title,
+			a.quantity as quantity,
+			a.quantityunit as quantityunit,
+			ifnull(c.dic_cn_name,'') as quantityunitname,
+			a.tel as tel,
+			a.content as content,
+			a.addtime as addtime,			
+			a.remark as remark			
+			
+        from online_inquiry as a
+        left join system_dictionaries as b on b.dicid=a.productmenuid and b.dic_parentid=90
+        left join system_dictionaries as c on c.dicid=a.quantityunit and c.dic_parentid=105        
+        where a.session=#{session} and a.status=2
+        <if test="keywords!=null and keywords!=''">
+        	and (a.title LIKE '%${keywords}%' or a.content LIKE '%${keywords}%')
+        </if>
+        <if test="menuid!=null">
+        	and a.productmenuid = #{menuid}
+        </if>
+        order by a.addtime desc limit 6
+    </select>
+    
+    <!--top点赞头像-->
+    <select id="GettopLikes" resultType="map">
+    	select headimgurl from online_awesome as a
+    	inner join wechat_user as b on a.memberid=b.uid
+    	where a.session=#{session}
+    	and a.primaryid=#{primaryid} and a.act=#{act}
+    	order by a.addtime desc limit ${itop}
+    </select>
+    
+    <!--我的收藏-->
+    <select id="GetMyFavorites" resultType="map">
+    	<if test="act==0">
+    		select a.id,
+    		b.comany_type_id as companyType,
+    		b.id as companyId,
+    		b.chinesename as companyName,
+    		ifnull(b.exhibits,'') as exhibits,
+    		ifnull(c.name,'') as exhibitionName,
+    		ifnull(gj.name,'') as country,
+    		ifnull(sf.name,'') as province,
+    		ifnull(cs.name,'') as city,
+    		'' as num
+    		 from online_favorites as a
+			inner join ebs_companyinfo as b on a.primaryid=b.id 
+			left join ebs_tradinggroup as c on c.id=b.tradinggroupid
+			left join sys_country_area as gj on b.country=gj.id
+			left join sys_country_area as sf on b.province=sf.id
+			left join sys_country_area as cs on b.city=cs.id
+			where a.session=#{session} and act=0 and a.memberid=#{memberid}
+    	</if>
+    	<if test="act==1">
+    		select a.id,
+    		ifnull(b.product_id,0) as productId,
+    		ifnull(b.product_name,'') as productName,
+    		ifnull(b.product_picture,'') as productPicture,
+    		ifnull(b.product_price,'') as productPrice,
+    		ifnull(c.dic_cn_name,'') as productUnit
+    		 from online_favorites as a
+			inner join web_product as b on a.primaryid=b.product_id 			
+        	left join system_dictionaries as c on c.dicid=b.product_unit and c.dic_parentid=105 
+			where a.session=#{session} and act=1 and a.memberid=#{memberid}
+    	</if>
+    	order by a.addtime desc
+    	LIMIT #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER};
+    </select>
+    <select id="GetMyFavoritesCount" resultType="int">
+    	<if test="act==0">
+    		select 
+    		count(*)
+    		 from online_favorites as a
+			left join ebs_companyinfo as b on a.primaryid=b.id 
+			left join ebs_tradinggroup as c on c.id=b.tradinggroupid
+			left join sys_country_area as gj on b.country=gj.id
+			left join sys_country_area as sf on b.province=sf.id
+			left join sys_country_area as cs on b.city=cs.id
+			where a.session=#{session} and act=0 and a.memberid=#{memberid}
+    	</if>
+    	<if test="act==1">
+    		select count(*)
+    		 from online_favorites as a
+			left join web_product as b on a.primaryid=b.product_id 			
+        	left join system_dictionaries as c on c.dicid=b.product_unit and c.dic_parentid=105 
+			where a.session=#{session} and act=1 and a.memberid=#{memberid}
+    	</if>
+    </select>
+    
+    <!--取消收藏-->
+    <delete id="UnFavorite">
+    	delete from online_favorites where id=#{fid}
+    </delete>
+    
+    <!--登录-->
+    <select id="login" resultType="cn.org.chtf.card.manage.wechatuser.pojo.WechatUser">
+    	select 
+		uid, unionid, openid, routine_openid, member_id as memberId, nickname, headimgurl, sex, city, 
+	    language, province, country, remark, groupid, tagid_list as tagidList, subscribe, subscribe_time as subscribeTime, 
+	    add_time as addTime, session_key as sessionKey, user_type_id as userTypeId, user_type as userType, ifnull(name,'') as name, ifnull(cardnumber,'') as cardnumber, phone,companyid
+		from wechat_user where phone=#{phone} 
+		<if test="password!=null and password!=''">
+			and password=#{password}
+		</if>
+    </select>
+    
+    <!--验证-->
+    <update id="updateInfo">
+    	update wechat_user set name=#{name},cardnumber=#{cardnumber} where uid=#{uid}
+    </update>
+    
+    <!--线上活动日期列表-->
+    <select id="getActivityList" resultType="map">
+    	select id,activitydate as date,
+    	case theweek 
+    	when '0' then '周日'
+    	when '1' then '周一'
+    	when '2' then '周二'
+    	when '3' then '周三'
+    	when '4' then '周四'
+    	when '5' then '周五'
+    	when '6' then '周六' end as week
+    	 from online_activity_manage where session=#{sessionId} and status=1 order by orders
+    </select>
+    
+    <select id="GetActivityTime" resultType="map">
+    	select a.id,b.starttime,b.endtime from online_activity_manage as a
+		inner join online_activity_details as b on a.id=b.parentid
+		where a.activitydate=#{riqi}
+		group by b.starttime,b.endtime
+		order by b.orders
+    </select>
+    
+    <select id="GetActivityDetails" resultType="map">
+    	select id as activityId,replace(replace(ifnull(title,''),'"','”'),' ','') as activityName,
+    	ifnull(address,'') as place,
+    	case when length(ifnull(intro,''))>40 then concat(left(ifnull(intro,''),36),'...') else ifnull(intro,'') end as intro,
+    	replace(intro,' ','') as jianjie,
+    	ifnull(roomid,'') as roomId,
+    	ifnull(link,'') as link,
+    	ifnull(acpicture,'') as picture,zhuangtai,ifnull(address,'') as address,zhuangtai,
+    	ifnull(liveaddress,'') as liveaddress,ifnull(videortmp,'') as videortmp,ifnull(videoflv,'') as videoflv,ifnull(videohls,'') as videohls,ifnull(videoudp,'') as videoudp
+    	from online_activity_details 
+		where parentid=#{id} and starttime=#{starttime} and endtime=#{endtime}
+		order by orders
+    </select>
+    <!--意向订单、预约洽谈-->
+    <select id="MyReceived" resultType="map">
+    	select a.id,case when act=0 then '意向订单' else '预约洽谈' end as typename,ifnull(name,'') as name,ifnull(tel,'') as tel,ifnull(content,'') as content,ifnull(product_name,'') as productname,
+		DATE_FORMAT(addtime,'%Y-%m-%d %H:%i') as addtime,a.memberid as uid from online_negotiate as a
+		left join web_product as b on a.productid=b.product_id
+		where 1=1
+		<if test="act!=null">
+			and act=#{act} 
+		</if>
+		and companyid=#{companyid} and status=2 and a.session=#{session}
+		order by addtime DESC
+    	LIMIT #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER};
+    </select>
+    <select id="MyReceivedCount" resultType="int">
+    	select count(*) from online_negotiate as a
+		left join web_product as b on a.productid=b.product_id
+		where 1=1
+		<if test="act!=null">
+			and act=#{act} 
+		</if>
+		and companyid=#{companyid} and status=2 and a.session=#{session}	
+    </select>
+    
+    <!--我发布的询盘-->
+    <select id="MyPostInfo" resultType="map">
+    	select			
+			a.id,a.productmenuid as productmenuid,
+			ifnull(b.dic_cn_name,'') as menuname,
+			a.name as name,
+			a.title as title,
+			a.quantity as quantity,
+			a.quantityunit as quantityunit,
+			ifnull(c.dic_cn_name,'') as quantityunitname,
+			a.tel as tel,
+			a.content as content,
+			DATE_FORMAT(a.addtime,'%Y-%m-%d %H:%i') as addtime,
+			a.status as status,
+			case a.status when 1 then '待审核'
+				when 0 then '审核未通过'
+				when 2 then '审核通过'
+				end as statusname,
+			a.remark as remark			
+        from online_inquiry as a
+        left join system_dictionaries as b on b.dicid=a.productmenuid and b.dic_parentid=90
+        left join system_dictionaries as c on c.dicid=a.quantityunit and c.dic_parentid=105
+		where memberid=#{memberid}
+		order by a.addtime desc
+    	LIMIT #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER};
+    </select>
+    <select id="MyPostInfoCount" resultType="int">
+    	select count(*) from online_inquiry as a
+        left join system_dictionaries as b on b.dicid=a.productmenuid and b.dic_parentid=90
+        left join system_dictionaries as c on c.dicid=a.quantityunit and c.dic_parentid=105
+		where memberid=#{memberid}
+    </select>
+    
+    <!--企业直播情况-->
+    <select id="GetZhiBoQingKuang" resultType="map">
+    	select ifnull(zhuangtai,0) as zhuangtai,ifnull(friendlink_address,'') as faddress from web_friendlink where friendlink_name=#{companyid}  order by friendlink_id desc limit 1
+    </select>
+    
+    <!--获取在线活动指定日期第一条-->
+    <select id="GetTopActivity" resultType="map">
+    	select b.id,ifnull(b.title,'') as title,replace(replace(ifnull(b.intro,''),'"','”'),' ','') as intro,ifnull(b.link,'') as link,ifnull(roomid,'') as roomid,
+		ifnull(b.acpicture,'') as picture,b.zhuangtai from online_activity_manage as a
+		inner join online_activity_details as b on a.id=b.parentid
+		where a.session=#{sessionId} and a.activitydate=#{riqi}
+		and b.starttime!='' and b.endtime!=''
+		order by b.orders limit 1
+    </select>
+    
+    <!--更新微信用户手机号、密码-->
+    <update id="updateWechatUserInfo">
+    	update wechat_user set phone=#{phone},password=#{password} where uid=#{uid}
+    </update>
+    
+    <!--获取企业下参展证类型人员-->
+    <select id="GetCanZhanZhengRenYuan" resultType="map">
+    	select ifnull(a.phone,'') as phone,ifnull(a.name,'') as name from ebs_personnelcard as a
+		inner join cm_certificate_type as b on a.cardtype=b.id and b.isexhibitor=1 and b.session=#{sessionid}
+		where a.companyid=#{companyid}
+    </select>
+    
+    <select id="getWechatUserByphone" resultType="int">
+    	select count(*) from wechat_user where phone=#{phone}
+    </select>
+    
+    <!--询盘列表-->
+    <select id="GetGongCaiList" resultType="map">
+    	select
+			a.id as id,
+			a.session as session,
+			a.memberid as memberid,
+			a.productmenuid as productmenuid,
+			ifnull(b.dic_cn_name,'') as menuname,			
+			a.title as title,
+			case when CHAR_LENGTH(a.title)>19 then concat(left(a.title,19),'...') else a.title end as shorttitle,
+			a.quantity as quantity,
+			a.quantityunit as quantityunit,
+			ifnull(c.dic_cn_name,'') as quantityunitname,
+			a.tel as tel,
+			a.content as content,
+			a.addtime as addtime,			
+			a.remark as remark		
+        from online_inquiry as a
+        left join system_dictionaries as b on b.dicid=a.productmenuid and b.dic_parentid=90
+        left join system_dictionaries as c on c.dicid=a.quantityunit and c.dic_parentid=105        
+        where a.session=#{session} and a.status=2
+        <if test="keywords!=null and keywords!=''">
+        	and (a.title LIKE '%${keywords}%' or a.content LIKE '%${keywords}%')
+        </if>
+        <if test="menuId!=null">
+        	and a.productmenuid = #{menuId}
+        </if>
+        order by a.addtime desc
+        LIMIT #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER};
+    </select>
+    <select id="GetGongCaiListCount" resultType="int">
+    	select
+			count(*)
+        from online_inquiry as a
+        left join system_dictionaries as b on b.dicid=a.productmenuid and b.dic_parentid=90
+        left join system_dictionaries as c on c.dicid=a.quantityunit and c.dic_parentid=105        
+        where a.session=#{session} and a.status=2
+        <if test="keywords!=null and keywords!=''">
+        	and (a.title LIKE '%${keywords}%' or a.content LIKE '%${keywords}%')
+        </if>
+        <if test="menuId!=null">
+        	and a.productmenuid = #{menuId}
+        </if>
+    </select>
+    
+    <!--会议列表-->
+    <select id="MeetingList" resultType="map">
+    	select a.id,b.meetingtype as title,a.ishost,b.meetingnumber,a.mobilephone as phone,b.meetingstart as starttime,b.meetingend as endtime 
+    	from online_apply_meeting_details as a
+		inner join online_apply_meeting as b on a.meetingid=b.id and b.status=2
+		where a.mobilephone = #{phone} and b.meetingend>now() and b.session=#{session}
+        order by b.addtime desc
+        LIMIT #{page,jdbcType=INTEGER},#{limit,jdbcType=INTEGER};
+    </select>
+    <select id="MeetingListCount" resultType="int">
+    	select count(*) from online_apply_meeting_details as a
+		inner join online_apply_meeting as b on a.meetingid=b.id and b.status=2
+		where a.mobilephone = #{phone} and b.meetingend>now() and b.session=#{session}
+    </select>
+    
+    <select id="GetMeetingPass" resultType="String">
+    	select pass from online_apply_meeting_details where id=#{id}
+    </select>
+    
+    <select id="GetPassByMeetingNumAndPhone" resultType="String">
+    	select b.pass from online_apply_meeting as a
+		inner join online_apply_meeting_details as b on a.id=b.meetingid
+		where a.meetingnumber=#{meetingnumber} and b.mobilephone=${phone} limit 1
+    </select>
+    <select id="GetHostUid" resultType="Object">
+    	select b.uid from online_apply_meeting as a
+		inner join wechat_user as b on a.contacttel=b.phone
+		where a.meetingnumber=#{meetingnumber} limit 1
+    </select>
+    
+    <select id="GetNowPassword" resultType="String">
+		select password from wechat_user where uid=#{uid} and phone=#{phone}
+	</select>
+	
+	<select id="UpdateWechatUserPass">
+		update wechat_user set password=#{pass} where uid=#{uid}
+	</select>
+    
+</mapper>

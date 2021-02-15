@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.ReportManagement.dao.VehicleCardGetOutReportMapper">
+	<select id="getVehicleCardList" resultType="map">
+		SELECT
+			b.chinesename AS companyname,
+			a.drivername,
+			a.platenumber
+		FROM
+			ebs_vehiclecard AS a
+		INNER JOIN cm_certificate_type AS b ON a.cardtype = b.id
+		WHERE
+			b.type = 1
+		AND b.session = #{session}
+		AND b.useable = 1
+		AND a.cardtype = #{cardtype}
+		AND a.agent = #{agentId}
+		and a.status = 1
+		<if test="isforensics != null and isforensics != ''">
+			AND a.isforensics = #{isforensics}
+		</if>
+		AND DATE_ADD(a.makecardtime,INTERVAL #{evidenceDelay} MINUTE)<![CDATA[ <= ]]> now()
+	</select>
+	
+	<select id="getAgentList" resultType="map">
+		select b.id agentId, a.member_id memberId, b.name, ebs_tradinggroup.name tradingGroupName from web_member a
+		inner JOIN web_member_session ON a.member_id = web_member_session.member_id
+		inner join pim_agent b on web_member_session.orgnization_id = b.id
+		inner join ebs_tradinggroup on b.tradinggroupid = ebs_tradinggroup.id
+		inner join (
+			select agent, count(*) num from ebs_vehiclecard
+			where session = #{session} AND DATE_ADD(makecardtime,INTERVAL #{evidenceDelay} MINUTE)<![CDATA[ <= ]]> now()
+			and cardtype in (select id from cm_certificate_type where session = #{session} and type = 1 and useable = 1)
+			group by agent
+		) c on a.member_id = c.agent 
+		where web_member_session.id = #{session} and b.isopen = 1 and !isnull(c.num)
+        order by b.addtime desc
+		limit #{index}, #{size}
+	</select>
+	
+	<select id="getAgentListCount" resultType="int">
+		select count(distinct b.id) from web_member a
+		inner JOIN web_member_session ON a.member_id = web_member_session.member_id
+		inner join pim_agent b on web_member_session.orgnization_id = b.id
+		inner join ebs_tradinggroup on b.tradinggroupid = ebs_tradinggroup.id
+		inner join (
+			select agent, count(*) num from ebs_vehiclecard
+			where session = #{session} AND DATE_ADD(makecardtime,INTERVAL #{evidenceDelay} MINUTE)<![CDATA[ <= ]]> now()
+			and cardtype in (select id from cm_certificate_type where session = #{session} and type = 1 and useable = 1)
+			group by agent
+		) c on b.id = c.agent 
+		where web_member_session.id = #{session} and b.isopen = 1 and !isnull(c.num)
+	</select>
+</mapper>

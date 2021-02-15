@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.Exhibitors.dao.EbsScatteredExhibitorsboothallocationMapper">
+
+	<select id="queryExportInfo" resultType="map">
+		SELECT
+			c.chinesename,
+			ifnull(d.apply_products,'') apply_products,
+			ifnull(sys_industry.chinese_name,'') industryName,
+			ifnull(d.boothApplyNumber,'') boothApplyNumber,
+			ifnull(e.booths,'') booths,
+			ifnull(c.contactperson,'') contactperson,
+			ifnull(c.phone,'') phone,
+			ifnull(c.tel,'') tel,
+			ifnull(c.fax,'') fax,
+			ifnull(sys_country_area.name,'') province,
+			ifnull(c.purchaseintention,'') purchaseintention,
+			'' remark
+		FROM
+			web_member a
+		LEFT JOIN web_member_session b ON a.member_id = b.member_id
+		LEFT JOIN ebs_companyinfo c ON b.orgnization_id = c.id
+		LEFT JOIN sys_industry ON c.industryid = sys_industry.id and sys_industry.use_flag = 'Y'
+		LEFT JOIN sys_country_area ON c.province = sys_country_area.id and sys_country_area.use_flag = 'Y'
+		LEFT JOIN (SELECT company_id, ifnull(GROUP_CONCAT(NAME),'') booths FROM ebs_booth WHERE session = #{session} GROUP BY company_id) e ON c.id = e.company_id
+		INNER JOIN (
+			select
+				ebs_booth_apply.company_id,
+				ebs_booth_apply.apply_products,
+				SUM(IF(ISNULL(apply_count),(apply_area/area),apply_count)) boothApplyNumber
+			FROM ebs_booth_apply
+			INNER JOIN ebs_booth_apply_list ON ebs_booth_apply.apply_id = ebs_booth_apply_list.apply_id
+			INNER JOIN system_user_rights ON ebs_booth_apply_list.tradinggroup_id = system_user_rights.tradinggroupid AND ebs_booth_apply.session_id = system_user_rights.session
+			INNER JOIN ebs_tradinggroup ON system_user_rights.tradinggroupid = ebs_tradinggroup.id
+			left JOIN ebs_showroomtype ON ebs_booth_apply_list.showroom_type_id = ebs_showroomtype.id
+			WHERE system_user_rights.userid = #{userId} and system_user_rights.session = #{session} AND ebs_tradinggroup.type = 1
+			GROUP BY ebs_booth_apply.company_id
+		) d ON c.id = d.company_id
+		WHERE a.member_type = 2 AND a.member_status = 0 and b.id = #{session} and c.useable = 1
+		GROUP BY c.id
+		order by sys_country_area.name
+	</select>
+	
+	<select id="loadCount" resultType="map">
+		select * FROM (
+			select ifnull(SUM(boothApplyNumber), 0) boothApplyTotal FROM web_member a
+			LEFT JOIN web_member_session b ON a.member_id = b.member_id
+			LEFT JOIN ebs_companyinfo c ON b.orgnization_id = c.id
+			inner join (
+				SELECT ebs_booth_apply.company_id,IF(ISNULL(apply_count),(apply_area/area),apply_count) boothApplyNumber FROM system_user_rights
+				INNER JOIN ebs_booth_apply_list ON system_user_rights.tradinggroupid = ebs_booth_apply_list.tradinggroup_id
+				INNER JOIN ebs_booth_apply ON ebs_booth_apply.session_id = system_user_rights.session AND ebs_booth_apply.apply_id = ebs_booth_apply_list.apply_id
+				INNER JOIN ebs_tradinggroup ON system_user_rights.tradinggroupid = ebs_tradinggroup.id
+				left JOIN ebs_showroomtype ON ebs_booth_apply_list.showroom_type_id = ebs_showroomtype.id
+				WHERE system_user_rights.session = #{session} AND system_user_rights.userid = #{userId} AND ebs_tradinggroup.type = 1
+				<if test="tradingGroupId != null and tradingGroupId != ''">
+					AND ebs_tradinggroup.id = #{tradingGroupId}
+				</if>
+			) d on c.id = d.company_id
+			WHERE a.member_type = 2 AND a.member_status = 0 and b.id = #{session} and c.useable = 1
+		) a
+		left join
+		(
+			select count(c.id) applyCompanyNumber FROM web_member a
+			LEFT JOIN web_member_session b ON a.member_id = b.member_id
+			LEFT JOIN ebs_companyinfo c ON b.orgnization_id = c.id
+			inner join (
+				SELECT distinct ebs_booth_apply.company_id FROM system_user_rights
+				INNER JOIN ebs_booth_apply_list ON system_user_rights.tradinggroupid = ebs_booth_apply_list.tradinggroup_id
+				INNER JOIN ebs_booth_apply ON ebs_booth_apply.session_id = system_user_rights.session AND ebs_booth_apply.apply_id = ebs_booth_apply_list.apply_id
+				INNER JOIN ebs_tradinggroup ON system_user_rights.tradinggroupid = ebs_tradinggroup.id
+				WHERE system_user_rights.session = #{session} AND system_user_rights.userid = #{userId} AND ebs_tradinggroup.type = 1
+				<if test="tradingGroupId != null and tradingGroupId != ''">
+					AND ebs_tradinggroup.id = #{tradingGroupId}
+				</if>
+			) d on c.id = d.company_id
+			WHERE a.member_type = 2 AND a.member_status = 0 and b.id = #{session} and c.useable = 1
+		) aa on 1=1
+		left join
+		(
+			select count(ebs_booth.id) allocationedNumber FROM web_member a
+			LEFT JOIN web_member_session b ON a.member_id = b.member_id
+			LEFT JOIN ebs_companyinfo c ON b.orgnization_id = c.id
+			inner join (
+				SELECT distinct ebs_booth_apply.company_id FROM system_user_rights
+				INNER JOIN ebs_booth_apply_list ON system_user_rights.tradinggroupid = ebs_booth_apply_list.tradinggroup_id
+				INNER JOIN ebs_booth_apply ON ebs_booth_apply.session_id = system_user_rights.session AND ebs_booth_apply.apply_id = ebs_booth_apply_list.apply_id
+				INNER JOIN ebs_tradinggroup ON system_user_rights.tradinggroupid = ebs_tradinggroup.id
+				WHERE system_user_rights.session = #{session} AND system_user_rights.userid = #{userId} AND ebs_tradinggroup.type = 1
+				<if test="tradingGroupId != null and tradingGroupId != ''">
+					AND ebs_tradinggroup.id = #{tradingGroupId}
+				</if>
+			) d on c.id = d.company_id
+			INNER JOIN ebs_booth ON c.id = ebs_booth.company_id
+			WHERE a.member_type = 2 AND a.member_status = 0 and b.id = #{session} and c.useable = 1 AND ebs_booth.session = #{session} AND ebs_booth.useable = 1
+		) b on 1=1
+		left join
+		(
+			SELECT count(product_id) productsTotal,
+			ifnull(SUM(IF(product_status=-1,1,0)), 0) auditedNotPassProductsNumber,
+			ifnull(SUM(IF(product_status=0,1,0)), 0) waitAuditProductsNumber,
+			ifnull(SUM(IF(product_status=1,1,0)), 0) auditedPassProductsNumber
+			FROM web_member a
+			LEFT JOIN web_member_session b ON a.member_id = b.member_id
+			LEFT JOIN ebs_companyinfo c ON b.orgnization_id = c.id
+			inner join (
+				SELECT distinct ebs_booth_apply.company_id FROM system_user_rights
+				INNER JOIN ebs_booth_apply_list ON system_user_rights.tradinggroupid = ebs_booth_apply_list.tradinggroup_id
+				INNER JOIN ebs_booth_apply ON ebs_booth_apply.session_id = system_user_rights.session AND ebs_booth_apply.apply_id = ebs_booth_apply_list.apply_id
+				INNER JOIN ebs_tradinggroup ON system_user_rights.tradinggroupid = ebs_tradinggroup.id
+				WHERE system_user_rights.session = #{session} AND system_user_rights.userid = #{userId} AND ebs_tradinggroup.type = 1
+				<if test="tradingGroupId != null and tradingGroupId != ''">
+					AND ebs_tradinggroup.id = #{tradingGroupId}
+				</if>
+			) d on c.id = d.company_id
+			INNER JOIN web_product ON c.id = web_product.company_id
+			WHERE a.member_type = 2 AND a.member_status = 0 and b.id = #{session} and c.useable = 1 AND web_product.session = #{session}
+		) c on 1=1
+	</select>
+
+	<select id="getScatteredExhibitorsList" resultType="map">
+        SELECT
+			a.member_id memberId,
+			c.id companyId,
+			c.chinesename,
+			c.contactperson,
+			e.booths,
+			c.addtime,
+			j.exhibition_office_audit_status exhibitionOfficeAuditStatus,
+			j.exhibition_office_audit_remark exhibitionOfficeAuditRemark
+		FROM
+			web_member a
+		LEFT JOIN web_member_session b ON a.member_id = b.member_id
+		LEFT JOIN ebs_companyinfo c ON b.orgnization_id = c.id
+		LEFT JOIN (SELECT company_id, GROUP_CONCAT(NAME) booths FROM ebs_booth WHERE session = #{session} GROUP BY company_id) e ON c.id = e.company_id
+		LEFT JOIN ebs_booth_audit j ON c.id = j.company_id AND j.session_id = b.id
+		INNER JOIN (
+			select ebs_booth_apply.company_id,ebs_booth_apply_list.tradinggroup_id FROM ebs_booth_apply
+			INNER JOIN ebs_booth_apply_list ON ebs_booth_apply.apply_id = ebs_booth_apply_list.apply_id
+			INNER JOIN system_user_rights ON ebs_booth_apply_list.tradinggroup_id = system_user_rights.tradinggroupid AND ebs_booth_apply.session_id = system_user_rights.session
+			INNER JOIN ebs_tradinggroup ON system_user_rights.tradinggroupid = ebs_tradinggroup.id
+			WHERE system_user_rights.userid = #{userId} and system_user_rights.session = #{session} AND ebs_tradinggroup.type = 1
+		) d ON c.id = d.company_id
+		WHERE a.member_type = 2 AND a.member_status = 0 and b.id = #{session} and c.useable = 1
+        <if test="companyName != null and companyName != ''">
+            and c.chinesename like concat ('%',#{companyName},'%')
+        </if>
+        <if test="booth != '' and booth == 0">
+        	AND ISNULL(e.booths)
+        </if>
+        <if test="booth != '' and booth == 1">
+        	AND !ISNULL(e.booths)
+        </if>
+        <if test="province != '' and province == 0">
+            and c.province = 230000
+        </if>
+        <if test="province != '' and province == 1">
+            and c.province != 230000
+        </if>
+        <if test="tradingGroupId != null and tradingGroupId != ''">
+            and d.tradinggroup_id = #{tradingGroupId}
+        </if>
+		GROUP BY c.id
+        order by c.addtime desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="getScatteredExhibitorsListCount" resultType="int">
+		SELECT count(*) from (
+			SELECT
+				c.id
+			FROM
+				web_member a
+			LEFT JOIN web_member_session b ON a.member_id = b.member_id
+			LEFT JOIN ebs_companyinfo c ON b.orgnization_id = c.id
+			LEFT JOIN (SELECT company_id, GROUP_CONCAT(NAME) booths FROM ebs_booth WHERE session = #{session} GROUP BY company_id) e ON c.id = e.company_id
+			LEFT JOIN ebs_booth_audit j ON c.id = j.company_id AND j.session_id = b.id
+			INNER JOIN (
+				select ebs_booth_apply.company_id,ebs_booth_apply_list.tradinggroup_id FROM ebs_booth_apply
+				INNER JOIN ebs_booth_apply_list ON ebs_booth_apply.apply_id = ebs_booth_apply_list.apply_id
+				INNER JOIN system_user_rights ON ebs_booth_apply_list.tradinggroup_id = system_user_rights.tradinggroupid AND ebs_booth_apply.session_id = system_user_rights.session
+				INNER JOIN ebs_tradinggroup ON system_user_rights.tradinggroupid = ebs_tradinggroup.id
+				WHERE system_user_rights.userid = #{userId} and system_user_rights.session = #{session} AND ebs_tradinggroup.type = 1
+			) d ON c.id = d.company_id
+			WHERE a.member_type = 2 AND a.member_status = 0 and b.id = #{session} and c.useable = 1
+	        <if test="companyName != null and companyName != ''">
+	            and c.chinesename like concat ('%',#{companyName},'%')
+	        </if>
+	        <if test="booth != '' and booth == 0">
+	        	AND ISNULL(e.booths)
+	        </if>
+	        <if test="booth != '' and booth == 1">
+	        	AND !ISNULL(e.booths)
+	        </if>
+	        <if test="province != '' and province == 0">
+	            and c.province = 230000
+	        </if>
+	        <if test="province != '' and province == 1">
+	            and c.province != 230000
+	        </if>
+	        <if test="tradingGroupId != null and tradingGroupId != ''">
+	            and d.tradinggroup_id = #{tradingGroupId}
+	        </if>
+			GROUP BY c.id
+		) a
+	</select>
+
+	<select id="getApplyBoothInfo" resultType="map">
+		SELECT
+			ebs_booth_apply_info.apply_id applyId,
+			ebs_booth_apply_info.apply_products applyProducts,
+			ebs_booth_apply_info.apply_license applyLicense,
+			ebs_booth_apply_info.apply_file applyFile,
+			ebs_tradinggroup.id tradingGroupId,
+			ebs_tradinggroup.name tradingGroupName,
+			ebs_showroomtype.id showRoomTypeId,
+			ebs_showroomtype.name showRoomTypeName,
+			ebs_showroomtype.area singleArea,
+			ebs_showroomtype.tollmehod,
+			ebs_showroomtype.boothlimit,
+			ifnull(ebs_booth_apply_info.apply_build_type,'') applyBuildType,
+			ifnull(ebs_booth_apply_info.apply_count,'') applyCount,
+			ifnull(ebs_booth_apply_info.apply_area,'') applyArea,
+			ifnull(ebs_booth_apply_info.apply_remove_separator,'') applyRemoveSeparator,
+			ifnull(ebs_booth_apply_info.apply_device_length,'') applyDeviceLength,
+			ifnull(ebs_booth_apply_info.apply_device_width,'') applyDeviceWidth,
+			ifnull(ebs_booth_apply_info.apply_device_high,'') applyDeviceHigh,
+			ifnull(ebs_booth_apply_info.apply_electricity_amount,'') applyElectricityAmount,
+			ifnull(ebs_booth_apply_info.apply_voltage,'') applyVoltage,
+			GROUP_CONCAT(CONCAT(ebs_booth.id, '|', ebs_booth.NAME, '|', IFNULL(ebs_booth.company_id,0)) ORDER BY ebs_booth.id) boothIdName
+		FROM ebs_tradinggroupboothallocation
+		LEFT JOIN ebs_tradinggroup on ebs_tradinggroupboothallocation.tradinggroupid = ebs_tradinggroup.id and ebs_tradinggroup.session = #{session}
+		LEFT JOIN ebs_showroom ON ebs_tradinggroupboothallocation.showroomid = ebs_showroom.id and ebs_showroom.session = #{session}
+		LEFT JOIN ebs_showroomtype ON ebs_showroomtype.id = ebs_showroom.type and ebs_showroomtype.session = #{session}
+		LEFT JOIN ebs_booth ON ebs_tradinggroupboothallocation.boothid = ebs_booth.id and ebs_booth.session = #{session} AND ebs_booth.useable = 1
+		AND (ebs_booth.company_id = #{companyId} or ebs_booth.company_id = 0 or isnull(ebs_booth.company_id))
+		LEFT JOIN (
+			SELECT ebs_booth_apply.apply_id, ebs_booth_apply.apply_products, ebs_booth_apply.apply_license, ebs_booth_apply.apply_file, tradinggroup_id, showroom_type_id, apply_build_type, apply_count, apply_area, apply_remove_separator, apply_device_length, apply_device_width, apply_device_high, apply_electricity_amount, apply_voltage
+			FROM ebs_booth_apply LEFT JOIN ebs_booth_apply_list ON ebs_booth_apply.apply_id = ebs_booth_apply_list.apply_id
+			WHERE ebs_booth_apply.company_id = #{companyId} AND ebs_booth_apply.session_id = #{session} group by tradinggroup_id, showroom_type_id
+		) ebs_booth_apply_info ON ebs_tradinggroup.id = ebs_booth_apply_info.tradinggroup_id AND ebs_booth_apply_info.showroom_type_id = ebs_showroomtype.id
+		WHERE ebs_tradinggroupboothallocation.session = #{session} AND ebs_tradinggroup.type = #{tradingGroupType}
+		AND ebs_showroomtype.status = 1 AND ebs_showroom.useable = 1
+		GROUP BY ebs_tradinggroup.id, ebs_showroomtype.id
+		ORDER BY ebs_tradinggroup.orders,ebs_tradinggroup.id, ebs_showroomtype.id
+	</select>
+	
+	<update id="cancleAllocationBooth">
+		update ebs_booth set company_id = 0 WHERE tradinggroupid != 0 and !isnull(tradinggroupid) and session = #{session} and company_id = #{companyId}
+	</update>
+	
+	<update id="allocationBooth">
+		update ebs_booth set company_id = 0 where company_id = #{companyId} and session = #{session};
+		update ebs_booth set company_id = #{companyId} WHERE id IN
+		<foreach collection="selectBoothIds" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</update>
+	
+	<select id="selectScatteredTraddingGroup" resultType="map">
+		select DISTINCT ebs_tradinggroup.id,ebs_tradinggroup.name from ebs_tradinggroup
+		INNER JOIN system_user_rights ON ebs_tradinggroup.id = system_user_rights.tradinggroupid
+		and system_user_rights.userid = #{userId} and system_user_rights.session=#{session}
+		where ebs_tradinggroup.session=#{session} and ebs_tradinggroup.type=1
+  		order by ebs_tradinggroup.orders
+	</select>
+</mapper>

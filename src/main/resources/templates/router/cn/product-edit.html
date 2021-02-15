@@ -1,0 +1,169 @@
+    <div class="modal inmodal" id="edit-model" style="display:none">
+		<div class="modal-content animated bounceInUp">
+			<div class="ibox-content">
+				<fieldset class="layui-elem-field layui-field-title" style="border-top:0px">
+					<form class="layui-form layui-form-pane" action="" id="editform">
+					    <input type="hidden" name="productId" value="0"  />
+					    <input type="hidden" name="session" value="${exhibitionSessionId}"  />
+					    <input type="hidden" name="productStatus" value="0"  />
+						<table width="100%"  class="layui-table form-content">
+							<tr class="papers-edit-bg"><td colspan="3" style="border-right: none;">编辑产品信息</td><td align="right"><a class="layui-icon layui-icon-close close"></a></td></tr>
+							<tr>
+								<td>*产品名称</td>
+								<td width="40%" colspan="3"><input class="layui-input" autocomplete="off" id="productName" name="productName" type="text"  lay-verify="required"></td>
+								
+							</tr>
+							<tr>
+								<td>*单位</td>
+								<td width="40%">
+								      <select name="productUnit" id="productUnit">
+										   <#list productMenu1 as menu>
+										  <option value="${menu.dicid}">${menu.dicCnName}</option>
+										  </#list>
+									  </select>   
+								</td>
+								<td>*所属公司</td>
+								<td>									
+							      <select name="companyId" id="companyId" lay-filter="companyId" lay-search="">
+							      <#if companys??>
+							      <#list companys as company>
+							        <option value="${company.id}">${company.chinesename}</option>
+							      </#list>
+							      </#if>
+							      <#if company??>
+							        <option value="${company.id}">${company.chinesename}</option></#if>
+							      </select>
+      							</td>
+							</tr>
+							<tr>
+								<td>*价格</td>
+								<td><input class="layui-input" autocomplete="off" id="productPrice" name="productPrice" type="text"  lay-verify="required|number"></td>
+								<td>*价格单位</td>
+								<td>
+									<div class="layui-input-inline">
+								      <select name="productPriceunit" id="productPriceunit">
+										   <#list productMenu2 as menu>
+										  <option value="${menu.dicid}">${menu.dicCnName}</option>
+										  </#list>
+									  </select>   
+								    </div>
+								</td>
+							</tr>
+							<tr>
+								<td>*类别</td>
+								<td>
+									<div class="layui-input-inline">
+								      <select name="productMenuId" id="productMenuId">
+										  <#list productMenu as menu>
+										  <option value="${menu.dicid}">${menu.dicCnName}</option>
+										  </#list>
+									  </select>   
+								    </div>
+								</td>
+								<td>*品牌</td>
+								<td><input class="layui-input" autocomplete="off" id="productBrand" name="productBrand" type="text"  lay-verify="required"></td>
+							</tr>
+							<tr>
+								<td>*产地</td>
+								<td colspan=3>
+									<div class="layui-input-inline">
+								      <select name="country" lay-verify="required" lay-filter="country">
+										  <option value="">请选择</option>
+									  </select>   
+								    </div>
+								    <div class="layui-input-inline">
+								      <select name="province" lay-verify="required" lay-filter="province">
+										  <option value="">请选择</option>
+									  </select>   
+								    </div>
+								    <div class="layui-input-inline">
+								      <select name="city" lay-verify="required">
+										  <option value="">请选择</option>
+									  </select>   
+									 </div>
+								</td>
+							</tr>
+							<tr>
+								<td>规格</td>
+								<td>
+									<input autocomplete="off" class="layui-input" id="productNum" name="productNum" type="text">
+							   	</td>
+								<td>*供应数量</td>
+								<td><input class="layui-input" autocomplete="off" id="supplyquantity" name="supplyquantity" type="text"  lay-verify="required|number"></td>
+							</tr>
+							<tr>
+								<td>虚拟展厅地址</td>
+								<td colspan="3"><input class="layui-input" autocomplete="off" placeholder="请输入您虚拟展厅的网址" id="url" name="url" type="text" /></td>
+							</tr>
+							<tr>
+								<td>*封面图</td>
+								<input type="hidden" name="productPicture" id="productPicture" value=""  lay-verify="required" lay-reqText="必须上传产品封面图" />
+								<td>
+									<button type="button" class="layui-btn" id="btnProductPicture" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>上传图片
+									</button>
+									<button type="button" class="layui-btn" id="btnProductPictureCropper">
+									  <i class="layui-icon">&#xe67c;</i>裁剪助手
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />格式为JPG，上传文件小于2M，尺寸750*750（宽*高）像素，用于产品列表页的产品展示。
+									
+								</td>
+								<td colspan="2" class="prepic"><image src="" width="390" height="390" id="preproductPicture" /></td>
+							</tr>
+							<tr>
+								<td>*轮播图</td>
+								<input type="hidden" name="productPictures" id="productPictures" value=""  />
+								<td>
+									<button type="button" class="layui-btn" id="btnProductPictures" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>上传图片
+									</button>
+									<button type="button" class="layui-btn" id="btnProductPicturesCropper">
+									  <i class="layui-icon">&#xe67c;</i>裁剪助手
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />格式为JPG，上传文件小于2M，尺寸750*750（宽*高）像素，上传图片不超过3张。</div>
+								</td>
+								<td colspan="2">
+									<div class="mutipic">
+									</div>
+								</td>
+							</tr>
+							<tr style="display:none">
+								<td>视频介绍</td>
+								<input type="hidden" name="productVideo" id="productVideo" value="" />
+								<td>
+									<button type="button" class="layui-btn" id="btnProductVideo">
+									  <i class="layui-icon">&#xe67c;</i>上传视频
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />格式为MP4、FLV、MPG，上传文件小于20M，视频分辨率>=640*360，视频码率>=800kbps。</div>
+								</td>
+								<td colspan="2" class="prepic" id="videoContainer"><image src="" width="390" height="265" id="preidphotopath" /></td>
+							</tr>
+							<tr>
+								<td>产品介绍</td>
+								<td  colspan="4">
+              						<textarea name="productDescription" id="productDescription" rows="10" cols="80"  class="layui-input"></textarea>
+								</td>
+							</tr>
+							<tr class="papers-edit-bg">
+								<td colspan="4" align="center">
+									<button type="button" class="layui-btn layui-btn-primary close">取消</button>
+									<button type="reset" class="layui-btn layui-btn-primary" id="reset" style="display:none">重置</button>
+									<button type="button"  lay-submit class="layui-btn"  lay-filter="update">提交</button>
+								</td>
+							</tr>
+							
+						</table>
+					</form>
+				</fieldset>
+			</div>
+		</div>
+	</div>
+	<div id="mutiPictureTemplate" style="display:none">
+	<div class="item">
+		<img src="" />
+		<div class="fc-upload-cover">
+			<i class="ivu-icon fa fa-eye"></i>
+			<i class="ivu-icon fa fa-trash"></i>
+		</div>
+	</div>
+	</div>

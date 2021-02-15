@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>打印模板</title>
+		<link rel="stylesheet" href="/manage/css/xadmin.css">
+		<link href="/manage/css/style.css?v=4.1.0" rel="stylesheet">
+		<link href="/manage/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="/manage/layui/css/layui.css"  media="all">
+		<script charset="utf-8" src="/manage/js/jquery.min.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/layui/layui.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/xadmin.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/vue.js" type="text/javascript"></script>
+		<script src="/manage/js/bootstrap.min.js?v=3.3.6"></script>
+		<script src="/manage/js/manage/Lodop.js?v=1.0.0"></script>
+	</head>
+	<body style="padding:10px">
+		<table class="layui-table">
+			<tr>
+				<td>所属证件：</td>
+				<td id="CardTypeDiv">
+				</td>
+			</tr>
+			<tr>
+				<td>模版源码：</td>
+				<td><textarea rows="12" id="S1" cols="107" ></textarea></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>
+				<div id='id01'  disabled = true>					
+					<input type="button" class="layui-btn" value="用以上代码打印预览" id="button02" onclick="prn2_Preview()">
+					<input type="button" class="layui-btn" value="用以上代码设计" id="button05" onclick="prn2_design()">
+				</div></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>
+				<input type="button" class="layui-btn" value=" 保 存 " id="btnsave" onclick="save()">
+				</td>
+			</tr>
+		</table>
+		<input type="text" id="data01" style="display:none" size="30" value="">
+		<script language="javascript" type="text/javascript">
+			var form;
+			var layer;
+			layui.use(['form', 'layer', 'laydate'], function() {
+				form = layui.form;
+				layer = layui.layer;
+			});
+			var editSysPrintTemplateId = sessionStorage.getItem("editSysPrintTemplateId");
+			//console.log(editSysPrintTemplateId);
+			$.ajax({
+				url : "/manage/system/sysPrintTemplate/findById",
+				data : {
+					"id" : editSysPrintTemplateId
+				},
+				dataType : "json",
+				type : "get",
+				success : function(result) {
+					if (result.code === 1) {
+						$("#CardTypeDiv").html(result.data.cardtypename);
+						$("#S1").html(result.data.printTemplate);
+					} else {
+						alert("获取修改信息失败！");
+					}
+				}
+			});
+
+			
+			function save() {
+				var remark = $("#S1").val();				
+				var params = {};
+				params.printtemplate = remark;
+				params.id=editSysPrintTemplateId;
+				$.ajax({
+					url : "/manage/system/sysPrintTemplate/update",
+					data : JSON.stringify(params),
+					type : "post",
+					async : false,
+					contentType : "application/json",
+					success : function(result) {
+						if (result.code === 1) {
+							layer.msg("保存成功", {
+								icon : 6,
+								time : 500
+							}, function() {
+								//关闭当前frame
+								xadmin.close();
+								// 可以对父窗口进行刷新
+								xadmin.father_reload();
+							});
+						} else {
+							alert(result.msg);
+						}
+					}
+				});
+			}
+
+			var LODOP;
+			var MyData = document.getElementById('data01').value;
+			/*
+			 function prn1_preview() {
+			 CreateOneFormPage();
+			 if (LODOP.CVERSION) CLODOP.On_Return=function(TaskID,Value){document.getElementById('S1').value=Value;};
+			 document.getElementById('S1').value="打印预览返回结果："+LODOP.PREVIEW();
+			 document.getElementById('id01').disabled = true;
+			 };
+			 function prn1_setup() {
+			 CreateOneFormPage();
+			 if (LODOP.CVERSION) CLODOP.On_Return=function(TaskID,Value){document.getElementById('S1').value=Value;};
+			 document.getElementById('S1').value=LODOP.PRINT_SETUP();
+			 document.getElementById('id01').disabled = true;
+			 };*/
+			function prn1_design() {
+				CreateOneFormPage();
+				if (LODOP.CVERSION)
+					CLODOP.On_Return = function(TaskID, Value) {
+						document.getElementById('S1').value = Value;
+					};
+				document.getElementById('S1').value = LODOP.PRINT_DESIGN();
+				document.getElementById('id01').disabled = false;
+			};
+			/*
+			 function prn2_setup() {
+			 CreateOneFormPage();
+			 LODOP.SET_PRINT_MODE("PRINT_SETUP_PROGRAM",true);
+			 if (LODOP.CVERSION) CLODOP.On_Return=function(TaskID,Value){document.getElementById('S1').value=Value;};
+			 document.getElementById('S1').value=LODOP.PRINT_SETUP();
+			 document.getElementById('id01').display =false;
+			 };*/
+			function prn2_Preview() {
+				MyData = document.getElementById('data01').value;
+				//打印前变量重读一下最新值
+				LODOP = getLodop();
+				eval(document.getElementById('S1').value);
+				if (LODOP.CVERSION)
+					CLODOP.On_Return = null;
+				LODOP.PREVIEW();
+			};
+			function prn2_design() {
+				LODOP = getLodop();
+				eval(document.getElementById('S1').value);
+				if (LODOP.CVERSION)
+					CLODOP.On_Return = function(TaskID, Value) {
+						document.getElementById('S1').value = Value;
+					};
+				document.getElementById('S1').value = LODOP.PRINT_DESIGN();
+			};
+			function CreateOneFormPage() {
+				MyData = document.getElementById('data01').value;
+				//打印前变量重读一下最新值
+				LODOP = getLodop();
+				LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_获得程序代码");
+				LODOP.SET_PRINT_MODE("PROGRAM_CONTENT_BYVAR", true);
+				LODOP.ADD_PRINT_TEXTA("jj_xm", 40, 20, 85, 25, "姓名");
+				LODOP.ADD_PRINT_TEXTA("jj_dz", 80, 20, 85, 25, "公司名称");
+				LODOP.ADD_PRINT_TEXTA("jj_dh", 120, 20, 85, 25, "展位号");
+				LODOP.ADD_PRINT_TEXTA("sj_xm", 40, 190, 95, 25, "${UserName}");
+				LODOP.ADD_PRINT_TEXTA("sj_dz", 80, 190, 95, 25, "${CompanyName}");
+				LODOP.ADD_PRINT_TEXTA("sj_dh", 120, 190, 95, 25, "${BoothNumber}");
+				LODOP.ADD_PRINT_TEXT(503, 221, 0, 0, MyData);
+				LODOP.SET_PRINT_STYLEA(0, "FontSize", 13);
+				LODOP.SET_PRINT_STYLEA(0, "FontColor", "#FF0000");
+				LODOP.SET_PRINT_STYLEA(0, "ContentVName", "MyData");
+				LODOP.ADD_PRINT_IMAGE(142, 171, 200, 300, "<img src='http://localhost:7080/images/1.jpg'/>");
+				LODOP.SET_PRINT_STYLEA(0, "Stretch", 2);
+				LODOP.ADD_PRINT_IMAGE(100, 371, 200, 200, "<img src='http://localhost:7080/images/evm.png'/>");
+				LODOP.SET_PRINT_STYLEA(0, "Stretch", 2);
+			};
+		</script>
+
+	</body>
+</html>

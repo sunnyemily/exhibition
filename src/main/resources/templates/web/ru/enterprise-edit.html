@@ -1,0 +1,268 @@
+    <div class="modal inmodal" id="edit-model" style="display:none">
+		<div class="modal-content animated bounceInUp">
+			<div class="ibox-content">
+				<fieldset class="layui-elem-field layui-field-title" style="border-top:0px">
+					<form class="layui-form layui-form-pane" action="" id="editform">
+					    <input type="hidden" name="id" id="id" value="0"  />
+					    <input type="hidden" name="session" value="${exhibitionSessionId}"  />
+					    <input type="hidden" name="applyId" value="0"  />
+						<table width="100%"  class="layui-table form-content">
+							<tr class="papers-edit-bg"><td colspan="3" style="border-right: none;">Добавить  экспонент-компания</td><td align="right"><a class="layui-icon layui-icon-close close"></a></td></tr>
+							  <tr>
+							    <td><span>*</span>Наименование компании (на китайском языке)</td>
+							    <td colspan="3">
+							      <input type="text" name="chinesename" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>Наименование компании (на английском языке)</td>
+							    <td colspan="3">
+							      <input type="text" name="engname" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>Наименование компании (на русском языке)</td>
+							    <td colspan="3">
+							      <input type="text" name="russianname" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>Адрес компании (на китайском языке)</td>
+							    <td colspan="3">
+							      <input type="text" name="chineseaddress" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>Адрес компании (на английском языке)</td>
+							    <td colspan="3">
+							      <input type="text" name="engaddress" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>Индекс</td>
+							    <td colspan="3">
+							      <input type="text" name="postcode" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>Номер мобильного телефона</td>
+							    <td colspan="3">
+							      <input type="text" name="phone" required  lay-verify="required" placeholder="Заполните номер мобильного телефона" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>Телефон</td>
+							    <td colspan="3">
+							      <input type="text" name="tel" required  lay-verify="required" placeholder="Заполните контактный телефон" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>Факс</td>
+							    <td colspan="3">
+							      <input type="text" name="fax" required  placeholder="Заполните номер факса" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>Адрес сайта</td>
+							    <td colspan="3">
+							      <input type="text" name="website" required placeholder="Заполните адрес сайта" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>*Электронная почта</td>
+							    <td colspan="3">
+							      <input type="text" name="email"  lay-verify="email" placeholder="Заполните Вашу электронную почту" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>Страна / Регион</td>
+							    <td colspan="3">
+								    <div class="layui-input-inline">
+								      <select name="country" lay-verify="required" lay-filter="country">
+										  <option value="">Пожалуйста, выбирайте</option>
+									  </select>   
+								    </div>
+								    <div class="layui-input-inline">
+								      <select name="province" lay-verify="required" lay-filter="province">
+										  <option value="">Пожалуйста, выбирайте</option>
+									  </select>   
+								    </div>
+								    <div class="layui-input-inline">
+								      <select name="city" lay-verify="required">
+										  <option value="">Пожалуйста, выбирайте</option>
+									  </select>   
+									 </div>
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>Ответственное лицо</td>
+							    <td colspan="3">
+							      <input type="text" name="principal" required  lay-verify="required" placeholder="Ф.И.О. ответственного лица" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>Контактное лицо</td>
+							    <td colspan="3">
+							      <input type="text" name="contactperson" placeholder="Ф.И.О. контактного лица" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>Должность контактного лица</td>
+							    <td colspan="3">
+							      <input type="text" name="jobtitle" placeholder="Заполните должность контактного лица" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>Отрасль деятельности</td>
+							    <td colspan="3">
+							      <select name="industryid" lay-verify="">
+							    	<#list industries as industry>
+							    	<option value="${industry.id}">${industry.chineseName}</option>
+							    	</#list>
+								  </select>
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>Свойство компании</td>
+							    <td colspan="3">
+							    	<#list companytypes as type>
+							      <input type="radio" name="exhibitorsNatureId" value="${type.id}" title="${type.chineseName}">
+							      </#list>
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>Сфера деятельности</td>
+							    <td colspan="3">
+							      <textarea name="busscope" placeholder="Заполните  сферу деятельности компании" class="layui-textarea"></textarea>
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>Клиент, который желаете познакомиться</td>
+							    <td colspan="3">
+							      <textarea name="hopecustomers" placeholder="Заполните клиент, с которым вы желаете познакомиться." class="layui-textarea"></textarea>
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>Краткое описание компании</td>
+							    <td colspan="3">
+							      <textarea name="companyprofile" placeholder="Заполните краткое описание компании" class="layui-textarea"></textarea>
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>Намерение закупки</td>
+							    <td colspan="3">
+							      <textarea name="purchaseintention" required  lay-verify="required" placeholder="Заполните намерение закупки" class="layui-textarea"></textarea>
+							    </td>
+							  </tr>
+							<tr>
+								<td>logo компании</td>
+								<input type="hidden" name="companylogo" id="companylogo" value=""  />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnCompanylogo" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>Загрузите картинки
+									</button>
+									<button type="button" class="layui-btn" id="btnCompanylogoCropper">
+									  <i class="layui-icon">&#xe67c;</i>Ассистент по резке
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />Примечание: в формате jpg, размером меньше 100 КБ, в разрешении 200 (ш) на 200 (в) пикселей.</div>
+								</td>
+								<td colspan="2" class="prepic"><image src="" width="200" height="200" id="precompanylogo" /></td>
+							</tr>
+							<tr>
+								<td>*Свидетельство о государственной регистрации</td>
+								<input type="hidden" name="buslicensepath" id="buslicensepath" value=""  lay-verify="required" lay-reqText="Необходимо загрузить  Свидетельство о государственной регистрации"  />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="idpic" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>Загрузите картинки
+									</button>
+									<button type="button" class="layui-btn" id="btnBuslicensepathCropper">
+									  <i class="layui-icon">&#xe67c;</i>Ассистент по резке
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />Примечание: в формате jpg, размером меньше 2 МБ, в разрешении 800 (ш) на 1060 (в) пикселей</div>
+								</td>
+								<td colspan="2" class="prepic"><image src="" width="390" height="516" id="prebuslicensepath" /></td>
+							</tr>
+							<tr>
+								<td>*Обложка компании</td>
+								<input type="hidden" name="companypicture" id="companypicture" value=""  lay-verify="required" lay-reqText="Необходимо загрузить обложку компании"  />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnCompanyPicture" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>Загрузите картинки
+									</button>
+									<button type="button" class="layui-btn" id="btnCompanypictureCropper">
+									  <i class="layui-icon">&#xe67c;</i>Ассистент по резке
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />Примечание: в формате jpg, размером меньше 2 МБ, в разрешении 750 (ш) на 422 (в) пикселей.</div>
+								</td>
+								<td colspan="2" class="prepic"><image src="" width="390" height="219" id="precompanypicture" /></td>
+							</tr>
+							<tr>
+								<td>Рекламный ролик</td>
+								<input type="hidden" name="companyvideo" id="companyvideo" value="" />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnCompanyVideo">
+									  <i class="layui-icon">&#xe67c;</i>Загрузить видео
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />Примечание: в формате MP4, размером меньше 20 МБ, в разрешении 750 (ш) на 422 (в) пикселей</div>
+								</td>
+								<td colspan="2" class="prepic" id="videoContainer"><image src="" width="390" height="219" id="prebuslicensepath" /></td>
+							</tr>
+							<tr>
+								<td>*Карусель картинки</td>
+								<input type="hidden" name="companypictures" id="companypictures" value=""  />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnCompanyPictures" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>Загрузите картинки
+									</button>
+									<button type="button" class="layui-btn" id="btnCompanypicturesCropper">
+									  <i class="layui-icon">&#xe67c;</i>Ассистент по резке
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />Примечание: в формате jpg, размером меньше 2 МБ, количеством меньше 3 листа, в разрешении 750 (ш) на 422 (в) пикселей.</div>
+								</td>
+								<td colspan="2">
+									<div class="mutipic">
+									</div>
+								</td>
+							</tr>
+							<tr>
+							    <td>Адрес виртуального выставочного павильона</td>
+							    <td colspan="3">
+							      <input type="text" name="url" placeholder="Пожалуйста, заполните адрес виртуального выставочного зала" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							<tr class="papers-edit-bg"><td colspan="3" style="border-right: none;">Заявление и распределение стенда</td><td align="right"></td></tr>
+							
+							  <tr>
+							    <td><span>*</span>Экспонаты</td>
+							    <td colspan="3">
+							      <input type="text" name="exhibits" lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							<tr>
+								<td>*Распределение стенда</td>
+							    <td colspan="3" id="roomAndBooth">
+							    </td>
+							</tr>
+							<tr class="papers-edit-bg">
+								<td colspan="4" align="center">
+									<button type="button" class="layui-btn layui-btn-primary close">Отмена</button>
+									<button type="reset" class="layui-btn layui-btn-primary" id="reset" style="display:none">Переустановить</button>
+									<button type="button"  lay-submit class="layui-btn"  lay-filter="update" id="submit">Отправить</button>
+								</td>
+							</tr>
+							
+						</table>
+					</form>
+				</fieldset>
+			</div>
+		</div>
+	</div>
+	<div id="mutiPictureTemplate" style="display:none">
+	<div class="item">
+		<img src="" />
+		<div class="fc-upload-cover">
+			<i class="ivu-icon fa fa-eye"></i>
+			<i class="ivu-icon fa fa-trash"></i>
+		</div>
+	</div>
+	</div>

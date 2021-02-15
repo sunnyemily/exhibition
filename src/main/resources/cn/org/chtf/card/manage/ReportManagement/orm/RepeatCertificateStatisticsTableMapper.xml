@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.ReportManagement.dao.RepeatCertificateStatisticsTableMapper">
+	<!-- 证件类型 -->
+	<select id="getCardList" resultType="map">
+		SELECT DISTINCT
+			 chinesename
+		FROM
+			cm_certificate_type;
+	</select>
+	
+	<!-- 本届重复率 -->
+	<select id="repeatNumber" resultType="map">
+		SELECT COUNT(DISTINCT name) INTO @number FROM
+		(SELECT 
+				a.`session`,a.name,a.companyname,b.chinesename 
+			FROM
+				ebs_personnelcard a
+				INNER JOIN cm_certificate_type b on a.cardtype = b.id
+				<where>
+					<if test="chineseName != null and chineseName != ''">
+						b.chinesename in (#{chineseName}) 
+					</if>
+					<if test="session != null and session != ''">
+						AND b.session IN (${session})
+					</if>
+				</where>
+				) c;
+		SELECT CONCAT(LEFT(COUNT(*)/@number*100,5),'%') as repeatNumber FROM
+		(SELECT * FROM
+		(SELECT * FROM
+		(SELECT 
+				a.`session`,a.name,a.companyname,b.chinesename 
+			FROM
+				ebs_personnelcard as a
+				INNER JOIN cm_certificate_type as b on a.cardtype = b.id
+				<where>
+					<if test="chineseName != null and chineseName != ''">
+						b.chinesename in (#{chineseName}) 
+					</if>
+					<if test="session != null and session != ''">
+						AND b.session IN (${session})
+					</if>
+				</where>
+				) c GROUP BY `session`,`name`
+				) d GROUP BY `name` HAVING COUNT(*)>1
+				) e
+	</select>
+	
+	<!-- 届次 -->
+	<select id="getSessionList" resultType="map">
+		SELECT DISTINCT
+			 session
+		FROM
+			cm_certificate_type;
+	</select>
+	
+	<!-- 数据表  -->
+	<select id="selectInfoList" resultType="map">
+		SELECT name,companyname as companyName,chinesename as chineseName FROM
+		(SELECT * FROM
+		(SELECT 
+				a.`session`,a.name,a.companyname,b.chinesename 
+			FROM
+				ebs_personnelcard as a
+				INNER JOIN cm_certificate_type as b on a.cardtype = b.id and b.useable = 1
+			<where>
+				<if test="chineseName != null and chineseName != ''">
+					b.chinesename in (#{chineseName}) 
+				</if>
+				<if test="session != null and session != ''">
+					AND b.session IN (${session})
+				</if>
+			</where>
+		) c GROUP BY `session`,`name`
+		) d GROUP BY `name` HAVING COUNT(*)>1
+		limit #{index}, #{size}
+	</select>
+	
+	<!-- 导出  -->
+	<select id="queryExportInfo" resultType="map">
+		select
+			ifnull(a.personName,'') personName,
+			ifnull(a.session,0) session,
+			ifnull(a.tel,'') tel,
+			ifnull(a.phone,'') phone,
+			ifnull(a.website,'') website,
+			ifnull(a.email,'') email,
+			ifnull(a.fax,'') fax,
+			ifnull(a.postcode,'') postcode,
+			ifnull(a.jobtitle,'') jobtitle,
+			ifnull(a.chinesename,'') chinesename,
+			ifnull(a.cardnumber,'') cardnumber,
+			ifnull(c.name,'') country,
+			ifnull(d.name,'') province,
+			ifnull(a.companyname,'') companyname,
+			ifnull(f.dic_cn_name,'') bussinessarea,
+			ifnull(g.dic_cn_name,'') participants,
+			ifnull(h.dic_cn_name,'') purpose,
+			ifnull(i.dic_cn_name,'') visitexhibition,
+			ifnull(j.dic_cn_name,'') knowexhibition,
+			ifnull(k.dic_cn_name,'') businessnature,
+			ifnull(n.name,'') agentName,
+			ifnull(a.purchasingintention,'') purchasingintention
+		from (
+			SELECT * FROM (
+				SELECT * FROM (
+					SELECT
+						ifnull(a.name,'') personName,
+						ifnull(a.session,0) session,
+						ifnull(a.tel,'') tel,
+						ifnull(a.phone,'') phone,
+						ifnull(a.website,'') website,
+						ifnull(a.email,'') email,
+						ifnull(a.fax,'') fax,
+						ifnull(a.postcode,'') postcode,
+						ifnull(a.jobtitle,'') jobtitle,
+						ifnull(b.chinesename,'') chinesename,
+						ifnull(a.cardnumber,'') cardnumber,
+						ifnull(a.country,'') country,
+						ifnull(a.province,'') province,
+						ifnull(a.companyname,'') companyname,
+						ifnull(a.bussinessarea,'') bussinessarea,
+						ifnull(a.participants,'') participants,
+						ifnull(a.purpose,'') purpose,
+						ifnull(a.visitexhibition,'') visitexhibition,
+						ifnull(a.knowexhibition,'') knowexhibition,
+						ifnull(a.businessnature,'') businessnature,
+						ifnull(a.agent,'') agent,
+						ifnull(a.purchasingintention,'') purchasingintention
+					FROM
+						ebs_personnelcard AS a
+					INNER JOIN (
+						select id,session,chinesename from cm_certificate_type where useable = 1
+						<if test="chineseName != null and chineseName != ''">
+							AND chinesename = #{chineseName} 
+						</if>
+						<if test="session != null and session != ''">
+							AND session IN (${session})
+						</if>
+					) AS b ON a.cardtype = b.id and b.`session` = a.`session`
+				) c GROUP BY `session`,`personName`
+			) d GROUP BY `personName` HAVING COUNT(*)>1
+		) a
+		LEFT JOIN sys_country_area c ON a.country = c.id and c.use_flag = 'Y'
+		LEFT JOIN sys_country_area d ON a.province = d.id and d.use_flag = 'Y'
+		LEFT JOIN system_dictionaries f ON a.bussinessarea = f.dicid and f.useable = 1
+		LEFT JOIN system_dictionaries g ON a.participants = g.dicid and g.useable = 1
+		LEFT JOIN system_dictionaries h ON a.purpose = h.dicid and h.useable = 1
+		LEFT JOIN system_dictionaries i ON a.visitexhibition = i.dicid and i.useable = 1
+		LEFT JOIN system_dictionaries j ON a.knowexhibition = j.dicid and j.useable = 1
+		LEFT JOIN system_dictionaries k ON a.businessnature = k.dicid and k.useable = 1
+		LEFT JOIN web_member l on a.agent = l.member_id
+		LEFT JOIN web_member_session m on l.member_id = m.member_id AND m.id = a.session
+		LEFT JOIN pim_agent n on n.id = m.orgnization_id
+	</select>
+	
+	<!-- 记录数 -->
+	<select id="ListCount" resultType="int">
+		select count(*) from
+		(SELECT * FROM
+		(SELECT * FROM
+		(SELECT 
+				a.`session`,a.name,a.companyname,b.chinesename 
+			FROM
+				ebs_personnelcard as a
+				INNER JOIN cm_certificate_type as b on a.cardtype = b.id and b.useable = 1
+			<where>
+				<if test="chineseName != null and chineseName != ''">
+					b.chinesename in (#{chineseName}) 
+				</if>
+				<if test="session != null and session != ''">
+					AND b.session IN (${session})
+				</if>
+			</where>
+		) c GROUP BY `session`,`name`
+		) d GROUP BY `name` HAVING COUNT(*)>1
+		) e
+	</select>
+</mapper>

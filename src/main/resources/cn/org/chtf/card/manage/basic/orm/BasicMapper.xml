@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.org.chtf.card.manage.basic.dao.BasicMapper">
+  <resultMap id="BaseResultMap" type="cn.org.chtf.card.manage.basic.pojo.Basic">
+    <result column="menu_id" jdbcType="INTEGER" property="menuId" />
+    <result column="basic_updatetime" jdbcType="TIMESTAMP" property="basicUpdatetime" />
+    <result column="basic_operator" jdbcType="VARCHAR" property="basicOperator" /> 
+    <result column="basic_picture" jdbcType="VARCHAR" property="basicPicture" /> 
+    <result column="basic_content" jdbcType="LONGVARCHAR" property="basicContent" />
+    <result column="basic_intro" jdbcType="LONGVARCHAR" property="basicIntro" />
+    <result column="liveaddress" jdbcType="VARCHAR" property="liveaddress" /> 
+    <result column="videortmp" jdbcType="VARCHAR" property="videortmp" /> 
+    <result column="videoflv" jdbcType="VARCHAR" property="videoflv" /> 
+    <result column="videohls" jdbcType="VARCHAR" property="videohls" /> 
+    <result column="videoudp" jdbcType="VARCHAR" property="videoudp" /> 
+    <result column="starttime" jdbcType="VARCHAR" property="starttime" />
+    <result column="endtime" jdbcType="VARCHAR" property="endtime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    menu_id, basic_updatetime, basic_operator, basic_content,basic_picture,
+    basic_intro,liveaddress,videortmp,videoflv,videohls,videoudp,starttime,endtime
+  </sql>
+  <insert id="addBasic" parameterType="cn.org.chtf.card.manage.basic.pojo.Basic">
+    insert into web_basic
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="menuId != null">
+        menu_id,
+      </if>
+      <if test="basicUpdatetime != null">
+        basic_updatetime,
+      </if>
+      <if test="basicOperator != null">
+        basic_operator,
+      </if>
+      <if test="basicContent != null">
+        basic_content,
+      </if>
+      <if test="basicPicture != null">
+        basic_picture,
+      </if>
+      <if test="basicIntro != null">
+        basic_intro,
+      </if>
+      <if test="liveaddress != null">
+        liveaddress,
+      </if>
+		<if test="videortmp != null">
+		        videortmp,
+		      </if>
+		<if test="videoflv != null">
+		        videoflv,
+		      </if>
+		<if test="videohls != null">
+		        videohls,
+		      </if>
+		<if test="videoudp != null">
+		        videoudp,
+		      </if>
+	  <if test="starttime != null">
+        starttime,
+      </if>
+      <if test="endtime != null">
+        endtime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="menuId != null">
+        #{menuId,jdbcType=INTEGER},
+      </if>
+      <if test="basicUpdatetime != null">
+        #{basicUpdatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="basicOperator != null">
+        #{basicOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="basicContent != null">
+        #{basicContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="basicPicture != null">
+        #{basicPicture,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="basicIntro != null">
+        #{basicIntro,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="liveaddress != null">
+		    #{liveaddress,jdbcType=VARCHAR},
+		</if>
+		<if test="videortmp != null">
+		    #{videortmp,jdbcType=VARCHAR},
+		</if>
+		<if test="videoflv != null">
+		    #{videoflv,jdbcType=VARCHAR},
+		</if>
+		<if test="videohls != null">
+		    #{videohls,jdbcType=VARCHAR},
+		</if>
+		<if test="videoudp != null">
+		    #{videoudp,jdbcType=VARCHAR},
+		</if>
+	  <if test="starttime != null">
+        #{starttime,jdbcType=VARCHAR},
+      </if>
+      <if test="endtime != null">
+        #{endtime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="getBasicByMenuId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from web_basic
+    where menu_id = #{menuId,jdbcType=INTEGER} LIMIT 1
+  </select>
+  <delete id="deleteBasicByMenuId" parameterType="java.lang.Integer">
+  	delete 
+    from web_basic
+    where menu_id = #{menuId,jdbcType=INTEGER}
+  </delete>
+  <update id="updateBasicByMenuId" parameterType="cn.org.chtf.card.manage.basic.pojo.Basic">
+  	update web_basic
+    <set>
+      <if test="basicUpdatetime != null">
+        basic_updatetime = #{basicUpdatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="basicOperator != null">
+        basic_operator = #{basicOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="basicContent != null">
+        basic_content = #{basicContent,jdbcType=VARCHAR},
+      </if>
+      <if test="basicPicture != null">
+        basic_picture =#{basicPicture,jdbcType=VARCHAR},
+      </if>
+      <if test="basicIntro != null">
+        basic_intro =#{basicIntro,jdbcType=VARCHAR},
+      </if>
+      <if test="liveaddress != null">
+		   liveaddress = #{liveaddress,jdbcType=VARCHAR},
+		</if>
+		<if test="videortmp != null">
+		   videortmp = #{videortmp,jdbcType=VARCHAR},
+		</if>
+		<if test="videoflv != null">
+		   videoflv = #{videoflv,jdbcType=VARCHAR},
+		</if>
+		<if test="videohls != null">
+		   videohls = #{videohls,jdbcType=VARCHAR},
+		</if>
+		<if test="videoudp != null">
+		   videoudp = #{videoudp,jdbcType=VARCHAR},
+		</if>
+		<if test="starttime != null">
+        starttime = #{starttime,jdbcType=VARCHAR},
+      </if>
+      <if test="endtime != null">
+        endtime = #{endtime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where menu_id =#{menuId,jdbcType=INTEGER}
+  </update>
+</mapper>

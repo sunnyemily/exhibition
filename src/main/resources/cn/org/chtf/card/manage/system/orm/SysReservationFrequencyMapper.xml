@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.system.dao.SysReservationFrequencyMapper">
+	
+	<!-- 查询表中所有信息 -->
+	<select id="list" resultType="map">
+		SELECT 
+			id,
+			reserDate as reserDate,
+			frequencyPerson as frequencyPerson
+			FROM Sys_reservation_frequency
+			 limit #{index}, #{size};
+	</select>
+	
+	<!-- 查询所有记录总数 -->
+	<select id="listcount" resultType="int">
+		SELECT 
+			count(*)
+			 FROM Sys_reservation_frequency
+			 <where>
+				 <if test="id != null and id != ''">
+				 	id = #{id}
+				 </if>
+			</where>;
+    </select>
+    <!-- 查询单条数据 -->
+    <select id="findById" resultType="map">
+		SELECT 
+			id,
+			reserDate as reserDate,
+			frequencyPerson as frequencyPerson
+			 FROM Sys_reservation_frequency
+			 where id = #{id};
+	</select>
+	<!-- 根据id删除数据 -->
+	<delete id="deleteById">
+		DELETE FROM Sys_reservation_frequency WHERE id=#{id};
+	</delete>
+	 
+	 <!-- 添加数据 -->
+	 <insert id="saveData" >
+	 	INSERT INTO Sys_reservation_frequency 
+	 		(reserDate,frequencyPerson)
+	 		values(#{reserDate},#{frequencyPerson});
+	 </insert>
+	 
+	 <!-- 更新字段 -->
+	 <update id="updateData" >
+	 	update Sys_reservation_frequency 
+	 	<set>
+			<if test="reserDate != null">`reserDate` = #{reserDate},</if>
+			<if test="frequencyPerson != null">`frequencyPerson` = #{frequencyPerson}</if>
+		</set>
+		where id = #{id};
+	 </update>
+	 
+	 <!-- 判断预约时间是否重复 -->
+	 <select id="selectTime" resultType="int">
+	 	SELECT 
+			count(*)
+			 FROM Sys_reservation_frequency
+			 <where>
+				 reserDate = #{reserDate}
+				</where>;
+	 </select>
+	 
+</mapper>

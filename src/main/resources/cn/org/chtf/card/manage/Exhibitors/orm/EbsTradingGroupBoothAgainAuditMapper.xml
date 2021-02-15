@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.Exhibitors.dao.EbsTradingGroupBoothAgainAuditMapper">
+
+	<select id="list" resultType="map">
+        SELECT
+        	c.id companyId,
+			c.chinesename,
+			cc.id tradingGroupId,
+			CONCAT(IFNULL(f.submitNumber, 0),'/',IFNULL(f.notPassNumber, 0),'/',IFNULL(f.waitCheckNumber, 0),'/',IFNULL(i.totalNumber, 0),'/',IFNULL(f.printNumber, 0)) numbers,
+			i.boothNumber,
+			i.booths,
+			DATE(c.addtime) addtime,
+			j.exhibition_office_audit_status exhibitionOfficeAuditStatus,
+			j.finance_office_audit_status financeOfficeAuditStatus,
+			IFNULL(l.productNumber, 0) productNumber,
+			IFNULL(l.waitAuditProductNumber, 0) waitAuditProductNumber,
+			IFNULL(l.auditedProductNumber, 0) auditedProductNumber,
+			IFNULL(l.passProductNumber, 0) passProductNumber,
+			IFNULL(l.noPassProductNumber, 0) noPassProductNumber,
+			IFNULL(ebs_booth_again_audit.exhibition_area_administrator_audit_result, 0) exhibitionAreaAdministratorAuditResult,
+			ebs_booth_again_audit.exhibition_area_administrator_audit_reason exhibitionAreaAdministratorAuditReason,
+			ebs_booth_again_audit.financial_office_administrator_audit_result financialOfficeAdministratorAuditResult,
+			ebs_booth_again_audit.financial_office_administrator_audit_reason financialOfficeAdministratorAuditReason,
+			ebs_booth_again_audit.make_evidence_center_administrator_audit_result makeEvidenceCenterAdministratorAuditResult,
+			ebs_booth_again_audit.make_evidence_center_administrator_audit_reason makeEvidenceCenterAdministratorAuditReason
+		FROM
+			web_member a
+		INNER JOIN web_member_session b ON a.member_id = b.member_id and a.member_type = 0 AND a.member_status = 0 AND b.id = #{session}
+		INNER JOIN pim_agent bb ON b.orgnization_id = bb.id and bb.type = 0 and bb.isopen = 1
+		INNER JOIN ebs_tradinggroup cc ON bb.tradinggroupid = cc.id
+		INNER JOIN ebs_companyinfo c ON cc.id = c.tradinggroupid AND c.useable = 1 and c.session = b.id
+		INNER JOIN system_user_rights ON cc.id = system_user_rights.tradinggroupid
+		and system_user_rights.session = b.id and system_user_rights.userid = #{userId}
+		INNER JOIN (
+			SELECT
+				company_id,
+				COUNT(*) boothNumber,
+				COUNT(*)*3 totalNumber,
+				GROUP_CONCAT(NAME) booths
+			FROM
+				ebs_booth
+			WHERE
+				SESSION = #{session} AND useable = 1 AND company_id != 0
+			GROUP BY company_id
+		) i ON c.id = i.company_id
+		INNER JOIN ebs_booth_audit j ON c.id = j.company_id AND j.session_id = b.id
+		and exhibition_office_audit_status = 1 and finance_office_audit_status = 1
+		LEFT JOIN (
+			SELECT
+				ebs_personnelcard.companyid,
+				COUNT(ebs_personnelcard.id) submitNumber,
+				sum(IF(ebs_personnelcard.status=-1,1,0)) notPassNumber,
+				sum(IF(ebs_personnelcard.status=0,1,0)) waitCheckNumber,
+				sum(IF(ebs_personnelcard.printstatus=2,1,0)) printNumber
+			from ebs_personnelcard
+			inner join web_member on web_member.member_id = ebs_personnelcard.agent and ebs_personnelcard.session = #{session}
+			inner join web_member_session on web_member.member_id = web_member_session.member_id and ebs_personnelcard.session = web_member_session.id
+			inner join pim_agent on web_member_session.orgnization_id = pim_agent.id and pim_agent.makeevidence = 1
+			inner join cm_certificate_type on cm_certificate_type.type=0 and ebs_personnelcard.cardtype=cm_certificate_type.id
+			and cm_certificate_type.useable = 1 and cm_certificate_type.session = ebs_personnelcard.session and cm_certificate_type.isexhibitor = 1
+			GROUP BY ebs_personnelcard.companyid
+		) f ON c.id = f.companyid
+		left join (
+			select company_id,count(*) productNumber,
+			SUM(case when product_status=0 then 1 else 0 end) waitAuditProductNumber,
+			SUM(case when product_status=-1 then 1 else 0 end) noPassProductNumber,
+			SUM(case when product_status=1 then 1 else 0 end) passProductNumber,
+			SUM(case when product_status!=0 then 1 else 0 end) auditedProductNumber
+			from web_product
+			where session = #{session} group by company_id
+		) l on c.id = l.company_id
+		left join ebs_booth_again_audit on c.id = ebs_booth_again_audit.company_id and ebs_booth_again_audit.session = b.id
+		<where>
+	        <if test="tradingGroupId != null and tradingGroupId != ''">
+	            and FIND_IN_SET(#{tradingGroupId}, i.tradinggroupIds)
+	        </if>
+	        <if test="boothName != null and boothName != ''">
+	            and upper(booths) like concat ('%',upper(#{boothName}),'%')
+	        </if>
+	        <if test="companyName != null and companyName != ''">
+	            and upper(c.chinesename) like concat ('%',upper(#{companyName}),'%')
+	        </if>
+		</where>
+        order by c.addtime desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listCount" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			web_member a
+		INNER JOIN web_member_session b ON a.member_id = b.member_id and a.member_type = 0 AND a.member_status = 0 AND b.id = #{session}
+		INNER JOIN pim_agent bb ON b.orgnization_id = bb.id and bb.type = 0 and bb.isopen = 1
+		INNER JOIN ebs_tradinggroup cc ON bb.tradinggroupid = cc.id
+		INNER JOIN ebs_companyinfo c ON cc.id = c.tradinggroupid AND c.useable = 1 and c.session = b.id
+		INNER JOIN system_user_rights ON cc.id = system_user_rights.tradinggroupid
+		and system_user_rights.session = b.id and system_user_rights.userid = #{userId}
+		INNER JOIN (
+			SELECT
+				company_id,
+				COUNT(*) boothNumber,
+				COUNT(*)*3 totalNumber,
+				GROUP_CONCAT(NAME) booths
+			FROM
+				ebs_booth
+			WHERE
+				SESSION = #{session} AND useable = 1 AND company_id != 0
+			GROUP BY company_id
+		) i ON c.id = i.company_id
+		INNER JOIN ebs_booth_audit j ON c.id = j.company_id AND j.session_id = b.id
+		and exhibition_office_audit_status = 1 and finance_office_audit_status = 1
+		LEFT JOIN (
+			SELECT
+				ebs_personnelcard.companyid,
+				COUNT(ebs_personnelcard.id) submitNumber,
+				sum(IF(ebs_personnelcard.status=-1,1,0)) notPassNumber,
+				sum(IF(ebs_personnelcard.status=0,1,0)) waitCheckNumber,
+				sum(IF(ebs_personnelcard.printstatus=2,1,0)) printNumber
+			from ebs_personnelcard
+			inner join web_member on web_member.member_id = ebs_personnelcard.agent and ebs_personnelcard.session = #{session}
+			inner join web_member_session on web_member.member_id = web_member_session.member_id and ebs_personnelcard.session = web_member_session.id
+			inner join pim_agent on web_member_session.orgnization_id = pim_agent.id and pim_agent.makeevidence = 1
+			inner join cm_certificate_type on cm_certificate_type.type=0 and ebs_personnelcard.cardtype=cm_certificate_type.id
+			and cm_certificate_type.useable = 1 and cm_certificate_type.session = ebs_personnelcard.session and cm_certificate_type.isexhibitor = 1
+			GROUP BY ebs_personnelcard.companyid
+		) f ON c.id = f.companyid
+		left join (
+			select company_id,count(*) productNumber,
+			SUM(case when product_status=0 then 1 else 0 end) waitAuditProductNumber,
+			SUM(case when product_status=-1 then 1 else 0 end) noPassProductNumber,
+			SUM(case when product_status=1 then 1 else 0 end) passProductNumber,
+			SUM(case when product_status!=0 then 1 else 0 end) auditedProductNumber
+			from web_product
+			where session = #{session} group by company_id
+		) l on c.id = l.company_id
+		left join ebs_booth_again_audit on c.id = ebs_booth_again_audit.company_id and ebs_booth_again_audit.session = b.id
+		<where>
+	        <if test="tradingGroupId != null and tradingGroupId != ''">
+	            and FIND_IN_SET(#{tradingGroupId}, i.tradinggroupIds)
+	        </if>
+	        <if test="boothName != null and boothName != ''">
+	            and upper(booths) like concat ('%',upper(#{boothName}),'%')
+	        </if>
+	        <if test="companyName != null and companyName != ''">
+	            and upper(c.chinesename) like concat ('%',upper(#{companyName}),'%')
+	        </if>
+		</where>
+	</select>
+
+    <insert id="insertAuditInfo">
+    	insert into ebs_booth_again_audit (
+    		company_id,
+			session,
+			exhibition_area_administrator_audit_result,
+			exhibition_area_administrator_audit_reason
+		) values (
+			#{companyId},
+			#{session},
+			1,
+			#{applyAgainAuditReason}
+		)
+    </insert>
+
+    <update id="updateAuditInfo">
+    	update ebs_booth_again_audit
+		<set>
+	    	<if test="act == '财务负责人重审确认'">
+				financial_office_administrator_audit_result = #{auditResult},
+				financial_office_administrator_audit_reason = #{auditReason},
+	    	</if>
+	    	<if test="act == '制证中心负责人重审确认'">
+				make_evidence_center_administrator_audit_result = #{auditResult},
+				make_evidence_center_administrator_audit_reason = #{auditReason},
+	    	</if>
+		</set>
+		<where>
+			company_id = #{companyId} and session = #{session}
+		</where>
+    </update>
+</mapper>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.org.chtf.card.manage.memberlog.dao.MemberLogDAO">
+  <resultMap id="BaseResultMap" type="cn.org.chtf.card.manage.memberlog.pojo.MemberLog">
+    <id column="mlog_id" jdbcType="INTEGER" property="mlogId" />
+    <result column="member_id" jdbcType="INTEGER" property="memberId" />
+    <result column="mlog_ip" jdbcType="VARCHAR" property="mlogIp" />
+    <result column="mlog_datetime" jdbcType="TIMESTAMP" property="mlogDatetime" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="cn.org.chtf.card.manage.memberlog.pojo.MemberLog">
+    <result column="mlog_description" jdbcType="LONGVARCHAR" property="mlogDescription" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    mlog_id, member_id, mlog_ip, mlog_datetime
+  </sql>
+  <sql id="Blob_Column_List">
+    mlog_description
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from web_member_log
+    where mlog_id = #{mlogId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from web_member_log
+    where mlog_id = #{mlogId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.org.chtf.card.manage.memberlog.pojo.MemberLog">
+    insert into web_member_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="mlogId != null">
+        mlog_id,
+      </if>
+      <if test="memberId != null">
+        member_id,
+      </if>
+      <if test="mlogIp != null">
+        mlog_ip,
+      </if>
+      <if test="mlogDatetime != null">
+        mlog_datetime,
+      </if>
+      <if test="mlogDescription != null">
+        mlog_description,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="mlogId != null">
+        #{mlogId,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null">
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="mlogIp != null">
+        #{mlogIp,jdbcType=VARCHAR},
+      </if>
+      <if test="mlogDatetime != null">
+        #{mlogDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mlogDescription != null">
+        #{mlogDescription,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.org.chtf.card.manage.memberlog.pojo.MemberLog">
+    update web_member_log
+    <set>
+      <if test="memberId != null">
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="mlogIp != null">
+        mlog_ip = #{mlogIp,jdbcType=VARCHAR},
+      </if>
+      <if test="mlogDatetime != null">
+        mlog_datetime = #{mlogDatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mlogDescription != null">
+        mlog_description = #{mlogDescription,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where mlog_id = #{mlogId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.org.chtf.card.manage.memberlog.pojo.MemberLog">
+    update web_member_log
+    set member_id = #{memberId,jdbcType=INTEGER},
+      mlog_ip = #{mlogIp,jdbcType=VARCHAR},
+      mlog_datetime = #{mlogDatetime,jdbcType=TIMESTAMP},
+      mlog_description = #{mlogDescription,jdbcType=LONGVARCHAR}
+    where mlog_id = #{mlogId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.org.chtf.card.manage.memberlog.pojo.MemberLog">
+    update web_member_log
+    set member_id = #{memberId,jdbcType=INTEGER},
+      mlog_ip = #{mlogIp,jdbcType=VARCHAR},
+      mlog_datetime = #{mlogDatetime,jdbcType=TIMESTAMP}
+    where mlog_id = #{mlogId,jdbcType=INTEGER}
+  </update>
+</mapper>

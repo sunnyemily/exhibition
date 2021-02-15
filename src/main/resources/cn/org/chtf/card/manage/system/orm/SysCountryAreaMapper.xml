@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.system.dao.SysCountryAreaMapper">
+	
+	<select id="loadCountry" resultType="map">
+		SELECT id, name FROM sys_country_area WHERE parent_id = 0 AND use_flag = 'Y' ORDER BY order_num
+	</select>
+	
+	<select id="loadProvince" resultType="map">
+		SELECT
+			b.id,
+			b.NAME
+		FROM
+			sys_country_area b
+		WHERE
+			b.parent_id = #{parentId}
+		AND b.use_flag = 'Y'
+		ORDER BY
+			b.order_num
+	</select>
+	
+	<select id="loadCity" resultType="map">
+		SELECT
+			id,
+			NAME
+		FROM
+			sys_country_area
+		WHERE
+			(parent_id = #{parentId} OR (id = #{parentId} AND is_foreign = 1))
+		AND use_flag = 'Y'
+		ORDER BY
+			order_num
+	</select>
+	
+    <select id="findById" resultType="cn.org.chtf.card.manage.system.model.SysCountryArea">
+        select
+			a.id as id,
+			a.name as name,
+			a.is_foreign as isForeign,
+			a.order_num as orderNum,
+			a.parent_id as parentId,
+			a.add_time as addTime,
+			a.update_time as updateTime,
+			a.use_flag as useFlag
+        from sys_country_area as a
+        where a.id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.system.model.SysCountryArea">
+        select
+			a.id as id,
+			a.name as name,
+			a.is_foreign as isForeign,
+			a.order_num as orderNum,
+			a.parent_id as parentId,
+			a.add_time as addTime,
+			a.update_time as updateTime,
+			a.use_flag as useFlag
+        from sys_country_area as a
+        <where>
+			<if test="id != null and id != ''">
+				and a.id = #{id}
+			</if>
+			<if test="name != null and name != ''">
+				and a.name = #{name}
+			</if>
+			<if test="isForeign != null and isForeign != ''">
+				and a.is_foreign = #{isForeign}
+			</if>
+			<if test="orderNum != null and orderNum != ''">
+				and a.order_num = #{orderNum}
+			</if>
+			<if test="parentId != null and parentId != ''">
+				and a.parent_id = #{parentId}
+			</if>
+			<if test="addTime != null and addTime != ''">
+				and a.add_time = #{addTime}
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				and a.update_time = #{updateTime}
+			</if>
+			<if test="useFlag != null and useFlag != ''">
+				and a.use_flag = #{useFlag}
+			</if>
+        </where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.system.model.SysCountryArea">
+        select
+			a.id as id,
+			a.name as name,
+			a.is_foreign as isForeign,
+			a.order_num as orderNum,
+			a.parent_id as parentId,
+			a.add_time as addTime,
+			a.update_time as updateTime,
+			a.use_flag as useFlag
+        from sys_country_area as a
+        <where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                and a.name like concat('%',#{name},'%')
+            </if>
+            <if test="isForeign != null and isForeign != ''">
+                and a.is_foreign = #{isForeign}
+            </if>
+            <if test="orderNum != null and orderNum != ''">
+                and a.order_num = #{orderNum}
+            </if>
+            <if test="parentId != null and parentId != ''">
+                and a.parent_id = #{parentId}
+            </if>
+            <if test="addTime != null and addTime != ''">
+                and a.add_time = #{addTime}
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                and a.update_time = #{updateTime}
+            </if>
+            <if test="useFlag != null and useFlag != ''">
+                and a.use_flag = #{useFlag}
+            </if>
+        </where>
+        order by a.order_num, a.add_time desc
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(id) FROM sys_country_area a
+		<where>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                and a.name like concat('%',#{name},'%')
+            </if>
+            <if test="isForeign != null and isForeign != ''">
+                and a.is_foreign = #{isForeign}
+            </if>
+            <if test="orderNum != null and orderNum != ''">
+                and a.order_num = #{orderNum}
+            </if>
+            <if test="parentId != null and parentId != ''">
+                and a.parent_id = #{parentId}
+            </if>
+            <if test="addTime != null and addTime != ''">
+                and a.add_time = #{addTime}
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                and a.update_time = #{updateTime}
+            </if>
+            <if test="useFlag != null and useFlag != ''">
+                and a.use_flag = #{useFlag}
+            </if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.system.model.SysCountryArea">
+        insert into sys_country_area(
+        	<trim suffixOverrides=",">
+                <if test="id != null">`id`,</if>
+                <if test="name != null">`name`,</if>
+                <if test="isForeign != null">`is_foreign`,</if>
+                <if test="orderNum != null">`order_num`,</if>
+                <if test="parentId != null">`parent_id`,</if>
+                <if test="addTime != null">`add_time`,</if>
+                <if test="updateTime != null">`update_time`,</if>
+                <if test="useFlag != null">`use_flag`</if>
+			</trim>
+		) values (
+        	<trim suffixOverrides=",">
+                <if test="id != null">#{id},</if>
+                <if test="name != null">#{name},</if>
+                <if test="isForeign != null">#{isForeign},</if>
+                <if test="orderNum != null">#{orderNum},</if>
+                <if test="parentId != null">#{parentId},</if>
+                <if test="addTime != null">#{addTime},</if>
+                <if test="updateTime != null">#{updateTime},</if>
+                <if test="useFlag != null">#{useFlag}</if>
+			</trim>
+		)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.system.model.SysCountryArea">
+        update sys_country_area
+        <set>
+			<if test="name != null">`name` = #{name},</if>
+			<if test="isForeign != null">`is_foreign` = #{isForeign},</if>
+			<if test="orderNum != null">`order_num` = #{orderNum},</if>
+			<if test="parentId != null">`parent_id` = #{parentId},</if>
+			<if test="addTime != null">`add_time` = #{addTime},</if>
+			<if test="updateTime != null">`update_time` = #{updateTime},</if>
+			<if test="useFlag != null">`use_flag` = #{useFlag}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from sys_country_area where id = #{id}
+    </delete>
+</mapper>

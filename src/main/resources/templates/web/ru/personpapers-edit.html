@@ -1,0 +1,195 @@
+    <div class="modal inmodal" id="edit-model" style="display:none">
+		<div class="modal-content animated bounceInUp">
+			<div class="ibox-content">
+				<fieldset class="layui-elem-field layui-field-title" style="border-top:0px">
+					<form class="layui-form layui-form-pane" action="" id="editform">
+					    <input type="hidden" name="id" value="0"  />
+					    <input type="hidden" name="session" value="${exhibitionSessionId}"  />
+					    <input type="hidden" name="cardnature" value="0"  />
+					    <input type="hidden" name="isback" value="1"  />
+						<table width="100%"  class="layui-table form-content">
+						<#if isOut??><input type="hidden" name="isout" value="${isOut}" /></#if>
+							<tr class="papers-edit-bg"><td colspan="3" style="border-right: none;">Добавить${certificateModal.chinesename}</td><td align="right"><a class="layui-icon layui-icon-close close"></a></td></tr>
+							<tr>
+								<td>*Ф.И.О</td>
+								<td width="40%"><input class="layui-input" autocomplete="off" id="name" name="name" type="text"  lay-verify="required"></td>
+								<td>*Пол</td>
+								<td>
+									<input type="radio" name="sex" value="0" title="男" checked>
+      								<input type="radio" name="sex" value="1" title="女">
+      							</td>
+							</tr>
+							<tr>
+								<td>*Страна/регион</td>
+								<td>
+									<div class="layui-input-inline" style="width:30%">
+								      <select name="country" lay-verify="required" lay-filter="country"  lay-reqText="Необходимо выбрать страну" >
+										  <option value="">Пожалуйста, выбирайте</option>
+									  </select>   
+								    </div>
+								    <div class="layui-input-inline" style="width:30%">
+								      <select name="province" lay-verify="required" lay-filter="province"  lay-reqText="Необходимо выбрать регион" >
+										  <option value="">Пожалуйста, выбирайте</option>
+									  </select>   
+								    </div>
+								    <div class="layui-input-inline" style="width:30%" >
+								      <select name="city" lay-verify="required"  lay-reqText="Необходимо выбрать город">
+										  <option value="">Пожалуйста, выбирайте</option>
+									  </select>   
+								    </div>
+								</td>
+								<td>*Должность</td>
+								<td><input class="layui-input" autocomplete="off" id="jobtitle" name="jobtitle" type="text"  lay-verify="required"></td>
+							</tr>
+							<tr>
+								<td>*Наименование компании</td>
+								<td><#if isExhibitor!=0>
+							      <select name="companyid" id="companyid">
+							      	<#if companys??>
+							      	<#list companys as c>
+									<option value="${c.id}" <#if ((company.id)??&&c.id==company.id) >selected</#if> >${c.chinesename}</option>
+									</#list>
+									<#else>
+									<option value="${company.id!'0'}">${company.chinesename!''}</option>
+									</#if>
+								  </select>
+								  <#else>
+								  	<input class="layui-input" autocomplete="off" id="companyname" name="companyname" type="text"  lay-verify="required" value="<#if company??>${company.chinesename!''}</#if>" <#if company??>disabled</#if> />
+								  </#if>
+								</td>
+								<td>Тип документа</td>
+								<td>
+							      <select name="cardtype" id="cardtype" lay-filter="cardtype">
+								  </select>
+								</td>
+							</tr>
+							<tr>
+								<td>*Удостоверение личности/паспорт/пресс-карта</td>
+								<td>
+									<input type="radio" value="0" checked id="idcardpassport1" title="Удостоверение личности" name="idcardpassport">
+									<input type="radio" value="1" name="idcardpassport" id="idcardpassport2" title="паспорт">
+									<input type="radio" value="2" name="idcardpassport" id="idcardpassport3" title="пресс-карта">
+									
+								</td>
+								<td>*Номер документа</td>
+								<td><input class="layui-input" autocomplete="off" id="cardnumber" name="cardnumber" type="text"  lay-verify="required|checkID"></td>
+							</tr>
+							<tr>
+								<td>Индекс</td>
+								<td><input class="layui-input" autocomplete="off" id="postcode" name="postcode" type="text"></td>
+								<td>Адрес</td>
+								<td><input class="layui-input" autocomplete="off" id="address" name="address" type="text"></td>
+							</tr>
+							<tr>
+								<td>Адрес сайта компании</td>
+								<td colspan="3"><input class="layui-input" autocomplete="off" id="website" name="website" type="text"></td>
+							</tr>
+							<tr>
+								<td>* Номер мобильного телефона</td>
+								<td><input class="layui-input" autocomplete="off" id="phone" name="phone" type="text" lay-verify="required"></td>
+								<td>Электронная почта</td>
+								<td><input class="layui-input" autocomplete="off" id="email" name="email" type="text"></td>
+							</tr>
+							<tr>
+								<td>Телефон</td>
+								<td><input class="layui-input" autocomplete="off" id="tel" name="tel" type="text"></td>
+								<td>Факс</td>
+								<td><input class="layui-input" autocomplete="off" id="fax" name="fax" type="text"></td>
+							</tr>
+							<#if certificateModal.issurvey==1>
+							<tr>
+								<td>*Категория деятельности</td>
+								<td>	
+							      <select id="yewulingyu" name="bussinessarea" lay-verify="required">
+								  </select>
+								</td>
+								<td>*Ваш роль во время участия в ЭКСПО</td>
+								<td>	
+							      <select name="participants" id="canhuijuese" lay-verify="required">
+								  </select>
+								</td>
+							</tr>
+							<tr>
+								<td>*Цель участия</td>
+								<td colspan="3" id="purpose">
+								</td>
+							</tr>
+							<tr>
+								<td>*Выставочный сектор, который вас интересует</td>
+								<td colspan="3">
+								<select id="xcgdzq" name="visitexhibition" lay-verify="required">
+								</select>
+								</td>
+							</tr>
+							<tr>
+								<td>*Откуда вы узнаваете о ЭКСПО?</td>
+								<td colspan="3" id="knowexhibition">
+								</td>
+							</tr>
+							<tr>
+								<td>*Сфера деятельности</td>
+								<td colspan="3" id="businessnature">
+								</td>
+							</tr>
+							</#if>
+							<tr>
+								<td>*Фото удостоверения личности</td>
+								<input type="hidden" name="imagepath" id="imagepath" value=""  lay-verify="required" lay-reqText="Необходимо загрузить фото на удостоверение личности" />
+								<td>
+									<button type="button" class="layui-btn" id="pic" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>Необходимо загрузить фото
+									</button>
+									<button type="button" class="layui-btn" id="btnimagepathCropper">
+									  <i class="layui-icon">&#xe67c;</i>Ассистент по резке
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />Фото для  удостоверения личности: в формате jpg, размером меньше 2 МБ, в разрешении 600 (ш) на 749(в) пикселей, на красном, белом и синем фоне.
+								</td>
+								<td colspan="2" class="prepic"><image src="" width="195" height="243" id="preimagepath" /></td>
+							</tr>
+							<tr>
+								<td>*<#if certificateModal.chinesename=="пресс-карта" >Пропуск для корреспондента<#else>Удостоверение личности（паспорт）</#if></td>
+								<input type="hidden" name="idphotopath" id="idphotopath" value=""  lay-verify="required" lay-reqText="Необходимо загрузить удостоверение личности (паспорт)"  />
+								<td>
+									<button type="button" class="layui-btn" id="idpic" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>Необходимо загрузить фото
+									</button>
+									<button type="button" class="layui-btn" id="btnidphotopathCropper">
+									  <i class="layui-icon">&#xe67c;</i>Ассистент по резке
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />Удостоверение личности вторго поколения: в формате jpg, размером меньше 2 МБ, в разрешении 693 (ш) на 472 (в) пикселей</div>
+								</td>
+								<td colspan="2" class="prepic"><image src="" width="195" height="132" id="preidphotopath" /></td>
+							</tr>
+							<#if certificateModal.chinesename=='Бейдж "Покупатель"'>
+							<tr>
+								<td>*Свидетельство о государственной регистрации</td>
+								<input type="hidden" name="businesslicense" id="businesslicense" value=""  lay-verify="required" lay-reqText="Необходимо загрузить  Свидетельство о государственной регистрации"  />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnBusinesslicenseCropper">
+									  <i class="layui-icon">&#xe67c;</i>Ассистент по резке
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />Примечание: в формате jpg, размером меньше 2 МБ, в разрешении 800 (ш) на 1060 (в) пикселей</div>
+								</td>
+								<td colspan="2" class="prepic"><image src="" width="195" height="258" id="prebusinesslicense" /></td>
+							</tr>
+							<tr>
+								<td>*Намерение закупки</td>
+								<td colspan="3">
+									<textarea name="purchasingintention" required  lay-verify="required" placeholder="Заполните намерение закупки" class="layui-textarea"></textarea>
+								</td>
+							</tr>
+							</#if>
+							<tr class="papers-edit-bg">
+								<td colspan="4" align="center">
+									<button type="button" class="layui-btn layui-btn-primary close">Отмена</button>
+									<button type="reset" class="layui-btn layui-btn-primary" id="reset" style="display:none">Переустановить</button>
+									<button type="button"  lay-submit class="layui-btn"  lay-filter="update">Отправить</button>
+								</td>
+							</tr>
+							
+						</table>
+					</form>
+				</fieldset>
+			</div>
+		</div>
+	</div>

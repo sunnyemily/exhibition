@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>参展商管理-交易团管理</title>
+		<meta content="webkit" name="renderer">
+		<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+		<meta content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" name="viewport"/>
+		<link rel="stylesheet" href="/manage/css/xadmin.css">
+		<link rel="stylesheet" href="/manage/css/font.css">
+		<link href="/manage/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="/manage/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+		<link href="/manage/css/animate.css" rel="stylesheet">
+		<link href="/manage/css/style.css?v=4.1.0" rel="stylesheet">
+		<link href="/manage/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<script charset="utf-8" src="/manage/js/jquery.min.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/layui/layui.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/xadmin.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/vue.js" type="text/javascript"></script>
+	</head>
+
+	<body>
+		<div class="wrapper wrapper-content  animated fadeInRight">
+			<div class="row" id="vmEbsTradinggroup">
+				<div class="col-sm-12">
+					<div class="ibox float-e-margins">
+						<div class="ibox-title">
+							<h5>交易团管理</h5>
+							<div class="ibox-tools">
+								<a class="collapse-link"> <i class="fa fa-chevron-up"></i> </a><a class="close-link"> <i class="fa fa-times"></i> </a>
+							</div>
+						</div>
+						<div class="ibox-content">
+							<div class="fixed-table-toolbar" style="height:50px;">
+								<div class="bars pull-left">
+									<div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
+										<button type="button" class="btn btn-outline btn-default" onclick="xadmin.open('添加参展商管理-交易团','EbsTradinggroupAdd.html',700)" title="新建用户" id="addUser">
+											<i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
+										</button>
+										<button type="button" class="btn btn-outline btn-default" title="批量删除" onclick="delall()" id="delAll">
+											<i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
+										</button>
+										<button class="btn btn-default btn-outline" type="button" name="refresh" onclick="location.reload()" title="刷新" id="refresh">
+											<i class="glyphicon glyphicon-repeat"></i>
+										</button>
+									</div>
+								</div>
+								<div class="columns columns-right btn-group pull-right">
+									<button class="btn btn-default btn-outline" type="button" onclick="query()" name="search" title="搜索" id="search">
+										<i class="glyphicon glyphicon-search"></i>
+									</button>
+								</div>
+								<div class="pull-right search">
+									<input name="keyword" class="form-control input-outline" type="text" placeholder="请输入交易团名称"  id="keyword">
+								</div>
+							</div>
+							<table id="test" lay-filter="test"></table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="/manage/js/bootstrap.min.js?v=3.3.6"></script>
+		<script src="/manage/js/content.js?v=1.0.0"></script>
+	</body>
+	<script type="text/javascript">
+		var table;
+
+		layui.use(['layer', 'table'], function() {
+			var layer = layui.layer;
+			table = layui.table;
+			var $ = layui.jquery;
+			table.render({
+				elem : '#test',
+				url : '/manage/Exhibitors/ebsTradinggroup/list',
+				response : {
+					statusName : 'code',
+					statusCode : 200,
+					msgName : 'msg',
+					countName : 'total',
+					dataName : 'data'
+				},
+				page : true,
+				cols : [[//表头
+				{
+					type : 'checkbox'
+				}, {
+					type : 'numbers',
+					title : '序号'
+				}, {
+					align : 'center',
+					field : 'name',
+					title : '交易团名称',
+					/*templet : function(d) {
+						return getUrlName(d.name);
+					}*/
+				}, {
+					align : 'center',
+					field : 'typename',
+					title : '类型',
+					width : 80
+				}, {
+					align : 'center',
+					field : 'type',
+					width : 150,
+					title : '转换',
+					templet : function(d) {
+						var btn = "";
+						if (d.shuliang == 0) {
+							if (d.type == 0) {
+								btn = '<a class="layui-btn-xs" lay-event="JtoL">（交）转（零）</a>';
+							} else if(d.type==1) {
+								btn = '<a class="layui-btn-xs" lay-event="LtoJ">零散转交易团</a>';
+							}
+						}
+						return btn;
+					}
+				}, {
+					align : 'center',
+					field : 'orders',
+					title : '排序号',
+					width : 80
+				}, {
+					fixed : 'right',
+					field : 'status',
+					title : '操作',
+					templet : function(d) {
+						var btn = '<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>';
+						if (d.boothNumber == null || d.boothNumber == '0' || d.boothNumber == 0) {
+							btn += '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>';
+						}
+						return btn;
+					}
+				}]],
+				parseData : function(res) {
+					if (res.status == 5) {
+						yanzheng(layer, res.msg);
+					}
+					if (res.data.length == 0) {
+						return {
+							'code' : '201',
+							'msg' : '暂无信息'
+						};
+					}
+				},
+				done : function(res, curr, count) {// 表格渲染完成之后的回调
+					var that = this.elem.next();
+					if (res.hasOwnProperty("data")) {
+						res.data.forEach(function(item, index) {
+							if (index % 2 == 0) {
+							} else {
+								var tr = that.find(".layui-table-box tbody tr[data-index='" + index + "']").css("background-color", "#F5F5F5");
+							}
+						});
+					}
+				}
+			});
+			//监听工具条
+			table.on('tool(test)', function(obj) {
+				var data = obj.data;
+				if (obj.event === 'detail') {
+					sessionStorage.setItem("viewEbsTradinggroupId", data.id);
+					//layer.msg('ID：'+ data.id + ' 的查看操作');
+					xadmin.open('参展商管理-交易团详情', 'EbsTradinggroupView.html', 700);
+				} else if (obj.event === 'del') {
+					del(data.id);
+				} else if (obj.event === 'edit') {
+					sessionStorage.setItem("editEbsTradinggroupId", data.id);
+					sessionStorage.setItem("editboothNumber", data.boothNumber);
+					xadmin.open('编辑参展商管理-交易团', 'EbsTradinggroupEdit.html', 700);
+				} else if (obj.event === 'JtoL') {
+					//交易团转零散
+					ZhuanHuan(data.id, 1);
+				} else if (obj.event === 'LtoJ') {
+					//零散转交易团
+					ZhuanHuan(data.id, 0);
+				}
+			});
+			//查询
+			window.query = function() {
+				table.reload("test", {
+					where : {
+						name : $("#keyword").val()
+					}
+				});
+			}
+		});
+
+		function reloadTableDataCurrent() {
+			table.reload('test', {
+				method : 'get',
+				url : '/manage/Exhibitors/ebsTradinggroup/list',
+				where : {
+					name : $("#keyword").val()
+				}
+			});
+		}
+
+		function ZhuanHuan(id, leixing) {
+			var params = {};
+			params.type = leixing;
+			params.id = id;
+			$.ajax({
+				url : "/manage/Exhibitors/ebsTradinggroup/UpdateTradinggroupType",
+				data : JSON.stringify(params),
+				type : "post",
+				contentType : "application/json",
+				success : function(result) {
+					if (result.code === 1) {
+						layer.msg('操作成功', {
+							icon : 1,
+							time : 1000
+						});
+						setTimeout(function() {
+							window.location.reload();
+						}, 1000);
+					} else {
+						layer.alert(result.msg, {
+							icon : 5
+						});
+					}
+				}
+			});
+		}
+
+		function delall() {
+			layer.confirm('确认要删除选中的行吗？', function() {
+				var checkStatus = table.checkStatus('test');
+				var ids = [];
+				if (checkStatus.data.length == 0) {
+					layer.msg('请先选择要删除的行', {
+						icon : 5
+					});
+					return;
+				}
+				var selectCount = checkStatus.data.length;
+				var isStr = "";
+				for (var i = 0; i < selectCount; i++) {
+					if (checkStatus.data[i].boothNumber == null || checkStatus.data[i].boothNumber == '0' || checkStatus.data[i].boothNumber == 0) {
+						isStr = isStr + "," + checkStatus.data[i].id;
+					} else {
+						layer.alert('勾选的交易团中包含不可删除的交易团，请先取消勾选');
+						return;
+					}
+				}
+				$.ajax({
+					url : "/manage/Exhibitors/ebsTradinggroup/delAll",
+					data : {
+						isStr : isStr
+					},
+					dataType : "json",
+					type : "get",
+					success : function(result) {
+						if (result.code === 1) {
+							layer.alert(result.msg, function() {
+								window.location.reload();
+							});
+						} else {
+							layer.alert(result.msg, {
+								icon : 5
+							});
+						}
+					}
+				});
+			});
+		}
+
+		function del(id) {
+			layer.confirm('确认要删除吗？', function() {
+				//发异步删除数据
+				$.ajax({
+					url : "/manage/Exhibitors/ebsTradinggroup/deleteById",
+					data : {
+						id : id
+					},
+					dataType : "json",
+					type : "get",
+					success : function(result) {
+						if (result.code === 1) {
+							layer.msg(result.msg, {
+								icon : 1,
+								time : 1000
+							});
+							setTimeout(function() {
+								window.location.reload();
+							}, 1000);
+						} else {
+							layer.alert(result.msg, {
+								icon : 5
+							});
+						}
+					}
+				});
+
+			});
+		}
+
+
+		layui.use(['form'], function() {
+		});
+
+	</script>
+</html>

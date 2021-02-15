@@ -1,0 +1,268 @@
+    <div class="modal inmodal" id="edit-model" style="display:none">
+		<div class="modal-content animated bounceInUp">
+			<div class="ibox-content">
+				<fieldset class="layui-elem-field layui-field-title" style="border-top:0px">
+					<form class="layui-form layui-form-pane" action="" id="editform">
+					    <input type="hidden" name="id" id="id" value="0"  />
+					    <input type="hidden" name="session" value="${exhibitionSessionId}"  />
+					    <input type="hidden" name="applyId" value="0"  />
+						<table width="100%"  class="layui-table form-content">
+							<tr class="papers-edit-bg"><td colspan="3" style="border-right: none;">添加参展企业</td><td align="right"><a class="layui-icon layui-icon-close close"></a></td></tr>
+							  <tr>
+							    <td><span>*</span>单位名称（中文）</td>
+							    <td colspan="3">
+							      <input type="text" name="chinesename" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>单位名称（英文）</td>
+							    <td colspan="3">
+							      <input type="text" name="engname" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>单位名称（俄文）</td>
+							    <td colspan="3">
+							      <input type="text" name="russianname" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>单位地址（中文）</td>
+							    <td colspan="3">
+							      <input type="text" name="chineseaddress" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>单位地址（英文）</td>
+							    <td colspan="3">
+							      <input type="text" name="engaddress" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>邮编</td>
+							    <td colspan="3">
+							      <input type="text" name="postcode" required  lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>手机</td>
+							    <td colspan="3">
+							      <input type="text" name="phone" required  lay-verify="required|phone" placeholder="请输入您的手机号码" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>电话</td>
+							    <td colspan="3">
+							      <input type="text" name="tel" required  lay-verify="required" placeholder="请输入您的联系电话" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>传真</td>
+							    <td colspan="3">
+							      <input type="text" name="fax" required  placeholder="请输入您的传真号" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>网址</td>
+							    <td colspan="3">
+							      <input type="text" name="website" required placeholder="请输入您的网址" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>*电子信箱</td>
+							    <td colspan="3">
+							      <input type="text" name="email"  lay-verify="email" placeholder="请输入您的电子信箱" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>国家/地区</td>
+							    <td colspan="3">
+								    <div class="layui-input-inline">
+								      <select name="country" lay-verify="required" lay-filter="country">
+										  <option value="">请选择</option>
+									  </select>   
+								    </div>
+								    <div class="layui-input-inline">
+								      <select name="province" lay-verify="required" lay-filter="province">
+										  <option value="">请选择</option>
+									  </select>   
+								    </div>
+								    <div class="layui-input-inline">
+								      <select name="city" lay-verify="required">
+										  <option value="">请选择</option>
+									  </select>   
+									 </div>
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>负责人</td>
+							    <td colspan="3">
+							      <input type="text" name="principal" required  lay-verify="required" placeholder="请输入负责人姓名" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>联系人</td>
+							    <td colspan="3">
+							      <input type="text" name="contactperson" placeholder="请输入联系人姓名" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>联系人职务</td>
+							    <td colspan="3">
+							      <input type="text" name="jobtitle" placeholder="请输入联系人职务" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>行业分类</td>
+							    <td colspan="3">
+							      <select name="industryid" lay-verify="">
+							    	<#list industries as industry>
+							    	<option value="${industry.id}">${industry.chineseName}</option>
+							    	</#list>
+								  </select>
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>参展企业性质</td>
+							    <td colspan="3">
+							    	<#list companytypes as type>
+							      <input type="radio" name="exhibitorsNatureId" value="${type.id}" title="${type.chineseName}">
+							      </#list>
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>经营范围</td>
+							    <td colspan="3">
+							      <textarea name="busscope" placeholder="请输入企业经营范围" class="layui-textarea"></textarea>
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>希望结实客户</td>
+							    <td colspan="3">
+							      <textarea name="hopecustomers" placeholder="请输入您希望结实客户" class="layui-textarea"></textarea>
+							    </td>
+							  </tr>
+							  <tr>
+							    <td>企业简介</td>
+							    <td colspan="3">
+							      <textarea name="companyprofile" placeholder="请输入企业简介" class="layui-textarea"></textarea>
+							    </td>
+							  </tr>
+							  <tr>
+							    <td><span>*</span>采购意向</td>
+							    <td colspan="3">
+							      <textarea name="purchaseintention" required  lay-verify="required" placeholder="请输入采购意向" class="layui-textarea"></textarea>
+							    </td>
+							  </tr>
+							<tr>
+								<td>企业LOGO</td>
+								<input type="hidden" name="companylogo" id="companylogo" value=""  />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnCompanylogo" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>上传图片
+									</button>
+									<button type="button" class="layui-btn" id="btnCompanylogoCropper">
+									  <i class="layui-icon">&#xe67c;</i>裁剪助手
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />格式为JPG，上传文件小于100K，尺寸200*200（宽*高）像素。</div>
+								</td>
+								<td colspan="2" class="prepic"><image src="" width="200" height="200" id="precompanylogo" /></td>
+							</tr>
+							<tr>
+								<td>*营业执照</td>
+								<input type="hidden" name="buslicensepath" id="buslicensepath" value=""  lay-verify="required" lay-reqText="必须上传营业执照"  />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="idpic" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>上传图片
+									</button>
+									<button type="button" class="layui-btn" id="btnBuslicensepathCropper">
+									  <i class="layui-icon">&#xe67c;</i>裁剪助手
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />格式为JPG，上传文件小于2M，尺寸800*1060（宽*高）像素。</div>
+								</td>
+								<td colspan="2" class="prepic"><image src="" width="390" height="516" id="prebuslicensepath" /></td>
+							</tr>
+							<tr>
+								<td>*企业封面</td>
+								<input type="hidden" name="companypicture" id="companypicture" value=""  lay-verify="required" lay-reqText="必须上传企业封面"  />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnCompanyPicture" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>上传图片
+									</button>
+									<button type="button" class="layui-btn" id="btnCompanypictureCropper">
+									  <i class="layui-icon">&#xe67c;</i>裁剪助手
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />格式为JPG，上传文件小于2M，尺寸750*422（宽*高）像素，用于企业详情页面企业形象展示。</div>
+								</td>
+								<td colspan="2" class="prepic"><image src="" width="390" height="219" id="precompanypicture" /></td>
+							</tr>
+							<tr>
+								<td>宣传短片</td>
+								<input type="hidden" name="companyvideo" id="companyvideo" value="" />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnCompanyVideo">
+									  <i class="layui-icon">&#xe67c;</i>上传视频
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />格式为MP4、FLV、MPG，上传文件小于20M，视频分辨率>=640*360，视频码率>=800kbps。</div>
+								</td>
+								<td colspan="2" class="prepic" id="videoContainer"><image src="" width="390" height="219" id="prebuslicensepath" /></td>
+							</tr>
+							<tr>
+								<td>轮播图片</td>
+								<input type="hidden" name="companypictures" id="companypictures" value=""  />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnCompanyPictures" style="display:none">
+									  <i class="layui-icon">&#xe67c;</i>上传图片
+									</button>
+									<button type="button" class="layui-btn" id="btnCompanypicturesCropper">
+									  <i class="layui-icon">&#xe67c;</i>裁剪助手
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />格式为JPG，上传文件小于2M，尺寸750*422（宽*高）像素，上传图片不超过3张。</div>
+								</td>
+								<td colspan="2">
+									<div class="mutipic">
+									</div>
+								</td>
+							</tr>
+							<tr>
+							    <td>虚拟展厅地址</td>
+							    <td colspan="3">
+							      <input type="text" name="url" placeholder="请输入虚拟展厅地址" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							<tr class="papers-edit-bg"><td colspan="3" style="border-right: none;">展位申请及分配</td><td align="right"></td></tr>
+							
+							  <tr>
+							    <td><span>*</span>参展展品</td>
+							    <td colspan="3">
+							      <input type="text" name="exhibits" lay-verify="required" placeholder="" autocomplete="off" class="layui-input">
+							    </td>
+							  </tr>
+							<tr>
+								<td>*展位分配</td>
+							    <td colspan="3" id="roomAndBooth">
+							    </td>
+							</tr>
+							<tr class="papers-edit-bg">
+								<td colspan="4" align="center">
+									<button type="button" class="layui-btn layui-btn-primary close">取消</button>
+									<button type="reset" class="layui-btn layui-btn-primary" id="reset" style="display:none">重置</button>
+									<button type="button"  lay-submit class="layui-btn"  lay-filter="update" id="submit">提交</button>
+								</td>
+							</tr>
+							
+						</table>
+					</form>
+				</fieldset>
+			</div>
+		</div>
+	</div>
+	<div id="mutiPictureTemplate" style="display:none">
+	<div class="item">
+		<img src="" />
+		<div class="fc-upload-cover">
+			<i class="ivu-icon fa fa-eye"></i>
+			<i class="ivu-icon fa fa-trash"></i>
+		</div>
+	</div>
+	</div>

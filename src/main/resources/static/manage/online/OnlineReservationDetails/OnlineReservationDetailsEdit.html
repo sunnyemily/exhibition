@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>修改线上预约</title>
+    <meta content="webkit" name="renderer">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" name="viewport"/>
+    <link rel="stylesheet" href="/manage/css/xadmin.css">
+	<link href="/manage/css/style.css?v=4.1.0" rel="stylesheet">
+	<link href="/manage/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="/manage/layui/css/layui.css"  media="all">
+</head>
+<body class="gray-bg">
+    <div class="modal inmodal" id="friendlink-model">
+		<div class="modal-content animated bounceInUp" id="vmUpdateOnlineReservationDetails">
+			<div class="ibox-content">
+				<fieldset class="layui-elem-field layui-field-title" style="border-top:0px">
+					<form class="layui-form layui-form-pane" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="session">届次</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block" id="Div$column.attrnameDiv">
+                            		<input lay-verify="required" lay-reqtext="届次为必填项" id="session" name="session" autocomplete="off" class="layui-input" type="text" v-model="onlineReservationDetails.session">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="exhibitiondate">观展日期</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block" id="Div$column.attrnameDiv">
+                					<input lay-verify="required" lay-reqtext="观展日期为必填项" id="exhibitiondate" name="exhibitiondate" autocomplete="off" class="layui-input" type="text" v-model="onlineReservationDetails.exhibitiondate">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="name">姓名</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block" id="Div$column.attrnameDiv">
+                					<input lay-verify="required" lay-reqtext="姓名为必填项" id="name" name="name" autocomplete="off" class="layui-input" type="text" v-model="onlineReservationDetails.name">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="cardnumber">身份证</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block" id="Div$column.attrnameDiv">
+                					<input lay-verify="required" lay-reqtext="身份证为必填项" id="cardnumber" name="cardnumber" autocomplete="off" class="layui-input" type="text" v-model="onlineReservationDetails.cardnumber">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="phone">手机号</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block" id="Div$column.attrnameDiv">
+                					<input lay-verify="required" lay-reqtext="手机号为必填项" id="phone" name="phone" autocomplete="off" class="layui-input" type="text" v-model="onlineReservationDetails.phone">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="companyname">所属单位</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block" id="Div$column.attrnameDiv">
+                					<input lay-verify="required" lay-reqtext="所属单位为必填项" id="companyname" name="companyname" autocomplete="off" class="layui-input" type="text" v-model="onlineReservationDetails.companyname">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="country">国别</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block" id="Div$column.attrnameDiv">
+                            		<input lay-verify="required" lay-reqtext="国别为必填项" id="country" name="country" autocomplete="off" class="layui-input" type="text" v-model="onlineReservationDetails.country">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="province">省份</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block" id="Div$column.attrnameDiv">
+                            		<input lay-verify="required" lay-reqtext="省份为必填项" id="province" name="province" autocomplete="off" class="layui-input" type="text" v-model="onlineReservationDetails.province">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="city">城市</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block" id="Div$column.attrnameDiv">
+                            		<input lay-verify="required" lay-reqtext="城市为必填项" id="city" name="city" autocomplete="off" class="layui-input" type="text" v-model="onlineReservationDetails.city">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="industry">行业分类</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block" id="Div$column.attrnameDiv">
+                					<input lay-verify="required" lay-reqtext="行业分类为必填项" id="industry" name="industry" autocomplete="off" class="layui-input" type="text" v-model="onlineReservationDetails.industry">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="informant">填报人</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block" id="Div$column.attrnameDiv">
+                					<input lay-verify="required" lay-reqtext="填报人为必填项" id="informant" name="informant" autocomplete="off" class="layui-input" type="text" v-model="onlineReservationDetails.informant">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="informantphone">填报人手机号</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block" id="Div$column.attrnameDiv">
+                					<input lay-verify="required" lay-reqtext="填报人手机号为必填项" id="informantphone" name="informantphone" autocomplete="off" class="layui-input" type="text" v-model="onlineReservationDetails.informantphone">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="verificationcode">填报人验证码</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block" id="Div$column.attrnameDiv">
+                					<input lay-verify="required" lay-reqtext="填报人验证码为必填项" id="verificationcode" name="verificationcode" autocomplete="off" class="layui-input" type="text" v-model="onlineReservationDetails.verificationcode">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="exhibitionarea">展区</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block" id="Div$column.attrnameDiv">
+                					<input lay-verify="required" lay-reqtext="展区为必填项" id="exhibitionarea" name="exhibitionarea" autocomplete="off" class="layui-input" type="text" v-model="onlineReservationDetails.exhibitionarea">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="secretkey">秘钥</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block" id="Div$column.attrnameDiv">
+                					<input lay-verify="required" lay-reqtext="秘钥为必填项" id="secretkey" name="secretkey" autocomplete="off" class="layui-input" type="text" v-model="onlineReservationDetails.secretkey">
+	                            </div>
+	                        </div>
+	                    </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" for="status">（扩展用）</label>
+                            <div class="layui-input-block">
+                                <div class="layui-input-inline layui-show-xs-block" id="Div$column.attrnameDiv">
+	                            	<input type='radio' name='status' value='1' title='启用'>
+									<input type='radio' name='status' value='0' checked title='禁用'>
+	                            </div>
+	                        </div>
+	                    </div>
+			            <div class="layui-form-item">
+				            <div class="layui-input-block">	
+				            	<button class="layui-btn" lay-filter="edit" lay-submit="">确认修改</button>
+				            </div>
+						</div>
+					</form>
+ 				</fieldset>
+			</div>
+		</div>
+	</div>
+	<script charset="utf-8" src="/manage/js/jquery.min.js" type="text/javascript"></script>
+	<script charset="utf-8" src="/manage/layui/layui.js" type="text/javascript"></script>
+	<script charset="utf-8" src="/manage/js/xadmin.js" type="text/javascript"></script>
+	<script charset="utf-8" src="/manage/js/vue.js" type="text/javascript"></script>
+	<script src="/manage/js/bootstrap.min.js?v=3.3.6"></script>		
+	<script src="/manage/js/manage/common.js"></script>		
+	<script charset="UTF-8" type="text/javascript">
+    	var editOnlineReservationDetailsId = sessionStorage.getItem("editOnlineReservationDetailsId");
+    	vm = new Vue({
+	        el: "#vmUpdateOnlineReservationDetails",
+	        data: {
+	            onlineReservationDetails: {}
+	        },
+	        methods: {},
+	        created: function () {
+	            var _this = this;
+	            $.ajax({
+	                url: "/manage/online/onlineReservationDetails/findById",
+	                data: {
+	                    "id": editOnlineReservationDetailsId
+	                },
+	                dataType: "json",
+	                type: "get",async:false,
+	                success: function (result) {
+	                    if (result.code === 1) {
+	                        _this.onlineReservationDetails = result.data;
+	                    } else {
+	                        layer.alert("获取修改线上预约信息失败！");
+	                    }
+	                }
+	            });
+	        }
+	    });
+    	layui.use(['form', 'layer', 'laydate'], function () {
+            var form = layui.form, layer = layui.layer, laydate = layui.laydate;
+            //监听提交
+            form.on('submit(edit)', function (data) {   
+                //组装数据
+                data.field.id = editOnlineReservationDetailsId;
+                //发异步，把数据提交给controller
+                $.ajax({
+                    url: "/manage/online/onlineReservationDetails/update",
+                    data: JSON.stringify(data.field),
+                    dataType: "json",
+                    contentType: "application/json",
+                    type: "post",
+                    success: function (result) {
+                        if (result.code === 1) {
+                            layer.msg("修改成功", {icon: 6, time: 500}, function () {
+                                //关闭当前frame
+                                xadmin.close();
+                                // 可以对父窗口进行刷新
+                                xadmin.father_reload();
+                            });
+                        } else {
+                            layer.alert(result.msg);
+                        }
+                    }
+                });
+                return false;
+            });
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>企业信息管理</title>
+		<meta content="webkit" name="renderer">
+		<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+		<meta content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" name="viewport"/>
+		<link rel="stylesheet" href="/manage/css/xadmin.css">
+		<link rel="stylesheet" href="/manage/css/font.css">
+		<link href="/manage/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="/manage/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+		<link href="/manage/css/animate.css" rel="stylesheet">
+		<link href="/manage/css/style.css?v=4.1.0" rel="stylesheet">
+		<link href="/manage/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<script charset="utf-8" src="/manage/js/jquery.min.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/layui/layui.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/xadmin.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/vue.js" type="text/javascript"></script>
+	</head>
+	<body>
+		<div class="wrapper wrapper-content  animated fadeInRight">
+			<div class="row" id="vmEbsCompanyinfo">
+				<div class="col-sm-12">
+					<div class="ibox float-e-margins">
+						<div class="ibox-title">
+							<h5>采购商信息</h5>
+							<div class="ibox-tools">
+								<a class="collapse-link"> <i class="fa fa-chevron-up"></i> </a><a class="close-link"> <i class="fa fa-times"></i> </a>
+							</div>
+						</div>
+						<div class="ibox-content">
+							<div class="fixed-table-toolbar" style="height:50px;">
+								<div class="bars pull-left">
+									<div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
+										<button class="btn btn-default btn-outline" type="button" name="refresh" onclick="location.reload()" title="刷新" id="refresh">
+											<i class="glyphicon glyphicon-repeat"></i>
+										</button>
+										<button class="btn btn-default btn-outline" type="button" name="exportExcel" onclick="DownLoadExcel()" title="导出EXCEL" id="downexcel">
+											<i class="glyphicon glyphicon-arrow-down"></i>
+										</button>
+										<a href="" target="_blank" style="display:none;padding-left:5px" id="xiazai">下载导出文件</a>
+									</div>
+								</div>
+								<div class="columns columns-right btn-group pull-right">
+									<button class="btn btn-default btn-outline" type="button" name="search" title="搜索" onclick="reloadTableData()" id="search">
+										<i class="glyphicon glyphicon-search"></i>
+									</button>
+								</div>
+								<div class="pull-right search">
+									<input class="form-control input-outline" type="text" placeholder="请输入用户名" id="memberUsername">
+								</div>
+								<div class="pull-right search" style="padding-right:3px">
+									<input class="form-control input-outline" type="text" placeholder="请输入企业名称" id="companyName">
+								</div>
+								<div class="pull-right search" style="padding-right:3px">
+									<table>
+										<tr>
+											<td>是否在黑名单中：</td>
+											<td>
+											<select class="form-control input-outline" id="useable" onchange="reloadTableData()">
+												<option value="" selected>全部</option>
+												<option value="0">是</option>
+												<option value="1">否</option>
+											</select></td>
+										</tr>
+									</table>
+								</div>
+								<div class="pull-right search" style="padding-right:3px">
+									<table>
+										<tr>
+											<td>证件审核状态：</td>
+											<td>
+											<select class="form-control input-outline" id="personnelCardAuditstatus" onchange="reloadTableData()">
+												<option value="" selected>全部</option>
+												<option value="0">未审核</option>
+											</select></td>
+										</tr>
+									</table>
+								</div>
+								<div class="pull-right search" style="padding-right:10px">
+								</div>
+							</div>
+							<table class="layui-hide statisticsInfo" border="1px" style="text-align:center;" width="100%">
+						        <tfoot>
+							        <tr>
+							            <td>填报企业数</td>
+							            <td>填报证件总数</td>
+							            <td>待审核数</td>
+							            <td>审核未通过数</td>
+							            <td>已审核证件数</td>
+							            <td>已打印</td>
+							            <td>未打印</td>
+							            <td>绿色通道证件数</td>
+							        </tr>
+							        <tr>
+							            <td id="EnterprisesNumber"></td>
+							            <td id="certificatesTotalNumber"></td>
+							            <td id="pendingAuditNumber"></td>
+							            <td id="failedAuditNumber"></td>
+							            <td id="ReviewedCertificatesNumber"></td>
+							            <td id="Printed"></td>
+							            <td id="noPrinted"></td>
+							            <td id="greenChannelCertificatesNumber"></td>
+							        </tr>
+						        </tfoot>
+				            </table>
+							<table id="test" lay-filter="test"></table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="/manage/js/bootstrap.min.js?v=3.3.6"></script>
+		<script src="/manage/js/content.js?v=1.0.0"></script>
+	</body>
+	<script type="text/javascript">
+		var table;
+		//证件统计
+		$.get("/manage/Exhibitors/ebsScatteredExhibitorsManage/loadCount", function(r){
+			if(r.code===1){
+				$("#EnterprisesNumber").html(r.data.EnterprisesNumber);
+				$("#certificatesTotalNumber").html(r.data.certificatesTotalNumber);
+				$("#pendingAuditNumber").html(r.data.pendingAuditNumber);
+				$("#failedAuditNumber").html(r.data.failedAuditNumber);
+				$("#ReviewedCertificatesNumber").html(r.data.ReviewedCertificatesNumber);
+				$("#Printed").html(r.data.Printed);
+				$("#noPrinted").html(r.data.noPrinted);
+				$("#greenChannelCertificatesNumber").html(r.data.greenChannelCertificatesNumber);
+				$(".statisticsInfo").removeClass("layui-hide");
+			}else if(r.status!=4){
+				layer.alert(r.msg);
+			}
+		})
+		layui.use(['layer','table'], function() {
+			var layer = layui.layer;
+			table = layui.table;
+			var $ = layui.jquery;
+			table.render({
+				elem : '#test',
+				url : '/manage/Exhibitors/ebsScatteredExhibitorsManage/list',
+				where : {
+					leixing : 5,
+					useable : $("#useable").val(),
+					companyName : $("#companyName").val(),
+					personnelCardAuditstatus : $("#personnelCardAuditstatus").val(),
+					memberUsername : $("#memberUsername").val()
+				},
+				response : {
+					statusCode : 1
+				},
+				even : true,
+				page : true,
+				cols : [[//表头
+				{
+					type : 'checkbox'
+				}, {
+					type : 'numbers',
+					title : '序号'
+				}, {
+					align : 'center',
+					field : 'chinesename',
+					title : '企业名称',
+					templet : function(d) {
+						var btn = "<a class=\"\" lay-event=\"details\">"+d.chinesename+"</a>";
+						return btn;
+					}
+				}, {
+					align : 'center',
+					field : 'memberUsername',
+					title : '用户名'
+				}, {
+					align : 'center',
+					field : 'contactperson',
+					title : '联系人'
+				}, {
+					align : 'center',
+					field : 'phone',
+					title : '手机'
+				}, {
+					align : 'center',
+					field : 'companyNature',
+					title : '参展企业性质'
+				}, {
+					align : 'center',
+					field : 'addtime',
+					title : '注册日期',
+					templet : '<div>{{ layui.util.toDateString(d.addtime) }}</div>'
+				}, {
+					fixed: 'right',
+					width : 270,
+					title : '操作',
+					templet : function(d) {
+						var btn = "<a class=\"layui-btn layui-btn-primary layui-btn-xs\" lay-event=\"update\">修改</a>";
+						btn += "<a class=\"layui-btn layui-btn layui-btn-xs\" lay-event='ChongZhi'>重置密码</a>"; 
+						btn += "<a class=\"layui-btn layui-btn-danger layui-btn-xs\" onclick=\"deleteCompanyInfo(" + d.companyId + "," + d.sessionId + "," + d.memberId + ",'" + d.chinesename + "')\">删除</a>";
+						if (d.useable == 1) {
+							btn += "<a class=\"layui-btn layui-btn-danger layui-btn-xs\" onclick=\"blackList(" + d.companyId + ",0)\">加入黑名单</a>";
+						} else {
+							btn += "<a class=\"layui-btn layui-btn layui-btn-xs\" onclick=\"blackList(" + d.companyId + ",1)\">移出黑名单</a>";
+						}
+						return btn;
+					}
+				}]],
+				parseData : function(res) {
+					if(res.status==5){
+						yanzheng(layer,res.msg);
+					}
+					if (res.data.length == 0) {
+						return {
+							'code' : '201',
+							'msg' : '暂无信息'
+						};
+					}
+				},
+				done : function(res, curr, count) {// 表格渲染完成之后的回调
+					var that = this.elem.next();
+					if (res.hasOwnProperty("data")) {
+						res.data.forEach(function(item, index) {
+							//console.log(item.empName);item表示每列显示的数据
+							if (index % 2 == 0) {
+							} else {
+								var tr = that.find(".layui-table-box tbody tr[data-index='" + index + "']").css("background-color", "#F5F5F5");
+							}
+						});
+					}
+				}
+			});
+			//监听工具条
+			table.on('tool(test)', function(obj) {
+				var data = obj.data;
+				console.log(data);
+				if (obj.event === 'update') {
+					sessionStorage.setItem("editEbsCompanyinfoId", data.companyId);
+					xadmin.open('修改采购商信息', 'BuyersEdit.html');
+				} else if(obj.event == 'details'){
+					sessionStorage.setItem("editEbsCompanyinfoId", data.companyId);
+					xadmin.open('查看企业信息','BuyersView.html');
+				}else if (obj.event === 'ChongZhi') {
+					var params={};
+					params.memberid=data.memberId;
+					params.loginname=data.memberUsername;
+					$.ajax({
+						url : "/manage/Exhibitors/ebsScatteredExhibitorsManage/ResetPasswordcaigou",
+						data : JSON.stringify(params),
+						dataType : "json",
+						type : "post",
+						contentType : "application/json",
+						success : function(result) {
+							if (result.code === 200) {
+								layer.alert("密码已重置为123456");
+							} else {
+								layer.alert(result.msg);
+							}
+						}
+					});
+				}
+			});			
+		});
+		
+		function DownLoadExcel() {			
+			$.ajax({
+				url : "/manage/Exhibitors/ebsScatteredExhibitorsManage/DownLoadFile",
+				data : {
+					leixing : 5,
+					useable : $("#useable").val(),
+					companyName : $("#companyName").val(),
+					memberUsername : $("#memberUsername").val()
+				},
+				dataType : "json",
+				type : "get",
+				success : function(result) {
+					if (result.code === 1) {
+						layer.msg('导出成功', {
+							icon : 1,
+							time : 1000
+						});
+						$("#xiazai").attr("href",result.src);
+						$("#xiazai").show();
+					} else {
+						layer.alert(result.msg, {
+							icon : 5
+						});
+					}
+				}
+			});
+		}
+		
+		//重新加载数据
+		function reloadTableData() {
+			table.reload('test', {				
+				page : {
+					curr:1
+				},
+				where : {
+					leixing : 5,
+					useable : $("#useable").val(),
+					companyName : $("#companyName").val(),
+					personnelCardAuditstatus : $("#personnelCardAuditstatus").val(),
+					memberUsername : $("#memberUsername").val()
+				}
+			});
+		}
+		
+		//重新加载数据
+		function reloadTableDataCurrent() {
+			table.reload('test', {	
+				where : {
+					leixing : 5,
+					useable : $("#useable").val(),
+					companyName : $("#companyName").val(),
+					personnelCardAuditstatus : $("#personnelCardAuditstatus").val(),
+					memberUsername : $("#memberUsername").val()
+				}
+			});
+		}
+
+		//删除企业信息
+		function deleteCompanyInfo(companyId, sessionId, memberId, companyName) {
+			layer.confirm('确认删除企业：' + companyName + '?', {
+				icon : 2,
+				title : '删除企业'
+			}, function(index) {
+				$.ajax({
+					type : 'post',
+					url : '/manage/Exhibitors/ebsScatteredExhibitorsManage/deleteCompanyInfo',
+					data : {
+						id : companyId,
+						sessionId : sessionId,
+						memberId : memberId
+					},
+					success : function(r) {
+						if (r.code == 1) {
+							layer.alert("删除成功");
+							reloadTableData();
+						} else {
+							layer.alert(r.msg);
+						}
+					}
+				});
+			});
+		}
+
+		//加入或移出黑名单
+		function blackList(companyId, useable) {
+			$.ajax({
+				type : 'post',
+				url : '/manage/Exhibitors/ebsScatteredExhibitorsManage/updateCompanyInfo',
+				data : {
+					id : companyId,
+					useable : useable
+				},
+				success : function(r) {
+					if (r.code == 1) {
+						layer.alert("操作成功");
+						reloadTableData();
+					} else {
+						layer.alert(r.msg);
+					}
+				}
+			});
+		}
+	</script>
+</html>

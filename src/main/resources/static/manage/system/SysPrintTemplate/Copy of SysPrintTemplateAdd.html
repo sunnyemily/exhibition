@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Demo</title>
+		<link rel="stylesheet" href="/manage/css/xadmin.css">
+		<link href="/manage/css/style.css?v=4.1.0" rel="stylesheet">
+		<link href="/manage/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="/manage/layui/css/layui.css"  media="all">
+		<script charset="utf-8" src="/manage/js/jquery.min.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/layui/layui.js" type="text/javascript"></script>
+		<script src="/manage/js/manage/common.js"></script>	
+		<script charset="utf-8" src="/manage/js/xadmin.js" type="text/javascript"></script>
+		
+		<style>
+			#perinfo{
+				top:10px;
+				left:10px;
+			}
+			#perimage{
+				top:140px;
+				left:10px;
+			}
+			.drag {
+				border: 0px #d3dbde solid;
+				position: absolute;
+				/*height: 400px;*/
+				/*background: #F2F6F8;*/
+				padding: 0px;				
+				/*cursor: move;*/
+				z-index: 1000;
+			}
+			table {
+				width: 100%;height:100%;
+				border-top: 0px solid #d3dbde;
+				border-right: 0px solid #d3dbde;
+			}
+			th {
+				
+				line-height: 37px;
+				border-left: 0px solid #d3dbde;
+				border-bottom: 0px solid #d3dbde;
+			}
+
+			td {
+				border-bottom: 0px solid #d3dbde;
+				border-left: 0px solid #d3dbde;
+				padding: 5px;
+				text-indent: 5px;
+				text-align: center;
+				vertical-align: middle;
+				text-align: left;
+				
+			}
+			img {
+        width: 100%;
+        height: 100%;
+        cursor: move;
+      }
+			#scale { 
+		        width: 5px; 
+		        height: 5px; 
+		        overflow: hidden; 
+		        cursor: se-resize; 
+		        position: absolute; 
+		        right: 0; 
+		        bottom: 0; 
+		        background-color: rgb(122, 191, 238); 
+		     }
+		</style>
+		<script type="text/javascript">
+			
+		
+
+			$(function() {
+				_Mone();
+			});
+			
+			//拖拽
+			function _Mone() {
+				var _move = false;
+				//移动标记
+				var _x, _y;
+				//鼠标离控件左上角的相对位置
+				var t;
+				//当前激活层的对象
+				var newz = 1;
+				//新对象的z-index
+				var oldz = 1;
+				//旧对象的z-index
+
+				$("div.drag").mousedown(function(e) {
+					_move = true;
+					newz = parseInt($(this).css("z-index"))
+					$(this).css({
+						"z-index" : newz + oldz
+					});
+					t = $(this);
+					//初始化当前激活层的对象
+					_x = e.pageX - parseInt($(this).css("left"));
+					//获得左边位置
+					_y = e.pageY - parseInt($(this).css("top"));
+					//获得上边位置
+					$(this).fadeTo(20, 0.5);
+					//点击后开始拖动并透明显示
+				});
+
+				$("div.drag").mousemove(function(e) {
+					if (_move) {
+						var x = e.pageX - _x;
+						//移动时根据鼠标位置计算控件左上角的绝对位置
+						var y = e.pageY - _y;
+						t.css({
+							top : y,
+							left : x
+						});
+						//控件新位置
+					}
+				}).mouseup(function(e) {
+
+					_move = false;
+					t.fadeTo("fast", 1);
+					//松开鼠标后停止移动并恢复成不透明
+					oldz = parseInt(t.css("z-index"));
+					//获得最后激活层的z-index
+				});
+
+				/*
+				 $(document).mousemove(function (e) {
+				 if (_move) {
+				 var x = e.pageX - _x;//移动时根据鼠标位置计算控件左上角的绝对位置
+				 var y = e.pageY - _y;
+				 t.css({ top: y, left: x });//控件新位置
+				 }
+				 }).mouseup(function (e) {
+
+				 _move = false;
+				 t.fadeTo("fast", 1);//松开鼠标后停止移动并恢复成不透明
+				 oldz = parseInt(t.css("z-index"));//获得最后激活层的z-index
+				 });*/
+			}
+			// 图片缩放效果
+			
+		</script>
+	</head>
+<body>
+<div id="divcontent">
+<div class="drag" id="perinfo">
+<table border=1>
+<tr>
+<th>姓 名：</th>
+<td>${name}</td>
+</tr>
+<tr>
+<th>公司名称：</th>
+<td>${companyName}</td>
+</tr>
+<tr>
+<th>证件类型：</th>
+<td>${CardTypeName}</td>
+</tr>
+</table>
+<div id="scale"></div>
+</div>
+<div class="drag" id="perimage">
+<img src="${imagepath}">
+</div>
+</div>
+<div style="bottom:10px;left:10px;position: absolute;">
+	<table style="border:0px ">
+		<tr>
+			<td id="CardTypeDiv"><select id="cardtype" name="cardtype" class="layui-input" style="width:180px"></select></td>
+			<td><input type="button"  class="layui-btn" id="btn" onclick='save()' value=" 保 存 "></td>
+		</tr>
+	</table>
+</div>
+</body>
+</html>
+<script>
+
+			var scale = document.getElementById("scale");
+			var box = document.getElementById("perinfo");
+			var fa = document.getElementById('divcontent');
+        scale.onmousedown = function (e) {
+          // 阻止冒泡,避免缩放时触发移动事件
+          e.stopPropagation();
+          e.preventDefault();
+          var pos = {
+            'w': box.offsetWidth,
+            'h': box.offsetHeight,
+            'x': e.clientX,
+            'y': e.clientY
+          };
+          fa.onmousemove = function (ev) {
+            ev.preventDefault();
+            // 设置图片的最小缩放为30*30
+            var w = Math.max(30, ev.clientX - pos.x + pos.w)
+            var h = Math.max(30,ev.clientY - pos.y + pos.h)
+            // console.log(w,h)
+
+            // 设置图片的最大宽高
+            w = w >= fa.offsetWidth-box.offsetLeft ? fa.offsetWidth-box.offsetLeft : w
+            h = h >= fa.offsetHeight-box.offsetTop ? fa.offsetHeight-box.offsetTop : h
+            box.style.width = w + 'px';
+            box.style.height = h + 'px';
+            // console.log(box.offsetWidth,box.offsetHeight)
+          }
+          fa.onmouseleave = function () {
+            fa.onmousemove=null;
+            fa.onmouseup=null;
+          }
+          fa.onmouseup=function() {
+            fa.onmousemove=null;
+            fa.onmouseup=null;
+          } 
+        }
+
+layui.use(['form', 'layer'], function () {
+  var form = layui.form, layer = layui.layer;
+  loadZhengJianLeiXing(form, 0, '');          
+});
+function save(){
+	var remark=$("#divcontent").html();
+	var cardtype=$("#cardtype").val();
+	if(cardtype==''){
+		$("#CardTypeDiv select").focus();
+    	layer.tips("证件类型不可为空", "#CardTypeDiv", {tips: 1});
+    	return;
+	}
+	var params = {};
+	params.printtemplate = remark;
+	params.cardtypeid=cardtype;
+	$.ajax({
+		url : "/manage/system/sysPrintTemplate/save",
+		data : JSON.stringify(params),
+		type : "post",
+		async: false,
+		contentType : "application/json",
+		success : function(result) {			
+			if (result.code === 1) {
+				layer.msg("保存成功", {icon: 6, time: 500}, function () {
+                     //关闭当前frame
+                     xadmin.close();
+                     // 可以对父窗口进行刷新
+                     xadmin.father_reload();
+                 });
+			} else {
+				layer.alert(result.msg);
+			}
+		}
+	});
+}
+</script>

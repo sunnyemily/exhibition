@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.Exhibitors.dao.EbsTradingGroupBoothAuditMapper">
+
+	<select id="queryExportInfo" resultType="map">
+		SELECT
+			ifnull(c.chinesename,'') chinesename,
+			ifnull(cc.name,'') tradingGroupName,
+			ifnull(ebs_booth_apply.apply_products,'') apply_products,
+			ifnull(sys_industry.chinese_name,'') industryName,
+			ifnull(e.boothApplyNumber,'') boothApplyNumber,
+			ifnull(e.booths,'') booths,
+			ifnull(c.contactperson,'') contactperson,
+			ifnull(c.phone,'') phone,
+			ifnull(c.tel,'') tel,
+			ifnull(c.fax,'') fax,
+			ifnull(sys_country_area.name,'') province,
+			ifnull(c.purchaseintention,'') purchaseintention,
+			'' remark
+		FROM
+			web_member a
+		LEFT JOIN web_member_session b ON a.member_id = b.member_id
+		LEFT JOIN pim_agent bb ON b.orgnization_id = bb.id
+		LEFT JOIN ebs_tradinggroup cc ON bb.tradinggroupid = cc.id
+		LEFT JOIN ebs_companyinfo c ON cc.id = c.tradinggroupid
+		LEFT JOIN sys_industry ON c.industryid = sys_industry.id and sys_industry.use_flag = 'Y'
+		LEFT JOIN sys_country_area ON c.province = sys_country_area.id and sys_country_area.use_flag = 'Y'
+		LEFT JOIN (SELECT company_id, count(*) boothApplyNumber, ifnull(GROUP_CONCAT(NAME), '') booths FROM ebs_booth WHERE session = #{session} GROUP BY company_id) e ON c.id = e.company_id
+		left join ebs_booth_apply on ebs_booth_apply.company_id = c.id and ebs_booth_apply.session_id = #{session}
+		INNER JOIN system_user_rights ON cc.id = system_user_rights.tradinggroupid and system_user_rights.userid = #{userId} and system_user_rights.session=#{session}
+		WHERE a.member_type = 0 AND a.member_status = 0 AND b.id = #{session} AND c.useable = 1 and c.session = #{session}
+		and bb.type = 0 and bb.isopen = 1
+		GROUP BY c.id
+		order by cc.name
+	</select>
+
+	<select id="getTradingGroupCompanyList" resultType="map">
+        SELECT
+			web_member.member_id memberId,
+			web_member_session.id sessionId,
+			ebs_companyinfo.id companyId,
+			ebs_companyinfo.chinesename,
+			ebs_companyinfo.companyvideo,
+			DATE(ebs_companyinfo.addtime) addtime,
+			ebs_tradinggroup.id tradingGroupId,
+			ebs_tradinggroup.name tradingGroupName,
+			CONCAT(IFNULL(ebs_personnelcard.submitNumber, 0),'/',IFNULL(ebs_personnelcard.notPassNumber, 0),'/',IFNULL(ebs_personnelcard.waitCheckNumber, 0),'/',IFNULL(ebs_booth.totalCardNumber, 0),'/',IFNULL(ebs_personnelcard.printNumber, 0)) numbers,
+			ifnull(ebs_booth.boothNumber,0) boothNumber,
+			ebs_booth.booths,
+			ebs_booth_audit.exhibition_office_audit_status exhibitionOfficeAuditStatus,
+			ebs_booth_audit.finance_office_audit_status financeOfficeAuditStatus,
+			IFNULL(web_product.waitAuditProductNumber, 0) waitAuditProductNumber
+		FROM
+			web_member
+		INNER JOIN web_member_session ON web_member.member_id = web_member_session.member_id
+		AND web_member_session.id = #{session} AND web_member.member_type = 0 AND web_member.member_status = 0
+		INNER JOIN pim_agent ON web_member_session.orgnization_id = pim_agent.id and pim_agent.type = 0 and pim_agent.isopen = 1
+		INNER JOIN ebs_tradinggroup ON pim_agent.tradinggroupid = ebs_tradinggroup.id
+		INNER JOIN ebs_companyinfo ON ebs_tradinggroup.id = ebs_companyinfo.tradinggroupid
+		and ebs_companyinfo.session = web_member_session.id AND ebs_companyinfo.useable = 1
+		INNER JOIN system_user_rights ON ebs_tradinggroup.id = system_user_rights.tradinggroupid
+		and system_user_rights.session = web_member_session.id and system_user_rights.userid = #{userId}
+		LEFT JOIN (
+			SELECT
+				ebs_personnelcard.companyid,
+				COUNT(ebs_personnelcard.id) submitNumber,
+				sum(IF(ebs_personnelcard.status=-1,1,0)) notPassNumber,
+				sum(IF(ebs_personnelcard.status=0,1,0)) waitCheckNumber,
+				sum(IF(ebs_personnelcard.printstatus=2,1,0)) printNumber,
+				sum(IF(ebs_personnelcard.isgreen=1,1,0)) greenChannelNumber
+			from ebs_personnelcard
+			inner join web_member on web_member.member_id = ebs_personnelcard.agent and ebs_personnelcard.session = #{session}
+			inner join web_member_session on web_member.member_id = web_member_session.member_id and ebs_personnelcard.session = web_member_session.id
+			inner join pim_agent on web_member_session.orgnization_id = pim_agent.id and pim_agent.makeevidence = 1
+			inner join cm_certificate_type on cm_certificate_type.type=0 and ebs_personnelcard.cardtype=cm_certificate_type.id
+			and cm_certificate_type.useable = 1 and cm_certificate_type.session = ebs_personnelcard.session and cm_certificate_type.isexhibitor = 1
+			GROUP BY ebs_personnelcard.companyid
+		) ebs_personnelcard ON ebs_companyinfo.id = ebs_personnelcard.companyid
+		LEFT JOIN (
+			SELECT
+				company_id,
+				COUNT(*) boothNumber,
+				COUNT(*)*3 totalCardNumber,
+				GROUP_CONCAT(NAME) booths
+			FROM
+				ebs_booth
+			WHERE
+				useable = 1 and session = #{session}
+			GROUP BY company_id
+		) ebs_booth ON ebs_companyinfo.id = ebs_booth.company_id
+		LEFT JOIN ebs_booth_audit ON ebs_companyinfo.id = ebs_booth_audit.company_id AND ebs_booth_audit.session_id = web_member_session.id
+		left join (
+			select
+				company_id,
+				count(*) productNumber,
+				SUM(IF(product_status=0,1,0)) waitAuditProductNumber,
+				SUM(IF(product_status=-1,1,0)) noPassProductNumber,
+				SUM(IF(product_status=1,1,0)) passProductNumber,
+				SUM(IF(product_status!=0,1,0)) auditedProductNumber
+			from web_product where session = #{session}
+			group by company_id
+		) web_product on ebs_companyinfo.id = web_product.company_id
+		<where>
+		<if test="cardNature != null and cardNature != ''">
+	        <if test="cardNature == 0">
+	            and IFNULL(greenChannelNumber,0) &gt; 0
+	        </if>
+	        <if test="cardNature == 1">
+	            and IFNULL(submitNumber,0) &gt; IFNULL(totalCardNumber,0)
+	        </if>
+        </if>
+        <if test="cardAuditStatus != null and cardAuditStatus != ''">
+	        <if test="cardAuditStatus == 0">
+	            and IFNULL(waitCheckNumber,0) &gt; 0
+	        </if>
+	        <if test="cardAuditStatus == 1">
+	            and IFNULL(notPassNumber,0) &gt; 0
+	        </if>
+	        <if test="cardAuditStatus == 2">
+	            and IFNULL(submitNumber,0) &gt; 0 and IFNULL(notPassNumber,0) = 0 and IFNULL(waitCheckNumber,0) = 0
+	        </if>
+        </if>
+        <if test="cardSubmitNumber != null and cardSubmitNumber != ''">
+	        <if test="cardSubmitNumber == 0">
+	            and IFNULL(submitNumber,0) == IFNULL(totalNumber,0)
+	        </if>
+	        <if test="cardSubmitNumber == 1">
+	            and IFNULL(submitNumber,0) != IFNULL(totalNumber,0)
+	        </if>
+	        <if test="cardSubmitNumber == 2">
+	            and IFNULL(submitNumber,0) != IFNULL(printNumber,0)
+	        </if>
+        </if>
+        <if test="boothAuditStatus != null and boothAuditStatus != ''">
+	        <if test="boothAuditStatus == 0">
+	            and (isnull(exhibition_office_audit_status) or exhibition_office_audit_status = 0)
+	        </if>
+	        <if test="boothAuditStatus == 1">
+	            and exhibition_office_audit_status = 1 and (finance_office_audit_status = 0 or isnull(finance_office_audit_status))
+	        </if>
+	        <if test="boothAuditStatus == 2">
+	            and exhibition_office_audit_status = 1 and finance_office_audit_status = 1
+	        </if>
+        </if>
+        <if test="tradingGroupId != null and tradingGroupId != ''">
+            and ebs_tradinggroup.id = #{tradingGroupId}
+        </if>
+        <if test="boothName != null and boothName != ''">
+            and upper(booths) like concat ('%',upper(#{boothName}),'%')
+        </if>
+        <if test="companyName != null and companyName != ''">
+            and upper(chinesename) like concat ('%',upper(#{companyName}),'%')
+        </if>
+		</where>
+        order by orders,ebs_booth.boothNumber desc,ebs_companyinfo.addtime desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="getTradingGroupCompanyListCount" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			web_member
+		INNER JOIN web_member_session ON web_member.member_id = web_member_session.member_id AND web_member_session.id = #{session} AND web_member.member_type = 0 AND web_member.member_status = 0
+		INNER JOIN pim_agent ON web_member_session.orgnization_id = pim_agent.id and pim_agent.type = 0 and pim_agent.isopen = 1
+		INNER JOIN ebs_tradinggroup ON pim_agent.tradinggroupid = ebs_tradinggroup.id
+		INNER JOIN ebs_companyinfo ON ebs_tradinggroup.id = ebs_companyinfo.tradinggroupid and ebs_companyinfo.session = web_member_session.id AND ebs_companyinfo.useable = 1
+		INNER JOIN system_user_rights ON ebs_tradinggroup.id = system_user_rights.tradinggroupid and system_user_rights.session = web_member_session.id and system_user_rights.userid = #{userId}
+		LEFT JOIN (
+			SELECT
+				ebs_personnelcard.companyid,
+				COUNT(ebs_personnelcard.id) submitNumber,
+				sum(IF(ebs_personnelcard.status=-1,1,0)) notPassNumber,
+				sum(IF(ebs_personnelcard.status=0,1,0)) waitCheckNumber,
+				sum(IF(ebs_personnelcard.printstatus=2,1,0)) printNumber,
+				sum(IF(ebs_personnelcard.isgreen=1,1,0)) greenChannelNumber
+			from ebs_personnelcard
+			inner join web_member on web_member.member_id = ebs_personnelcard.agent and ebs_personnelcard.session = #{session}
+			inner join web_member_session on web_member.member_id = web_member_session.member_id and ebs_personnelcard.session = web_member_session.id
+			inner join pim_agent on web_member_session.orgnization_id = pim_agent.id and pim_agent.makeevidence = 1
+			inner join cm_certificate_type on cm_certificate_type.type=0 and ebs_personnelcard.cardtype=cm_certificate_type.id
+			and cm_certificate_type.useable = 1 and cm_certificate_type.session = ebs_personnelcard.session and cm_certificate_type.isexhibitor = 1
+			GROUP BY ebs_personnelcard.companyid
+		) ebs_personnelcard ON ebs_companyinfo.id = ebs_personnelcard.companyid
+		LEFT JOIN (
+			SELECT
+				company_id,
+				COUNT(*) boothNumber,
+				COUNT(*)*3 totalCardNumber,
+				GROUP_CONCAT(NAME) booths
+			FROM
+				ebs_booth
+			WHERE
+				useable = 1 and session = #{session}
+			GROUP BY company_id
+		) ebs_booth ON ebs_companyinfo.id = ebs_booth.company_id
+		LEFT JOIN ebs_booth_audit ON ebs_companyinfo.id = ebs_booth_audit.company_id AND ebs_booth_audit.session_id = web_member_session.id
+		left join (
+			select
+				company_id,
+				count(*) productNumber,
+				SUM(IF(product_status=0,1,0)) waitAuditProductNumber,
+				SUM(IF(product_status=-1,1,0)) noPassProductNumber,
+				SUM(IF(product_status=1,1,0)) passProductNumber,
+				SUM(IF(product_status!=0,1,0)) auditedProductNumber
+			from web_product where session = #{session}
+			group by company_id
+		) web_product on ebs_companyinfo.id = web_product.company_id
+		<where>
+		<if test="cardNature != null and cardNature != ''">
+	        <if test="cardNature == 0">
+	            and IFNULL(greenChannelNumber,0) &gt; 0
+	        </if>
+	        <if test="cardNature == 1">
+	            and IFNULL(submitNumber,0) &gt; IFNULL(totalCardNumber,0)
+	        </if>
+        </if>
+        <if test="cardAuditStatus != null and cardAuditStatus != ''">
+	        <if test="cardAuditStatus == 0">
+	            and IFNULL(waitCheckNumber,0) &gt; 0
+	        </if>
+	        <if test="cardAuditStatus == 1">
+	            and IFNULL(notPassNumber,0) &gt; 0
+	        </if>
+	        <if test="cardAuditStatus == 2">
+	            and IFNULL(submitNumber,0) &gt; 0 and IFNULL(notPassNumber,0) = 0 and IFNULL(waitCheckNumber,0) = 0
+	        </if>
+        </if>
+        <if test="cardSubmitNumber != null and cardSubmitNumber != ''">
+	        <if test="cardSubmitNumber == 0">
+	            and IFNULL(submitNumber,0) == IFNULL(totalNumber,0)
+	        </if>
+	        <if test="cardSubmitNumber == 1">
+	            and IFNULL(submitNumber,0) != IFNULL(totalNumber,0)
+	        </if>
+	        <if test="cardSubmitNumber == 2">
+	            and IFNULL(submitNumber,0) != IFNULL(printNumber,0)
+	        </if>
+        </if>
+        <if test="boothAuditStatus != null and boothAuditStatus != ''">
+	        <if test="boothAuditStatus == 0">
+	            and (isnull(exhibition_office_audit_status) or exhibition_office_audit_status = 0)
+	        </if>
+	        <if test="boothAuditStatus == 1">
+	            and exhibition_office_audit_status = 1 and (finance_office_audit_status = 0 or isnull(finance_office_audit_status))
+	        </if>
+	        <if test="boothAuditStatus == 2">
+	            and exhibition_office_audit_status = 1 and finance_office_audit_status = 1
+	        </if>
+        </if>
+        <if test="tradingGroupId != null and tradingGroupId != ''">
+            and ebs_tradinggroup.id = #{tradingGroupId}
+        </if>
+        <if test="boothName != null and boothName != ''">
+            and upper(booths) like concat ('%',upper(#{boothName}),'%')
+        </if>
+        <if test="companyName != null and companyName != ''">
+            and upper(chinesename) like concat ('%',upper(#{companyName}),'%')
+        </if>
+		</where>
+	</select>
+
+	<select id="selectTradingGroup" resultType="map">
+		SELECT
+			DISTINCT cc.id,cc.name
+		FROM
+			web_member a
+		LEFT JOIN web_member_session b ON a.member_id = b.member_id
+		LEFT JOIN pim_agent bb ON b.orgnization_id = bb.id
+		LEFT JOIN ebs_tradinggroup cc ON bb.tradinggroupid = cc.id
+		INNER JOIN system_user_rights ON cc.id = system_user_rights.tradinggroupid
+		and system_user_rights.userid = #{userId} and system_user_rights.session=#{session}
+		WHERE a.member_type = 0 AND a.member_status = 0 AND b.id = #{session}
+		order by cc.orders,cc.id
+	</select>
+
+	<select id="selectCompanyInfo" resultType="map">
+		SELECT
+			a.id companyId,
+			a.comany_type_id,
+			c.member_username memberUsername,
+			a.chinesename,
+			a.engname,
+			a.russianname,
+			a.chineseaddress,
+			a.engaddress,
+			a.postcode,
+			a.phone,
+			a.tel,
+			a.fax,
+			a.website,
+			a.email,
+			ifnull(a.country,0) as country,
+			ifnull(a.province,0) as province,
+			ifnull(a.city,0) as city,
+			a.contactperson,
+			a.jobtitle,
+			a.principal,
+			a.industryid,
+			a.busscope,
+			a.hopecustomers,
+			a.companyprofile,
+			a.companylogo,
+			ifnull(a.buslicensepath, d.apply_license) buslicensepath,
+			d.apply_file relateddocumentspath,
+			a.purchaseintention,
+			a.exhibitors_nature_id,
+			date(a.addtime) addtime,
+			a.companypicture,
+			a.companyvideo,
+			a.companypictures,
+			a.relateddocumentspath,
+			a.organizationcode,
+			a.url
+		FROM
+			ebs_companyinfo a
+		LEFT JOIN ebs_tradinggroup bb ON a.tradinggroupid = bb.id
+		left join pim_agent bbb on bb.id = bbb.tradinggroupid
+		LEFT JOIN web_member_session b ON bbb.id = b.orgnization_id
+		LEFT JOIN web_member c ON b.member_id = c.member_id
+		LEFT JOIN ebs_booth_apply d ON d.company_id = a.id and d.session_id = #{session}
+		where b.id = #{session} and a.id = #{id} order by bb.orders,b.addtime desc limit 1
+	</select>
+	
+	<select id="getPersonnelCardList" resultType="map">
+		select
+			b.id,
+			case b.sex WHEN 0 THEN '男' ELSE '女' end sex,
+			case b.isgreen WHEN 0 then '否' ELSE '是' end isgreen,
+			b.name,
+			case b.status when 0 then '待审核' when -1 then '审核未通过' when 1 then '审核通过' end status,
+			b.companyname,
+			b.remark,
+			b.addtime
+		from ebs_companyinfo a
+		left join ebs_personnelcard b on a.id = b.companyid and a.session=b.session
+		LEFT JOIN ebs_tradinggroup d ON a.tradinggroupid = d.id
+		left join pim_agent c on c.tradinggroupid = d.id
+		LEFT JOIN web_member_session ON c.id = web_member_session.orgnization_id
+		where a.id = #{companyId} and b.session = #{session} and c.makeevidence = 1 and web_member_session.id = #{session}
+		order by d.orders
+	</select>
+	
+	<select id="getPersonnelCardListCount" resultType="int">
+		select
+			count(*)
+		from ebs_companyinfo a
+		left join ebs_personnelcard b on a.id = b.companyid and a.session=b.session
+		LEFT JOIN ebs_tradinggroup d ON a.tradinggroupid = d.id
+		left join pim_agent c on c.tradinggroupid = d.id
+		LEFT JOIN web_member_session ON c.id = web_member_session.orgnization_id
+		where a.id = #{companyId} and b.session = #{session} and c.makeevidence = 1 and web_member_session.id = #{session}
+	</select>
+	
+	<select id="loadCount" resultType="map">
+		select * FROM (
+			SELECT
+				count(DISTINCT ebs_personnelcard.id) certificatesTotalNumber,
+				IFNULL(SUM(IF(ebs_personnelcard.status = 0,1,0)),0) pendingAuditNumber,
+				IFNULL(SUM(IF(ebs_personnelcard.status = -1,1,0)),0) failedAuditNumber,
+				IFNULL(SUM(IF(ebs_personnelcard.status = 1,1,0)),0) ReviewedCertificatesNumber,
+				IFNULL(SUM(IF(ebs_personnelcard.printstatus = 2,1,0)),0) Printed,
+				IFNULL(SUM(IF(ebs_personnelcard.status = 1 and ebs_personnelcard.isplastic = 1 and ebs_personnelcard.printstatus = 0,1,0)),0) noPrinted
+			FROM ebs_personnelcard
+			WHERE ebs_personnelcard.session = #{session} and ebs_personnelcard.companyid in (
+				SELECT
+					DISTINCT c.id
+				FROM
+					web_member a
+				INNER JOIN web_member_session b ON a.member_id = b.member_id AND b.id = #{session}
+				and a.member_type = 0 AND a.member_status = 0
+				INNER JOIN pim_agent bb ON b.orgnization_id = bb.id
+				and bb.type = 0 and bb.isopen = 1 and bb.makeevidence = 1
+				INNER JOIN ebs_tradinggroup cc ON bb.tradinggroupid = cc.id AND cc.type = 0 AND cc.`session` = b.id
+				<if test="tradingGroupId != null and tradingGroupId != ''">
+					AND cc.id = #{tradingGroupId}
+				</if>
+				INNER JOIN system_user_rights ON cc.id = system_user_rights.tradinggroupid
+				AND system_user_rights.userid = #{userId} AND system_user_rights.`session` = b.id
+				INNER JOIN ebs_companyinfo c ON cc.id = c.tradinggroupid AND c.useable = 1 AND c.`session` = b.id
+			) AND cardtype = (
+				SELECT id FROM cm_certificate_type WHERE type=0 and useable = 1 and session = #{session} and isexhibitor = 1
+			) AND agent in (
+				SELECT DISTINCT web_member.member_id FROM web_member
+				INNER JOIN web_member_session ON web_member.member_id = web_member_session.member_id
+				AND web_member_session.id = #{session} AND web_member.member_type = 0 AND web_member.member_type = 0
+				INNER JOIN pim_agent ON web_member_session.orgnization_id = pim_agent.id AND pim_agent.makeevidence = 1
+			)
+		) a
+		left join
+		(
+			select
+				COUNT(DISTINCT ebs_tradinggroupboothallocation.boothid) boothsTotalNumber,
+				IFNULL(SUM(CASE WHEN IFNULL(ebs_booth.company_id,0) != 0 THEN 1 ELSE 0 END), 0) boothsAllocationedNumber,
+				IFNULL(SUM(CASE WHEN IFNULL(ebs_booth.company_id,0) = 0 THEN 1 ELSE 0 END), 0) boothsNotAllocationedNumber
+			from system_user_rights
+			INNER JOIN ebs_tradinggroup ON system_user_rights.tradinggroupid = ebs_tradinggroup.id
+			INNER JOIN ebs_tradinggroupboothallocation ON ebs_tradinggroup.id = ebs_tradinggroupboothallocation.tradinggroupid and system_user_rights.session = ebs_tradinggroupboothallocation.session
+			INNER JOIN ebs_booth ON ebs_tradinggroupboothallocation.boothid = ebs_booth.id
+			WHERE system_user_rights.userid = #{userId} AND system_user_rights.session = #{session} AND ebs_tradinggroup.type = 0
+			<if test="tradingGroupId != null and tradingGroupId != ''">
+				AND ebs_tradinggroup.id = #{tradingGroupId}
+			</if>
+		) b on 1=1
+		left join
+		(
+			SELECT
+				count(product_id) ProductsNumber,
+				ifnull(SUM(IF(ifnull(product_status, 0)=0,1,0)), 0) waitAuditProductsNumber,
+				ifnull(SUM(IF(ifnull(product_status, 0)=1,1,0)), 0) auditedProductsNumber
+			FROM web_product
+			INNER JOIN ebs_companyinfo on web_product.company_id = ebs_companyinfo.id
+			INNER JOIN ebs_tradinggroup on ebs_companyinfo.tradinggroupid = ebs_tradinggroup.id and ebs_tradinggroup.type = 0
+			INNER JOIN system_user_rights on system_user_rights.tradinggroupid = ebs_tradinggroup.id
+			and system_user_rights.userid = #{userId} and system_user_rights.session = #{session}
+			<if test="tradingGroupId != null and tradingGroupId != ''">
+				AND ebs_tradinggroup.id = #{tradingGroupId}
+			</if>
+		) c on 1=1
+		left join
+		(
+			SELECT
+				count(DISTINCT c.id) EnterprisesNumber
+			FROM
+				web_member a
+			LEFT JOIN web_member_session b ON a.member_id = b.member_id
+			LEFT JOIN pim_agent bb ON b.orgnization_id = bb.id
+			LEFT JOIN ebs_tradinggroup cc ON bb.tradinggroupid = cc.id
+			LEFT JOIN ebs_companyinfo c ON cc.id = c.tradinggroupid
+			INNER JOIN system_user_rights ON cc.id = system_user_rights.tradinggroupid
+			and system_user_rights.userid = #{userId} and system_user_rights.session = #{session}
+			WHERE a.member_type = 0 AND a.member_status = 0 and bb.type = 0 and bb.isopen = 1 AND c.useable = 1 AND cc.type = 0
+			AND b.id = #{session} and c.session=#{session}
+			<if test="tradingGroupId != null and tradingGroupId != ''">
+				AND cc.id = #{tradingGroupId}
+			</if>
+		) d on 1=1
+	</select>
+</mapper>

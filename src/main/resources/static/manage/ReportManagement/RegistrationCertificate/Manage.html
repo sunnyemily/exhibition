@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>注册证件统计表</title>
+		<meta content="webkit" name="renderer">
+		<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+		<meta content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" name="viewport"/>
+		<link rel="stylesheet" href="/manage/css/xadmin.css">
+		<link rel="stylesheet" href="/manage/css/font.css">
+		<link href="/manage/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+		<link href="/manage/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+		<link href="/manage/css/animate.css" rel="stylesheet">
+		<link href="/manage/css/style.css?v=4.1.0" rel="stylesheet">
+		<link href="/manage/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<script charset="utf-8" src="/manage/js/jquery.min.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/layui/layui.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/xadmin.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/vue.js" type="text/javascript"></script>
+
+	</head>
+	<body>
+		<div class="wrapper wrapper-content  animated fadeInRight">
+			<div class="row" id="vmEbsCompanyinfo">
+				<div class="col-sm-12">
+					<div class="ibox float-e-margins">
+						<div class="ibox-title">
+							<h5>注册证件统计表</h5>
+							<div class="ibox-tools">
+								<a class="collapse-link"> <i class="fa fa-chevron-up"></i> </a><a class="close-link"> <i class="fa fa-times"></i> </a>
+							</div>
+						</div>
+						<div class="ibox-content">
+							<div class="fixed-table-toolbar" style="height:50px;">
+								<div class="bars pull-left">
+									<div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
+										<!--<button type="button" class="btn btn-outline btn-default" onclick="xadmin.open('添加企业信息','ebsCompanyinfoAdd.html')" title="新建" id="addUser"> <i class="glyphicon glyphicon-plus" aria-hidden="true"></i> </button>
+										<button type="button" class="btn btn-outline btn-default" title="批量删除" id="delAll" onclick="delall()"> <i class="glyphicon glyphicon-trash" aria-hidden="true"></i> </button>-->
+										<button class="btn btn-default btn-outline" type="button" name="refresh" onclick="location.reload()" title="刷新" id="refresh">
+											<i class="glyphicon glyphicon-repeat"></i>
+										</button>
+									</div>
+								</div>
+							</div>
+							<table width="70%" class="layui-table" style="margin:0px auto" border="1">
+								<tbody>
+									<tr>
+										<td width="160" bgcolor="#ffffff">
+										<div>参展证：</div></td>
+										<td align="left" style="font-size:18px;font-weight:bold" bgcolor="#ffffff" id="tdczz"></td>
+									</tr>
+									<tr>
+										<td width="160" bgcolor="#ffffff">参展证中国总数:</td>
+										<td align="left" id="tdczz1"></td>
+									</tr>
+									<tr>
+										<td width="160" bgcolor="#ffffff">参展证港澳台总数:</td>
+										<td align="left" id="tdczz2"></td>
+									</tr>
+									<tr>
+										<td width="160" bgcolor="#ffffff">参展证外国总数:</td>
+										<td align="left" id="tdczz3"></td>
+									</tr>
+									<tr>
+										<td width="160" bgcolor="#ffffff">
+										<div>
+											参展证B：
+										</div></td>
+										<td align="left" style="font-size:18px;font-weight:bold" bgcolor="#ffffff" id="tdczzb"></td>
+									</tr>
+
+									<tr>
+										<td width="160" bgcolor="#ffffff">参展证B中国总数:</td>
+										<td align="left" id="tdczzb1"></td>
+									</tr>
+									<tr>
+										<td width="160" bgcolor="#ffffff">参展证B港澳台总数:</td>
+										<td align="left" id="tdczzb2"></td>
+									</tr>
+									<tr>
+										<td width="160" bgcolor="#ffffff">参展证B外国总数:</td>
+										<td align="left" id="tdczzb3"></td>
+									</tr>
+									<tr>
+										<td width="160" bgcolor="#ffffff">
+										<div>
+											嘉宾证A：
+										</div></td>
+										<td align="left" style="font-size:18px;font-weight:bold" bgcolor="#ffffff" id="tdjbz"></td>
+									</tr>
+									<tr>
+										<td width="160" bgcolor="#ffffff">嘉宾证A中国总数:</td>
+										<td align="left" id="tdjbz1"></td>
+									</tr>
+									<tr>
+										<td width="160" bgcolor="#ffffff">嘉宾证A港澳台总数:</td>
+										<td align="left" id="tdjbz2"></td>
+									</tr>
+									<tr>
+										<td width="160" bgcolor="#ffffff">嘉宾证A外国总数:</td>
+										<td align="left" id="tdjbz3"></td>
+									</tr>
+									<tr>
+										<td width="160" bgcolor="#ffffff">
+										<div>
+											采购商证：
+										</div></td>
+										<td align="left" style="font-size:18px;font-weight:bold" bgcolor="#ffffff" id="tdcgs"></td>
+									</tr>
+									<tr>
+										<td width="160" bgcolor="#ffffff">采购商证中国总数:</td>
+										<td align="left" id="tdcgs1"></td>
+									</tr>
+									<tr>
+										<td width="160" bgcolor="#ffffff">采购商证港澳台总数:</td>
+										<td align="left" id="tdcgs2"></td>
+									</tr>
+									<tr>
+										<td width="160" bgcolor="#ffffff">采购商证外国总数:</td>
+										<td align="left" id="tdcgs3"></td>
+									</tr>
+									<tr>
+										<td width="160" bgcolor="#ffffff">
+										<div>
+											贵宾证：
+										</div></td>
+										<td align="left" style="font-size:18px;font-weight:bold" bgcolor="#ffffff" id="tdgbz"></td>
+									</tr>
+									<tr>
+										<td width="160" bgcolor="#ffffff">贵宾证中国总数:</td>
+										<td align="left" id="tdgbz1"></td>
+									</tr>
+									<tr>
+										<td width="160" bgcolor="#ffffff">贵宾证港澳台总数:</td>
+										<td align="left" id="tdgbz2"></td>
+									</tr>
+									<tr>
+										<td width="160" bgcolor="#ffffff">贵宾证外国总数:</td>
+										<td align="left" id="tdgbz3"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="/manage/js/bootstrap.min.js?v=3.3.6"></script>
+	</body>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var params={};
+			params.id='';
+			$.ajax({
+				url : "/manage/ReportManagement/Common/RegistrationCertificateList",
+				data : JSON.stringify(params),
+				type : "post",
+				contentType : "application/json",
+				success : function(result) {
+					if(result.code==1){
+						$("#tdczz").html(result.data[0].canzhanzheng.zongshu);
+						$("#tdczz1").html(result.data[0].canzhanzheng.zhongguo);
+						$("#tdczz2").html(result.data[0].canzhanzheng.gangaotai);
+						$("#tdczz3").html(result.data[0].canzhanzheng.guowai);
+						
+						$("#tdczzb").html(result.data[0].canzhanzhengb.zongshu);
+						$("#tdczzb1").html(result.data[0].canzhanzhengb.zhongguo);
+						$("#tdczzb2").html(result.data[0].canzhanzhengb.gangaotai);
+						$("#tdczzb3").html(result.data[0].canzhanzhengb.guowai);
+						
+						$("#tdjbz").html(result.data[0].jiabinzhenga.zongshu);
+						$("#tdjbz1").html(result.data[0].jiabinzhenga.zhongguo);
+						$("#tdjbz2").html(result.data[0].jiabinzhenga.gangaotai);
+						$("#tdjbz3").html(result.data[0].jiabinzhenga.guowai);
+						
+						$("#tdcgs").html(result.data[0].caigoushang.zongshu);
+						$("#tdcgs1").html(result.data[0].caigoushang.zhongguo);
+						$("#tdcgs2").html(result.data[0].caigoushang.gangaotai);
+						$("#tdcgs3").html(result.data[0].caigoushang.guowai);
+						
+						$("#tdgbz").html(result.data[0].jiabinzhenga.zongshu);
+						$("#tdgbz1").html(result.data[0].jiabinzhenga.zhongguo);
+						$("#tdgbz2").html(result.data[0].jiabinzhenga.gangaotai);
+						$("#tdgbz3").html(result.data[0].jiabinzhenga.guowai);
+					}
+				}
+			});			
+		});
+	</script>
+</html>

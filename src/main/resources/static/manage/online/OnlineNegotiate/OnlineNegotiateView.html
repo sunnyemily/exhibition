@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>预约洽谈详情</title>
+    <meta content="webkit" name="renderer">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" name="viewport"/>
+    <link rel="stylesheet" href="/manage/css/xadmin.css">
+	<link href="/manage/css/style.css?v=4.1.0" rel="stylesheet">
+	<link href="/manage/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="/manage/layui/css/layui.css"  media="all">
+</head>
+<body class="gray-bg">
+    <div class="modal inmodal" id="friendlink-model">
+		<div class="modal-content animated bounceInUp" id="vmViewOnlineNegotiate">
+			<div class="ibox-content">
+				<fieldset class="layui-elem-field layui-field-title" style="border-top:0px">
+					<form class="layui-form layui-form-pane" action="">
+	                    <div class="layui-form-item">
+	                        <label class="layui-form-label" for="session">届次</label>
+	                        <div class="layui-input-block">
+	                            <div class="layui-input-inline layui-show-xs-block">
+	                                <input autocomplete="off" class="layui-input" id="session" name="session" readonly type="text" v-model="onlineNegotiate.session">
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="layui-form-item">
+	                        <label class="layui-form-label" for="memberid">会员Id</label>
+	                        <div class="layui-input-block">
+	                            <div class="layui-input-inline layui-show-xs-block">
+	                                <input autocomplete="off" class="layui-input" id="memberid" name="memberid" readonly type="text" v-model="onlineNegotiate.memberid">
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="layui-form-item">
+	                        <label class="layui-form-label" for="companyid">被预约企业</label>
+	                        <div class="layui-input-block">
+	                            <div class="layui-input-inline layui-show-xs-block">
+	                                <input autocomplete="off" class="layui-input" id="companyid" name="companyid" readonly type="text" v-model="onlineNegotiate.companyid">
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="layui-form-item">
+	                        <label class="layui-form-label" for="productid">被预约产品</label>
+	                        <div class="layui-input-block">
+	                            <div class="layui-input-inline layui-show-xs-block">
+	                                <input autocomplete="off" class="layui-input" id="productid" name="productid" readonly type="text" v-model="onlineNegotiate.productid">
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="layui-form-item">
+	                        <label class="layui-form-label" for="name">预约者姓名</label>
+	                        <div class="layui-input-block">
+	                            <div class="layui-input-inline layui-show-xs-block">
+	                                <input autocomplete="off" class="layui-input" id="name" name="name" readonly type="text" v-model="onlineNegotiate.name">
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="layui-form-item">
+	                        <label class="layui-form-label" for="tel">预约者联系方式</label>
+	                        <div class="layui-input-block">
+	                            <div class="layui-input-inline layui-show-xs-block">
+	                                <input autocomplete="off" class="layui-input" id="tel" name="tel" readonly type="text" v-model="onlineNegotiate.tel">
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="layui-form-item">
+	                        <label class="layui-form-label" for="content">内容</label>
+	                        <div class="layui-input-block">
+	                            <div class="layui-input-inline layui-show-xs-block">
+	                                <input autocomplete="off" class="layui-input" id="content" name="content" readonly type="text" v-model="onlineNegotiate.content">
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="layui-form-item">
+	                        <label class="layui-form-label" for="status">0审核拒绝 1待审 2审核通过</label>
+	                        <div class="layui-input-block">
+	                            <div class="layui-input-inline layui-show-xs-block">
+	                                <input autocomplete="off" class="layui-input" id="status" name="status" readonly type="text" v-model="onlineNegotiate.status">
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="layui-form-item">
+	                        <label class="layui-form-label" for="remark">拒绝理由</label>
+	                        <div class="layui-input-block">
+	                            <div class="layui-input-inline layui-show-xs-block">
+	                                <input autocomplete="off" class="layui-input" id="remark" name="remark" readonly type="text" v-model="onlineNegotiate.remark">
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="layui-form-item">
+	                        <label class="layui-form-label" for="audittime">审核时间</label>
+	                        <div class="layui-input-block">
+	                            <div class="layui-input-inline layui-show-xs-block">
+	                                <input autocomplete="off" class="layui-input" id="audittime" name="audittime" readonly type="text" v-model="onlineNegotiate.audittime">
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="layui-form-item">
+	                        <label class="layui-form-label" for="audituser">审核人</label>
+	                        <div class="layui-input-block">
+	                            <div class="layui-input-inline layui-show-xs-block">
+	                                <input autocomplete="off" class="layui-input" id="audituser" name="audituser" readonly type="text" v-model="onlineNegotiate.audituser">
+	                            </div>
+	                        </div>
+	                    </div>
+			            <div class="layui-form-item">  
+			            	<div class="layui-input-block">	              
+                				<button class="layui-btn layui-btn-primary" onclick="xadmin.close();" style="width: 100px;">返回</button>
+			                </div>
+			            </div>
+			        </form>
+			 	</fieldset>
+			</div>
+		</div>
+	</div>
+	<script charset="utf-8" src="/manage/js/jquery.min.js" type="text/javascript"></script>
+	<script charset="utf-8" src="/manage/layui/layui.js" type="text/javascript"></script>
+	<script charset="utf-8" src="/manage/js/xadmin.js" type="text/javascript"></script>
+	<script charset="utf-8" src="/manage/js/vue.js" type="text/javascript"></script>
+	<script src="/manage/js/bootstrap.min.js?v=3.3.6"></script>
+	<script charset="UTF-8" type="text/javascript">
+    	var viewOnlineNegotiateId = sessionStorage.getItem("viewOnlineNegotiateId");
+    	vm = new Vue({
+		    el: "#vmViewOnlineNegotiate",
+		    data: {
+		    	onlineNegotiate: {}
+		    },
+		    methods: {},
+		    created: function () {
+		        var _this = this;
+		        $.ajax({
+		            url: "/manage/online/onlineNegotiate/findById",
+		            data: {
+		                "id": viewOnlineNegotiateId
+		            },
+		            dataType: "json",
+		            type: "get",
+		            success: function (result) {
+		                if (result.code === 1) {
+		                    _this.onlineNegotiate = result.data;
+		                } else {
+		                    layer.alert("获取修改预约洽谈信息失败！");
+		                }
+		            }
+		        });
+			}
+		});
+	</script>
+</body>
+</html>

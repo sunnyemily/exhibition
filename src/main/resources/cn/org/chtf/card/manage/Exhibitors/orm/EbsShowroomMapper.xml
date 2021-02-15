@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.Exhibitors.dao.EbsShowroomMapper">
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsShowroom">
+        select a.id,a.session,a.code,a.name,a.type,a.useable,a.orders,a.remark,a.addtime,b.name as typename        from ebs_showroom as a
+        left join ebs_showroomtype as b on a.type=b.id
+        where a.id = #{id}
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsShowroom">
+        select a.id,a.session,a.code,a.name,a.type,a.useable,a.orders,a.remark,a.addtime        from ebs_showroom as a
+        <where>
+                            <if test="id != null and id != ''">
+                    and a.id = #{id}
+                </if>
+                            <if test="session != null and session != ''">
+                    and a.session = #{session}
+                </if>
+                            <if test="code != null and code != ''">
+                    and a.code = #{code}
+                </if>
+                            <if test="name != null and name != ''">
+                    and a.name = #{name}
+                </if>
+                            <if test="type != null and type != ''">
+                    and a.type = #{type}
+                </if>
+                            <if test="useable != null and useable != ''">
+                    and a.useable = #{useable}
+                </if>
+                            <if test="orders != null and orders != ''">
+                    and a.orders = #{orders}
+                </if>
+                            <if test="remark != null and remark != ''">
+                    and a.remark = #{remark}
+                </if>
+                            <if test="addtime != null and addtime != ''">
+                    and a.addtime = #{addtime}
+                </if>
+                    </where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsShowroom">
+        select a.id,a.session,a.code,a.name,a.type,a.useable,a.orders,a.remark,a.addtime,b.name as typename,ifnull(c.shuliang,0) as shuliang  from ebs_showroom as a
+        left join ebs_showroomtype as b on a.type=b.id
+        left join (select session,show_room_id,count(*) as shuliang from ebs_booth where useable=1 group by session,show_room_id) as c on c.show_room_id=a.id and a.session=c.session
+        <where>
+        	<if test="id != null and id != ''">and a.id =
+				#{id}
+			</if>
+        	<if test="session != null and session != ''">and a.session =
+            	 #{session}
+            </if>
+			<if test="code != null and code != ''">and a.code like concat('%',#{code},'%')
+            </if>
+            <if test="name != null and name != ''">and a.name like concat('%',#{name},'%')
+            </if>
+            <if test="type != null and type != ''">and a.type =
+            	#{type}
+            </if>
+            <if test="useable != null and useable != ''">and a.useable =
+                #{useable}
+            </if>
+            <if test="orders != null and orders != ''">and a.orders =
+                #{orders}
+            </if>
+            <if test="remark != null and remark != ''">and a.remark =
+                #{remark}
+            </if>
+            <if test="addtime != null and addtime != ''">and a.addtime =
+                #{addtime}
+            </if>
+        </where>
+        order by a.orders	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(id) 
+		FROM 
+		ebs_showroom a
+		<where>
+        	<if test="id != null and id != ''">and a.id =
+				#{id}
+			</if>
+        	<if test="session != null and session != ''">and a.session =
+            	#{session}
+            </if>
+			<if test="code != null and code != ''">and a.code like concat('%',#{code},'%')
+            </if>
+            <if test="name != null and name != ''">and a.name like concat('%',#{name},'%')
+            </if>
+            <if test="type != null and type != ''">and a.type =
+            	#{type}
+            </if>
+            <if test="useable != null and useable != ''">and a.useable =
+                #{useable}
+            </if>
+            <if test="orders != null and orders != ''">and a.orders =
+                #{orders}
+            </if>
+            <if test="remark != null and remark != ''">and a.remark =
+                #{remark}
+            </if>
+            <if test="addtime != null and addtime != ''">and a.addtime =
+                #{addtime}
+            </if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.Exhibitors.model.EbsShowroom"            useGeneratedKeys="true" keyProperty="id">
+        insert into ebs_showroom(
+        	<trim suffixOverrides=",">
+	        	<if test="session != null">`session`,</if>
+	            <if test="code != null">`code`,</if>
+	            <if test="name != null">`name`,</if>
+	            <if test="type != null">`type`,</if>
+	            <if test="useable != null">`useable`,</if>
+	            <if test="orders != null">`orders`,</if>
+	            <if test="remark != null">`remark`,</if>
+	            <if test="addtime != null">`addtime`</if>
+           	</trim>
+        ) values (
+        	<trim suffixOverrides=",">
+                <if test="session != null">#{session},</if>
+                <if test="code != null">#{code},</if>
+                <if test="name != null">#{name},</if>
+                <if test="type != null">#{type},</if>
+                <if test="useable != null">#{useable},</if>
+                <if test="orders != null">#{orders},</if>
+                <if test="remark != null">#{remark},</if>
+                <if test="addtime != null">#{addtime}</if>
+       		</trim>
+       	)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.Exhibitors.model.EbsShowroom">
+        update ebs_showroom
+        <set>
+            <if test="session != null">`session` = #{session}
+            ,</if>
+           	<if test="code != null">`code` = #{code}
+            ,</if>
+           	<if test="name != null">`name` = #{name}
+            ,</if>
+            <if test="type != null">`type` = #{type}
+            ,</if>
+            <if test="useable != null">`useable` = #{useable}
+            ,</if>
+            <if test="orders != null">`orders` = #{orders}
+            ,</if>
+            <if test="remark != null">`remark` = #{remark}
+            ,</if>
+            <if test="addtime != null">`addtime` = #{addtime}
+            </if>
+		</set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete
+        from ebs_showroom
+        where id = #{id}
+    </delete>
+
+
+    <select id="groupRooms" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsShowroom">
+        SELECT
+			*
+		FROM
+			ebs_showroom
+		WHERE
+			id IN (
+				SELECT
+					showroomid
+				FROM
+					ebs_tradinggroupboothallocation
+				WHERE
+					tradinggroupid = (
+						SELECT
+							tradinggroupid
+						FROM
+							pim_agent
+						WHERE
+							id = (
+								SELECT
+									orgnization_id
+								FROM
+									web_member_session
+								WHERE
+									member_id = #{memberId}
+								AND id = #{sessionId}
+							)
+					)
+				GROUP BY
+					showroomid
+			)
+    </select>
+</mapper>
