@@ -247,4 +247,8 @@ public class EbsPersonnelcard implements Serializable{
     private Integer isplastic;
     
     private String middleid;
+
+    private String profession;
+
+    private Timestamp audittime;
 }

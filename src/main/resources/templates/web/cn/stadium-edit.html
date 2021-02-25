@@ -1,0 +1,137 @@
+    <div class="modal inmodal" id="edit-model" style="display:none">
+		<div class="modal-content animated bounceInUp">
+			<div class="ibox-content">
+				<fieldset class="layui-elem-field layui-field-title" style="border-top:0px">
+					<form class="layui-form layui-form-pane" action="" id="editform">
+					    <input type="hidden" name="id" value="0"  />
+					    <input type="hidden" name="session" value="${exhibitionSessionId}"  />
+					    <input type="hidden" name="isback" value="1"  />
+						<table width="100%"  class="layui-table form-content">
+							<tr class="papers-edit-bg"><td colspan="3" style="border-right: none;">添加报馆申请</td><td align="right"><a class="layui-icon layui-icon-close close"></a></td></tr>
+							<tr>
+								<td>*展商名称</td>
+								<td colspan=3"">
+							      <select name="relationcompanyid" id="relationcompanyid">
+							      	<#if companys??>
+							      	<#list companys as c>
+									<option value="${c.id}">${c.chinesename}</option>
+									</#list>
+									<#else>
+									<option value="${company.id!'0'}">${company.chinesename!''}</option>
+									</#if>
+								  </select>
+								</td>
+							</tr>
+							<tr>
+								<td>*特装展位搭建安全责任承诺书</td>
+								<input type="hidden" name="safetyresponsibilitycommit" id="safetyresponsibilitycommit" value="" lay-verify="required" lay-reqText="必须上传特装展位搭建安全责任承诺书" />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnSafetyResponsibilityCommit">
+										<i class="layui-icon">&#xe67c;</i>上传文件
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />此处可上传特装展位搭建安全责任承诺书,上传文件为ZIP和RAR类型并且大小要在15MB以内。</div>
+								</td>
+								<td colspan="2" class="prepic" id="safetyResponsibilityCommitContainer"></td>
+							</tr>
+							<tr>
+								<td>*特装展位装修工程申请表</td>
+								<input type="hidden" name="fitmentapplication" id="fitmentapplication" value="" lay-verify="required" lay-reqText="必须上传特装展位装修工程申请表" />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnFitmentApplication">
+										<i class="layui-icon">&#xe67c;</i>上传文件
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />此处可上传特装展位装修工程申请表,上传文件为ZIP和RAR类型并且大小要在15MB以内。</div>
+								</td>
+								<td colspan="2" class="prepic" id="fitmentApplicationContainer"></td>
+							</tr>
+							<tr>
+								<td>*特装工程效果图</td>
+								<input type="hidden" name="effectdiagram" id="effectdiagram" value="" lay-verify="required" lay-reqText="必须上传特装工程效果图" />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnEffectDiagram">
+										<i class="layui-icon">&#xe67c;</i>上传文件
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />此处可上传特装工程效果图,上传文件为ZIP和RAR类型并且大小要在15MB以内。</div>
+								</td>
+								<td colspan="2" class="prepic" id="effectDiagramContainer"></td>
+							</tr>
+							<tr>
+								<td>*特装工程施工图</td>
+								<input type="hidden" name="constructiondiagram" id="constructiondiagram" value="" lay-verify="required" lay-reqText="必须上传特装工程施工图" />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnConstructionDiagram">
+										<i class="layui-icon">&#xe67c;</i>上传文件
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />此处可上传特装工程施工图,上传文件为ZIP和RAR类型并且大小要在15MB以内。</div>
+								</td>
+								<td colspan="2" class="prepic" id="constructionDiagramContainer"></td>
+							</tr>
+							<tr>
+								<td>*特装工程载荷图或点位图</td>
+								<input type="hidden" name="pointdiagram" id="pointdiagram" value="" lay-verify="required" lay-reqText="必须上传特装工程载荷图或点位图" />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnPointDiagram">
+										<i class="layui-icon">&#xe67c;</i>上传文件
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />此处可上传特装工程载荷图或点位图,上传文件为ZIP和RAR类型并且大小要在15MB以内。</div>
+								</td>
+								<td colspan="2" class="prepic" id="pointDiagramContainer"></td>
+							</tr>
+							<tr>
+								<td>*特装工程电路图</td>
+								<input type="hidden" name="circuitdiagram" id="circuitdiagram" value="" lay-verify="required" lay-reqText="必须上传特装工程电路图" />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnCircuitDiagram">
+										<i class="layui-icon">&#xe67c;</i>上传文件
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />此处可上传特装工程电路图,上传文件为ZIP和RAR类型并且大小要在15MB以内。</div>
+								</td>
+								<td colspan="2" class="prepic" id="circuitDiagramContainer"></td>
+							</tr>
+							<tr>
+								<td>*施工人员身份证，电焊工上岗证等复印件</td>
+								<input type="hidden" name="workercertificatecopy" id="workercertificatecopy" value="" lay-verify="required" lay-reqText="必须上传施工人员身份证，电焊工上岗证等复印件" />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnWorkerCertificateCopy">
+										<i class="layui-icon">&#xe67c;</i>上传文件
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />此处可上传施工人员身份证，电焊工上岗证等复印件,上传文件为ZIP和RAR类型并且大小要在15MB以内。</div>
+								</td>
+								<td colspan="2" class="prepic" id="workerCertificateCopyContainer"></td>
+							</tr>
+							<tr>
+								<td>*特装展位器材及用料说明</td>
+								<input type="hidden" name="equipmentqualifiedprove" id="equipmentqualifiedprove" value="" lay-verify="required" lay-reqText="必须上传特装展位器材及用料说明" />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnEquipmentQualifiedProve">
+										<i class="layui-icon">&#xe67c;</i>上传文件
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />此处可上传特装展位器材及用料说明,上传文件为ZIP和RAR类型并且大小要在15MB以内。</div>
+								</td>
+								<td colspan="2" class="prepic" id="equipmentQualifiedProveContainer"></td>
+							</tr>
+							<tr>
+								<td>*参与施工的工作人员进行施工意外伤害保险的相关证明</td>
+								<input type="hidden" name="workercasualtyprove" id="workercasualtyprove" value="" lay-verify="required" lay-reqText="必须上传参与施工的工作人员进行施工意外伤害保险的相关证明" />
+								<td width="40%">
+									<button type="button" class="layui-btn" id="btnWorkerCasualtyProve">
+										<i class="layui-icon">&#xe67c;</i>上传文件
+									</button>
+									<div class="layui-form-mid layui-word-aux"><br />此处可上传参与施工的工作人员进行施工意外伤害保险的相关证明,上传文件为ZIP和RAR类型并且大小要在15MB以内。</div>
+								</td>
+								<td colspan="2" class="prepic" id="workerCasualtyProveContainer"></td>
+							</tr>
+							<tr class="papers-edit-bg">
+								<td colspan="4" align="center">
+									<button type="button" class="layui-btn layui-btn-primary close">取消</button>
+									<button type="reset" class="layui-btn layui-btn-primary" id="reset" style="display:none">重置</button>
+									<button type="button"  lay-submit class="layui-btn"  lay-filter="update">提交</button>
+								</td>
+							</tr>
+							
+						</table>
+					</form>
+				</fieldset>
+			</div>
+		</div>
+	</div>

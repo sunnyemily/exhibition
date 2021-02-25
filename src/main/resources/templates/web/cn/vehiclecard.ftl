@@ -47,12 +47,24 @@ var limit = ${limit};
 		    <i class="layui-icon layui-icon-search"></i>
 		  </button>
 		</div>
+		<#if type!="decorator">
          <div class="pull-right search">
            <input name="keywords" class="layui-input" type="text" placeholder="司机姓名" id="keywords" style="height:30px;" />
          </div>
          <div class="pull-right search">
            <input name="companyName" class="layui-input" type="text" placeholder="单位名称" id="companyName" style="height:30px;" />
          </div>
+		<#else>
+			<div class="pull-right search">
+				<input name="keywords" class="layui-input" type="text" placeholder="司机姓名" id="keywords" style="height:30px;" />
+			</div>
+			<div class="pull-right search">
+				<input name="phone" class="layui-input" type="text" placeholder="手机号" id="phone" style="height:30px;" />
+			</div>
+			<div class="pull-right search">
+				<input name="platenumber" class="layui-input" type="text" placeholder="车牌号" id="platenumber" style="height:30px;" />
+			</div>
+		</#if>
          <div class="pull-right search">
 			状态：<input type="radio" name="status" value="0" title="全部" checked />
 			<input type="radio" name="status" value="1" title="已取证" />
@@ -72,6 +84,10 @@ var limit = ${limit};
 <#include 'vehiclecard-edit.html'>
 <script type="text/html" id="toolBar">
 <#if !isTimeout>
+{{# if(d.status == 3){ }}
+<a class="layui-btn layui-btn-xs" lay-event="download" id="downloadFile" target="_blank">下载证书</a>
+<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+{{# } }}
 {{# if(d.status != 1){ }}
 <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
@@ -84,6 +100,28 @@ var limit = ${limit};
 </script>
 
 <script>
+	<#if type=="decorator">
+	var cols = [[{ checkbox: true }
+		, { field: 'id', title: '证件编号', sort: true, width: 120 }
+		, { field: 'platenumber', title: '车牌号码', sort: true, width: 150 }
+		, { field: 'drivername', title: '司机姓名', sort: true, width: 150 }
+		, { field: 'phone', title: '手机号', sort: true, width: 150 }
+		, { field: 'addtime', title: '提审时间', sort: true, width: 120,
+			templet:function (d) {
+				return showTime(d.addtime);
+			}}
+		, { field: 'status', title: '审核状态', sort: true, width: 120, templet: '#statusTpl' }
+		, { field: 'audittime', title: '审核时间', sort: true, width: 120,
+			templet:function (d) {
+				if (d.audittime == null || d.audittime == '') {
+					return '';
+				}
+				return showTime(d.audittime);
+			}}
+		, { fixed: 'right', width: 200, align: 'center', toolbar: '#toolBar', title: '操作' } // 这里的toolbar值是模板元素的选择器
+
+	]];
+	<#else>
 var cols =  [[{ checkbox: true }
 			, { field: 'drivername', title: '司机姓名', sort: true, width: 150 }
 			, { field: 'companyname', title: '单位名称', sort: true, width: 150 }
@@ -100,6 +138,7 @@ var cols =  [[{ checkbox: true }
 			, { field: '', title: '状态', sort: true, width: 100, templet: '#statusTpl' }
 			, { fixed: 'right', width: 200, align: 'center', toolbar: '#toolBar', title: '操作' } // 这里的toolbar值是模板元素的选择器
 		]]
+	</#if>
 </script>
 <script type="text/html" id="statusTpl">
 {{getStatusName(d)}}
@@ -120,6 +159,8 @@ var uploadSuccessfully="上传成功";
 var interfaceException="接口异常";
 var pictureToolTitle = '图片裁剪工具';
 </script>
+<script src="/script/validate.js"></script>
 <script src="/script/vehiclecard.js"></script>
+<script src="/manage/js/content.js?v=1.0.0"></script>
 </body>
 </html>

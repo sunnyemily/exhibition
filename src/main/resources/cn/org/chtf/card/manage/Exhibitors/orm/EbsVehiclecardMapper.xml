@@ -133,7 +133,9 @@
 		a.isforensics as isforensics,
 		a.forensicstime as forensicstime,
 		a.certificatenumber as certificatenumber,
-		a.printnumber as printnumber,a.reviewremark,a.isplastic,ifnull(s.middleid,'') as middleid        
+		a.printnumber as printnumber,a.reviewremark,a.isplastic,ifnull(s.middleid,'') as middleid,
+		a.phone as phone,
+		a.audittime as audittime
         from ebs_vehiclecard as a
         inner join cm_certificate_type as b on b.type=1 and a.cardtype=b.id
         <if test="leixing != null and leixing != ''">
@@ -196,6 +198,9 @@
 			</if>
 			<if test="isplastic != null and isplastic != ''">
 				and a.isplastic = #{isplastic}
+			</if>
+			<if test="phone != null and phone != ''">
+				and a.phone = #{phone}
 			</if>
                     </where>
         order by j.orders,a.id desc	
@@ -264,6 +269,9 @@
 			<if test="isplastic != null and isplastic != ''">
 				and a.isplastic = #{isplastic}
 			</if>
+			<if test="phone != null and phone != ''">
+				and a.phone = #{phone}
+			</if>
                     </where>
 	</select>
 
@@ -289,7 +297,9 @@
 					                <if test="forensicstime != null">`forensicstime`,</if>
 					                <if test="certificatenumber != null">`certificatenumber`,</if>
 					                <if test="reviewremark != null">`reviewremark`,</if>
-					                <if test="printnumber != null">`printnumber`</if>
+					                <if test="printnumber != null">`printnumber`,</if>
+									<if test="phone != null">`phone`,</if>
+									<if test="audittime != null">`audittime`</if>
                     </trim>)
         values (<trim suffixOverrides=",">
     								<if test="session != null">#{session},</if>
@@ -312,7 +322,9 @@
 					                <if test="forensicstime != null">#{forensicstime},</if>
 					                <if test="certificatenumber != null">#{certificatenumber},</if>
 					                <if test="reviewremark != null">#{reviewremark},</if>
-					                <if test="printnumber != null">#{printnumber}</if>
+					                <if test="printnumber != null">#{printnumber},</if>
+					                <if test="phone != null">#{phone},</if>
+					                <if test="audittime != null">#{audittime}</if>
                     </trim>)
     </insert>
 
@@ -342,7 +354,9 @@
 			<if test="reviewremark != null">`reviewremark` = #{reviewremark},</if>
 			<if test="isplastic != null">`isplastic` = #{isplastic},</if>
 			<if test="plastictime != null">`plastictime` = #{plastictime},</if>
-			<if test="printnumber != null">`printnumber` = #{printnumber}</if>
+			<if test="printnumber != null">`printnumber` = #{printnumber},</if>
+			<if test="phone != null">`phone` = #{phone},</if>
+			<if test="audittime != null">`audittime` = #{audittime}</if>
         </set>
         where id = #{id}
     </update>
@@ -372,7 +386,7 @@
 	       </foreach>;
 	 </delete>
 	 <select id="takeAwayReport" resultType="map">
-	 SELECT 
+	 SELECT
 		ebs_vehiclecard.id,
 		ebs_vehiclecard.companyname,
 		ebs_vehiclecard.platenumber,
@@ -418,7 +432,7 @@
 		AND cardtype=#{cardType}
 		</if>
 	 </select>
-	 
+
 	 <update id="updatePrintNumberByMap">
 		UPDATE ebs_vehiclecard a
 		INNER JOIN cm_certificate_type b ON a.cardtype = b.id
@@ -491,8 +505,8 @@
 		)
 	 GROUP BY ebs_vehiclecard.`platenumber`) AS car
 	 </select>
-	 
-	 
+
+
 	 <select id="VehicleIDMarkList" resultType="map">
 	 	select * from (
 			select ifnull(s.middleid,'') as middleid,a.agent,a.forensicstime,a.id,ifnull(t.name,'') as jytname,vw.uname as agentname,a.companyname,
@@ -507,7 +521,7 @@
 			left join (select primaryid,max(phone) as phone from sys_forensic_log where act='person' group by primaryid) as fl on fl.primaryid=a.id
 			where a.printstatus=#{printstatus} and a.session=#{session} and a.isforensics=#{isforensics}
 			and a.isplastic=#{isplastic}
-		) as a where 1=1 
+		) as a where 1=1
 		<if test="middleid != null and middleid != ''">
 			AND a.middleid = #{middleid}
 		</if>
@@ -523,10 +537,10 @@
 		<if test="agent != null and agent != ''">
 			AND a.agent = #{agent}
 		</if>
-		order by a.id desc	
+		order by a.id desc
 		limit #{index}, #{size}
 	 </select>
-	 
+
 	 <select id="VehicleIDMarkListCount" resultType="int">
 	 	select count(*) from (
 			select ifnull(s.middleid,'') as middleid,a.agent,a.id,ifnull(t.name,'') as jytname,vw.uname as agentname,a.companyname,
@@ -540,7 +554,7 @@
 			left join web_member_session as s on s.member_id=a.agent and s.id=#{session}
 			where a.printstatus=#{printstatus} and a.session=#{session} and a.isforensics=#{isforensics}
 			and a.isplastic=#{isplastic}
-		) as a where 1=1 
+		) as a where 1=1
 		<if test="middleid != null and middleid != ''">
 			AND a.middleid = #{middleid}
 		</if>

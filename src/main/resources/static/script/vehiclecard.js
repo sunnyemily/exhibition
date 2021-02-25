@@ -12,6 +12,8 @@ var where = {
 	cardtype: paperType,
 	companyname: $("#companyName").val(),
 	keywords: $("#keywords").val(),
+	phone: $("#phone").val(),
+	platenumber: $("#platenumber").val(),
 	status: $("input[name=status]:checked").val()
 };
 function renderTable() {
@@ -58,6 +60,10 @@ function renderTable() {
 			deleteCards(obj);
 		} else if (layEvent === 'edit') { // 编辑
 			openEditModal(obj);
+		} else if (layEvent === 'detail') { // 查看
+			openLookModal(obj);
+		} else if (layEvent === 'download') { // 下载文件
+			downloadFile(obj);
 		}
 	});
 	table.on('sort(test)', function (obj) { // 注：sort是排序事件名，test是table原始容器的属性
@@ -73,7 +79,9 @@ function renderTable() {
 function reloadTableData() {
 	where.companyname=$("#companyName").val(),
 	where.keywords = $("#keywords").val(),
-		where.status = $("input[name=status]:checked").val();
+	where.phone = $("#phone").val(),
+	where.platenumber = $("#platenumber").val(),
+	where.status = $("input[name=status]:checked").val();
 	table.reload('id', {
 		method: 'post'
 		, url: '/vehiclecard/list'
@@ -99,6 +107,9 @@ $("#add").on("click", function () {
 	$("#drivinglicense").val("");
 	$("#predrivinglicense").attr("src", "");
 	$("input[name=id]").val("");
+	$("input").removeAttr("disabled");
+	$("select").removeAttr("disabled");
+	$("button").removeAttr("disabled");
 	$("#edit-model").show();
 });
 $(".close").on("click", function () {
@@ -144,7 +155,67 @@ function openEditModal(obj) {
 	});
 
 	$("#predrivinglicense").attr("src", $("#drivinglicense").val());
+	$("input").removeAttr("disabled");
+	$("select").removeAttr("disabled");
+	$("button").removeAttr("disabled");
 	$("#edit-model").show();
+}
+function openLookModal(obj) {
+	$("#reset").click();
+	obj = obj.data;
+	$("#editform input[type=hidden]").each(function () {
+		$(this).attr("disabled", "disabled");
+		var name = $(this).attr("name");
+		$(this).val(obj[name]);
+	});
+	$("#editform input[type=text]").each(function () {
+		$(this).attr("disabled", "disabled");
+		var name = $(this).attr("name");
+		$(this).val(obj[name]);
+	});
+	$("#editform textarea").each(function () {
+		$(this).attr("disabled", "disabled");
+		var name = $(this).attr("name");
+		$(this).val(obj[name]);
+	});
+	$("#editform select").each(function () {
+		$(this).attr("disabled", "disabled");
+		var name = $(this).attr("name");
+		$(this).val(obj[name]);
+	});
+	$("#editform input[type=checkbox]").each(function () {
+		$(this).attr("disabled", "disabled");
+		var name = $(this).attr("name").replace("chk", "");
+		if (!obj[name]) {
+			return true;
+		}
+		var arr = obj[name].split(',');
+		for (i = 0; i < arr.length; i++) {
+			if (arr[i] == $(this).val())
+				$(this).prop("checked", true);
+		}
+	});
+	$("#editform input[type=radio]").each(function () {
+		$(this).attr("disabled", "disabled");
+		var name = $(this).attr("name").replace("chk", "");
+		if (!obj[name]) {
+			return true;
+		}
+		if (obj[name] == $(this).val())
+			$(this).prop("checked", true);
+	});
+
+	$("#predrivinglicense").attr("src", $("#drivinglicense").val());
+	$("input").attr("disabled", "disabled");
+	$("select").attr("disabled", "disabled");
+	$("button").attr("disabled", "disabled");
+	$("#edit-model").show();
+}
+function downloadFile(obj) {
+	$("#reset").click();
+	obj = obj.data;
+	$("#downloadFile").attr("href","/upload/file/2021-02-21/f5303335-6dd3-40ca-9146-c2f64dddb526.docx");
+	$("#downloadFile")[0].click();
 }
 $(document).ready(function () {
 	form = layui.form;

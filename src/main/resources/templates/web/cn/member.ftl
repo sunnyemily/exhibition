@@ -13,6 +13,9 @@ var hasPicture = ${applyInfo.hasPicture?string("true","false")};
 var productCount = ${applyInfo.productCount};
 var boothCount = ${applyInfo.boothCount};
 </#if>
+<#if type=="decorator">
+var hasCertification = ${applyInfo.hasCertification?string("true","false")};
+</#if>
 </script>
 <body class="login-body">
 <div class="member-head">
@@ -31,6 +34,9 @@ var boothCount = ${applyInfo.boothCount};
 	<div class="member-left">
 		<div class="left-head"><i class="fa fa-th-list"></i>功能管理</div>
 		<div style="height:20px;"></div>
+		<#if type=="decorator">
+			<div class="left-item" data-page="home"><i class="fa fa-desktop"></i>首页<i class="fa jt fa-chevron-right"></i></div>
+		</#if>
 		<#if type=="exhibitor">	
 		<div class="left-item" data-page="apply"><i class="fa fa-desktop"></i>申请展位<i class="fa jt fa-chevron-right"></i></div>	
 		<div class="left-item" data-page="product"><i class="fa fa-desktop"></i>产品管理<i class="fa jt fa-chevron-right"></i></div>
@@ -79,27 +85,34 @@ var boothCount = ${applyInfo.boothCount};
 		</#list>
 		</div>
 		</#if>
+		<#if type!="decorator">
 		<div class="left-item" data-page="historycard"><i class="fa fa-history"></i>历届信息提取<i class="fa jt fa-chevron-right"></i></div>
 		<div class="two-level">
 			<#if type=="delegation">
 			<div class="left-item" data-page="historyenterprise"><i class="fa fa-bars"></i>企业信息提取</div>
 			</#if>
-			<#if type=="delegation"|| type=="report"|| type=="exhibitor" || type=="decorator">
+			<#if type=="delegation"|| type=="report"|| type=="exhibitor">
 			<div class="left-item" data-page="historypersoncard"><i class="fa fa-bars"></i>人员证件提取</div>
 			</#if>
-			<#if type=="delegation"|| type=="report"|| type=="exhibitor" || type=="decorator">
+			<#if type=="delegation"|| type=="report"|| type=="exhibitor">
 			<div class="left-item" data-page="historycarcard"><i class="fa fa-bars"></i>车辆证件提取</div>
 			</#if>
 		</div>
-		<#if type!="online">
+		</#if>
+		<#if type!="online" && type!="decorator">
 		<div class="left-item" data-page="report" style="display:none"><i class="fa fa-newspaper-o"></i>取证报表<i class="fa jt fa-chevron-right"></i></div>
 		<div class="left-item" data-page="takecard"><i class="fa fa-newspaper-o"></i>取证<i class="fa jt fa-chevron-right"></i></div>
 		</#if>
+		<#if type!="decorator">
 		<div class="left-item" data-page="info"><i class="fa fa-pie-chart"></i>汇总信息<i class="fa jt fa-chevron-right"></i></div>
+		</#if>
 		<#if type=="delegation" || type=="reporter">
 		<div class="left-item" data-page="agent"><i class="fa fa-cog"></i>修改信息<i class="fa jt fa-chevron-right"></i></div>
 		<#elseif type=="exhibitor" || type=="online">
 		<div class="left-item" data-page="company"><i class="fa fa-cog"></i>修改企业信息<i class="fa jt fa-chevron-right"></i></div>
+		<#elseif type=="decorator">
+		<div class="left-item" data-page="decorator"><i class="fa fa-cog"></i>企业资质<i class="fa jt fa-chevron-right"></i></div>
+		<div class="left-item" data-page="stadium"><i class="fa fa-inbox"></i>报馆管理<i class="fa jt fa-chevron-right"></i></div>
 		</#if>
 		<div class="left-item" data-page="password"><i class="fa fa-lock"></i>修改密码<i class="fa jt fa-chevron-right"></i></div>
 		<div class="left-item"  data-page="exit"><i class="fa fa-power-off"></i>退出<i class="fa jt fa-chevron-right"></i></div>
@@ -116,6 +129,7 @@ var noBooth='尚未申请展位，是否立即前往？';
 var noLogo='尚未设置企业Logo，是否立即前往？';
 var noSurfacePlot='尚未设置企业封面图，是否立即前往设置？';
 var noProduct='尚未添加产品，是否立即前往添加？';
+var noCertification='尚未添加资质，是否立即前往？';
 </script>
 <script src="/script/member.js"></script>
 </body>

@@ -29,7 +29,9 @@
         ,a.site_name as siteName
         ,a.site_description as siteDescription
         ,a.site_keywords as siteKeywords
-        ,b.exhibitionname        from sys_session as a
+        ,b.exhibitionname
+        ,a.stadium_decorator_end_date as stadiumDecoratorEndDate
+        from sys_session as a
         left join sys_exhibition as b on a.exhibitionid=b.id
         where a.id = #{id}
     </select>
@@ -50,7 +52,9 @@
         ,a.end_date as endDate
         ,a.site_name as siteName
         ,a.site_description as siteDescription
-        ,a.site_keywords as siteKeywords        from sys_session as a
+        ,a.site_keywords as siteKeywords
+        ,a.stadium_decorator_end_date as stadiumDecoratorEndDate
+        from sys_session as a
         <where>
                             <if test="id != null and id != ''">
                     and a.id = #{id}
@@ -118,6 +122,9 @@
                             <if test="siteKeywords != null and siteKeywords != ''">
                     and a.site_keywords = #{siteKeywords}
                 </if>
+                <if test="stadiumDecoratorEndDate != null and stadiumDecoratorEndDate != ''">
+                    and a.stadium_decorator_end_date = #{stadiumDecoratorEndDate}
+                </if>
                     </where>
     </select>
 
@@ -137,7 +144,10 @@
         ,a.end_date as endDate
         ,a.site_name as siteName
         ,a.site_description as siteDescription
-        ,a.site_keywords as siteKeywords,b.exhibitionname        from sys_session as a
+        ,a.site_keywords as siteKeywords
+        ,b.exhibitionname
+        ,a.stadium_decorator_end_date as stadiumDecoratorEndDate
+        from sys_session as a
         left join sys_exhibition as b on a.exhibitionid=b.id
                 <where>
                             <if test="id != null and id != ''">and a.id =
@@ -205,6 +215,9 @@
                 </if>
                             <if test="siteKeywords != null and siteKeywords != ''">and a.site_keywords =
                     #{siteKeywords}
+                </if>
+                            <if test="stadiumDecoratorEndDate != null and stadiumDecoratorEndDate != ''">and a.stadium_decorator_end_date =
+                    #{stadiumDecoratorEndDate}
                 </if>
                     </where>
         order by a.id desc	
@@ -282,6 +295,9 @@
                             <if test="siteKeywords != null and siteKeywords != ''">and site_keywords =
                     #{siteKeywords}
                 </if>
+                            <if test="stadiumDecoratorEndDate != null and stadiumDecoratorEndDate != ''">and stadium_decorator_end_date =
+                    #{stadiumDecoratorEndDate}
+                </if>
                     </where>
 	</select>
 
@@ -307,7 +323,8 @@
                                                 <if test="endDate != null">`end_date`,</if>
                                                 <if test="siteName != null">`site_name`,</if>
                                                 <if test="siteDescription != null">`site_description`,</if>
-                                                <if test="siteKeywords != null">`site_keywords`</if>
+                                                <if test="siteKeywords != null">`site_keywords`,</if>
+                                                <if test="stadium_decorator_end_date != null">`stadium_decorator_end_date`</if>
                     </trim>)
         values (<trim suffixOverrides=",">
                                                         <if test="exhibitionid != null">#{exhibitionid},</if>
@@ -330,7 +347,8 @@
                                                 <if test="endDate != null">#{endDate},</if>
                                                 <if test="siteName != null">#{siteName},</if>
                                                 <if test="siteDescription != null">#{siteDescription},</if>
-                                                <if test="siteKeywords != null">#{siteKeywords}</if>
+                                                <if test="siteKeywords != null">#{siteKeywords},</if>
+                                                <if test="stadiumDecoratorEndDate != null">#{stadiumDecoratorEndDate}</if>
                     </trim>)
     </insert>
 
@@ -378,6 +396,8 @@
                                                                 <if test="siteDescription != null">`site_description` = #{siteDescription}
                         ,</if>
                                                                 <if test="siteKeywords != null">`site_keywords` = #{siteKeywords}
+                        ,</if>
+                                                                <if test="stadiumDecoratorEndDate != null">`stadium_decorator_end_date` = #{stadiumDecoratorEndDate}
                         </if>
                                     </set>
         where id = #{id}
@@ -425,7 +445,8 @@
 		concat(date_format(start_date,'%Y年%m月%d日'),'-',date_format(end_date,'%d日')) as startenddate,
 		a.site_name AS siteName,
 		a.site_description AS siteDescription,
-		a.site_keywords AS siteKeywords
+		a.site_keywords AS siteKeywords,
+		a.stadium_decorator_end_date as stadiumDecoratorEndDate
 	FROM
 		sys_session AS a
 	INNER JOIN sys_exhibition AS b ON a.exhibitionid = b.id
@@ -484,7 +505,10 @@
         ,a.end_date as endDate
         ,a.site_name as siteName
         ,a.site_description as siteDescription
-        ,a.site_keywords as siteKeywords from sys_session as a where exhibitionid=#{exhibitionid} order by id desc limit 1
+        ,a.site_keywords as siteKeywords
+        ,a.stadium_decorator_end_date as stadiumDecoratorEndDate
+        from sys_session as a
+        where exhibitionid=#{exhibitionid} order by id desc limit 1
     </select>
     
     <update id="updateStatus" parameterType="cn.org.chtf.card.manage.system.model.SysSession">

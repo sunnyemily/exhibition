@@ -2,6 +2,7 @@ package cn.org.chtf.card.manage.Exhibitors.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.Date;
 
 import lombok.Data;
@@ -122,5 +123,8 @@ public class EbsVehiclecard implements Serializable{
     private Integer isplastic;
     
     private String middleid;
+
+    private String phone;
+    private Timestamp audittime;
 
 }

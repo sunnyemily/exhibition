@@ -304,6 +304,7 @@ public class EbsPersonnelcardServiceImpl implements EbsPersonnelcardService {
 		ResultModel result = null;
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("name", page.getKeywords());
+		map.put("phone", page.getPhone());
 		map.put("index",page.getStart());
 		map.put("size", page.getLimit());
 		map.put("agent", personCard.getAgent());

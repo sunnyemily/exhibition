@@ -128,4 +128,9 @@ public class SysSession implements Serializable{
 
     private String exhibitionname;
 
+    /**
+     * 搭建商报馆申请截止日期
+     */
+    private String stadiumDecoratorEndDate;
+
 }

@@ -891,7 +891,15 @@
 			<if test="auditStatus != null">`audit_status` = #{auditStatus},</if>
 			<if test="auditRemark != null">`audit_remark` = #{auditRemark},</if>
 			<if test="videourl != null">`videourl` = #{videourl},</if>
-			<if test="useable != null">`useable` = #{useable}</if>
+			<if test="useable != null">`useable` = #{useable},</if>
+			<if test="legalpersonname != null">`legalpersonname` = #{legalpersonname},</if>
+			<if test="legalpersoncardnumber != null">`legalpersoncardnumber` = #{legalpersoncardnumber},</if>
+			<if test="legalpersoncardpath != null">`legalpersoncardpath` = #{legalpersoncardpath},</if>
+			<if test="admissionapplicationform != null">`admissionapplicationform` = #{admissionapplicationform},</if>
+			<if test="workshopcertificate != null">`workshopcertificate` = #{workshopcertificate},</if>
+			<if test="technicalproofdocuments != null">`technicalproofdocuments` = #{technicalproofdocuments},</if>
+			<if test="othersupportingdocuments != null">`othersupportingdocuments` = #{othersupportingdocuments},</if>
+			<if test="previouscase != null">`previouscase` = #{previouscase}</if>
         </set>
         where id = #{id}
     </update>
@@ -1133,6 +1141,28 @@ GROUP BY chinesename
 	<select id="GetCompanyBooth" resultType="map">
 		select name as boothName from ebs_booth where company_id=#{companyid} and session=#{session} order by name
 	</select>
-	  
+	<select id="getStadiumCompanys"  resultType="map">
+		SELECT
+		ebs_companyinfo.id,
+		ebs_companyinfo.*,
+		ebs_companyinfo.exhibitors_nature_id AS exhibitorsNatureId
+		FROM
+		ebs_companyinfo
+		WHERE
+		ebs_companyinfo.session = #{sessionIds}
+		and ebs_companyinfo.comany_type_id != 3
+		order by ebs_companyinfo.id
+		LIMIT ${start}, ${limit}
+	</select>
+
+	<select id="getStadiumCompanysCount"  resultType="int">
+		SELECT
+		count(*)
+		FROM
+		ebs_companyinfo
+		WHERE
+		ebs_companyinfo.session = #{sessionIds}
+		and ebs_companyinfo.comany_type_id != 3
+	</select>
 	  
 </mapper>

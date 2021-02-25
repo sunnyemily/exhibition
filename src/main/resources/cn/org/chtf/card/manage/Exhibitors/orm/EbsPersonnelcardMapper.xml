@@ -556,7 +556,9 @@
 			a.is_out as isout,case when a.is_out=0 then '否' else '是' end as isoutname,
 			a.businesslicense as businesslicense,
 			a.purchasingintention as purchasingintention,a.isgreen,a.isplastic,
-			ifnull(s.middleid,'') as middleid
+			ifnull(s.middleid,'') as middleid,
+			a.profession as profession,
+			a.audittime as audittime
         from ebs_personnelcard as a
         inner join sys_session as c on a.session=c.id
         inner join cm_certificate_type as b on b.type=0 and a.cardtype=b.id and b.useable = 1 and b.session = a.session
@@ -942,7 +944,8 @@
                 <if test="purchasingintention != null">`purchasingintention`,</if>
                 <if test="isgreen != null">`isgreen`,</if>
                 <if test="isplastic != null">`isplastic`,</if>
-                <if test="printnumber != null">`printnumber`</if>                
+                <if test="printnumber != null">`printnumber`,</if>
+				<if test="profession != null">`profession`</if>
 			</trim>
 		) values (
         	<trim suffixOverrides=",">
@@ -995,7 +998,8 @@
                 <if test="purchasingintention != null">#{purchasingintention},</if>
                 <if test="isgreen != null">#{isgreen},</if>
                 <if test="isplastic != null">#{isplastic},</if>
-                <if test="printnumber != null">#{printnumber}</if>
+                <if test="printnumber != null">#{printnumber},</if>
+                <if test="profession != null">#{profession}</if>
 			</trim>
 		)
     </insert>
@@ -1055,7 +1059,8 @@
 			<if test="isgreen != null">`isgreen` = #{isgreen},</if>
 			<if test="isplastic != null">`isplastic` = #{isplastic},</if>
 			<if test="plastictime != null">`plastictime` = #{plastictime},</if>
-			<if test="printnumber != null">`printnumber` = #{printnumber}</if>
+			<if test="printnumber != null">`printnumber` = #{printnumber},</if>
+			<if test="profession != null">`profession` = #{profession}</if>
         </set>
         where id = #{id}
     </update>

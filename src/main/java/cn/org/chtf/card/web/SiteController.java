@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import cn.org.chtf.card.manage.Exhibitors.model.EbsStadium;
+import cn.org.chtf.card.manage.Exhibitors.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,18 +33,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import cn.hutool.core.util.NumberUtil;
 import cn.org.chtf.card.common.utils.R;
-import cn.org.chtf.card.common.utils.ResultVOUtil;
 import cn.org.chtf.card.manage.Exhibitors.dao.EbsCompanyinfoMapper;
 import cn.org.chtf.card.manage.Exhibitors.model.EbsCompanyinfo;
 import cn.org.chtf.card.manage.Exhibitors.model.EbsPersonnelcard;
 import cn.org.chtf.card.manage.Exhibitors.model.EbsVehiclecard;
-import cn.org.chtf.card.manage.Exhibitors.service.EbsBoothApplyService;
-import cn.org.chtf.card.manage.Exhibitors.service.EbsBoothService;
-import cn.org.chtf.card.manage.Exhibitors.service.EbsCompanyinfoService;
-import cn.org.chtf.card.manage.Exhibitors.service.EbsPersonnelcardService;
-import cn.org.chtf.card.manage.Exhibitors.service.EbsShowroomService;
-import cn.org.chtf.card.manage.Exhibitors.service.EbsTradinggroupboothallocationService;
-import cn.org.chtf.card.manage.Exhibitors.service.EbsVehiclecardService;
 import cn.org.chtf.card.manage.MakeEvidence.model.CmCertificateType;
 import cn.org.chtf.card.manage.MakeEvidence.service.CmCertificateTypeService;
 import cn.org.chtf.card.manage.PreviousInformation.model.PimAgent;
@@ -111,6 +105,8 @@ public class SiteController {
 	private EbsPersonnelcardService ebsPersonnelcardService;
 	@Autowired
 	private EbsVehiclecardService vehiclecardService;
+	@Autowired
+	private EbsStadiumService stadiumService;
 	@Resource
 	private CmCertificateTypeService certificateType;
     @Autowired
@@ -336,7 +332,9 @@ public class SiteController {
 			model.addAttribute("canInCertification", permission.get("canInCertification"));
 			//获取当前信息填报和展位分配情况
 			model.addAttribute("applyInfo", memberService.getExhibitorApplyInfo(session, Integer.parseInt(sessionId)));
-
+		} else if (type.equals("decorator")) {
+			//获取当前信息填报和展位分配情况
+			model.addAttribute("applyInfo", memberService.getExhibitorApplyInfo(session, Integer.parseInt(sessionId)));
 		}
 		String templateName = "web/"+language+"/member";
 
@@ -590,6 +588,9 @@ public class SiteController {
 		}
 
 		String templateName = "web/"+language+"/personpapers";
+//		if ("decorator".equals(type)) {
+//			templateName = "web/"+language+"/personpapers-decorator";
+//		}
 
 		return templateName;
 	}
@@ -728,12 +729,15 @@ public class SiteController {
 		}
 		if(certificateModal.getChinesename().contains("布撤展车证")) {
 			cardStopDate = this.exhibitionInfo.get("certificatesFprEndDate").toString();
+			if(type.equals("decorator")) {
+				needCarPicture = true;
+			}
 		}
 		model.addAttribute("cardStopDate",cardStopDate);
 
 		//6.是否超过限制时间
 		Boolean isTimeout = false;
-		if(cardStopDate!=null) {
+		if(cardStopDate!=null && !"".equals(cardStopDate)) {
 	        try {
 	    		long now = System.currentTimeMillis();
 	    		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");//注意月份是MM
@@ -936,6 +940,162 @@ public class SiteController {
 		String templateName = "web/"+language+"/"+"company";
 
 		return templateName;
+	}
+	@RequestMapping(value= {"/{language}/{type}-decorator.html"})
+	public String decorator(@PathVariable String language,@PathVariable String type,Model model,HttpSession session,HttpServletRequest request, HttpServletResponse response) {
+		setCommonContent(model);
+		safeCheck(language,type,session,request,response);
+		model.addAttribute("language", language);
+		model.addAttribute("type", type);
+		model.addAttribute("pageName", "login");
+		model.addAttribute("typeId", getMemberTypeId(type));
+		model.addAttribute("typeName",getMemberTypeName(type,language));
+
+		//获取member和展会届次
+		int memberId = 0;
+		Member member = (Member) session.getAttribute("member");
+		if(member!=null) {
+			memberId = member.getMemberId();
+		}
+
+		Integer sessionId = (Integer) exhibitionInfo.get("sessionId");
+
+		//1.公司类型和行业类型
+		Map<String, Object> map = new HashMap<>();
+		map.put("index", 0);
+		map.put("size", 10000);
+		List<SysCompanyType> companytypes = sysCompanyTypeService.list(map);
+		List<SysIndustry> industries = sysIndustryService.list(map);
+		//2.展位申请状态
+		model.addAttribute("applyInfo", memberService.getExhibitorApplyInfo(session, sessionId));
+		model.addAttribute("companytypes", companytypes);
+		model.addAttribute("industries", industries);
+		String templateName = "web/"+language+"/"+"decorator";
+
+		return templateName;
+	}
+	@RequestMapping(value= {"/{language}/{type}-stadium.html"})
+	public String stadium(@PathVariable String language,@PathVariable String type,Model model,HttpSession session,HttpServletRequest request, HttpServletResponse response) {
+		setCommonContent(model);
+		safeCheck(language,type,session,request,response);
+		model.addAttribute("pageName", "vehiclecard");
+		model.addAttribute("language", language);
+		model.addAttribute("type", type);
+		model.addAttribute("typeId", getMemberTypeId(type));
+		model.addAttribute("typeName",getMemberTypeName(type,language));
+		//5.报馆申请截止日期
+		String stadiumStopDate = "";
+		if(type.equals("decorator")){
+			Object stadiumDecoratorEndDate = exhibitionInfo.get("stadiumDecoratorEndDate");
+			if (stadiumDecoratorEndDate != null) {
+				stadiumStopDate = (String) stadiumDecoratorEndDate;
+			} else {
+				stadiumStopDate = null;//不设截止日期
+			}
+		}
+		model.addAttribute("stadiumStopDate",stadiumStopDate);
+
+		//6.是否超过限制时间
+		Boolean isTimeout = false;
+		if(stadiumStopDate!=null && !"".equals(stadiumStopDate)) {
+			try {
+				long now = System.currentTimeMillis();
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");//注意月份是MM
+				Date date = simpleDateFormat.parse(stadiumStopDate);
+				Calendar c = Calendar.getInstance();
+				c.setTime(date);
+				c.add(Calendar.DATE, 1);
+				if((now - c.getTimeInMillis()) > 0) {
+					isTimeout = true;
+				}
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+		model.addAttribute("isTimeout",isTimeout);
+
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("start",0);
+		map.put("limit", 10000);
+		map.put("sessionIds",(Integer) this.exhibitionInfo.get("sessionId"));
+		List<Map<String, Object>>  companys = ebsCompanyinfoDao.getStadiumCompanys(map);
+		model.addAttribute("companys",companys);
+
+		Member member = (Member) session.getAttribute("member");
+		EbsCompanyinfo company = ebsCompanyinfoDao.getCompanyByMemberIdAndSessionId(
+				member.getMemberId(),
+				Integer.parseInt(exhibitionInfo.get("sessionId").toString()));
+		model.addAttribute("company",company);
+
+		String templateName = "web/"+language+"/stadium";
+
+		return templateName;
+	}
+
+	/**
+	 * 添加报馆申请
+	 */
+	@PostMapping("/stadium/save")
+	@ResponseBody
+	public ResultModel stadiumSave(EbsStadium stadium, HttpSession session) {
+		int memberId = 0;
+		Member member = (Member) session.getAttribute("member");
+		if(member!=null) {
+			memberId = member.getMemberId();
+		}
+		else{
+			return new ResultModel(WConst.LOGINOVERTIME,WConst.LOGINOVERTIMEMSG,null);
+		}
+		stadium.setAgent(memberId);
+		EbsCompanyinfo company = ebsCompanyinfoDao.getCompanyByMemberIdAndSessionId(
+				member.getMemberId(),
+				Integer.parseInt(exhibitionInfo.get("sessionId").toString()));
+		if (company != null) {
+			stadium.setCompanyid(company.getId());
+			stadium.setCompanyname(company.getChinesename());
+		}
+		return stadiumService.addOrUpdate(stadium);
+	}
+	/**
+	 * 获取报馆申请列表
+	 * @param page 分页及搜索实体
+	 * @return
+	 */
+	@RequestMapping(value="/stadium/list")
+	@ResponseBody
+	public ResultModel stadiums(EbsStadium stadium,PageModel page,HttpSession session) {
+		setCommonContent();
+
+		int memberId = 0;
+		Member member = (Member) session.getAttribute("member");
+		if(member!=null) {
+			memberId = member.getMemberId();
+		}
+		else{
+			return new ResultModel(WConst.LOGINOVERTIME,WConst.LOGINOVERTIMEMSG,null);
+		}
+		stadium.setAgent(memberId);
+		stadium.setSession(exhibitionInfo.get("sessionId").toString());
+		return stadiumService.getStadiums(stadium, page);
+	}
+	/**
+	 * 批量删除
+	 * @param session
+	 * @param idList
+	 * @return
+	 */
+	@RequestMapping(value="/stadium/delete")
+	@ResponseBody
+	public ResultModel stadiumDelete(HttpSession session,@RequestParam(value = "idList[]") Integer[] idList) {
+		int memberId = 0;
+		Member member = (Member) session.getAttribute("member");
+		if(member!=null) {
+			memberId = member.getMemberId();
+		}
+		else{
+			return new ResultModel(WConst.LOGINOVERTIME,WConst.LOGINOVERTIMEMSG,null);
+		}
+		return stadiumService.delete(idList,memberId);
 	}
 	@RequestMapping(value= {"/{language}/{type}-info.html"})
 	public String info(@PathVariable String language,@PathVariable String type,Model model,HttpSession session,HttpServletRequest request, HttpServletResponse response) {

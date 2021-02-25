@@ -231,5 +231,45 @@ public class EbsCompanyinfo implements Serializable{
     private String videourl;
     
     private Integer uid;
+
+    /**
+     * 法人姓名
+     */
+    private String legalpersonname;
+
+    /**
+     * 法人身份证号码
+     */
+    private String legalpersoncardnumber;
+
+    /**
+     * 法人身份证扫描件
+     */
+    private String legalpersoncardpath;
+
+    /**
+     * 特装搭建施工准入资质单位申请表
+     */
+    private String admissionapplicationform;
+
+    /**
+     * 制作工场车间的产权证明或租赁合同
+     */
+    private String workshopcertificate;
+
+    /**
+     * 技术力量证明材料【填写说明：包括设计师、工程师的专业资格证书复印件；其他与展览工程有关工种人员上岗证复印件】
+     */
+    private String technicalproofdocuments;
+
+    /**
+     * 设计施工能力和资质的其他证明资料
+     */
+    private String othersupportingdocuments;
+
+    /**
+     * 往届成稿案例
+     */
+    private String previouscase;
     
 }

@@ -14,6 +14,7 @@ public class PageModel{
 	private String session;
 	private String companyid;
 	private String phone;
+	private String platenumber;
 	
 	public String getPhone() {
 		return phone;
@@ -184,5 +185,12 @@ public class PageModel{
 	public void setStart(Integer start) {
 		this.start = start;
 	}
-	
+
+	public String getPlatenumber() {
+		return platenumber;
+	}
+
+	public void setPlatenumber(String platenumber) {
+		this.platenumber = platenumber;
+	}
 }

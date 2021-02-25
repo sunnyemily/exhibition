@@ -104,4 +104,13 @@ function validateApplyInfo(){
 			return;
 		}
 	}
+	else if(type=="decorator"){
+		if(!hasCertification){
+			layer.confirm(noCertification, function(index){
+				layer.close(index);
+				$("iframe").attr("src","/"+language+"/"+type+"-decorator.html");
+			});
+			return;
+		}
+	}
 }

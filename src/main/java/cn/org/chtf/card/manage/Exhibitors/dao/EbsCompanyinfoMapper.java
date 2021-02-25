@@ -119,4 +119,16 @@ public interface EbsCompanyinfoMapper {
 
 	List<Map<String,Object>> GetCompanyBooth(Map<String, Object> par);
 
+    /**
+     * @author wushixing
+     * 查询搭建商报馆申请关联的企业列表
+     */
+    List<Map<String,Object>> getStadiumCompanys(Map<String, Object> map);
+
+    /**
+     * @author wushixing
+     * 查询搭建商报馆申请关联的企业总数
+     */
+    int getStadiumCompanysCount(Map<String, Object> map);
+
 }

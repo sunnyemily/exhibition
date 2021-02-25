@@ -80,10 +80,19 @@
 								<td>地址</td>
 								<td><input class="layui-input" autocomplete="off" id="address" name="address" type="text"></td>
 							</tr>
+							<#if type=="decorator">
+							<tr>
+								<td>公司网址</td>
+								<td><input class="layui-input" autocomplete="off" id="website" name="website" type="text"></td>
+								<td>*工种</td>
+								<td><input class="layui-input" autocomplete="off" id="profession" name="profession" type="text" lay-verify="required"></td>
+							</tr>
+							<#else>
 							<tr>
 								<td>公司网址</td>
 								<td colspan="3"><input class="layui-input" autocomplete="off" id="website" name="website" type="text"></td>
 							</tr>
+							</#if>
 							<tr>
 								<td>*手机号码</td>
 								<td><input class="layui-input" autocomplete="off" id="phone" name="phone" type="text" lay-verify="required|phone"></td>

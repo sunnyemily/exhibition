@@ -54,8 +54,13 @@ var cardName = "${certificateModal.chinesename}";
 		  </button>
 		</div>
          <div class="pull-right search">
-           <input name="keywords" class="layui-input" type="text" placeholder="请输姓名" id="keywords" style="height:30px;" />
+           <input name="keywords" class="layui-input" type="text" placeholder="请输入姓名" id="keywords" style="height:30px;" />
          </div>
+		<#if type=="decorator">
+			<div class="pull-right search">
+				<input name="phone" class="layui-input" type="text" placeholder="请输入手机号" id="phone" style="height:30px;" />
+			</div>
+		</#if>
          <div class="pull-right search">
            <input name="companyName" class="layui-input" type="text" placeholder="企业名称" id="companyName" value="<#if isExhibitor==1&&company??>${company.chinesename}</#if>" style="height:30px;" />
          </div>
@@ -78,6 +83,10 @@ var cardName = "${certificateModal.chinesename}";
 <#include 'personpapers-edit.html'>
 <script type="text/html" id="toolBar">
 <#if !isTimeout>
+{{# if(d.status == 3){ }}
+<a class="layui-btn layui-btn-xs" lay-event="download" id="downloadFile" target="_blank">下载证书</a>
+<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+{{# } }}
 {{# if(d.status != 1){ }}
 <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
@@ -117,29 +126,54 @@ var pressCard="记者证";
 <script type="text/html" id="picTpl">
   <img src="{{d.imagepath}}" />
 </script>
-<style>
-.layui-table-body .layui-table-cell{height:125px;line-height:125px;}
-</style>
+<#--<style>-->
+<#--.layui-table-body .layui-table-cell{height:125px;line-height:125px;}-->
+<#--</style>-->
 <script>
+<#if type=="decorator">
 var cols = [[{ checkbox: true }
-			, { field: 'name', title: '人员姓名', sort: true, width: 150 }
-			, { field: 'imagepath', title: '证件照片', sort: true, width: 150, templet: "#picTpl" }
-			, { field: 'remark', title: '未通过原因', sort: true,templet:function(d){
-				if(d.status==-1)
-				{
-					return d.remark;
-				}
-				else{
-					return "";
-				}
-			}}
-			, { field: 'companyname', title: '企业名称', sort: true, width: 300 }
-			, { field: 'articleUpdatetime', title: '状态', sort: true, width: 100, templet: '#statusTpl' }
-			, { fixed: 'right', width: 200, align: 'center', toolbar: '#toolBar', title: '操作' } // 这里的toolbar值是模板元素的选择器
+	, { field: 'id', title: '证件编号', sort: true, width: 120 }
+	, { field: 'name', title: '姓名', sort: true, width: 90 }
+	, { field: 'sexname', title: '性别', sort: true, width: 80 }
+	, { field: 'phone', title: '手机号', sort: true, width: 150 }
+	, { field: 'profession', title: '工种', sort: true, width: 150 }
+	, { field: 'addtime', title: '提审时间', sort: true, width: 120,
+		templet:function (d) {
+			return showTime(d.addtime);
+		}}
+	, { field: 'status', title: '审核状态', sort: true, width: 120, templet: '#statusTpl' }
+	, { field: 'audittime', title: '审核时间', sort: true, width: 120,
+		templet:function (d) {
+			if (d.audittime == null || d.audittime == '') {
+				return '';
+			}
+			return showTime(d.audittime);
+		}}
+	, { fixed: 'right', width: 200, align: 'center', toolbar: '#toolBar', title: '操作' } // 这里的toolbar值是模板元素的选择器
 
-		]];
+]];
+<#else>
+var cols = [[{ checkbox: true }
+	, { field: 'name', title: '人员姓名', sort: true, width: 150 }
+	, { field: 'imagepath', title: '证件照片', sort: true, width: 150, templet: "#picTpl" }
+	, { field: 'remark', title: '未通过原因', sort: true,templet:function(d){
+			if(d.status==-1)
+			{
+				return d.remark;
+			}
+			else{
+				return "";
+			}
+		}}
+	, { field: 'companyname', title: '企业名称', sort: true, width: 300 }
+	, { field: 'articleUpdatetime', title: '状态', sort: true, width: 100, templet: '#statusTpl' }
+	, { fixed: 'right', width: 200, align: 'center', toolbar: '#toolBar', title: '操作' } // 这里的toolbar值是模板元素的选择器
+
+]];
+</#if>
 </script>
 <script src="/script/validate.js"></script>
 <script src="/script/personpapers.js"></script>
+<script src="/manage/js/content.js?v=1.0.0"></script>
 </body>
 </html>

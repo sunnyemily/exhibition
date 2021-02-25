@@ -778,11 +778,17 @@ public class MemberServiceImpl implements MemberService {
 		else {
 			applyInfo.put("hasLogo", false);
 		}
-		if(StringUtil.isNotEmpty(company.getCompanypicture())&&!company.getCompanylogo().trim().equals("")) {
+		if(StringUtil.isNotEmpty(company.getCompanypicture())&&!company.getCompanypicture().trim().equals("")) {
 			applyInfo.put("hasPicture", true);
 		}
 		else {
 			applyInfo.put("hasPicture", false);
+		}
+		if(StringUtil.isNotEmpty(company.getLegalpersonname())&&!company.getLegalpersonname().trim().equals("")) {
+			applyInfo.put("hasCertification", true);
+		}
+		else {
+			applyInfo.put("hasCertification", false);
 		}
 		//3.获取产品信息
 		Map<String,Object> productFilter = new HashMap<String,Object>();
