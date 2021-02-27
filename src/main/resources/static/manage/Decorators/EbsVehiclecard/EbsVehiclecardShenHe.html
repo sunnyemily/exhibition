@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>修改搭建商管理-车辆证件审核</title>
+		<meta content="webkit" name="renderer">
+		<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+		<meta content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" name="viewport"/>
+		<link rel="stylesheet" href="/manage/css/xadmin.css">
+		<link href="/manage/css/style.css?v=4.1.0" rel="stylesheet">
+		<link href="/manage/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="/manage/layui/css/layui.css"  media="all">
+	</head>
+	<body class="gray-bg">
+		<div class="modal inmodal" id="friendlink-model">
+			<div class="modal-content animated bounceInUp" id="vmUpdateEbsVehiclecard">
+				<div class="ibox-content">
+					<fieldset class="layui-elem-field layui-field-title" style="border-top:0px">
+						<form class="layui-form layui-form-pane" lay-filter="demo" action="">	
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="companyname"> 单位名称 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" class="layui-input" id="companyname1" readonly name="companyname1" type="text" v-model="ebsVehiclecard.companyname">										
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="drivername"> 司机姓名 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+
+										<input autocomplete="off" class="layui-input" id="drivername1" readonly name="drivername1" type="text" v-model="ebsVehiclecard.drivername">
+
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="phone"> 手机号 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+
+										<input autocomplete="off" class="layui-input" id="phone" readonly name="phone" type="text" v-model="ebsVehiclecard.phone">
+
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="platenumber"> 车牌号码 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+
+										<input autocomplete="off" class="layui-input" id="platenumber1" readonly name="platenumber1"  type="text" v-model="ebsVehiclecard.platenumber">
+
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="cardtype"> 证件类型 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input type="text" class="layui-input" readonly id="cardtypename1" name="cardtypename1" v-model="ebsVehiclecard.cardtypename">
+									</div>
+								</div>
+							</div>
+
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="drivinglicense"> 车辆行驶证 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<div class="layui-input-inline">
+							                <img src="/images/2.jpg" width="390" onclick="SeeImage(this.src)" height="265" id="predrivinglicense">             
+							              </div>
+							             
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="remark"> 备注 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<textarea class="layui-textarea" id="remark1" name="remark1" readonly rows="4" v-model="ebsVehiclecard.remark"></textarea>										
+									</div>
+								</div>
+							</div>								
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="remark"> 未通过原因 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<textarea class="layui-textarea" id="reviewremark" name="reviewremark" rows="4" v-model="ebsVehiclecard.reviewremark"></textarea>										
+									</div>
+								</div>
+							</div>	
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="status"> 状态 </label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block radioborder">
+										<input type='radio' name='status' value='1' title='审核通过'>
+										<input type='radio' name='status' value='-1' title='审核未通过'>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<div class="layui-input-block">
+									<input class="layui-btn" type="button" onclick="ShenHeVehiclecard()" value="确认">
+										
+									
+									<input type="hidden" id="cardtypeid"><input type="hidden" id="txtcompanyid"><input type="hidden" id="txtstatus">
+								</div>
+							</div>
+						</form>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+		<script charset="utf-8" src="/manage/js/jquery.min.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/layui/layui.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/xadmin.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/vue.js" type="text/javascript"></script>
+		<script src="/manage/js/bootstrap.min.js?v=3.3.6"></script>
+		<script src="/manage/js/manage/common.js"></script>
+		<script charset="UTF-8" type="text/javascript">
+	
+			var editEbsVehiclecardId = sessionStorage.getItem("shenheEbsVehiclecardId");
+			vm = new Vue({
+				el : "#vmUpdateEbsVehiclecard",
+				data : {
+					ebsVehiclecard : {}
+				},
+				methods : {},
+				created : function() {
+					var _this = this;
+					$.ajax({
+						url : "/manage/Decorators/ebsVehiclecard/findById",
+						data : {
+							"id" : editEbsVehiclecardId
+						},
+						dataType : "json",
+						type : "get",async:false, 
+						success : function(result) {
+							if (result.code === 200) {
+								_this.ebsVehiclecard = result.data;
+								$("#txtcompanyid").val(result.data.companyid);
+								$("#cardtypeid").val(result.data.cardtype);
+								var drivinglicense = result.data.drivinglicense=='' ? "/images/null150x85.jpg" : result.data.drivinglicense;
+								$("#predrivinglicense").attr("src",drivinglicense);
+								$("#txtstatus").val(result.data.status);
+							} else {
+								layer.alert("获取修改搭建商管理-车辆证件审核信息失败！");
+							}
+						}
+					});
+				}
+			});
+			
+			function ShenHeVehiclecard() {
+				var status = $('input:radio[name="status"]:checked').val();
+				var remark = $("#reviewremark").val();
+				if (status == -1 && remark == '') {
+					alert("请输入未通过原因");
+					return;
+				}
+				var params = {};
+				params.id = editEbsVehiclecardId;
+				params.remark = remark;				
+				params.act = 1;
+				params.status = status;
+
+				$.ajax({
+					url : "/manage/Decorators/ebsVehiclecard/UpdateAuditStatus",
+					data : JSON.stringify(params),
+					type : "post",
+					contentType : "application/json",
+					success : function(result) {						
+						if (result.code === 200) {
+							layer.msg("审核完成", {icon: 6, time: 500}, function () {
+                                //关闭当前frame
+                                xadmin.close();
+                                // 可以对父窗口进行刷新
+                                xadmin.father_reload();
+                            });							
+						} else {
+							layer.alert(result.msg);
+						}
+					}
+				});
+			}
+			
+			layui.use(['form', 'layer', 'laydate'], function() {
+				var form = layui.form, layer = layui.layer, laydate = layui.laydate;
+				loadCompany(form,$("#txtcompanyid").val(),'companyid');
+				
+				var sta = $("#txtstatus").val();
+				if(sta==0){
+					sta=1;
+				}
+				var radio = document.getElementsByName("status");
+				var radioLength = radio.length;
+				for (var i = 0; i < radioLength; i++) {
+					if (sta == radio[i].value) {
+						$(radio[i]).next().click();
+					}
+				}
+				
+				form.render(null,'demo');
+				//监听提交
+				form.on('submit(edit)', function(data) {
+
+					//组装数据
+					data.field.id = editEbsVehiclecardId;
+
+					//发异步，把数据提交给controller
+					$.ajax({
+						url : "/manage/Decorators/ebsVehiclecard/update",
+						data : JSON.stringify(data.field),
+						dataType : "json",
+						contentType : "application/json",
+						type : "post",
+						success : function(result) {
+							if (result.code === 200) {
+								layer.msg("修改成功", {
+									icon : 6,
+									time : 500
+								}, function() {
+									//关闭当前frame
+									xadmin.close();
+									// 可以对父窗口进行刷新
+									xadmin.father_reload();
+								});
+							} else {
+								layer.alert(result.msg);
+							}
+						}
+					});
+
+					return false;
+				});
+
+			});
+		</script>
+	</body>
+</html>

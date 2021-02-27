@@ -1,0 +1,2854 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.Decorators.dao.DecoratorEbsPersonnelcardMapper">
+
+    <select id="findById" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsPersonnelcard">
+        select
+        	case f.comany_type_id 
+			when 0 then '交易团'
+			when 1 then '记者'
+			when 2 then '零散展商'
+			when 3 then '布撤展商'
+			when 4 then '外宾'
+			when 5 then '采购商'
+			end as tjleixing,
+			a.id as id,
+			a.session as session,
+			a.name as name,
+			a.sex as sex,case when a.sex=0 then '男' else '女' end as sexname,
+			a.country as country,
+			a.province as province,
+			a.city,
+			case when ifnull(c.name,'')='' then '' else case when ifnull(d.name,'')='' then c.name else concat(c.name,' ',d.name,' ',e.name) end end as countryAndprovince,
+			a.jobtitle as jobtitle,
+			a.companyname as companyname,
+			a.companyid as companyid,
+			a.postcode as postcode,
+			a.idcardpassport as idcardpassport,
+			case a.idcardpassport 
+			when 0 then '身份证' 
+			when 1 then '护照' 
+			when 2 then '记者证'
+			end as idcardpassportname,
+			a.cardnumber as cardnumber,
+			a.address as address,
+			a.cardtype as cardtype,b.chinesename as cardtypename,
+			a.website as website,
+			a.email as email,
+			a.tel as tel,
+			a.fax as fax,
+			a.phone as phone,
+			a.imagepath as imagepath,
+			a.idphotopath as idphotopath,
+			a.addtime as addtime,
+			a.status as status,
+			a.bussinessarea as bussinessarea,
+			hy.chinese_name as industryname,
+			a.participants as participants,
+			ifnull(chjs.dic_cn_name,'') as participantsname,
+			a.visitexhibition as visitexhibition,
+			ifnull(zq.dic_cn_name,'') as zqname,
+			a.purpose as purpose,
+			a.knowexhibition as knowexhibition,
+			a.businessnature as businessnature,
+			a.remark as remark,
+			a.agent as agent,
+			vw.uname as agentname,
+			a.printstatus as printstatus,
+			case printstatus 
+				when 0 then '未打印'
+				when 1 then '打印中'
+				when 2 then '已打印'
+			end	as printstatusname,
+			a.printtype as printtype,
+			case printtype 
+				when -1 then ''
+				when 0 then '正常打印' 
+				when 1 then 'IC卡打印' 
+			end printtypename,
+			a.printtime,
+			a.verificationstatus as verificationstatus,
+			case when a.verificationstatus=0 then '未验证' else '已验证' end as verificationstatusname,
+			a.iccode as iccode,'' as iccodeaes,
+			a.vipcode as vipcode,
+			a.cardnature as cardnature,
+			case when a.cardnature=0 then '网络' else '现场' end as cardnaturename,
+			a.makecardtime as makecardtime,
+			a.issuevalid,a.boothcode,a.isback,a.printtime,
+			a.isforensics as isforensics,
+			a.forensicstime as forensicstime,
+			a.certificatenumber as certificatenumber,
+			a.printnumber as printnumber,
+			a.is_out as isout,case when a.is_out=0 then '否' else '是' end as isoutname,
+			a.purchasingintention,a.businesslicense,a.isgreen,a.isplastic,a.plastictime,
+			a.profession,a.audittime
+        from ebs_personnelcard as a
+        inner join cm_certificate_type as b on b.type=0 and a.cardtype=b.id
+        left join sys_country_area as c on a.country=c.id
+        left join sys_country_area as d on a.province=d.id
+        left join sys_country_area as e on a.city=e.id
+        left join ebs_companyinfo as f on a.companyid = f.id
+        left join vw_Frontend_user_integration as vw on vw.isback=a.isback and vw.uid=a.agent
+        left join sys_industry as hy on hy.id=a.bussinessarea
+        left join system_dictionaries as chjs on chjs.dicid=a.participants and chjs.dic_parentid=3
+        left join system_dictionaries as zq on zq.dicid=a.visitexhibition and zq.dic_parentid=20
+        where a.id = #{id}
+    </select>
+    
+    <select id="findByMapForReport" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsPersonnelcard">
+        select
+			a.id as id,
+			a.session as session,
+			a.name as name,
+			a.sex as sex,case when a.sex=0 then '男' else '女' end as sexname,
+			a.country as country,
+			a.province as province,
+			a.city,
+			a.jobtitle as jobtitle,
+			a.companyname as companyname,
+			a.companyid as companyid,
+			a.postcode as postcode,
+			a.idcardpassport as idcardpassport,
+			case a.idcardpassport 
+			when 0 then '身份证' 
+			when 1 then '护照' 
+			when 2 then '记者证'
+			end as idcardpassportname,
+			a.cardnumber as cardnumber,
+			a.address as address,
+			a.cardtype as cardtype,
+			a.website as website,
+			a.email as email,
+			a.tel as tel,
+			a.fax as fax,
+			a.phone as phone,
+			a.imagepath as imagepath,
+			a.idphotopath as idphotopath,
+			a.addtime as addtime,
+			a.status as status,
+			a.bussinessarea as bussinessarea,
+			a.participants as participants,
+			a.visitexhibition as visitexhibition,
+			a.purpose as purpose,
+			a.knowexhibition as knowexhibition,
+			a.businessnature as businessnature,
+			a.remark as remark,
+			a.agent as agent,
+			a.printstatus as printstatus,
+			case printstatus 
+				when 0 then '未打印'
+				when 1 then '打印中'
+				when 2 then '已打印'
+			end	as printstatusname,
+			a.printtype as printtype,
+			case printtype 
+				when -1 then ''
+				when 0 then '正常打印' 
+				when 1 then 'IC卡打印' 
+			end printtypename,
+			a.printtime,
+			a.verificationstatus as verificationstatus,
+			case when a.verificationstatus=0 then '未验证' else '已验证' end as verificationstatusname,
+			a.iccode as iccode,
+			a.vipcode as vipcode,
+			a.cardnature as cardnature,		
+			case when a.cardnature=0 then '网络' else '现场' end as cardnaturename,	
+			a.makecardtime as makecardtime,
+			a.issuevalid,a.boothcode,a.isback,a.printtime,
+			a.isforensics as isforensics,
+			a.forensicstime as forensicstime,
+			a.certificatenumber as certificatenumber,
+			a.printnumber as printnumber,
+			a.is_out as isout,case when a.is_out=0 then '否' else '是' end as isoutname,
+			a.purchasingintention,a.businesslicense,a.isgreen,a.isplastic,
+			c.chinesename as cardtypename
+        from ebs_personnelcard as a        
+        inner join cm_certificate_type as c on c.id=a.cardtype and a.session=c.session        
+        <where>        	
+			<if test="session != null and session != ''">
+				and a.session = #{session}
+			</if>
+        </where>
+    </select>
+
+    <select id="findByMap" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsPersonnelcard">
+        select
+			a.id as id,
+			a.session as session,
+			a.name as name,
+			a.sex as sex,case when a.sex=0 then '男' else '女' end as sexname,
+			a.country as country,
+			a.province as province,
+			a.city,
+			a.jobtitle as jobtitle,
+			a.companyname as companyname,
+			a.companyid as companyid,
+			a.postcode as postcode,
+			a.idcardpassport as idcardpassport,
+			case a.idcardpassport 
+			when 0 then '身份证' 
+			when 1 then '护照' 
+			when 2 then '记者证'
+			end as idcardpassportname,
+			a.cardnumber as cardnumber,
+			a.address as address,
+			a.cardtype as cardtype,
+			a.website as website,
+			a.email as email,
+			a.tel as tel,
+			a.fax as fax,
+			a.phone as phone,
+			a.imagepath as imagepath,
+			a.idphotopath as idphotopath,
+			a.addtime as addtime,
+			a.status as status,
+			a.bussinessarea as bussinessarea,
+			a.participants as participants,
+			a.visitexhibition as visitexhibition,
+			a.purpose as purpose,
+			a.knowexhibition as knowexhibition,
+			a.businessnature as businessnature,
+			a.remark as remark,
+			a.agent as agent,
+			vw.uname as agentname,
+			a.printstatus as printstatus,
+			case printstatus 
+				when 0 then '未打印'
+				when 1 then '打印中'
+				when 2 then '已打印'
+			end	as printstatusname,
+			a.printtype as printtype,
+			case printtype 
+				when -1 then ''
+				when 0 then '正常打印' 
+				when 1 then 'IC卡打印' 
+			end printtypename,
+			a.printtime,
+			a.verificationstatus as verificationstatus,
+			case when a.verificationstatus=0 then '未验证' else '已验证' end as verificationstatusname,
+			a.iccode as iccode,
+			a.vipcode as vipcode,
+			a.cardnature as cardnature,		
+			case when a.cardnature=0 then '网络' else '现场' end as cardnaturename,	
+			a.makecardtime as makecardtime,
+			a.issuevalid,a.boothcode,a.isback,a.printtime,
+			a.isforensics as isforensics,
+			a.forensicstime as forensicstime,
+			a.certificatenumber as certificatenumber,
+			a.printnumber as printnumber,
+			a.is_out as isout,case when a.is_out=0 then '否' else '是' end as isoutname,
+			a.purchasingintention,a.businesslicense,a.isgreen,a.isplastic,
+			s.middleid,c.chinesename as cardtypename
+        from ebs_personnelcard as a        
+        inner join cm_certificate_type as c on c.id=a.cardtype and a.session=c.session
+        left join vw_Frontend_user_integration as vw on vw.isback=a.isback and vw.uid=a.agent
+        left join web_member_session as s on s.member_id=a.agent and s.id=#{session}
+        <where>
+        	<if test="agent != null and agent != ''">
+				and a.agent = #{agent}
+			</if>
+			<if test="oldid != null and oldid != ''">
+				and a.id != #{oldid}
+			</if>
+        	<if test="id != null and id != ''">
+				and a.id = #{id}
+			</if>
+			<if test="isout != null and isout != ''">
+				and a.is_out = #{isout}
+			</if>
+			<if test="session != null and session != ''">
+				and a.session = #{session}
+			</if>
+			<if test="name != null and name != ''">
+				and a.name like concat('%',#{name},'%')
+			</if>
+			<if test="sex != null and sex != ''">
+				and a.sex = #{sex}
+			</if>
+			<if test="country != null and country != ''">
+				and a.country = #{country}
+			</if>
+			<if test="province != null and province != ''">
+				and a.province = #{province}
+			</if>
+			<if test="jobtitle != null and jobtitle != ''">
+				and a.jobtitle = #{jobtitle}
+			</if>
+			<if test="companyname != null and companyname != ''">
+				and a.companyname like concat('%',#{companyname},'%')
+			</if>
+			<if test="companyid != null and companyid != ''">
+				and a.companyid = #{companyid}
+			</if>
+			<if test="postcode != null and postcode != ''">
+				and a.postcode = #{postcode}
+			</if>
+			<if test="idcardpassport != null and idcardpassport != ''">
+				and a.idcardpassport = #{idcardpassport}
+			</if>
+			<if test="cardnumber != null and cardnumber != ''">
+				and a.cardnumber = #{cardnumber}
+			</if>
+			<if test="address != null and address != ''">
+				and a.address = #{address}
+			</if>
+			<if test="cardtype != null and cardtype != ''">
+				and a.cardtype = #{cardtype}
+			</if>
+			<if test="website != null and website != ''">
+				and a.website = #{website}
+			</if>
+			<if test="email != null and email != ''">
+				and a.email = #{email}
+			</if>
+			<if test="tel != null and tel != ''">
+				and a.tel = #{tel}
+			</if>
+			<if test="fax != null and fax != ''">
+				and a.fax = #{fax}
+			</if>
+			<if test="phone != null and phone != ''">
+				and a.phone = #{phone}
+			</if>
+			<if test="imagepath != null and imagepath != ''">
+				and a.imagepath = #{imagepath}
+			</if>
+			<if test="idphotopath != null and idphotopath != ''">
+				and a.idphotopath = #{idphotopath}
+			</if>
+			<if test="addtime != null and addtime != ''">
+				and a.addtime = #{addtime}
+			</if>
+			<if test="status != null and status != ''">
+				and a.status = #{status}
+			</if>
+			<if test="bussinessarea != null and bussinessarea != ''">
+				and a.bussinessarea = #{bussinessarea}
+			</if>
+			<if test="participants != null and participants != ''">
+				and a.participants = #{participants}
+			</if>
+			<if test="visitexhibition != null and visitexhibition != ''">
+				and a.visitexhibition = #{visitexhibition}
+			</if>
+			<if test="purpose != null and purpose != ''">
+				and a.purpose = #{purpose}
+			</if>
+			<if test="knowexhibition != null and knowexhibition != ''">
+				and a.knowexhibition = #{knowexhibition}
+			</if>
+			<if test="businessnature != null and businessnature != ''">
+				and a.businessnature = #{businessnature}
+			</if>
+			<if test="businessnature != null and businessnature != ''">
+				and a.agent = #{agent}
+			</if>
+			<if test="printstatus != null and printstatus != ''">
+				and a.printstatus = #{printstatus}
+			</if>
+			<if test="printtype != null and printtype != ''">
+				and a.printtype = #{printtype}
+			</if>
+			<if test="verificationstatus != null and verificationstatus != ''">
+				and a.verificationstatus = #{verificationstatus}
+			</if>
+			<if test="iccode != null and iccode != ''">
+				and a.iccode = #{iccode}
+			</if>
+			<if test="vipcode != null and vipcode != ''">
+				and a.vipcode = #{vipcode}
+			</if>
+			<if test="cardnature != null and cardnature != ''">
+				and a.cardnature = #{cardnature}
+			</if>
+			<if test="makecardtime != null and makecardtime != ''">
+				and a.makecardtime = #{makecardtime}
+			</if>
+			<if test="boothcode != null and boothcode != ''">
+				and a.boothcode = #{boothcode}
+			</if>
+			<if test="issuevalid != null and issuevalid != ''">
+				and a.issuevalid = #{issuevalid}
+			</if>
+			<if test="isforensics != null and isforensics != ''">
+				and a.isforensics = #{isforensics}
+			</if>
+			<if test="forensicstime != null and forensicstime != ''">
+				and a.forensicstime = #{forensicstime}
+			</if>
+			<if test="certificatenumber != null and certificatenumber != ''">
+				and a.certificatenumber = #{certificatenumber}
+			</if>
+			<if test="printnumber != null and printnumber != ''">
+				and a.printnumber = #{printnumber}
+			</if>
+			<if test="isgreen != null and isgreen != ''">
+				and a.isgreen = #{isgreen}
+			</if>
+			<if test="isplastic != null and isplastic != ''">
+				and a.isplastic = #{isplastic}
+			</if>
+        </where>
+    </select>
+    
+    <select id="ExhibitorBadgeProductionlist" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsPersonnelcard">
+    	select 			
+			a.id as id,
+			a.session as session,
+			a.name as name,			
+			c.chinesename as companyname,
+			a.companyid as companyid,			
+			a.imagepath as imagepath,			
+			a.status as status,			
+			a.agent as agent,			
+			a.isback,
+			a.printstatus,
+			ifnull(s.middleid,'') as middleid,a.isplastic
+		 from ebs_personnelcard as a  
+		 inner join ebs_companyinfo as c on a.companyid=c.id and a.session=c.session
+		 inner join cm_certificate_type as e on e.type=0 and a.cardtype=e.id and e.session=#{session}
+		 inner join ebs_booth_audit as ba on ba.company_id=a.companyid and ba.session_id=#{session}    
+		 left join web_member_session as s on s.member_id=a.agent and s.id=#{session}   
+		left join web_member as m on m.member_id=a.agent
+		<where>			
+				and m.member_type = #{leixing}
+			 and ba.exhibition_office_audit_status=1
+			 and ba.finance_office_audit_status=1
+			<if test="isexhibitor!=null and isexhibitor != ''">
+				and e.isexhibitor = #{isexhibitor}
+			</if>
+			<if test="groupid!=null and groupid != ''">
+				and c.tradinggroupid = #{groupid}
+			</if>	
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="name != null and name != ''">
+                and a.name like concat('%',#{name},'%')
+            </if>           
+            <if test="companyname != null and companyname != ''">
+                and a.companyname like concat('%',#{companyname},'%')
+            </if>
+            <if test="isplastic != null and isplastic != ''">
+				and a.isplastic = #{isplastic}
+			</if>
+			 <if test="printstatus != null and printstatus != ''">
+				and a.printstatus = #{printstatus}
+			</if>
+			<if test="status != null and status != ''">
+				and a.status = #{status}
+			</if>
+		</where>
+		order by a.id desc	
+		limit #{index}, #{size}
+    </select> 
+    
+    <select id="ExhibitorBadgeProductionlistcount" resultType="int">
+    	select count(*)     	
+		 from ebs_personnelcard as a   
+		inner join ebs_companyinfo as c on a.companyid=c.id and a.session=c.session
+		inner join cm_certificate_type as e on e.type=0 and a.cardtype=e.id and e.session=#{session}
+		inner join ebs_booth_audit as ba on ba.company_id=a.companyid and ba.session_id=#{session}  
+		left join web_member as m on m.member_id=a.agent
+		<where>			
+				and m.member_type = #{leixing}			
+			 and ba.exhibition_office_audit_status=1
+			 and ba.finance_office_audit_status=1
+			<if test="isexhibitor!=null and isexhibitor != ''">
+				and e.isexhibitor = #{isexhibitor}
+			</if>
+			<if test="groupid!=null and groupid != ''">
+				and c.tradinggroupid = #{groupid}
+			</if>	
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="name != null and name != ''">
+                and a.name like concat('%',#{name},'%')
+            </if>           
+            <if test="companyname != null and companyname != ''">
+                and a.companyname like concat('%',#{companyname},'%')
+            </if>
+            <if test="isplastic != null and isplastic != ''">
+				and a.isplastic = #{isplastic}
+			</if>
+			 <if test="printstatus != null and printstatus != ''">
+				and a.printstatus = #{printstatus}
+			</if>
+			<if test="status != null and status != ''">
+				and a.status = #{status}
+			</if>
+		</where>
+    </select>
+
+    <select id="list" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsPersonnelcard">
+        select
+        	'' as tjleixing,
+			'' as jiaoyituan,
+			a.id as id,
+			a.session as session,
+			a.name as name,
+			a.sex as sex,case when a.sex=0 then '男' else '女' end as sexname,
+			a.country as country,
+			a.province as province,
+			a.city,
+			a.jobtitle as jobtitle,
+			a.companyname as companyname,
+			a.companyid as companyid,
+			a.postcode as postcode,
+			a.idcardpassport as idcardpassport,
+			case a.idcardpassport 
+			when 0 then '身份证' 
+			when 1 then '护照' 
+			when 2 then '记者证'
+			end as idcardpassportname,
+			a.cardnumber as cardnumber,
+			a.address as address,
+			a.cardtype as cardtype,
+        b.chinesename,
+        b.engname,
+        b.japanname,
+        b.russianame,
+        b.koreaname,
+			a.website as website,
+			a.email as email,
+			a.tel as tel,
+			a.fax as fax,
+			a.phone as phone,
+			a.imagepath as imagepath,
+			a.idphotopath as idphotopath,
+			a.addtime as addtime,
+			a.status as status,
+			a.bussinessarea as bussinessarea,
+			a.participants as participants,
+			a.visitexhibition as visitexhibition,
+			a.purpose as purpose,
+			a.knowexhibition as knowexhibition,
+			a.businessnature as businessnature,
+			a.remark as remark,
+			a.agent as agent,
+			'' as agentname,
+			a.printstatus as printstatus,
+			case printstatus 
+				when '0' then '未打印'
+				when '1' then '打印中'
+				when '2' then '已打印'
+			end	as printstatusname,
+			a.printtype as printtype,
+			case printtype 
+				when -1 then ''
+				when 0 then '正常打印' 
+				when 1 then 'IC卡打印' 
+			end printtypename,
+			a.printtime,
+			a.verificationstatus as verificationstatus,
+			case when a.verificationstatus=0 then '未验证' else '已验证' end as verificationstatusname,
+			a.iccode as iccode,
+			a.vipcode as vipcode,
+			a.cardnature as cardnature,
+			case when a.cardnature=0 then '网络' else '现场' end as cardnaturename,
+			a.makecardtime as makecardtime,b.chinesename as cardtypename,
+			a.issuevalid,a.boothcode,a.isback,a.printtime,
+			a.isforensics as isforensics,
+			a.forensicstime as forensicstime,
+			a.certificatenumber as certificatenumber,
+			a.printnumber as printnumber,c.sessionid,
+			a.is_out as isout,case when a.is_out=0 then '否' else '是' end as isoutname,
+			a.businesslicense as businesslicense,
+			a.purchasingintention as purchasingintention,a.isgreen,a.isplastic,
+			ifnull(s.middleid,'') as middleid,
+			a.profession as profession,
+			a.audittime as audittime
+        from ebs_personnelcard as a
+        inner join sys_session as c on a.session=c.id
+        inner join cm_certificate_type as b on b.type=0 and a.cardtype=b.id and b.useable = 1 and b.session = a.session
+        left join web_member_session as s on s.member_id=a.agent and s.id=#{session}
+        <if test="leixing != null and leixing != ''">
+        left join vw_agentstatus as d on d.memberid=a.agent 
+        </if>
+        <where> 
+        	<if test="jyt != null and jyt == 'yes'">
+				and a.agent in (
+					select a.member_id from web_member as a
+					inner join web_member_session as b on a.member_id=b.member_id and b.id=#{session}
+					where a.member_type = 3 and a.member_status=0)
+			</if>	
+        	<if test="leixing != null and leixing != ''">
+				and ifnull(d.makeevidence,1)=1	
+			</if>	
+        	<if test="isexhibitor!=null and isexhibitor != ''">
+				and b.isexhibitor = #{isexhibitor}
+			</if>
+			<if test="isout != null and isout != ''">
+				and a.is_out = #{isout}
+			</if>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="name != null and name != ''">
+                and a.name like concat('%',#{name},'%')
+            </if>
+            <if test="sex != null and sex != ''">
+                and a.sex = #{sex}
+            </if>
+            <if test="country != null and country != ''">
+                and a.country = #{country}
+            </if>
+            <if test="province != null and province != ''">
+                and a.province = #{province}
+            </if>
+            <if test="jobtitle != null and jobtitle != ''">
+                and a.jobtitle = #{jobtitle}
+            </if>
+            <if test="companyname != null and companyname != ''">
+                and a.companyname like concat('%',#{companyname},'%')
+            </if>
+            <if test="companyid != null and companyid != ''">
+                and a.companyid = #{companyid}
+            </if>
+            <if test="postcode != null and postcode != ''">
+                and a.postcode = #{postcode}
+            </if>
+            <if test="idcardpassport != null and idcardpassport != ''">
+                and a.idcardpassport = #{idcardpassport}
+            </if>
+            <if test="cardnumber != null and cardnumber != ''">
+                and a.cardnumber = #{cardnumber}
+            </if>
+            <if test="address != null and address != ''">
+                and a.address = #{address}
+            </if>
+            <if test="cardtype != null and cardtype != ''">            	
+                and a.cardtype = #{cardtype}               
+            </if>
+            <if test="website != null and website != ''">
+                and a.website = #{website}
+            </if>
+            <if test="email != null and email != ''">
+                and a.email = #{email}
+            </if>
+            <if test="tel != null and tel != ''">
+                and a.tel = #{tel}
+            </if>
+            <if test="fax != null and fax != ''">
+                and a.fax = #{fax}
+            </if>
+            <if test="phone != null and phone != ''">
+                and a.phone = #{phone}
+            </if>
+            <if test="imagepath != null and imagepath != ''">
+                and a.imagepath = #{imagepath}
+            </if>
+            <if test="idphotopath != null and idphotopath != ''">
+                and a.idphotopath = #{idphotopath}
+            </if>
+            <if test="addtime != null and addtime != ''">
+                and a.addtime = #{addtime}
+            </if>
+            <if test="status != null and status != ''">
+                and a.status = #{status}
+            </if>
+            <if test="bussinessarea != null and bussinessarea != ''">
+				and a.bussinessarea = #{bussinessarea}
+			</if>
+			<if test="participants != null and participants != ''">
+				and a.participants = #{participants}
+			</if>
+			<if test="visitexhibition != null and visitexhibition != ''">
+				and a.visitexhibition = #{visitexhibition}
+			</if>
+			<if test="purpose != null and purpose != ''">
+				and a.purpose = #{purpose}
+			</if>
+			<if test="knowexhibition != null and knowexhibition != ''">
+				and a.knowexhibition = #{knowexhibition}
+			</if>
+			<if test="businessnature != null and businessnature != ''">
+				and a.businessnature = #{businessnature}
+			</if>			
+			<if test="printstatus != null and printstatus != ''">
+				and a.printstatus = #{printstatus}
+			</if>
+			<if test="printtype != null and printtype != ''">
+				and a.printtype = #{printtype}
+			</if>
+			<if test="verificationstatus != null and verificationstatus != ''">
+				and a.verificationstatus = #{verificationstatus}
+			</if>
+			<if test="iccode != null and iccode != ''">
+				and a.iccode = #{iccode}
+			</if>
+			<if test="vipcode != null and vipcode != ''">
+				and a.vipcode = #{vipcode}
+			</if>
+			<if test="cardnature != null and cardnature != ''">
+				and a.cardnature = #{cardnature}
+			</if>
+			<if test="makecardtime != null and makecardtime != ''">
+				and a.makecardtime = #{makecardtime}
+			</if>
+			<if test="boothcode != null and boothcode != ''">
+				and a.boothcode = #{boothcode}
+			</if>
+			<if test="issuevalid != null and issuevalid != ''">
+				and a.issuevalid = #{issuevalid}
+			</if>
+			<if test="isforensics != null and isforensics != ''">
+				and a.isforensics = #{isforensics}
+			</if>
+			<if test="forensicstime != null and forensicstime != ''">
+				and a.forensicstime = #{forensicstime}
+			</if>
+			<if test="certificatenumber != null and certificatenumber != ''">
+				and a.certificatenumber = #{certificatenumber}
+			</if>
+			<if test="printnumber != null and printnumber != ''">
+				and a.printnumber = #{printnumber}
+			</if>
+			<if test="agent != null and agent != ''">
+				and a.agent = #{agent}
+			</if>
+			<if test="isgreen != null and isgreen != ''">
+				and a.isgreen = #{isgreen}
+			</if>
+			<if test="isback != null and isback != ''">
+				and a.isback = #{isback}
+			</if>
+			<if test="isplastic != null and isplastic != ''">
+				and a.isplastic = #{isplastic}
+			</if>
+	        <if test="cardTypeName == 'removeBuCheZhanCard'">
+	        	and b.chinesename != '布撤展证'
+	        </if>
+			<if test="cardTypeName == 'onlyBuCheZhanCard'">
+				and b.chinesename = '布撤展证'
+			</if>
+        </where>
+        order by field(a.status,0,-1,1),a.printstatus
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(*) FROM ebs_personnelcard a
+		inner join sys_session as c on a.session=c.id
+		inner join cm_certificate_type as b on b.type=0 and a.cardtype=b.id and b.useable = 1 and b.session = a.session
+		<if test="leixing != null and leixing != ''">
+        left join vw_agentstatus as d on d.memberid=a.agent 
+        </if>
+		<where>	
+			<if test="jyt != null and jyt == 'yes'">
+				and a.agent in (
+					select a.member_id from web_member as a
+					inner join web_member_session as b on a.member_id=b.member_id and b.id=#{session}
+					where a.member_type = 3 and a.member_status=0)
+			</if>	
+			<if test="leixing != null and leixing != ''">
+				and ifnull(d.makeevidence,1)=1	
+			</if>	
+			<if test="isexhibitor!=null and isexhibitor != ''">
+				and b.isexhibitor = #{isexhibitor}
+			</if>		
+			<if test="isout!=null and isout != ''">
+				and a.is_out = #{isout}
+			</if>
+			<if test="isout != null and isout != ''">
+				and a.is_out = #{isout}
+			</if>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="name != null and name != ''">
+                and a.name like concat('%',#{name},'%')
+            </if>
+            <if test="sex != null and sex != ''">
+                and a.sex = #{sex}
+            </if>
+            <if test="country != null and country != ''">
+                and a.country = #{country}
+            </if>
+            <if test="province != null and province != ''">
+                and a.province = #{province}
+            </if>
+            <if test="jobtitle != null and jobtitle != ''">
+                and a.jobtitle = #{jobtitle}
+            </if>
+            <if test="companyname != null and companyname != ''">
+                and a.companyname like concat('%',#{companyname},'%')
+            </if>
+            <if test="companyid != null and companyid != ''">
+                and a.companyid = #{companyid}
+            </if>
+            <if test="postcode != null and postcode != ''">
+                and a.postcode = #{postcode}
+            </if>
+            <if test="idcardpassport != null and idcardpassport != ''">
+                and a.idcardpassport = #{idcardpassport}
+            </if>
+            <if test="cardnumber != null and cardnumber != ''">
+                and a.cardnumber = #{cardnumber}
+            </if>
+            <if test="address != null and address != ''">
+                and a.address = #{address}
+            </if>
+            <if test="cardtype != null and cardtype != ''">   
+                and a.cardtype = #{cardtype}                
+            </if>
+            <if test="website != null and website != ''">
+                and a.website = #{website}
+            </if>
+            <if test="email != null and email != ''">
+                and a.email = #{email}
+            </if>
+            <if test="tel != null and tel != ''">
+                and a.tel = #{tel}
+            </if>
+            <if test="fax != null and fax != ''">
+                and a.fax = #{fax}
+            </if>
+            <if test="phone != null and phone != ''">
+                and a.phone = #{phone}
+            </if>
+            <if test="imagepath != null and imagepath != ''">
+                and a.imagepath = #{imagepath}
+            </if>
+            <if test="idphotopath != null and idphotopath != ''">
+                and a.idphotopath = #{idphotopath}
+            </if>
+            <if test="addtime != null and addtime != ''">
+                and a.addtime = #{addtime}
+            </if>
+            <if test="status != null and status != ''">
+                and a.status = #{status}
+            </if>
+            <if test="bussinessarea != null and bussinessarea != ''">
+				and a.bussinessarea = #{bussinessarea}
+			</if>
+			<if test="participants != null and participants != ''">
+				and a.participants = #{participants}
+			</if>
+			<if test="visitexhibition != null and visitexhibition != ''">
+				and a.visitexhibition = #{visitexhibition}
+			</if>
+			<if test="purpose != null and purpose != ''">
+				and a.purpose = #{purpose}
+			</if>
+			<if test="knowexhibition != null and knowexhibition != ''">
+				and a.knowexhibition = #{knowexhibition}
+			</if>
+			<if test="businessnature != null and businessnature != ''">
+				and a.businessnature = #{businessnature}
+			</if>			
+			<if test="printstatus != null and printstatus != ''">
+				and a.printstatus = #{printstatus}
+			</if>
+			<if test="printtype != null and printtype != ''">
+				and a.printtype = #{printtype}
+			</if>
+			<if test="verificationstatus != null and verificationstatus != ''">
+				and a.verificationstatus = #{verificationstatus}
+			</if>
+			<if test="iccode != null and iccode != ''">
+				and a.iccode = #{iccode}
+			</if>
+			<if test="vipcode != null and vipcode != ''">
+				and a.vipcode = #{vipcode}
+			</if>
+			<if test="cardnature != null and cardnature != ''">
+				and a.cardnature = #{cardnature}
+			</if>
+			<if test="makecardtime != null and makecardtime != ''">
+				and a.makecardtime = #{makecardtime}
+			</if>
+			<if test="boothcode != null and boothcode != ''">
+				and a.boothcode = #{boothcode}
+			</if>
+			<if test="issuevalid != null and issuevalid != ''">
+				and a.issuevalid = #{issuevalid}
+			</if>
+			<if test="isforensics != null and isforensics != ''">
+				and a.isforensics = #{isforensics}
+			</if>
+			<if test="forensicstime != null and forensicstime != ''">
+				and a.forensicstime = #{forensicstime}
+			</if>
+			<if test="certificatenumber != null and certificatenumber != ''">
+				and a.certificatenumber = #{certificatenumber}
+			</if>
+			<if test="printnumber != null and printnumber != ''">
+				and a.printnumber = #{printnumber}
+			</if>
+			<if test="agent != null and agent != ''">
+				and a.agent = #{agent}
+			</if>
+			<if test="isgreen != null and isgreen != ''">
+				and a.isgreen = #{isgreen}
+			</if>
+			<if test="isback != null and isback != ''">
+				and a.isback = #{isback}
+			</if>
+			<if test="isplastic != null and isplastic != ''">
+				and a.isplastic = #{isplastic}
+			</if>
+	        <if test="cardTypeName == 'removeBuCheZhanCard'">
+	        	and b.chinesename != '布撤展证'
+	        </if>
+			<if test="cardTypeName == 'onlyBuCheZhanCard'">
+				and b.chinesename = '布撤展证'
+			</if>
+        </where>
+	</select>
+
+    <insert id="save" parameterType="cn.org.chtf.card.manage.Exhibitors.model.EbsPersonnelcard" useGeneratedKeys="true" keyProperty="id">
+        insert into ebs_personnelcard(
+        	<trim suffixOverrides=",">
+                <if test="session != null">`session`,</if>
+                <if test="name != null">`name`,</if>
+                <if test="sex != null">`sex`,</if>
+                <if test="country != null">`country`,</if>
+                <if test="province != null">`province`,</if>
+                <if test="city != null">`city`,</if>
+                <if test="jobtitle != null">`jobtitle`,</if>
+                <if test="companyname != null">`companyname`,</if>
+                <if test="companyid != null">`companyid`,</if>
+                <if test="postcode != null">`postcode`,</if>
+                <if test="idcardpassport != null">`idcardpassport`,</if>
+                <if test="cardnumber != null">`cardnumber`,</if>
+                <if test="address != null">`address`,</if>
+                <if test="cardtype != null">`cardtype`,</if>
+                <if test="website != null">`website`,</if>
+                <if test="email != null">`email`,</if>
+                <if test="tel != null">`tel`,</if>
+                <if test="fax != null">`fax`,</if>
+                <if test="phone != null">`phone`,</if>
+                <if test="imagepath != null">`imagepath`,</if>
+                <if test="idphotopath != null">`idphotopath`,</if>
+                <if test="addtime != null">`addtime`,</if>
+                <if test="status != null">`status`,</if>
+                <if test="bussinessarea != null">`bussinessarea`,</if>
+                <if test="participants != null">`participants`,</if>
+                <if test="visitexhibition != null">`visitexhibition`,</if>
+                <if test="purpose != null">`purpose`,</if>
+                <if test="knowexhibition != null">`knowexhibition`,</if>
+                <if test="businessnature != null">`businessnature`,</if>
+                <if test="agent != null">`agent`,</if>
+                <if test="remark != null">`remark`,</if>
+                <if test="printstatus != null">`printstatus`,</if>
+                <if test="printtype != null">`printtype`,</if>
+                <if test="verificationstatus != null">`verificationstatus`,</if>
+                <if test="iccode != null">`iccode`,</if>
+                <if test="vipcode != null">`vipcode`,</if>
+                <if test="cardnature != null">`cardnature`,</if>
+                <if test="boothcode != null">`boothcode`,</if>
+                <if test="issuevalid != null">`issuevalid`,</if>
+                <if test="isback != null">`isback`,</if>
+                <if test="makecardtime != null">`makecardtime`,</if>
+                <if test="isforensics != null">`isforensics`,</if>
+                <if test="forensicstime != null">`forensicstime`,</if>
+                <if test="certificatenumber != null">`certificatenumber`,</if>
+                <if test="isout != null">`is_out`,</if>
+                <if test="businesslicense != null">`businesslicense`,</if>
+                <if test="purchasingintention != null">`purchasingintention`,</if>
+                <if test="isgreen != null">`isgreen`,</if>
+                <if test="isplastic != null">`isplastic`,</if>
+                <if test="printnumber != null">`printnumber`,</if>
+				<if test="profession != null">`profession`</if>
+			</trim>
+		) values (
+        	<trim suffixOverrides=",">
+                <if test="session != null">#{session},</if>
+                <if test="name != null">#{name},</if>
+                <if test="sex != null">#{sex},</if>
+                <if test="country != null">#{country},</if>
+                <if test="province != null">#{province},</if>
+                <if test="city != null">#{city},</if>
+                <if test="jobtitle != null">#{jobtitle},</if>
+                <if test="companyname != null">#{companyname},</if>
+                <if test="companyid != null">#{companyid},</if>
+                <if test="postcode != null">#{postcode},</if>
+                <if test="idcardpassport != null">#{idcardpassport},</if>
+                <if test="cardnumber != null">#{cardnumber},</if>
+                <if test="address != null">#{address},</if>
+                <if test="cardtype != null">#{cardtype},</if>
+                <if test="website != null">#{website},</if>
+                <if test="email != null">#{email},</if>
+                <if test="tel != null">#{tel},</if>
+                <if test="fax != null">#{fax},</if>
+                <if test="phone != null">#{phone},</if>
+                <if test="imagepath != null">#{imagepath},</if>
+                <if test="idphotopath != null">#{idphotopath},</if>
+                <if test="addtime != null">#{addtime},</if>
+                <if test="status != null">#{status},</if>
+                <if test="bussinessarea != null">#{bussinessarea},</if>
+                <if test="participants != null">#{participants},</if>
+                <if test="visitexhibition != null">#{visitexhibition},</if>
+                <if test="purpose != null">#{purpose},</if>
+                <if test="knowexhibition != null">#{knowexhibition},</if>
+                <if test="businessnature != null">#{businessnature},</if>
+                <if test="agent != null">#{agent},</if>
+                <if test="remark != null">#{remark},</if>
+                <if test="printstatus != null">#{printstatus},</if>
+                <if test="printtype != null">#{printtype},</if>
+                <if test="verificationstatus != null">#{verificationstatus},</if>
+                <if test="iccode != null">#{iccode},</if>
+                <if test="vipcode != null">#{vipcode},</if>
+                <if test="cardnature != null">#{cardnature},</if>
+                <if test="boothcode != null">#{boothcode},</if>
+                <if test="issuevalid != null">#{issuevalid},</if>
+                <if test="isback != null">#{isback},</if>
+                <if test="makecardtime != null">#{makecardtime},</if>
+                <if test="isforensics != null">#{isforensics},</if>
+                <if test="forensicstime != null">#{forensicstime},</if>
+                <if test="certificatenumber != null">#{certificatenumber},</if>
+                <if test="isout != null">#{isout},</if>
+                <if test="businesslicense != null">#{businesslicense},</if>
+                <if test="purchasingintention != null">#{purchasingintention},</if>
+                <if test="isgreen != null">#{isgreen},</if>
+                <if test="isplastic != null">#{isplastic},</if>
+                <if test="printnumber != null">#{printnumber},</if>
+                <if test="profession != null">#{profession}</if>
+			</trim>
+		)
+    </insert>
+
+    <update id="update" parameterType="cn.org.chtf.card.manage.Exhibitors.model.EbsPersonnelcard">
+        update ebs_personnelcard
+        <set>
+			<if test="session != null">`session` = #{session},</if>
+			<if test="name != null">`name` = #{name},</if>
+			<if test="sex != null">`sex` = #{sex},</if>
+			<if test="country != null">`country` = #{country},</if>
+			<if test="province != null">`province` = #{province},</if>
+			<if test="city != null">`city` = #{city},</if>
+			<if test="jobtitle != null">`jobtitle` = #{jobtitle},</if>
+			<if test="companyname != null">`companyname` = #{companyname},</if>
+			<if test="companyid != null">`companyid` = #{companyid},</if>
+			<if test="postcode != null">`postcode` = #{postcode},</if>
+			<if test="idcardpassport != null">`idcardpassport` = #{idcardpassport},</if>
+			<if test="cardnumber != null">`cardnumber` = #{cardnumber},</if>
+			<if test="address != null">`address` = #{address},</if>
+			<if test="cardtype != null">`cardtype` = #{cardtype},</if>
+			<if test="website != null">`website` = #{website},</if>
+			<if test="email != null">`email` = #{email},</if>
+			<if test="tel != null">`tel` = #{tel},</if>
+			<if test="fax != null">`fax` = #{fax},</if>
+			<if test="phone != null">`phone` = #{phone},</if>
+			<if test="imagepath != null">`imagepath` = #{imagepath},</if>
+			<if test="idphotopath != null">`idphotopath` = #{idphotopath},</if>
+			<if test="addtime != null">`addtime` = #{addtime},</if>
+			<if test="status != null">`status` = #{status},</if>
+			<if test="bussinessarea != null">`bussinessarea` = #{bussinessarea},</if>
+			<if test="participants != null">`participants` = #{participants},</if>
+			<if test="visitexhibition != null">`visitexhibition` = #{visitexhibition},</if>
+			<if test="purpose != null">`purpose` = #{purpose},</if>
+			<if test="knowexhibition != null">`knowexhibition` = #{knowexhibition},</if>
+			<if test="businessnature != null">`businessnature` = #{businessnature},</if>
+			<if test="agent != null">`agent` = #{agent},</if>
+			<if test="remark != null">`remark` = #{remark},</if>
+			<if test="printstatus != null ">`printstatus` = #{printstatus},</if>
+			<if test="printtype != null">`printtype` = #{printtype},</if>
+			<if test="printtime != null and printtime != ''">`printtime` = #{printtime},</if>
+			<if test="verificationstatus != null">`verificationstatus` = #{verificationstatus},</if>
+			<if test="iccode != null and iccode != ''">`iccode` = #{iccode},</if>
+			<if test="vipcode != null and vipcode != ''">`vipcode` = #{vipcode},</if>
+			<if test="cardnature != null">`cardnature` = #{cardnature},</if>
+			<if test="boothcode != null">`boothcode` = #{boothcode},</if>
+			<if test="cardnature != null">`cardnature` = #{cardnature},</if>
+			<if test="isback != null">`isback` = #{isback},</if>
+			<if test="makecardtime != null and makecardtime != ''">`makecardtime` = #{makecardtime},</if>
+			<if test="issuevalid != null">`issuevalid` = #{issuevalid},</if>
+			<if test="isforensics != null">`isforensics` = #{isforensics},</if>
+			<if test="forensicstime != null">`forensicstime` = #{forensicstime},</if>
+			<if test="certificatenumber != null">`certificatenumber` = #{certificatenumber},</if>
+			<if test="isout != null">`is_out` = #{isout},</if>
+			<if test="businesslicense != null">`businesslicense` = #{businesslicense},</if>
+			<if test="purchasingintention != null">`purchasingintention` = #{purchasingintention},</if>
+			<if test="isgreen != null">`isgreen` = #{isgreen},</if>
+			<if test="isplastic != null">`isplastic` = #{isplastic},</if>
+			<if test="plastictime != null">`plastictime` = #{plastictime},</if>
+			<if test="printnumber != null">`printnumber` = #{printnumber},</if>
+			<if test="profession != null">`profession` = #{profession},</if>
+			<if test="audittime != null">`audittime` = #{audittime}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from ebs_personnelcard where id = #{id}
+    </delete>
+    
+    <select id="GetDownLoadInfo" resultType="map">
+        select
+			a.id as id,
+			a.session as session,
+			a.name as name,
+			a.sex as sex,case when a.sex=0 then '男' else '女' end as sexname,
+			a.country as country,
+			a.province as province,
+			a.city,
+			a.jobtitle as jobtitle,
+			a.companyname as companyname,
+			a.companyid as companyid,
+			a.postcode as postcode,
+			a.idcardpassport as idcardpassport,
+			case a.idcardpassport 
+			when 0 then '身份证' 
+			when 1 then '护照' 
+			when 2 then '记者证'
+			end as idcardpassportname,
+			a.cardnumber as cardnumber,
+			a.address as address,
+			a.cardtype as cardtype,
+			a.website as website,
+			a.email as email,
+			a.tel as tel,
+			a.fax as fax,
+			a.phone as phone,
+			a.imagepath as imagepath,
+			a.idphotopath as idphotopath,
+			a.addtime as addtime,
+			a.status as status,
+			a.bussinessarea as bussinessarea,
+			a.participants as participants,
+			a.visitexhibition as visitexhibition,
+			a.purpose as purpose,
+			a.knowexhibition as knowexhibition,
+			a.businessnature as businessnature,
+			a.remark as remark,
+			a.agent as agent,
+			vw.uname as agentname,
+			a.printstatus as printstatus,
+			case printstatus 
+				when '0' then '未打印'
+				when '1' then '打印中'
+				when '2' then '已打印'
+			end	as printstatusname,
+			a.printtype as printtype,
+			case printtype 
+				when -1 then ''
+				when 0 then '正常打印' 
+				when 1 then 'IC卡打印' 
+			end printtypename,
+			a.printtime,
+			a.verificationstatus as verificationstatus,
+			case when a.verificationstatus=0 then '未验证' else '已验证' end as verificationstatusname,
+			a.iccode as iccode,
+			a.vipcode as vipcode,
+			a.cardnature as cardnature,
+			case when a.cardnature=0 then '网络' else '现场' end as cardnaturename,
+			a.makecardtime as makecardtime,b.chinesename as cardtypename,
+			a.issuevalid,a.boothcode,a.isback,a.printtime,
+			a.isforensics as isforensics,
+			a.forensicstime as forensicstime,
+			a.certificatenumber as certificatenumber,
+			a.printnumber as printnumber,
+			case status when 0 then '未审核'
+						when 1 then '审核通过'
+						when -1 then '审核未通过' end as statusname,i.chinese_name as industryname,chjs.dic_cn_name as chjsname,cgdzq.dic_cn_name as cgdzqname,
+			'' as chmdname,
+			'' as rhzdzhname,
+			'' as ywxzname,
+			'' as cgflname,ifnull(c.purchaseintention,'') as purchaseintention
+        from ebs_personnelcard as a
+        inner join cm_certificate_type as b on b.type=0 and a.cardtype=b.id 
+        left join ebs_companyinfo as c on c.id=a.companyid
+        left join sys_industry as i on i.id=a.bussinessarea
+        left join system_dictionaries as chjs on chjs.dicid=a.participants
+        left join system_dictionaries as cgdzq on cgdzq.dicid=a.visitexhibition        
+        left join vw_Frontend_user_integration as vw on vw.isback=a.isback and vw.uid=a.agent
+        <if test="leixing != null and leixing != ''">
+        left join vw_agentstatus as d on d.memberid=a.agent 
+        </if>
+		<where>		
+			<if test="leixing != null and leixing != ''">
+				and ifnull(d.makeevidence,1)=1	
+			</if>	
+        	<if test="isexhibitor!=null and isexhibitor != ''">
+				and b.isexhibitor = #{isexhibitor}
+			</if>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="name != null and name != ''">
+                and a.name like concat('%',#{name},'%')
+            </if>
+            <if test="sex != null and sex != ''">
+                and a.sex = #{sex}
+            </if>
+            <if test="country != null and country != ''">
+                and a.country = #{country}
+            </if>
+            <if test="province != null and province != ''">
+                and a.province = #{province}
+            </if>
+            <if test="jobtitle != null and jobtitle != ''">
+                and a.jobtitle = #{jobtitle}
+            </if>
+            <if test="companyname != null and companyname != ''">
+                and a.companyname like concat('%',#{companyname},'%')
+            </if>
+            <if test="companyid != null and companyid != ''">
+                and a.companyid = #{companyid}
+            </if>
+            <if test="postcode != null and postcode != ''">
+                and a.postcode = #{postcode}
+            </if>
+            <if test="idcardpassport != null and idcardpassport != ''">
+                and a.idcardpassport = #{idcardpassport}
+            </if>
+            <if test="cardnumber != null and cardnumber != ''">
+                and a.cardnumber = #{cardnumber}
+            </if>
+            <if test="address != null and address != ''">
+                and a.address = #{address}
+            </if>
+            <if test="cardtype != null and cardtype != ''">            	
+                and a.cardtype = #{cardtype}               
+            </if>
+            <if test="website != null and website != ''">
+                and a.website = #{website}
+            </if>
+            <if test="email != null and email != ''">
+                and a.email = #{email}
+            </if>
+            <if test="tel != null and tel != ''">
+                and a.tel = #{tel}
+            </if>
+            <if test="fax != null and fax != ''">
+                and a.fax = #{fax}
+            </if>
+            <if test="phone != null and phone != ''">
+                and a.phone = #{phone}
+            </if>
+            <if test="imagepath != null and imagepath != ''">
+                and a.imagepath = #{imagepath}
+            </if>
+            <if test="idphotopath != null and idphotopath != ''">
+                and a.idphotopath = #{idphotopath}
+            </if>
+            <if test="addtime != null and addtime != ''">
+                and a.addtime = #{addtime}
+            </if>
+            <if test="status != null and status != ''">
+                and a.status = #{status}
+            </if>
+            <if test="bussinessarea != null and bussinessarea != ''">
+				and a.bussinessarea = #{bussinessarea}
+			</if>
+			<if test="participants != null and participants != ''">
+				and a.participants = #{participants}
+			</if>
+			<if test="visitexhibition != null and visitexhibition != ''">
+				and a.visitexhibition = #{visitexhibition}
+			</if>
+			<if test="purpose != null and purpose != ''">
+				and a.purpose = #{purpose}
+			</if>
+			<if test="knowexhibition != null and knowexhibition != ''">
+				and a.knowexhibition = #{knowexhibition}
+			</if>
+			<if test="businessnature != null and businessnature != ''">
+				and a.businessnature = #{businessnature}
+			</if>			
+			<if test="printstatus != null and printstatus != ''">
+				and a.printstatus = #{printstatus}
+			</if>
+			<if test="printtype != null and printtype != ''">
+				and a.printtype = #{printtype}
+			</if>
+			<if test="verificationstatus != null and verificationstatus != ''">
+				and a.verificationstatus = #{verificationstatus}
+			</if>
+			<if test="iccode != null and iccode != ''">
+				and a.iccode = #{iccode}
+			</if>
+			<if test="vipcode != null and vipcode != ''">
+				and a.vipcode = #{vipcode}
+			</if>
+			<if test="cardnature != null and cardnature != ''">
+				and a.cardnature = #{cardnature}
+			</if>
+			<if test="makecardtime != null and makecardtime != ''">
+				and a.makecardtime = #{makecardtime}
+			</if>
+			<if test="boothcode != null and boothcode != ''">
+				and a.boothcode = #{boothcode}
+			</if>
+			<if test="issuevalid != null and issuevalid != ''">
+				and a.issuevalid = #{issuevalid}
+			</if>
+			<if test="isforensics != null and isforensics != ''">
+				and a.isforensics = #{isforensics}
+			</if>
+			<if test="forensicstime != null and forensicstime != ''">
+				and a.forensicstime = #{forensicstime}
+			</if>
+			<if test="certificatenumber != null and certificatenumber != ''">
+				and a.certificatenumber = #{certificatenumber}
+			</if>
+			<if test="printnumber != null and printnumber != ''">
+				and a.printnumber = #{printnumber}
+			</if>
+			<if test="agent != null and agent != ''">
+				and a.agent = #{agent}
+			</if>
+			<if test="isgreen != null and isgreen != ''">
+				and a.isgreen = #{isgreen}
+			</if>
+			<if test="isback != null and isback != ''">
+				and a.isback = #{isback}
+			</if>
+        </where>
+        order by a.id			
+    </select>
+    
+    <delete id="deleteByMap">
+    	delete from ebs_personnelcard
+	   where agent=#{memberid} and session=#{session}
+    </delete>
+    
+	 <delete id="delete">
+	   delete from ebs_personnelcard
+	   where agent=#{memberId} and id in  
+	       <foreach collection="idList" item="id" index="index"
+	           open="(" close=")" separator=",">
+	           #{id,jdbcType=VARCHAR}
+	       </foreach>;
+	 </delete>
+	 <select id="getHistoryPersonCard" resultType="map">
+	 SELECT
+	 	ebs_personnelcard.sex as sex,case when ebs_personnelcard.sex=0 then '男' else '女' end as sexname,
+			ebs_personnelcard.country as country,
+			ebs_personnelcard.province as province,
+			ebs_personnelcard.city,
+			ebs_personnelcard.jobtitle as jobtitle,
+			ebs_personnelcard.companyname as companyname,
+			ebs_personnelcard.companyid as companyid,
+			ebs_personnelcard.postcode as postcode,
+			ebs_personnelcard.idcardpassport as idcardpassport,
+			case ebs_personnelcard.idcardpassport 
+			when 0 then '身份证' 
+			when 1 then '护照' 
+			when 2 then '记者证'
+			end as idcardpassportname,
+			ebs_personnelcard.cardnumber as cardnumber,
+			ebs_personnelcard.address as address,
+			ebs_personnelcard.cardtype as cardtype,
+			ebs_personnelcard.website as website,
+			ebs_personnelcard.email as email,
+			ebs_personnelcard.tel as tel,
+			ebs_personnelcard.fax as fax,
+			ebs_personnelcard.phone as phone,
+			ebs_personnelcard.imagepath as imagepath,
+			ebs_personnelcard.idphotopath as idphotopath,
+			ebs_personnelcard.addtime as addtime,
+			ebs_personnelcard.status as status,
+			ebs_personnelcard.bussinessarea as bussinessarea,
+			ebs_personnelcard.participants as participants,
+			ebs_personnelcard.visitexhibition as visitexhibition,
+			ebs_personnelcard.purpose as purpose,
+			ebs_personnelcard.knowexhibition as knowexhibition,
+			ebs_personnelcard.businessnature as businessnature,
+			ebs_personnelcard.remark as remark,
+			ebs_personnelcard.agent as agent,
+			ebs_personnelcard.printstatus as printstatus,
+			case ebs_personnelcard.printstatus 
+				when '0' then '未打印'
+				when '1' then '打印中'
+				when '2' then '已打印'
+			end	as printstatusname,
+			ebs_personnelcard.printtype as printtype,
+			case ebs_personnelcard.printtype 
+				when -1 then ''
+				when 0 then '正常打印' 
+				when 1 then 'IC卡打印' 
+			end printtypename,
+			ebs_personnelcard.printtime,
+			ebs_personnelcard.verificationstatus as verificationstatus,
+			case when ebs_personnelcard.verificationstatus=0 then '未验证' else '已验证' end as verificationstatusname,
+			ebs_personnelcard.iccode as iccode,
+			ebs_personnelcard.vipcode as vipcode,
+			ebs_personnelcard.cardnature as cardnature,
+			case when ebs_personnelcard.cardnature=0 then '网络' else '现场' end as cardnaturename,
+			ebs_personnelcard.makecardtime as makecardtime,
+			ebs_personnelcard.issuevalid,ebs_personnelcard.boothcode,ebs_personnelcard.isback,ebs_personnelcard.printtime,
+			ebs_personnelcard.isforensics as isforensics,
+			ebs_personnelcard.forensicstime as forensicstime,
+			ebs_personnelcard.certificatenumber as certificatenumber,
+			ebs_personnelcard.printnumber as printnumber,
+			ebs_personnelcard.is_out as isout,case when ebs_personnelcard.is_out=0 then '否' else '是' end as isoutname,
+			ebs_personnelcard.businesslicense as businesslicense,
+			ebs_personnelcard.purchasingintention as purchasingintention,
+		ebs_personnelcard.id,
+		sys_session.sessionid as sessionname,
+		ebs_personnelcard.`name`,
+		ebs_personnelcard.companyname,
+		ebs_personnelcard.idphotopath,
+		cm_certificate_type.chinesename,
+		cm_certificate_type.engname,
+		cm_certificate_type.japanname,
+		cm_certificate_type.koreaname,
+		cm_certificate_type.russianame
+	FROM
+		ebs_personnelcard
+	LEFT JOIN sys_session ON sys_session.id = ebs_personnelcard.`session`
+	LEFT JOIN cm_certificate_type on ebs_personnelcard.cardtype=cm_certificate_type.id
+	WHERE ebs_personnelcard.agent=#{memberId} 
+	AND ebs_personnelcard.`session`!=#{sessionId} 
+	AND `name` LIKE concat('%',#{name},'%') 
+	<if test="companyname != null and companyname != ''">
+	AND `companyname` LIKE concat('%',#{companyname},'%') 
+	</if>
+	AND (cm_certificate_type.chinesename =#{cardname} 
+		OR cm_certificate_type.engname =#{cardname}
+		OR cm_certificate_type.japanname =#{cardname}
+		OR cm_certificate_type.koreaname =#{cardname} 
+		OR cm_certificate_type.russianame =#{cardname}
+		)
+	 GROUP BY ebs_personnelcard.`name`
+	 ORDER BY ebs_personnelcard.id DESC
+	LIMIT #{start,jdbcType=INTEGER},#{limit,jdbcType=INTEGER};
+	 </select>
+	 <select id="getHistoryPersonCardCount" resultType="int">
+	 SELECT
+		count(*)
+	FROM(
+	 SELECT
+		count(*)
+	FROM
+		ebs_personnelcard
+	LEFT JOIN cm_certificate_type on ebs_personnelcard.cardtype=cm_certificate_type.id
+	WHERE agent=#{memberId} 
+	AND ebs_personnelcard.`session`!=#{sessionId}  
+	AND `name` LIKE concat('%',#{name},'%') 
+	<if test="companyname != null and companyname != ''">
+	AND `companyname` LIKE concat('%',#{companyname},'%') 
+	</if>
+	AND (cm_certificate_type.chinesename =#{cardname} 
+		OR cm_certificate_type.engname =#{cardname}
+		OR cm_certificate_type.japanname =#{cardname}
+		OR cm_certificate_type.koreaname =#{cardname} 
+		OR cm_certificate_type.russianame =#{cardname}
+		)
+	 GROUP BY ebs_personnelcard.`name`) AS car
+	 </select>
+	 <select id="takeAwayReport" resultType="map">
+	 SELECT 
+		ebs_personnelcard.id,
+		ebs_personnelcard.`name`,
+		case when sex=0 then '男' else '女' end as sex,
+		ebs_personnelcard.companyname,
+		ebs_personnelcard.idphotopath,
+		ebs_personnelcard.agent,
+		ebs_personnelcard.printnumber AS printnumber,
+		cm_certificate_type.chinesename,
+		cm_certificate_type.engname,
+		cm_certificate_type.japanname,
+		cm_certificate_type.koreaname,
+		cm_certificate_type.russianame,
+		group_concat(ebs_booth.`name`) AS boothname
+		FROM ebs_personnelcard
+		LEFT JOIN cm_certificate_type on ebs_personnelcard.cardtype=cm_certificate_type.id
+		LEFT JOIN ebs_companyinfo ON ebs_companyinfo.chinesename=ebs_personnelcard.companyname and ebs_companyinfo.session=ebs_personnelcard.session
+		LEFT JOIN ebs_booth ON ebs_booth.company_id=ebs_companyinfo.id
+		WHERE agent=#{memberId}
+		AND printstatus=2
+		<if test="makecardtime != null and makecardtime != ''">
+		AND makecardtime<![CDATA[ <= ]]>#{makecardtime}
+		</if>
+		<if test="sessionId != null and sessionId != ''">
+		AND ebs_personnelcard.`session`=#{sessionId}
+		</if>
+		<if test="awayStatus != null and awayStatus != '' and awayStatus != -1">
+		AND isforensics=#{awayStatus}
+		</if>
+		<if test="cardType != null and cardType != ''">
+		AND cardtype=#{cardType}
+		</if>
+		GROUP BY ebs_personnelcard.id
+	 </select>
+	 <select id="updatePrintNumber" resultType="Integer">
+	 	UPDATE ebs_personnelcard SET printnumber=#{printNumber}
+		WHERE agent=#{memberId}
+		AND printstatus=2
+		<if test="makecardtime != null and makecardtime != ''">
+		AND makecardtime<![CDATA[ <= ]]>#{makecardtime}
+		</if>
+		<if test="sessionId != null and sessionId != ''">
+		AND ebs_personnelcard.`session`=#{sessionId}
+		</if>
+		<if test="awayStatus != null and awayStatus != ''">
+		AND isforensics=#{awayStatus}
+		</if>
+		<if test="cardType != null and cardType != ''">
+		AND cardtype=#{cardType}
+		</if>
+	 </select>
+	 
+	 <select id="ExportForeignGuestsList" resultType="map">
+	 	select   
+			a.id as id,
+			a.session as session,
+			a.name as name,
+			a.sex as sex,case when a.sex=0 then '男' else '女' end as sexname,
+			a.country as country,
+			a.province as province,
+			a.city,
+			a.jobtitle as jobtitle,
+			a.companyname as companyname,
+			a.companyid as companyid,
+			a.postcode as postcode,
+			a.idcardpassport as idcardpassport,
+			case a.idcardpassport 
+			when 0 then '身份证' 
+			when 1 then '护照' 
+			when 2 then '记者证'
+			end as idcardpassportname,
+			a.cardnumber as cardnumber,
+			a.address as address,
+			a.cardtype as cardtype,
+			a.website as website,
+			a.email as email,
+			a.tel as tel,
+			a.fax as fax,
+			a.phone as phone,
+			a.imagepath as imagepath,
+			a.idphotopath as idphotopath,
+			a.addtime as addtime,
+			a.status as status,
+			a.bussinessarea as bussinessarea,
+			a.participants as participants,
+			a.visitexhibition as visitexhibition,
+			a.purpose as purpose,
+			a.knowexhibition as knowexhibition,
+			a.businessnature as businessnature,
+			a.remark as remark,
+			a.agent as agent,
+			vw.uname as agentname,
+			a.printstatus as printstatus,
+			case printstatus 
+				when '0' then '未打印'
+				when '1' then '打印中'
+				when '2' then '已打印'
+			end	as printstatusname,
+			a.printtype as printtype,
+			case printtype 
+				when -1 then ''
+				when 0 then '正常打印' 
+				when 1 then 'IC卡打印' 
+			end printtypename,
+			a.printtime,
+			a.verificationstatus as verificationstatus,
+			case when a.verificationstatus=0 then '未验证' else '已验证' end as verificationstatusname,
+			a.iccode as iccode,
+			a.vipcode as vipcode,
+			a.cardnature as cardnature,
+			case when a.cardnature=0 then '网络' else '现场' end as cardnaturename,
+			a.makecardtime as makecardtime,b.chinesename as cardtypename,
+			a.issuevalid,a.boothcode,a.isback,a.printtime,
+			a.isforensics as isforensics,
+			a.forensicstime as forensicstime,
+			a.certificatenumber as certificatenumber,
+			a.printnumber as printnumber,c.sessionid,
+			a.is_out as isout,case when a.is_out=0 then '否' else '是' end as isoutname,g.name as countryname
+        from ebs_personnelcard as a
+        inner join sys_session as c on a.session=c.id
+        inner join cm_certificate_type as b on b.type=0 and a.cardtype=b.id and b.chinesename='嘉宾证B'
+        left join sys_country_area as g on g.id=a.country        
+        left join vw_Frontend_user_integration as vw on vw.isback=a.isback and vw.uid=a.agent
+        <where>         	
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="name != null and name != ''">
+                and a.name like concat('%',#{name},'%')
+            </if>            
+            <if test="companyname != null and companyname != ''">
+                and a.companyname like concat('%',#{companyname},'%')
+            </if>
+        </where>
+        order by a.id desc	
+        <if test="index != null and index != ''">
+			limit #{index}, #{size}
+		</if>
+	 </select>
+	 
+	 <select id="ExportForeignGuestsListCount" resultType="int">
+	 	select count(*)
+	 	from ebs_personnelcard as a
+        inner join sys_session as c on a.session=c.id
+        inner join cm_certificate_type as b on b.type=0 and a.cardtype=b.id and b.chinesename='嘉宾证B'        
+        left join vw_Frontend_user_integration as vw on vw.isback=a.isback and vw.uid=a.agent
+        <where>         	
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="name != null and name != ''">
+                and a.name like concat('%',#{name},'%')
+            </if>            
+            <if test="companyname != null and companyname != ''">
+                and a.companyname like concat('%',#{companyname},'%')
+            </if>   
+        </where>
+	 </select>
+	 
+	 <select id="Greenlist" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsPersonnelcard">
+        select
+        	'' as tjleixing,
+			'' as jiaoyituan,
+			a.id as id,
+			a.session as session,
+			a.name as name,
+			a.sex as sex,case when a.sex=0 then '男' else '女' end as sexname,
+			a.country as country,
+			a.province as province,
+			a.city,
+			a.jobtitle as jobtitle,
+			a.companyname as companyname,
+			a.companyid as companyid,
+			a.postcode as postcode,
+			a.idcardpassport as idcardpassport,
+			case a.idcardpassport 
+			when 0 then '身份证' 
+			when 1 then '护照' 
+			when 2 then '记者证'
+			end as idcardpassportname,
+			a.cardnumber as cardnumber,
+			a.address as address,
+			a.cardtype as cardtype,
+        b.chinesename,
+        b.engname,
+        b.japanname,
+        b.russianame,
+        b.koreaname,
+			a.website as website,
+			a.email as email,
+			a.tel as tel,
+			a.fax as fax,
+			a.phone as phone,
+			a.imagepath as imagepath,
+			a.idphotopath as idphotopath,
+			a.addtime as addtime,
+			a.status as status,
+			a.bussinessarea as bussinessarea,
+			a.participants as participants,
+			a.visitexhibition as visitexhibition,
+			a.purpose as purpose,
+			a.knowexhibition as knowexhibition,
+			a.businessnature as businessnature,
+			a.remark as remark,
+			a.agent as agent,
+			'' as agentname,
+			a.printstatus as printstatus,
+			case printstatus 
+				when '0' then '未打印'
+				when '1' then '打印中'
+				when '2' then '已打印'
+			end	as printstatusname,
+			a.printtype as printtype,
+			case printtype 
+				when -1 then ''
+				when 0 then '正常打印' 
+				when 1 then 'IC卡打印' 
+			end printtypename,
+			a.printtime,
+			a.verificationstatus as verificationstatus,
+			case when a.verificationstatus=0 then '未验证' else '已验证' end as verificationstatusname,
+			a.iccode as iccode,
+			a.vipcode as vipcode,
+			a.cardnature as cardnature,
+			case when a.cardnature=0 then '网络' else '现场' end as cardnaturename,
+			a.makecardtime as makecardtime,b.chinesename as cardtypename,
+			a.issuevalid,a.boothcode,a.isback,a.printtime,
+			a.isforensics as isforensics,
+			a.forensicstime as forensicstime,
+			a.certificatenumber as certificatenumber,
+			a.printnumber as printnumber,c.sessionid,
+			a.is_out as isout,case when a.is_out=0 then '否' else '是' end as isoutname,a.isgreen,a.isplastic
+        from ebs_personnelcard as a
+        inner join sys_session as c on a.session=c.id
+        inner join cm_certificate_type as b on b.type=0 and a.cardtype=b.id 
+        <where> 
+        	<if test="isexhibitor!=null and isexhibitor != ''">
+				and b.isexhibitor = #{isexhibitor}
+			</if>
+			<if test="isout != null and isout != ''">
+				and a.is_out = #{isout}
+			</if>
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="name != null and name != ''">
+                and a.name like concat('%',#{name},'%')
+            </if>
+            <if test="sex != null and sex != ''">
+                and a.sex = #{sex}
+            </if>
+            <if test="country != null and country != ''">
+                and a.country = #{country}
+            </if>
+            <if test="province != null and province != ''">
+                and a.province = #{province}
+            </if>
+            <if test="jobtitle != null and jobtitle != ''">
+                and a.jobtitle = #{jobtitle}
+            </if>
+            <if test="companyname != null and companyname != ''">
+                and a.companyname like concat('%',#{companyname},'%')
+            </if>
+            <if test="companyid != null and companyid != ''">
+                and a.companyid = #{companyid}
+            </if>
+            <if test="postcode != null and postcode != ''">
+                and a.postcode = #{postcode}
+            </if>
+            <if test="idcardpassport != null and idcardpassport != ''">
+                and a.idcardpassport = #{idcardpassport}
+            </if>
+            <if test="cardnumber != null and cardnumber != ''">
+                and a.cardnumber = #{cardnumber}
+            </if>
+            <if test="address != null and address != ''">
+                and a.address = #{address}
+            </if>
+            <if test="cardtype != null and cardtype != ''">            	
+                and a.cardtype = #{cardtype}               
+            </if>
+            <if test="website != null and website != ''">
+                and a.website = #{website}
+            </if>
+            <if test="email != null and email != ''">
+                and a.email = #{email}
+            </if>
+            <if test="tel != null and tel != ''">
+                and a.tel = #{tel}
+            </if>
+            <if test="fax != null and fax != ''">
+                and a.fax = #{fax}
+            </if>
+            <if test="phone != null and phone != ''">
+                and a.phone = #{phone}
+            </if>
+            <if test="imagepath != null and imagepath != ''">
+                and a.imagepath = #{imagepath}
+            </if>
+            <if test="idphotopath != null and idphotopath != ''">
+                and a.idphotopath = #{idphotopath}
+            </if>
+            <if test="addtime != null and addtime != ''">
+                and a.addtime = #{addtime}
+            </if>
+            <if test="status != null and status != ''">
+                and a.status = #{status}
+            </if>
+            <if test="bussinessarea != null and bussinessarea != ''">
+				and a.bussinessarea = #{bussinessarea}
+			</if>
+			<if test="participants != null and participants != ''">
+				and a.participants = #{participants}
+			</if>
+			<if test="visitexhibition != null and visitexhibition != ''">
+				and a.visitexhibition = #{visitexhibition}
+			</if>
+			<if test="purpose != null and purpose != ''">
+				and a.purpose = #{purpose}
+			</if>
+			<if test="knowexhibition != null and knowexhibition != ''">
+				and a.knowexhibition = #{knowexhibition}
+			</if>
+			<if test="businessnature != null and businessnature != ''">
+				and a.businessnature = #{businessnature}
+			</if>
+			<if test="businessnature != null and businessnature != ''">
+				and a.agent = #{agent}
+			</if>
+			<if test="printstatus != null and printstatus != ''">
+				and a.printstatus = #{printstatus}
+			</if>
+			<if test="printtype != null and printtype != ''">
+				and a.printtype = #{printtype}
+			</if>
+			<if test="verificationstatus != null and verificationstatus != ''">
+				and a.verificationstatus = #{verificationstatus}
+			</if>
+			<if test="iccode != null and iccode != ''">
+				and a.iccode = #{iccode}
+			</if>
+			<if test="vipcode != null and vipcode != ''">
+				and a.vipcode = #{vipcode}
+			</if>
+			<if test="cardnature != null and cardnature != ''">
+				and a.cardnature = #{cardnature}
+			</if>
+			<if test="makecardtime != null and makecardtime != ''">
+				and a.makecardtime = #{makecardtime}
+			</if>
+			<if test="boothcode != null and boothcode != ''">
+				and a.boothcode = #{boothcode}
+			</if>
+			<if test="issuevalid != null and issuevalid != ''">
+				and a.issuevalid = #{issuevalid}
+			</if>
+			<if test="isforensics != null and isforensics != ''">
+				and a.isforensics = #{isforensics}
+			</if>
+			<if test="forensicstime != null and forensicstime != ''">
+				and a.forensicstime = #{forensicstime}
+			</if>
+			<if test="certificatenumber != null and certificatenumber != ''">
+				and a.certificatenumber = #{certificatenumber}
+			</if>
+			<if test="printnumber != null and printnumber != ''">
+				and a.printnumber = #{printnumber}
+			</if>
+			<if test="agent != null and agent != ''">
+				and a.agent = #{agent}
+			</if>
+			<if test="isgreen != null and isgreen != ''">
+				and a.isgreen = #{isgreen}
+			</if>
+			<if test="isplastic != null and isplastic != ''">
+				and a.isplastic = #{isplastic}
+			</if>
+        </where>
+        order by a.id desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="Greenlistcount" resultType="int">
+		SELECT count(*) FROM ebs_personnelcard a
+		inner join sys_session as c on a.session=c.id
+		inner join cm_certificate_type as b on b.type=0 and a.cardtype=b.id 
+		<where>			
+			<if test="isexhibitor!=null and isexhibitor != ''">
+				and b.isexhibitor = #{isexhibitor}
+			</if>		
+			<if test="isout!=null and isout != ''">
+				and a.is_out = #{isout}
+			</if>			
+            <if test="id != null and id != ''">
+                and a.id = #{id}
+            </if>
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="name != null and name != ''">
+                and a.name like concat('%',#{name},'%')
+            </if>
+            <if test="sex != null and sex != ''">
+                and a.sex = #{sex}
+            </if>
+            <if test="country != null and country != ''">
+                and a.country = #{country}
+            </if>
+            <if test="province != null and province != ''">
+                and a.province = #{province}
+            </if>
+            <if test="jobtitle != null and jobtitle != ''">
+                and a.jobtitle = #{jobtitle}
+            </if>
+            <if test="companyname != null and companyname != ''">
+                and a.companyname like concat('%',#{companyname},'%')
+            </if>
+            <if test="companyid != null and companyid != ''">
+                and a.companyid = #{companyid}
+            </if>
+            <if test="postcode != null and postcode != ''">
+                and a.postcode = #{postcode}
+            </if>
+            <if test="idcardpassport != null and idcardpassport != ''">
+                and a.idcardpassport = #{idcardpassport}
+            </if>
+            <if test="cardnumber != null and cardnumber != ''">
+                and a.cardnumber = #{cardnumber}
+            </if>
+            <if test="address != null and address != ''">
+                and a.address = #{address}
+            </if>
+            <if test="cardtype != null and cardtype != ''">   
+                and a.cardtype = #{cardtype}                
+            </if>
+            <if test="website != null and website != ''">
+                and a.website = #{website}
+            </if>
+            <if test="email != null and email != ''">
+                and a.email = #{email}
+            </if>
+            <if test="tel != null and tel != ''">
+                and a.tel = #{tel}
+            </if>
+            <if test="fax != null and fax != ''">
+                and a.fax = #{fax}
+            </if>
+            <if test="phone != null and phone != ''">
+                and a.phone = #{phone}
+            </if>
+            <if test="imagepath != null and imagepath != ''">
+                and a.imagepath = #{imagepath}
+            </if>
+            <if test="idphotopath != null and idphotopath != ''">
+                and a.idphotopath = #{idphotopath}
+            </if>
+            <if test="addtime != null and addtime != ''">
+                and a.addtime = #{addtime}
+            </if>
+            <if test="status != null and status != ''">
+                and a.status = #{status}
+            </if>
+            <if test="bussinessarea != null and bussinessarea != ''">
+				and a.bussinessarea = #{bussinessarea}
+			</if>
+			<if test="participants != null and participants != ''">
+				and a.participants = #{participants}
+			</if>
+			<if test="visitexhibition != null and visitexhibition != ''">
+				and a.visitexhibition = #{visitexhibition}
+			</if>
+			<if test="purpose != null and purpose != ''">
+				and a.purpose = #{purpose}
+			</if>
+			<if test="knowexhibition != null and knowexhibition != ''">
+				and a.knowexhibition = #{knowexhibition}
+			</if>
+			<if test="businessnature != null and businessnature != ''">
+				and a.businessnature = #{businessnature}
+			</if>
+			<if test="businessnature != null and businessnature != ''">
+				and a.agent = #{agent}
+			</if>
+			<if test="printstatus != null and printstatus != ''">
+				and a.printstatus = #{printstatus}
+			</if>
+			<if test="printtype != null and printtype != ''">
+				and a.printtype = #{printtype}
+			</if>
+			<if test="verificationstatus != null and verificationstatus != ''">
+				and a.verificationstatus = #{verificationstatus}
+			</if>
+			<if test="iccode != null and iccode != ''">
+				and a.iccode = #{iccode}
+			</if>
+			<if test="vipcode != null and vipcode != ''">
+				and a.vipcode = #{vipcode}
+			</if>
+			<if test="cardnature != null and cardnature != ''">
+				and a.cardnature = #{cardnature}
+			</if>
+			<if test="makecardtime != null and makecardtime != ''">
+				and a.makecardtime = #{makecardtime}
+			</if>
+			<if test="boothcode != null and boothcode != ''">
+				and a.boothcode = #{boothcode}
+			</if>
+			<if test="issuevalid != null and issuevalid != ''">
+				and a.issuevalid = #{issuevalid}
+			</if>
+			<if test="isforensics != null and isforensics != ''">
+				and a.isforensics = #{isforensics}
+			</if>
+			<if test="forensicstime != null and forensicstime != ''">
+				and a.forensicstime = #{forensicstime}
+			</if>
+			<if test="certificatenumber != null and certificatenumber != ''">
+				and a.certificatenumber = #{certificatenumber}
+			</if>
+			<if test="printnumber != null and printnumber != ''">
+				and a.printnumber = #{printnumber}
+			</if>
+			<if test="agent != null and agent != ''">
+				and a.agent = #{agent}
+			</if>
+			<if test="isgreen != null and isgreen != ''">
+				and a.isgreen = #{isgreen}
+			</if>
+			<if test="isplastic != null and isplastic != ''">
+				and a.isplastic = #{isplastic}
+			</if>
+        </where>
+	</select>
+	 <select id="addCount" resultType="int">
+		SELECT count(id) FROM ebs_personnelcard as a
+		<where>
+            <if test="session != null and session != ''">
+                and a.session = #{session}
+            </if>
+            <if test="cardtype != null and cardtype != ''">   
+                and a.cardtype = #{cardtype}                
+            </if>
+            <if test="cardtype != null and cardtype != ''">   
+                and a.cardtype = #{cardtype}                
+            </if>
+			<if test="agent != null and agent != ''">
+				and a.agent = #{agent}
+			</if>
+			<if test="id != null and id != ''">
+				and a.id != #{id}
+			</if>
+        </where>
+     </select>
+        
+     <select id="PersonnelCardQuerylist" resultType="map">
+     	<!--全部-->
+     	<if test="ZJLX == 1000">
+     		select agent,isback,status,act, a.id, b.chinesename, cardnaturename, companyid, companyname, name, imagepath, agentname, printstatusname, printnumber, a.addtime, printtime,s.middleid,plastictime,forensicstime from (
+			select a.isback,a.status,agent,'' as platenumber,'renyuan' as act,a.id,a.session,cardtype,
+			case when a.cardnature=0 then '网络' else '现场' end as cardnaturename,a.cardnature,
+			case when a.companyid=0 then '' else a.companyid end companyid,
+			a.companyname,name,imagepath,'' as agentname,printstatus,
+			case printstatus 
+				when '0' then '未打印'
+				when '1' then '打印中'
+				when '2' then '已打印'
+			end	as printstatusname,a.printnumber,a.addtime,a.printtime,a.isplastic,a.isforensics,date_format(a.plastictime,'%Y-%m-%d %H:%i') as plastictime,date_format(a.forensicstime,'%Y-%m-%d %H:%i') as forensicstime
+			from ebs_personnelcard as a 
+			where a.session=#{session}
+			union 
+			select a.isback,a.status,agent,a.platenumber,'cheliang' as act,a.id,a.session,cardtype,
+			case when a.cardnature=0 then '网络' else '现场' end as cardnaturename,a.cardnature, 
+			case when a.companyid=0 then '' else a.companyid end companyid,
+			a.companyname,a.drivername as name,a.drivinglicense as imagepath,'' as agentname,printstatus,
+			case printstatus 
+				when '0' then '未打印'
+				when '1' then '打印中'
+				when '2' then '已打印'
+			end	as printstatusname,a.printnumber,a.addtime,a.printtime,a.isplastic,a.isforensics,date_format(a.plastictime,'%Y-%m-%d %H:%i') as plastictime,date_format(a.forensicstime,'%Y-%m-%d %H:%i') as forensicstime
+			from ebs_vehiclecard as a 
+			where a.session=#{session}
+			) as a
+			inner join cm_certificate_type as b on a.cardtype=b.id and a.session=b.session
+			left join web_member_session as s on s.member_id=a.agent and s.id=a.session
+			where 1=1 
+			<if test="platenumber!=null and platenumber!=''">
+				and a.platenumber = #{platenumber}
+			</if>
+			<if test="status!=null and status!=''">
+				and a.status = #{status}
+			</if>
+			<if test="printstatus!=null and printstatus!=''">
+				and a.printstatus = #{printstatus}
+			</if>
+			<if test="agent!=null and agent!=''">
+				and a.agent = #{agent}
+			</if>
+			<if test="isplastic!=null and isplastic!=''">
+				and a.isplastic = #{isplastic}
+			</if>
+			<if test="isforensics!=null and isforensics!=''">
+				and a.isforensics = #{isforensics}
+			</if>
+			<if test="companyid!=null and companyid!=''">
+				and s.middleid = #{companyid}
+			</if>
+			<if test="name!=null and name!=''">
+				and a.name like concat('%',#{name},'%')
+			</if>
+			<if test="companyname!=null and companyname!=''">
+				and a.companyname like concat('%',#{companyname},'%')
+			</if>
+			<if test="cardtype!=null and cardtype!=''">
+				and a.cardtype = #{cardtype}
+			</if>
+			order by a.id desc	
+			limit #{index}, #{size}
+     	</if>
+     	<!--参展证-->
+     	<if test="ZJLX == 1">
+     		select a.isback,agent,'' as platenumber,'renyuan' as act,a.id,b.chinesename,
+			case when a.cardnature=0 then '网络' else '现场' end as cardnaturename,a.cardnature, 
+			case when a.companyid=0 then '' else a.companyid end companyid,
+			a.companyname,name,imagepath,'' as agentname,a.printstatus,
+			case printstatus 
+				when '0' then '未打印'
+				when '1' then '打印中'
+				when '2' then '已打印'
+			end	as printstatusname,a.printnumber,a.addtime,a.printtime,s.middleid,date_format(a.plastictime,'%Y-%m-%d %H:%i') as plastictime,date_format(a.forensicstime,'%Y-%m-%d %H:%i') as forensicstime
+			from ebs_personnelcard as a 
+			inner join cm_certificate_type as b on a.cardtype=b.id and a.session=b.session and b.isexhibitor=1
+			left join web_member_session as s on s.member_id=a.agent and s.id=a.session
+			where a.session=#{session}
+			<if test="status!=null and status!=''">
+				and a.status = #{status}
+			</if>
+			<if test="printstatus!=null and printstatus!=''">
+				and a.printstatus = #{printstatus}
+			</if>
+			<if test="agent!=null and agent!=''">
+				and a.agent = #{agent}
+			</if>
+			<if test="isplastic!=null and isplastic!=''">
+				and a.isplastic = #{isplastic}
+			</if>
+			<if test="isforensics!=null and isforensics!=''">
+				and a.isforensics = #{isforensics}
+			</if>
+			<if test="companyid!=null and companyid!=''">
+				and s.middleid = #{companyid}
+			</if>
+			<if test="name!=null and name!=''">
+				and a.name like concat('%',#{name},'%')
+			</if>
+			<if test="companyname!=null and companyname!=''">
+				and a.companyname like concat('%',#{companyname},'%')
+			</if>
+			order by a.id desc	
+			limit #{index}, #{size}
+     	</if>
+     	<!--其他人员证件-->
+     	<if test="ZJLX == 2">
+     		select a.isback,agent,'renyuan' as act,a.id,b.chinesename,
+			case when a.cardnature=0 then '网络' else '现场' end as cardnaturename,a.cardnature, 
+			case when a.companyid=0 then '' else a.companyid end companyid,
+			a.companyname,name,imagepath,'' as agentname,a.printstatus,
+			case printstatus 
+				when '0' then '未打印'
+				when '1' then '打印中'
+				when '2' then '已打印'
+			end	as printstatusname,a.printnumber,a.addtime,a.printtime,s.middleid,date_format(a.plastictime,'%Y-%m-%d %H:%i') as plastictime,date_format(a.forensicstime,'%Y-%m-%d %H:%i') as forensicstime
+			from ebs_personnelcard as a 
+			inner join cm_certificate_type as b on a.cardtype=b.id and a.session=b.session and b.isexhibitor=0 and b.type=0
+			left join web_member_session as s on s.member_id=a.agent and s.id=a.session
+			where a.session=#{session}			
+			<if test="status!=null and status!=''">
+				and a.status = #{status}
+			</if>
+			<if test="printstatus!=null and printstatus!=''">
+				and a.printstatus = #{printstatus}
+			</if>
+			<if test="agent!=null and agent!=''">
+				and a.agent = #{agent}
+			</if>
+			<if test="isplastic!=null and isplastic!=''">
+				and a.isplastic = #{isplastic}
+			</if>
+			<if test="isforensics!=null and isforensics!=''">
+				and a.isforensics = #{isforensics}
+			</if>
+			<if test="companyid!=null and companyid!=''">
+				and s.middleid = #{companyid}
+			</if>
+			<if test="name!=null and name!=''">
+				and a.name like concat('%',#{name},'%')
+			</if>
+			<if test="companyname!=null and companyname!=''">
+				and a.companyname like concat('%',#{companyname},'%')
+			</if>
+			<if test="cardtype!=null and cardtype!=''">
+				and a.cardtype = #{cardtype}
+			</if>
+			order by a.id desc	
+			limit #{index}, #{size}
+     	</if>
+     	<!--车辆证件-->
+     	<if test="ZJLX == 3">
+     		select agent,a.isback,'cheliang' as act,a.id,b.chinesename,
+			case when a.cardnature=0 then '网络' else '现场' end as cardnaturename, 
+			case when a.companyid=0 then '' else a.companyid end companyid,
+			a.companyname,a.drivername as name,a.drivinglicense as imagepath,'' as agentname,
+			case printstatus 
+				when '0' then '未打印'
+				when '1' then '打印中'
+				when '2' then '已打印'
+			end	as printstatusname,a.printnumber,a.addtime,a.printtime,s.middleid,date_format(a.plastictime,'%Y-%m-%d %H:%i') as plastictime,date_format(a.forensicstime,'%Y-%m-%d %H:%i') as forensicstime
+			from ebs_vehiclecard as a 
+			inner join cm_certificate_type as b on a.cardtype=b.id and a.session=b.session and b.type=1
+			left join web_member_session as s on s.member_id=a.agent and s.id=a.session
+			where a.session=#{session}
+			<if test="platenumber!=null and platenumber!=''">
+				and a.platenumber = #{platenumber}
+			</if>
+			<if test="status!=null and status!=''">
+				and a.status = #{status}
+			</if>
+			<if test="printstatus!=null and printstatus!=''">
+				and a.printstatus = #{printstatus}
+			</if>
+			<if test="agent!=null and agent!=''">
+				and a.agent = #{agent}
+			</if>
+			<if test="isplastic!=null and isplastic!=''">
+				and a.isplastic = #{isplastic}
+			</if>
+			<if test="isforensics!=null and isforensics!=''">
+				and a.isforensics = #{isforensics}
+			</if>
+			<if test="companyid!=null and companyid!=''">
+				and s.middleid = #{companyid}
+			</if>
+			<if test="name!=null and name!=''">
+				and a.drivername like concat('%',#{name},'%')
+			</if>
+			<if test="companyname!=null and companyname!=''">
+				and a.companyname like concat('%',#{companyname},'%')
+			</if>
+			<if test="cardtype!=null and cardtype!=''">
+				and a.cardtype = #{cardtype}
+			</if>
+			order by a.id desc	
+			limit #{index}, #{size}
+     	</if>     	
+     </select> 
+     
+     <select id="PersonnelCardQuerylistcount" resultType="int">
+     	<!--全部-->
+     	<if test="ZJLX == 1000">
+     		select count(*) from (
+			select a.status,agent,'' as platenumber,'renyuan' as act,a.id,a.session,cardtype,
+			case when a.cardnature=0 then '网络' else '现场' end as cardnaturename,a.cardnature,
+			case when a.companyid=0 then '' else a.companyid end companyid,
+			a.companyname,name,imagepath,'' as agentname,printstatus,
+			case printstatus 
+				when '0' then '未打印'
+				when '1' then '打印中'
+				when '2' then '已打印'
+			end	as printstatusname,a.printnumber,a.addtime,a.printtime,a.isplastic,a.isforensics
+			from ebs_personnelcard as a 
+			where a.session=1
+			union 
+			select a.status,agent,a.platenumber,'cheliang' as act,a.id,a.session,cardtype,
+			case when a.cardnature=0 then '网络' else '现场' end as cardnaturename,a.cardnature, 
+			case when a.companyid=0 then '' else a.companyid end companyid,
+			a.companyname,a.drivername as name,a.drivinglicense as imagepath,'' as agentname,printstatus,
+			case printstatus 
+				when '0' then '未打印'
+				when '1' then '打印中'
+				when '2' then '已打印'
+			end	as printstatusname,a.printnumber,a.addtime,a.printtime,a.isplastic,a.isforensics
+			from ebs_vehiclecard as a 
+			where a.session=1
+			) as a
+			inner join cm_certificate_type as b on a.cardtype=b.id and a.session=b.session
+			left join web_member_session as s on s.member_id=a.agent and s.id=a.session
+			where 1=1 
+			<if test="platenumber!=null and platenumber!=''">
+				and a.platenumber = #{platenumber}
+			</if>
+			<if test="status!=null and status!=''">
+				and a.status = #{status}
+			</if>
+			<if test="printstatus!=null and printstatus!=''">
+				and a.printstatus = #{printstatus}
+			</if>
+			<if test="agent!=null and agent!=''">
+				and a.agent = #{agent}
+			</if>
+			<if test="isplastic!=null and isplastic!=''">
+				and a.isplastic = #{isplastic}
+			</if>
+			<if test="isforensics!=null and isforensics!=''">
+				and a.isforensics = #{isforensics}
+			</if>
+			<if test="companyid!=null and companyid!=''">
+				and s.middleid = #{companyid}
+			</if>
+			<if test="name!=null and name!=''">
+				and a.name like concat('%',#{name},'%')
+			</if>
+			<if test="companyname!=null and companyname!=''">
+				and a.companyname like concat('%',#{companyname},'%')
+			</if>
+			<if test="cardtype!=null and cardtype!=''">
+				and a.cardtype = #{cardtype}
+			</if>
+     	</if>
+     	<!--参展证-->
+     	<if test="ZJLX == 1">
+     		select count(*)
+			from ebs_personnelcard as a 
+			inner join cm_certificate_type as b on a.cardtype=b.id and a.session=b.session and b.isexhibitor=1
+			left join web_member_session as s on s.member_id=a.agent and s.id=a.session
+			where a.session=#{session}
+			<if test="status!=null and status!=''">
+				and a.status = #{status}
+			</if>
+			<if test="printstatus!=null and printstatus!=''">
+				and a.printstatus = #{printstatus}
+			</if>
+			<if test="agent!=null and agent!=''">
+				and a.agent = #{agent}
+			</if>
+			<if test="isplastic!=null and isplastic!=''">
+				and a.isplastic = #{isplastic}
+			</if>
+			<if test="isforensics!=null and isforensics!=''">
+				and a.isforensics = #{isforensics}
+			</if>
+			<if test="companyid!=null and companyid!=''">
+				and s.middleid = #{companyid}
+			</if>
+			<if test="name!=null and name!=''">
+				and a.name like concat('%',#{name},'%')
+			</if>
+			<if test="companyname!=null and companyname!=''">
+				and a.companyname like concat('%',#{companyname},'%')
+			</if>
+     	</if>
+     	<!--其他人员证件-->
+     	<if test="ZJLX == 2">
+     		select count(*)
+			from ebs_personnelcard as a 
+			inner join cm_certificate_type as b on a.cardtype=b.id and a.session=b.session and b.isexhibitor=0 and b.type=0
+			left join web_member_session as s on s.member_id=a.agent and s.id=a.session
+			where a.session=#{session}			
+			<if test="status!=null and status!=''">
+				and a.status = #{status}
+			</if>
+			<if test="printstatus!=null and printstatus!=''">
+				and a.printstatus = #{printstatus}
+			</if>
+			<if test="agent!=null and agent!=''">
+				and a.agent = #{agent}
+			</if>
+			<if test="isplastic!=null and isplastic!=''">
+				and a.isplastic = #{isplastic}
+			</if>
+			<if test="isforensics!=null and isforensics!=''">
+				and a.isforensics = #{isforensics}
+			</if>
+			<if test="companyid!=null and companyid!=''">
+				and s.middleid = #{companyid}
+			</if>
+			<if test="name!=null and name!=''">
+				and a.name like concat('%',#{name},'%')
+			</if>
+			<if test="companyname!=null and companyname!=''">
+				and a.companyname like concat('%',#{companyname},'%')
+			</if>
+			<if test="cardtype!=null and cardtype!=''">
+				and a.cardtype = #{cardtype}
+			</if>
+     	</if>
+     	<!--车辆证件-->
+     	<if test="ZJLX == 3">
+     		select count(*)
+			from ebs_vehiclecard as a 
+			inner join cm_certificate_type as b on a.cardtype=b.id and a.session=b.session and b.type=1
+			left join web_member_session as s on s.member_id=a.agent and s.id=a.session
+			where a.session=#{session}
+			<if test="platenumber!=null and platenumber!=''">
+				and a.platenumber = #{platenumber}
+			</if>
+			<if test="status!=null and status!=''">
+				and a.status = #{status}
+			</if>
+			<if test="printstatus!=null and printstatus!=''">
+				and a.printstatus = #{printstatus}
+			</if>
+			<if test="agent!=null and agent!=''">
+				and a.agent = #{agent}
+			</if>
+			<if test="isplastic!=null and isplastic!=''">
+				and a.isplastic = #{isplastic}
+			</if>
+			<if test="isforensics!=null and isforensics!=''">
+				and a.isforensics = #{isforensics}
+			</if>
+			<if test="companyid!=null and companyid!=''">
+				and s.middleid = #{companyid}
+			</if>
+			<if test="name!=null and name!=''">
+				and a.drivername like concat('%',#{name},'%')
+			</if>
+			<if test="companyname!=null and companyname!=''">
+				and a.companyname like concat('%',#{companyname},'%')
+			</if>
+			<if test="cardtype!=null and cardtype!=''">
+				and a.cardtype = #{cardtype}
+			</if>
+     	</if>
+     </select>
+     
+     <select id="PersonnelCertificateCollectionList" resultType="map">
+     	<!--全部-->
+     	<if test="leixing == 1000">
+     		select ifnull(s.middleid,'') as middleid,a.forensicstime,a.id,b.chinesename as cardtypename,ifnull(c.jytname,'') as jytname,
+     		ifnull(c.membername,'') as membername,
+     		a.companyname,
+			a.name,case when a.companyid=0 then '' else a.companyid end as companyid,a.agent,fl.phone from ebs_personnelcard as a
+			inner join cm_certificate_type as b on b.id=a.cardtype and a.session=b.session
+			left join (
+				select a.member_id as memberid,a.member_company as membername,ifnull(t.name,'') as jytname from web_member as a
+				inner join web_member_session as b on a.member_id=b.member_id 
+				inner join pim_agent as c on c.id=b.orgnization_id
+				left join ebs_tradinggroup as t on t.id=c.tradinggroupid
+				where b.id=#{session}
+				union 
+				select member_id as memberid,member_company as membername,'' as jytname from web_member where member_status=0
+				and member_type=2
+			) as c on a.agent=c.memberid
+			left join web_member_session as s on s.member_id=a.agent and s.id=#{session}
+			left join (select primaryid,max(phone) as phone from sys_forensic_log where act='person' group by primaryid) as fl on fl.primaryid=a.id
+			where a.session=#{session} and a.printstatus=2 and a.isplastic=1
+			<if test="companyname!=null and companyname!=''">
+				and a.companyname = #{companyname}
+			</if>
+			<if test="companyid!=null and companyid!=''">
+				and a.companyid = #{companyid}
+			</if>
+			<if test="name!=null and name!=''">
+				and a.name = #{name}
+			</if>
+			<if test="membername!=null and membername!=''">
+				and c.membername = #{membername}
+			</if>
+			<if test="jytname!=null and jytname!=''">
+				and c.jytname = #{jytname}
+			</if>
+			<if test="isforensics!=null and isforensics!=''">
+				and a.isforensics = #{isforensics}
+			</if>
+			<if test="isplastic!=null and isplastic!=''">
+				and a.isplastic = #{isplastic}
+			</if>
+			<if test="agent!=null and agent!=''">
+				and s.middleid = #{agent}
+			</if>
+			order by a.id desc	
+			limit #{index}, #{size}
+     	</if>
+     	<!--代办员-参展证-->
+     	<if test="leixing == 1">
+     		select ifnull(s.middleid,'') as middleid,a.id,b.chinesename as cardtypename,ifnull(c.jytname,'') as jytname,ifnull(c.membername,'') as membername,a.companyname,
+			a.name,case when a.companyid=0 then '' else a.companyid end as companyid,a.agent,fl.phone from ebs_personnelcard as a
+			inner join cm_certificate_type as b on b.id=a.cardtype and a.session=b.session and b.isexhibitor=1
+			inner join (
+				select a.member_id as memberid,a.member_company as membername,ifnull(t.name,'') as jytname from web_member as a
+				inner join web_member_session as b on a.member_id=b.member_id 
+				inner join pim_agent as c on c.id=b.orgnization_id
+				left join ebs_tradinggroup as t on t.id=c.tradinggroupid
+				where b.id=#{session} and member_type in (0,1)
+			) as c on a.agent=c.memberid
+			left join web_member_session as s on s.member_id=a.agent and s.id=#{session}
+			left join (select primaryid,max(phone) as phone from sys_forensic_log where act='person' group by primaryid) as fl on fl.primaryid=a.id
+			where a.session=#{session} and a.printstatus=2 and a.isplastic=1
+			<if test="companyname!=null and companyname!=''">
+				and a.companyname = #{companyname}
+			</if>
+			<if test="companyid!=null and companyid!=''">
+				and a.companyid = #{companyid}
+			</if>
+			<if test="name!=null and name!=''">
+				and a.name = #{name}
+			</if>
+			<if test="membername!=null and membername!=''">
+				and c.membername = #{membername}
+			</if>
+			<if test="jytname!=null and jytname!=''">
+				and c.jytname = #{jytname}
+			</if>
+			<if test="isforensics!=null and isforensics!=''">
+				and a.isforensics = #{isforensics}
+			</if>
+			<if test="isplastic!=null and isplastic!=''">
+				and a.isplastic = #{isplastic}
+			</if>
+			<if test="agent!=null and agent!=''">
+				and s.middleid = #{agent}
+			</if>
+			order by a.id desc	
+			limit #{index}, #{size}
+     	</if>
+     	<!--代办员-其他证件-->
+     	<if test="leixing == 2">
+     		select ifnull(s.middleid,'') as middleid,a.id,b.chinesename as cardtypename,ifnull(c.jytname,'') as jytname,ifnull(c.membername,'') as membername,a.companyname,
+			a.name,case when a.companyid=0 then '' else a.companyid end as companyid,a.agent,fl.phone from ebs_personnelcard as a
+			inner join cm_certificate_type as b on b.id=a.cardtype and a.session=b.session and b.isexhibitor=0 and b.type=0
+			inner join (
+				select a.member_id as memberid,a.member_company as membername,ifnull(t.name,'') as jytname from web_member as a
+				inner join web_member_session as b on a.member_id=b.member_id 
+				inner join pim_agent as c on c.id=b.orgnization_id
+				left join ebs_tradinggroup as t on t.id=c.tradinggroupid
+				where b.id=#{session} and member_type in (0,1)
+			) as c on a.agent=c.memberid
+			left join web_member_session as s on s.member_id=a.agent and s.id=#{session}
+			left join (select primaryid,max(phone) as phone from sys_forensic_log where act='person' group by primaryid) as fl on fl.primaryid=a.id
+			where a.session=#{session} and a.printstatus=2 and a.isplastic=1
+			<if test="companyname!=null and companyname!=''">
+				and a.companyname = #{companyname}
+			</if>
+			<if test="companyid!=null and companyid!=''">
+				and a.companyid = #{companyid}
+			</if>
+			<if test="name!=null and name!=''">
+				and a.name = #{name}
+			</if>
+			<if test="membername!=null and membername!=''">
+				and c.membername = #{membername}
+			</if>
+			<if test="jytname!=null and jytname!=''">
+				and c.jytname = #{jytname}
+			</if>
+			<if test="isforensics!=null and isforensics!=''">
+				and a.isforensics = #{isforensics}
+			</if>
+			<if test="isplastic!=null and isplastic!=''">
+				and a.isplastic = #{isplastic}
+			</if>
+			<if test="agent!=null and agent!=''">
+				and s.middleid = #{agent}
+			</if>
+			order by a.id desc	
+			limit #{index}, #{size}
+     	</if>
+     	<!--零散企业-->
+     	<if test="leixing == 3">
+     		select ifnull(s.middleid,'') as middleid,a.id,b.chinesename as cardtypename,ifnull(c.jytname,'') as jytname,ifnull(c.membername,'') as membername,a.companyname,
+			a.name,case when a.companyid=0 then '' else a.companyid end as companyid,a.agent,fl.phone from ebs_personnelcard as a
+			inner join cm_certificate_type as b on b.id=a.cardtype and a.session=b.session and b.type=0
+			inner join (
+				select a.member_id as memberid,a.member_company as membername,'' as jytname from web_member as a
+				inner join web_member_session as b on a.member_id=b.member_id 				
+				where b.id=#{session} and member_type !=0 and member_type != 1
+			) as c on a.agent=c.memberid
+			left join web_member_session as s on s.member_id=a.agent and s.id=#{session}
+			left join (select primaryid,max(phone) as phone from sys_forensic_log where act='person' group by primaryid) as fl on fl.primaryid=a.id
+			where a.session=#{session} and a.printstatus=2 and a.isplastic=1
+			<if test="companyname!=null and companyname!=''">
+				and a.companyname = #{companyname}
+			</if>
+			<if test="companyid!=null and companyid!=''">
+				and a.companyid = #{companyid}
+			</if>
+			<if test="name!=null and name!=''">
+				and a.name = #{name}
+			</if>
+			<if test="membername!=null and membername!=''">
+				and c.membername = #{membername}
+			</if>
+			<if test="jytname!=null and jytname!=''">
+				and c.jytname = #{jytname}
+			</if>
+			<if test="isforensics!=null and isforensics!=''">
+				and a.isforensics = #{isforensics}
+			</if>
+			<if test="agent!=null and agent!=''">
+				and s.middleid = #{agent}
+			</if>
+			order by a.id desc	
+			limit #{index}, #{size}
+     	</if>
+     	<!--嘉宾B-->
+     	<if test="leixing == 4">
+     		select ifnull(s.middleid,'') as middleid,a.id,b.chinesename as cardtypename,ifnull(e.name,'') as jytname,ifnull(c.membername,'') as membername,a.companyname,
+			a.name,case when a.companyid=0 then '' else a.companyid end as companyid,a.agent,fl.phone from ebs_personnelcard as a
+			inner join cm_certificate_type as b on b.id=a.cardtype and a.session=b.session and b.type=0 and b.chinesename='嘉宾证B'
+			left join (
+				select a.member_id as memberid,a.member_company as membername from web_member as a
+				inner join web_member_session as b on a.member_id=b.member_id 				
+				where b.id=#{session}
+			) as c on a.agent=c.memberid
+			left join ebs_companyinfo as d on d.chinesename=a.companyname
+			left join ebs_tradinggroup as e on e.id=d.tradinggroupid
+			left join web_member_session as s on s.member_id=a.agent and s.id=#{session}
+			left join (select primaryid,max(phone) as phone from sys_forensic_log where act='person' group by primaryid) as fl on fl.primaryid=a.id
+			where a.session=#{session} and a.printstatus=2 and a.isplastic=1
+			<if test="companyname!=null and companyname!=''">
+				and a.companyname = #{companyname}
+			</if>
+			<if test="companyid!=null and companyid!=''">
+				and a.companyid = #{companyid}
+			</if>
+			<if test="name!=null and name!=''">
+				and a.name = #{name}
+			</if>
+			<if test="membername!=null and membername!=''">
+				and c.membername = #{membername}
+			</if>
+			<if test="jytname!=null and jytname!=''">
+				and d.name = #{jytname}
+			</if>
+			<if test="isforensics!=null and isforensics!=''">
+				and a.isforensics = #{isforensics}
+			</if>
+			<if test="agent!=null and agent!=''">
+				and s.middleid = #{agent}
+			</if>
+			order by e.orders,a.id desc	
+			limit #{index}, #{size}
+     	</if>
+     </select>
+     
+     <select id="PersonnelCertificateCollectionListCount" resultType="int">
+     	<!--全部-->
+     	<if test="leixing == 1000">
+     		select count(*) from ebs_personnelcard as a
+			inner join cm_certificate_type as b on b.id=a.cardtype and a.session=b.session
+			left join (
+				select a.member_id as memberid,a.member_company as membername,ifnull(t.name,'') as jytname from web_member as a
+				inner join web_member_session as b on a.member_id=b.member_id 
+				inner join pim_agent as c on c.id=b.orgnization_id
+				left join ebs_tradinggroup as t on t.id=c.tradinggroupid
+				where b.id=#{session}
+			) as c on a.agent=c.memberid
+			left join web_member_session as s on s.member_id=a.agent and s.id=#{session}
+			where a.session=#{session} and a.printstatus=2 and a.isplastic=1
+			<if test="companyname!=null and companyname!=''">
+				and a.companyname = #{companyname}
+			</if>
+			<if test="companyid!=null and companyid!=''">
+				and a.companyid = #{companyid}
+			</if>
+			<if test="name!=null and name!=''">
+				and a.name = #{name}
+			</if>
+			<if test="membername!=null and membername!=''">
+				and c.membername = #{membername}
+			</if>
+			<if test="jytname!=null and jytname!=''">
+				and c.jytname = #{jytname}
+			</if>
+			<if test="isforensics!=null and isforensics!=''">
+				and a.isforensics = #{isforensics}
+			</if>
+			<if test="agent!=null and agent!=''">
+				and s.middleid = #{agent}
+			</if>
+     	</if>
+     	<!--代办员-参展证-->
+     	<if test="leixing == 1">
+     		select count(*) from ebs_personnelcard as a
+			inner join cm_certificate_type as b on b.id=a.cardtype and a.session=b.session and b.isexhibitor=1
+			inner join (
+				select a.member_id as memberid,a.member_company as membername,ifnull(t.name,'') as jytname from web_member as a
+				inner join web_member_session as b on a.member_id=b.member_id 
+				inner join pim_agent as c on c.id=b.orgnization_id
+				left join ebs_tradinggroup as t on t.id=c.tradinggroupid
+				where b.id=#{session} and member_type in (0,1)
+			) as c on a.agent=c.memberid
+			left join web_member_session as s on s.member_id=a.agent and s.id=#{session}
+			where a.session=#{session} and a.printstatus=2 and a.isplastic=1
+			<if test="companyname!=null and companyname!=''">
+				and a.companyname = #{companyname}
+			</if>
+			<if test="companyid!=null and companyid!=''">
+				and a.companyid = #{companyid}
+			</if>
+			<if test="name!=null and name!=''">
+				and a.name = #{name}
+			</if>
+			<if test="membername!=null and membername!=''">
+				and c.membername = #{membername}
+			</if>
+			<if test="jytname!=null and jytname!=''">
+				and c.jytname = #{jytname}
+			</if>
+			<if test="isforensics!=null and isforensics!=''">
+				and a.isforensics = #{isforensics}
+			</if>
+			<if test="agent!=null and agent!=''">
+				and s.middleid = #{agent}
+			</if>
+     	</if>
+     	<!--代办员-其他证件-->
+     	<if test="leixing == 2">
+     		select count(*) from ebs_personnelcard as a
+			inner join cm_certificate_type as b on b.id=a.cardtype and a.session=b.session and b.isexhibitor=0 and b.type=0
+			inner join (
+				select a.member_id as memberid,a.member_company as membername,ifnull(t.name,'') as jytname from web_member as a
+				inner join web_member_session as b on a.member_id=b.member_id 
+				inner join pim_agent as c on c.id=b.orgnization_id
+				left join ebs_tradinggroup as t on t.id=c.tradinggroupid
+				where b.id=#{session} and member_type in (0,1)
+			) as c on a.agent=c.memberid
+			left join web_member_session as s on s.member_id=a.agent and s.id=#{session}
+			where a.session=#{session} and a.printstatus=2 and a.isplastic=1
+			<if test="companyname!=null and companyname!=''">
+				and a.companyname = #{companyname}
+			</if>
+			<if test="companyid!=null and companyid!=''">
+				and a.companyid = #{companyid}
+			</if>
+			<if test="name!=null and name!=''">
+				and a.name = #{name}
+			</if>
+			<if test="membername!=null and membername!=''">
+				and c.membername = #{membername}
+			</if>
+			<if test="jytname!=null and jytname!=''">
+				and c.jytname = #{jytname}
+			</if>
+			<if test="isforensics!=null and isforensics!=''">
+				and a.isforensics = #{isforensics}
+			</if>
+			<if test="agent!=null and agent!=''">
+				and s.middleid = #{agent}
+			</if>
+     	</if>
+     	<!--零散企业-->
+     	<if test="leixing == 3">
+     		select count(*) from ebs_personnelcard as a
+			inner join cm_certificate_type as b on b.id=a.cardtype and a.session=b.session and b.type=0
+			inner join (
+				select a.member_id as memberid,a.member_company as membername,'' as jytname from web_member as a
+				inner join web_member_session as b on a.member_id=b.member_id 				
+				where b.id=#{session} and member_type !=0 and member_type != 1
+			) as c on a.agent=c.memberid
+			left join web_member_session as s on s.member_id=a.agent and s.id=#{session}
+			where a.session=#{session} and a.printstatus=2 and a.isplastic=1
+			<if test="companyname!=null and companyname!=''">
+				and a.companyname = #{companyname}
+			</if>
+			<if test="companyid!=null and companyid!=''">
+				and a.companyid = #{companyid}
+			</if>
+			<if test="name!=null and name!=''">
+				and a.name = #{name}
+			</if>
+			<if test="membername!=null and membername!=''">
+				and c.membername = #{membername}
+			</if>
+			<if test="jytname!=null and jytname!=''">
+				and c.jytname = #{jytname}
+			</if>
+			<if test="isforensics!=null and isforensics!=''">
+				and a.isforensics = #{isforensics}
+			</if>
+			<if test="agent!=null and agent!=''">
+				and s.middleid = #{agent}
+			</if>
+     	</if>
+     	<!--嘉宾B-->
+     	<if test="leixing == 4">
+     		select count(*) from ebs_personnelcard as a
+			inner join cm_certificate_type as b on b.id=a.cardtype and a.session=b.session and b.type=0 and b.chinesename='嘉宾证B'
+			left join (
+				select a.member_id as memberid,a.member_company as membername from web_member as a
+				inner join web_member_session as b on a.member_id=b.member_id 				
+				where b.id=#{session}
+			) as c on a.agent=c.memberid			
+			left join ebs_companyinfo as d on d.chinesename=a.companyname
+			left join ebs_tradinggroup as e on e.id=d.tradinggroupid
+			left join web_member_session as s on s.member_id=a.agent and s.id=#{session}
+			where a.session=#{session} and a.printstatus=2 and a.isplastic=1
+			<if test="companyname!=null and companyname!=''">
+				and a.companyname = #{companyname}
+			</if>
+			<if test="companyid!=null and companyid!=''">
+				and a.companyid = #{companyid}
+			</if>
+			<if test="name!=null and name!=''">
+				and a.name = #{name}
+			</if>
+			<if test="membername!=null and membername!=''">
+				and c.membername = #{membername}
+			</if>
+			<if test="jytname!=null and jytname!=''">
+				and d.name = #{jytname}
+			</if>
+			<if test="isforensics!=null and isforensics!=''">
+				and a.isforensics = #{isforensics}
+			</if>
+			<if test="agent!=null and agent!=''">
+				and s.middleid = #{agent}
+			</if>
+     	</if>
+     </select>
+	 <select id="getRouterPersonRole" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsCompanyinfo">
+	 SELECT
+		ebs_companyinfo.*,ebs_companyinfo.comany_type_id as comanyTypeId
+	FROM
+		ebs_personnelcard
+	LEFT JOIN ebs_companyinfo ON ebs_personnelcard.companyname = ebs_companyinfo.chinesename
+	WHERE
+		cardnumber = #{cardnumber,jdbcType=VARCHAR}
+	AND `name` = #{name,jdbcType=VARCHAR}
+	AND ebs_personnelcard.`session` = #{sessionId,jdbcType=VARCHAR}
+	AND `status` = 1
+	 </select>
+	 
+	 
+	 <select id="getPersonnelCardList" resultType="map">
+	 	SELECT
+			id,
+			name,
+			CASE sex
+			WHEN 0 THEN '男'
+			WHEN 1 THEN '女'
+			END sex,
+			CASE status
+			WHEN 0 THEN '待审核'
+			WHEN -1 THEN '审核未通过'
+			WHEN 1 THEN '审核通过'
+			END status,
+			CASE isgreen
+			WHEN 1 THEN '是'
+			WHEN 0 THEN '否'
+			END isgreen,
+			companyname,
+			remark,
+			addtime
+		FROM
+			ebs_personnelcard
+		WHERE
+			session = #{session}
+			AND agent = (
+				select a.member_id from web_member_session a
+				left join ebs_companyinfo b on a.orgnization_id = b.id
+				left join web_member c on a.member_id = c.member_id
+				where a.id = #{session} and b.session = #{session}
+				and c.member_type = #{comanytypeid} and c.member_status = 0
+				and b.useable = 1 and b.id = #{companyid} limit 1
+			) AND cardtype in (
+				SELECT card_type_id FROM web_member_certificate_type
+				WHERE member_type =#{comanytypeid} AND session_id = #{session} AND card_type_id in (
+					SELECT id FROM cm_certificate_type
+					WHERE session = #{session} and type = 0 and isexhibitor = 0 and useable = 1
+				)
+			)
+		order by id desc
+		limit #{index}, #{size}
+	 </select>
+	 <select id="getPersonnelCardListCount" resultType="int">
+	 	SELECT
+			count(*)
+		FROM
+			ebs_personnelcard
+		WHERE
+			session = #{session}
+			AND agent = (
+				select a.member_id from web_member_session a
+				left join ebs_companyinfo b on a.orgnization_id = b.id
+				left join web_member c on a.member_id = c.member_id
+				where a.id = #{session} and b.session = #{session}
+				and c.member_type = #{comanytypeid} and c.member_status = 0
+				and b.useable = 1 and b.id = #{companyid} limit 1
+			) AND cardtype in (
+				SELECT card_type_id FROM web_member_certificate_type
+				WHERE member_type =#{comanytypeid} AND session_id = #{session} AND card_type_id in (
+					SELECT id FROM cm_certificate_type
+					WHERE session = #{session} and type = 0 and isexhibitor = 0 and useable = 1
+				)
+			)
+	 </select>
+	 
+	 <update id="resetStatusByCompanyId">
+	 	update ebs_personnelcard
+	 	<set>
+	 		status = 0,
+	 		remark = '',
+	 		printstatus = 0,
+	 		printtype = -1,
+	 		printtime = '',
+	 		verificationstatus = 0,
+	 		cardnature = 1,
+	 		makecardtime = '',
+	 		makecardtime = 0,
+	 		forensicstime = '',
+	 		printnumber = '',
+	 	</set>
+	 	<where>
+	 		session = #{session} and companyid = #{companyId}
+	 	</where>
+	 </update>
+</mapper>

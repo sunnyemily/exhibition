@@ -15,7 +15,8 @@ function loadCardTypeForRadioForChange(form,inputid,isexhibitor,type,val){
 			var strHtml = '<input type="radio" class="cardtype" name="cardtype" value="" checked>全部';
 			if (result.code === 1) {
 				for (var j = 0; j < result.data.length; j++) {
-					strHtml += '&nbsp;&nbsp;<input class="cardtype" type="radio" name="cardtype" value="'+result.data[j].id+'">'+result.data[j].name;					
+					if(result.data[j].name == '布撤展车证')
+						strHtml += '&nbsp;&nbsp;<input class="cardtype" type="radio" name="cardtype" value="'+result.data[j].id+'">'+result.data[j].name;
 				}
 				//alert(strHtml);
 				$("#"+inputid).html(strHtml);

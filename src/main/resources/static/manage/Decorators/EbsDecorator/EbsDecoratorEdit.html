@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>修改企业信息</title>
+		<meta content="webkit" name="renderer">
+		<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+		<meta content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" name="viewport"/>
+		<link rel="stylesheet" href="/manage/css/xadmin.css">
+		<link href="/manage/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="/manage/layui/css/layui.css"  media="all">
+		<link href="/manage/css/style.css?v=4.1.0" rel="stylesheet">
+		<link href="/css/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+		<style type="text/css">
+			.layui-form-pane .layui-form-label {
+				width: 150px;
+			}
+			.layui-form-pane .layui-input-block {
+				margin-left: 150px;
+			}
+		</style>
+		<style type="text/css">
+	        .layui-table-cell {
+	            height: auto;
+	            line-height: 40px;
+	        }
+	    </style>
+	</head>
+	<body class="gray-bg">
+		<div class="modal inmodal" id="friendlink-model">
+			<div class="modal-content animated bounceInUp" id="vmUpdateEbsCompanyinfo">
+				<div class="ibox-content">
+					<fieldset class="layui-elem-field layui-field-title" style="border-top:0px">
+						<form class="layui-form layui-form-pane" action="">
+							<div class="layui-form-item">
+								<label class="layui-form-label"><span style='color:red'>*</span>用户名</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" disabled="disabled" class="layui-input" id="memberUsername" type="text" v-model="ebsCompanyinfo.memberUsername">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+	                            <label class="layui-form-label" for="country"><span style='color:red'>*</span>展区</label>
+	                            <div class="layui-input-block">
+	                                <div class="layui-input-inline layui-show-xs-block">
+	                                	<select id="tradingGroup" lay-verify="required" lay-search=""></select>
+		                            </div>
+		                        </div>
+		                    </div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="engaddress"><span style='color:red'>*</span>统一社会信用代码</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" id="organizationcodeDiv">
+										<input autocomplete="off" class="layui-input" id="organizationcode" name="organizationcode" lay-verify="required" type="text" v-model="ebsCompanyinfo.organizationcode">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="chinesename"><span style='color:red'>*</span>单位名称（中文）</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" class="layui-input" id="chinesename" name="chinesename" lay-verify="required" type="text" v-model="ebsCompanyinfo.chinesename">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="engname"><span style='color:red'>*</span>单位名称（英文）</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" class="layui-input" id="engname" name="engname" lay-verify="required" type="text" v-model="ebsCompanyinfo.engname">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="russianname">单位名称（俄文）</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" class="layui-input" id="russianname" name="russianname" lay-verify="required" type="text" v-model="ebsCompanyinfo.russianname">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="chineseaddress"><span style='color:red'>*</span>单位地址（中文）</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" class="layui-input" id="chineseaddress" name="chineseaddress" lay-verify="required" type="text" v-model="ebsCompanyinfo.chineseaddress">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="engaddress"><span style='color:red'>*</span>单位地址（英文）</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" class="layui-input" id="engaddress" name="engaddress" lay-verify="required" type="text" v-model="ebsCompanyinfo.engaddress">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="postcode"><span style='color:red'>*</span>邮编</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" class="layui-input" id="postcode" name="postcode" lay-verify="required" type="text" v-model="ebsCompanyinfo.postcode">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="phone"><span style='color:red'>*</span>手机</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" class="layui-input" id="phone" name="phone" lay-verify="required" type="text" v-model="ebsCompanyinfo.phone">
+										<span style="color: red">(手机号码用作密码找回,发送提示短信)</span>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="tel"><span style='color:red'>*</span>电话</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" class="layui-input" id="tel" name="tel" lay-verify="required" type="text" v-model="ebsCompanyinfo.tel">
+										<span style="color: red">(格式为：国家号-区号-电话号 86-451-82340100) 注：国家号区号电话号之间的横线一定是半角横线)</span>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="fax"><span style='color:red'>*</span>传真</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" class="layui-input" id="fax" name="fax" lay-verify="required" type="text" v-model="ebsCompanyinfo.fax">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="website">网址</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" class="layui-input" id="website" name="website" type="text" v-model="ebsCompanyinfo.website">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="email"><span style='color:red'>*</span>电子邮箱</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" class="layui-input" id="email" name="email" lay-verify="required" type="text" v-model="ebsCompanyinfo.email">
+										<span>(请填写真实邮箱地址，邮箱地址将做为密码恢复、及信息联络等用途)</span>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+	                            <label class="layui-form-label" for="country"><span style='color:red'>*</span>国家</label>
+	                            <div class="layui-input-block">
+	                                <div class="layui-input-inline layui-show-xs-block" id="countryDiv">
+	                                	<select id="country" lay-verify="required" lay-filter="country" lay-search=""></select>
+		                            </div>
+		                        </div>
+		                    </div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="province"><span style='color:red'>*</span>省份</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" id="provinceDiv">
+										<select id="province" lay-verify="required" lay-filter="province" lay-search=""></select>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="city"><span style='color:red'>*</span>城市</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" id="cityDiv">
+										<select id="city" lay-search="" lay-verify="required"></select>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="principal"><span style='color:red'>*</span>负责人</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" class="layui-input" id="principal" name="principal" lay-verify="required" type="text" v-model="ebsCompanyinfo.principal">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="contactperson"><span style='color:red'>*</span>联系人</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" class="layui-input" id="contactperson" name="contactperson" lay-verify="required" type="text" v-model="ebsCompanyinfo.contactperson">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="jobtitle">联系人职务</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" class="layui-input" id="jobtitle" name="jobtitle" type="text" v-model="ebsCompanyinfo.jobtitle">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+	                            <label class="layui-form-label" for="url">虚拟展厅地址</label>
+	                            <div class="layui-input-block">
+	                                <div class="layui-input-inline layui-show-xs-block" id="urlDiv">
+	                					<input id="url" name="url" autocomplete="off" class="layui-input" type="text" v-model="ebsCompanyinfo.url">
+		                            </div>
+		                        </div>
+		                    </div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="industryid"><span style='color:red'>*</span>行业分类</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" id="industryDiv">
+										<select id="industry" lay-search="" lay-verify="required"></select>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="exhibitorsNatureId"><span style='color:red'>*</span>参展企业性质</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" id="companyNatureDiv">
+										<select id="companyNature" lay-verify="required"></select>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" style="height: 100px;line-height: 70px;"><span style='color:red'>*</span>经营范围</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<textarea class="layui-textarea" id="busscope" name="busscope" lay-verify="required" rows="4" v-model="ebsCompanyinfo.busscope"></textarea>
+										<span>(请详细填写)</span>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" style="height: 100px;line-height: 70px;">希望结识客户</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<textarea class="layui-textarea" id="hopecustomers" name="hopecustomers" rows="4" v-model="ebsCompanyinfo.hopecustomers"></textarea>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" style="height: 100px;line-height: 70px;"><span style='color:red'>*</span>企业简介</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<textarea class="layui-textarea" id="companyprofile" name="companyprofile" lay-verify="required" rows="4" v-model="ebsCompanyinfo.companyprofile"></textarea>
+										<span>(请详细填写)</span>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" style="height: 100px;line-height: 70px;"><span style='color:red'>*</span>采购意向</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<textarea class="layui-textarea" id="purchaseintention" name="purchaseintention" lay-verify="required" rows="4" v-model="ebsCompanyinfo.purchaseintention"></textarea>
+										<span>(请详细填写)
+											<br>
+										</span>
+										<span style="color: red;">采购意向请按照以下标准填写，采购意向必须大于20字
+											<br>
+										</span>
+										<span style="color: red;">例如：供* 关键字1;关键字2;
+											<br>
+										</span>
+										<span style="color: red;">求* 关键字1;关键字2;
+											<br>
+										</span>
+										<span style="color: red;">合作* 关键字1;关键字2;
+											<br>
+										</span>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<table>
+									<tr>
+									<td valign="top">
+										<label class="layui-form-label" for="companyname">公司Logo</label>
+										<div class="layui-input-inline layui-show-xs-block" style="width:70%">
+											<input class="layui-input" autocomplete="off" id="companylogo" name="companylogo" type="hidden">
+											<button type="button" class="layui-btn" id="btncompanylogo">
+											  <i class="layui-icon">&#xe67c;</i>裁剪助手
+											</button>
+							                <br>
+							                <span style="color:red;font-size:16px">格式为jpg，上传文件小于100K。logo尺寸200*200（宽*高）像素。</span>
+										</div>
+									</td>
+									<td style="padding:5px">
+										<img src="" width="200" onclick="SeeImage(this.src)" height="200" id="precompanylogo">
+									</td>
+								</tr>
+								</table>								
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="buslicensepath">营业执照</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" id="buslicensepath">
+										<img :src="ebsCompanyinfo.buslicensepath" onclick="SeeImage(this.src)" style="width:390px;height:516px;margin-left: 2px;">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="relateddocumentspath">相关文件</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" id="relateddocumentspath">
+										<button type="button" style="margin-left: 2px;height: 40px;" class="layui-btn layui-btn-primary" onclick="vm.downLoadRelatedDocuments()">
+											<i class="layui-icon layui-icon-link"></i>下载文件
+										</button>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<table>
+									<tr>
+									<td valign="top">
+										<label class="layui-form-label" for="companyname">企业封面</label>
+										<div class="layui-input-inline layui-show-xs-block" style="width:70%">
+											<input class="layui-input" autocomplete="off" id="companypicture" name="companypicture" type="hidden">
+											<button type="button" class="layui-btn" id="btncompanypicture">
+											  <i class="layui-icon">&#xe67c;</i>裁剪助手
+											</button>
+							                <br>
+							                <span style="color:red;font-size:16px">注意：格式为jpg，上传文件小于2M。logo尺寸750*422（宽*高）像素。</span>
+										</div>
+									</td>
+									<td style="padding:5px">
+										<img src="" width="390" height="219" onclick="SeeImage(this.src)" id="precompanypicture">
+									</td>
+								</tr>
+								</table>								
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="companyvideo">宣传短片</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" style="display:none" class="layui-input" id="companyvideo" name="companyvideo" type="text" v-model="ebsCompanyinfo.companyvideo">
+									</div>
+									<div class="layui-input-inline radioborder" style="padding-left:5px;height:70px">
+										<button type="button" class="layui-btn" id="uploadPictrue2">
+											<i class="layui-icon">&#xe67c;</i>上传视频
+										</button>
+										<button type="button" class="layui-btn layui-btn-primary" style="display:none" id="yulan2">
+											预览
+										</button><br>
+							                <span style="color:red;font-size:16px">格式为MP4、FLV、MPG，上传文件小于20M，视频分辨率>=640*360，视频码率>=800kbps。</span>
+									</div>
+								</div>
+							</div>
+							<table>
+								<tr>
+									<td valign="top">
+										<label class="layui-form-label" for="companyname">轮播图片</label>
+										<div class="layui-input-inline layui-show-xs-block" style="width:70%">
+											<input class="layui-input" autocomplete="off" id="companypictures" name="companypictures" type="hidden">
+											<button type="button" class="layui-btn" id="btncompanypictures">
+											  <i class="layui-icon">&#xe67c;</i>裁剪助手
+											</button>
+							                <br>
+							                <span style="color:red;font-size:16px">注意：格式为jpg，上传文件小于2M。logo尺寸750*422（宽*高）像素。</span>
+										</div>
+									</td>
+									<td style="padding:5px">
+										<div class="mutipic">
+										</div>
+									</td>
+								</tr>
+							</table>
+							<div class="layui-form-item">
+		    					<label class="layui-form-label" style="height:50px;margin-top: 10px;">产品</label>
+		    					<div class="layui-input-block">
+							    	<table id="productTable" lay-filter="productTable"></table>
+							    </div>
+							</div>
+							<hr>
+							<div class="layui-form-item">
+								<div class="layui-input-block">
+									<input type="radio" name="auditStatus" lay-filter="auditStatus" value="2" title="审核通过" checked>
+									<input type="radio" name="auditStatus" lay-filter="auditStatus" value="3" title="审核未通过">
+								</div>
+							</div>
+							<div class="layui-form-item">
+		    					<label class="layui-form-label">拒绝原因</label>
+		    					<div class="layui-input-block">
+							    	<textarea placeholder="请输入内容" id="auditRemark" name="auditRemark" class="layui-textarea layui-bg-gray" disabled></textarea>
+							    </div>
+							</div>
+							<div class="layui-form-item">
+								<div class="layui-input-block">
+									<button class="layui-btn" type="button" onclick="vm.updateCompanyInfo()">
+										确认修改
+									</button>
+								</div>
+							</div>
+						</form>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+		<div id="mutiPictureTemplate" style="display:none">
+			<div class="item">
+				<img style="width:100px" src="" />
+				<div class="fc-upload-cover">
+					<i class="ivu-icon fa fa-eye"></i>
+					<i class="ivu-icon fa fa-trash"></i>
+				</div>
+			</div>
+		</div>
+		<script type="text/html" id="batchAuditProductBar">
+  			<div class="layui-btn-container">
+    			<button class="layui-btn layui-btn-sm layui-hide againAuditProduct" type="button" onclick="batchAgainAuditProduct()">批量重审</button>
+  			</div>
+		</script>
+		<script charset="utf-8" src="/manage/js/jquery.min.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/layui/layui.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/xadmin.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/vue.js" type="text/javascript"></script>
+		<script src="/manage/js/bootstrap.min.js?v=3.3.6"></script>
+		<script src="/manage/js/manage/common.js"></script>
+		<script src="/manage/js/content.js?v=1.0.0"></script>
+		<script src="/manage/js/manage/product/WebProduct/product.js"></script>
+		<script charset="UTF-8" type="text/javascript">
+			var form;
+			var layer;
+			var editEbsCompanyinfoId = sessionStorage.getItem("editEbsCompanyinfoId");
+       		//重新加载参展人员和产品列表,供弹出层调用,刷新父页面表格数据
+    		window.reloadTableDataCurrent = function(){
+    			reoladProductTable();
+    		}
+			vm = new Vue({
+				el : "#vmUpdateEbsCompanyinfo",
+				data : {
+					ebsCompanyinfo : {}
+				},
+				methods : {
+					//查看图片
+					downLoadRelatedDocuments : function() {
+						if (vm.ebsCompanyinfo.relateddocumentspath == null || vm.ebsCompanyinfo.relateddocumentspath == '') {
+							layer.alert("企业未上传相关文件");
+						} else {
+							window.open(vm.ebsCompanyinfo.relateddocumentspath);
+						}
+					},
+					//修改企业信息
+					updateCompanyInfo : function() {
+						vm.ebsCompanyinfo.id = editEbsCompanyinfoId;
+						var tradinggroupid = $("#tradingGroup").val();
+						if (tradinggroupid == null || tradinggroupid == '') {
+							$("#tradingGroup").focus();
+							layer.tips("请先选择展区", "#tradingGroup", {
+								tips : 1
+							});
+							return;
+						}
+						if (vm.ebsCompanyinfo.chinesename == null || vm.ebsCompanyinfo.chinesename == '') {
+							$("#chinesename").focus();
+							layer.tips("单位名称（中文）不可为空", "#chinesename", {
+								tips : 1
+							});
+							return;
+						}
+						if (vm.ebsCompanyinfo.engname == null || vm.ebsCompanyinfo.engname == '') {
+							$("#engname").focus();
+							layer.tips("单位名称（英文）不可为空", "#engname", {
+								tips : 1
+							});
+							return;
+						}
+						if (vm.ebsCompanyinfo.chineseaddress == null || vm.ebsCompanyinfo.chineseaddress == '') {
+							$("#chineseaddress").focus();
+							layer.tips("单位地址（中文）不可为空", "#chineseaddress", {
+								tips : 1
+							});
+							return;
+						}
+						if (vm.ebsCompanyinfo.engaddress == null || vm.ebsCompanyinfo.engaddress == '') {
+							$("#engaddress").focus();
+							layer.tips("单位地址（英文）不可为空", "#engaddress", {
+								tips : 1
+							});
+							return;
+						}
+						if (vm.ebsCompanyinfo.organizationcode == null || vm.ebsCompanyinfo.organizationcode == '') {
+							$("#organizationcode").focus();
+							layer.tips("统一社会信用代码不可为空", "#organizationcodeDiv", {
+								tips : 1
+							});
+							return;
+						}
+						if (vm.ebsCompanyinfo.postcode == null || vm.ebsCompanyinfo.postcode == '') {
+							$("#postcode").focus();
+							layer.tips("邮编不可为空", "#postcode", {
+								tips : 1
+							});
+							return;
+						}
+						if (vm.ebsCompanyinfo.phone == null || vm.ebsCompanyinfo.phone == '') {
+							$("#phone").focus();
+							layer.tips("手机不可为空", "#phone", {
+								tips : 1
+							});
+							return;
+						}
+						if (vm.ebsCompanyinfo.tel == null || vm.ebsCompanyinfo.tel == '') {
+							$("#tel").focus();
+							layer.tips("电话不可为空", "#tel", {
+								tips : 1
+							});
+							return;
+						}
+						if (vm.ebsCompanyinfo.fax == null || vm.ebsCompanyinfo.fax == '') {
+							$("#fax").focus();
+							layer.tips("传真不可为空", "#fax", {
+								tips : 1
+							});
+							return;
+						}
+						if (vm.ebsCompanyinfo.email == null || vm.ebsCompanyinfo.email == '') {
+							$("#email").focus();
+							layer.tips("电子邮箱不可为空", "#email", {
+								tips : 1
+							});
+							return;
+						}
+						vm.ebsCompanyinfo.country = $("#country").val();
+    					if(vm.ebsCompanyinfo.country==null || vm.ebsCompanyinfo.country==''){
+    						$("#countryDiv input").focus();
+    						layer.tips("国家不可为空", "#countryDiv", {tips: 1});
+    						return;
+    					}
+						vm.ebsCompanyinfo.province = $("#province").val();
+						if (vm.ebsCompanyinfo.province == null || vm.ebsCompanyinfo.province == '') {
+							$("#provinceDiv input").focus();
+							layer.tips("省份不可为空", "#provinceDiv", {
+								tips : 1
+							});
+							return;
+						}
+						vm.ebsCompanyinfo.city = $("#city").val();
+						if (vm.ebsCompanyinfo.city == null || vm.ebsCompanyinfo.city == '') {
+							$("#cityDiv input").focus();
+							layer.tips("城市不可为空", "#cityDiv", {
+								tips : 1
+							});
+							return;
+						}
+						if (vm.ebsCompanyinfo.contactperson == null || vm.ebsCompanyinfo.contactperson == '') {
+							$("#contactperson").focus();
+							layer.tips("联系人不可为空", "#contactperson", {
+								tips : 1
+							});
+							return;
+						}
+						if (vm.ebsCompanyinfo.principal == null || vm.ebsCompanyinfo.principal == '') {
+							$("#principal").focus();
+							layer.tips("负责人不可为空", "#principal", {
+								tips : 1
+							});
+							return;
+						}
+						vm.ebsCompanyinfo.industryid = $("#industry").val();
+						if (vm.ebsCompanyinfo.industryid == null || vm.ebsCompanyinfo.industryid == '') {
+							$("#industryDiv input").focus();
+							layer.tips("行业分类不可为空", "#industryDiv", {
+								tips : 1
+							});
+							return;
+						}
+						if (vm.ebsCompanyinfo.busscope == null || vm.ebsCompanyinfo.busscope == '') {
+							$("#busscope").focus();
+							layer.tips("经营范围不可为空", "#busscope", {
+								tips : 1
+							});
+							return;
+						}
+						if (vm.ebsCompanyinfo.companyprofile == null || vm.ebsCompanyinfo.companyprofile == '') {
+							$("#companyprofile").focus();
+							layer.tips("企业简介不可为空", "#companyprofile", {
+								tips : 1
+							});
+							return;
+						}
+						if (vm.ebsCompanyinfo.purchaseintention == null || vm.ebsCompanyinfo.purchaseintention == '') {
+							$("#purchaseintention").focus();
+							layer.tips("采购意向不可为空", "#purchaseintention", {
+								tips : 1
+							});
+							return;
+						}
+						vm.ebsCompanyinfo.exhibitorsNatureId = $("#companyNature").val();
+						if (vm.ebsCompanyinfo.exhibitorsNatureId == null || vm.ebsCompanyinfo.exhibitorsNatureId == '') {
+							$("#companyNatureDiv input").focus();
+							layer.tips("参展企业性质不可为空", "#companyNatureDiv", {
+								tips : 1
+							});
+							return;
+						}
+
+						var imagepaths = new Array();
+						var yb = 0;
+						$(".mutipic img").each(function(){
+							var imagepath = $(this).attr("src");
+							if (imagepath != '') {
+								imagepaths[yb] = imagepath;
+								yb++;
+							}
+						});
+						vm.ebsCompanyinfo.companypictures = JSON.stringify(imagepaths);
+						vm.ebsCompanyinfo.companypicture = $("#companypicture").val();
+						vm.ebsCompanyinfo.companyvideo = $("#companyvideo").val();
+						vm.ebsCompanyinfo.companylogo = $("#companylogo").val();
+						vm.ebsCompanyinfo.tradinggroupid = tradinggroupid;
+						var auditStatus = $("input[type=radio][name=auditStatus]:checked").val();
+						var auditRemark = $("#auditRemark").val();
+						if(auditStatus==3 && auditRemark == ''){
+							layer.alert("请先填写拒绝原因");
+							return;
+						}
+						vm.ebsCompanyinfo.auditStatus = auditStatus;
+						vm.ebsCompanyinfo.auditRemark = auditRemark;
+
+						$.ajax({
+							type : 'post',
+							url : '/manage/Exhibitors/ebsScatteredExhibitorsManage/updateCompanyInfo',
+							data : vm.ebsCompanyinfo,
+							success : function(r) {
+								if (r.code === 1) {
+									layer.msg("修改成功", {icon: 6, time: 500}, function () {
+		                                //关闭当前frame
+		                                xadmin.close();
+		                                // 可以对父窗口进行刷新
+		                                xadmin.father_reload();
+		                            });
+		                        } else {
+		                        	if(r.status==5){
+		                        		layer.alert(r.msg);
+		                        		parent.window.location.href='/manage/login.html';
+		                        	}else{
+			                            layer.alert(r.msg);
+		                        	}
+		                        }
+							}
+						});
+					}
+				},
+				created : function() {
+					var _this = this;
+					layui.use(['form', 'layer', 'laydate'], function() {
+						addLisenter();
+						layer = layui.layer;
+						form = layui.form;
+						
+						//加载企业信息
+						$.ajax({
+							url : "/manage/Exhibitors/ebsScatteredExhibitorsManage/selectCompanyInfo",
+							data : {
+								"id" : editEbsCompanyinfoId
+							},
+							dataType : "json",
+							type : "get",
+							success : function(result) {
+								if (result.code === 1) {
+									_this.ebsCompanyinfo = result.data;
+									loadTradingGroupByMap(form, result.data.tradinggroupid, "tradingGroup", 2);
+									loadCountryInfo(form, "country", result.data.country);
+									loadProvince(result.data.country, result.data.province);
+									loadCity(result.data.province, result.data.city);
+									loadIndustry(result.data.industryid);
+									loadCompanyNature(result.data.exhibitors_nature_id);
+									if (result.data.buslicensepath == null || result.data.buslicensepath == '') {
+										$("#buslicensepath").html("<input disabled=\"disabled\" class=\"layui-input\" type=\"text\" value=\"企业未上传营业执照\">");
+									}
+									if (result.data.relateddocumentspath == null || result.data.relateddocumentspath == '') {
+										$("#relateddocumentspath").html("<input disabled=\"disabled\" class=\"layui-input\" type=\"text\" value=\"企业未上传相关文件\">");
+									}
+	
+									var companyPictures = eval(result.data.companypictures);
+									if(typeof companyPictures!="undefined")
+									for(var i = 0;i<companyPictures.length;i++){
+										$("#mutiPictureTemplate img").attr("src",companyPictures[i]);
+										var templateHtml = $("#mutiPictureTemplate").html();
+										var item = $(templateHtml);
+										$(".mutipic").append(item);
+									}
+	
+									if (result.data.companypicture != '') {									
+										$("#precompanypicture").attr("src", result.data.companypicture);
+									}
+									if (result.data.companyvideo != '') {
+										$("#yulan2").show();
+										$("#yulan2").attr("onclick", "window.open('" + result.data.companyvideo + "')");
+									}								
+									if (result.data.companylogo != '') {									
+										$("#precompanylogo").attr("src", result.data.companylogo);
+									}
+	
+								} else {
+									layui.layer.alert("获取企业信息失败！");
+								}
+							}
+						});
+						
+						var laydate = layui.laydate;
+						$("#auditRemark").val("");
+						//监控审核状态单选框
+						form.on('radio(auditStatus)', function(data){
+							$("#auditRemark").val("");
+							if(data.value==2){
+								$("#auditRemark").addClass("layui-bg-gray");
+								$("#auditRemark").attr("disabled",true);
+							}else{
+								$("#auditRemark").removeClass("layui-bg-gray");
+								$("#auditRemark").removeAttr("disabled");
+							}
+						});
+						form.on('select(country)', function(data){
+							loadProvince(data.value, 0);
+			            });
+						form.on('select(province)', function(data) {
+							loadCity(data.value, 0);
+						});
+					});
+				}
+			});
+			//加载省份
+			function loadProvince(parentId, selectProvince) {
+				$.get("/manage/system/sysCountryArea/loadProvince", {'parentId' : parentId}, function(r) {
+					var provinceStr = '<option value="">请选择省份</option>';
+					r.forEach(function(item, index) {
+						if (selectProvince != item.id) {
+							provinceStr += '<option value="' + item.id + '">' + item.NAME + '</option>';
+						} else {
+							provinceStr += '<option value="' + item.id + '" selected>' + item.NAME + '</option>';
+						}
+					});
+					$("#province").html(provinceStr);
+					layui.form.render('select');
+				});
+			}
+
+			//加载城市
+			function loadCity(parentId, selectCity) {
+				$.get("/manage/system/sysCountryArea/loadCity", {
+					'parentId' : parentId
+				}, function(r) {
+					var cityStr = '<option value="">请选择城市</option>';
+					r.forEach(function(item, index) {
+						if (selectCity != item.id) {
+							cityStr += '<option value="' + item.id + '">' + item.NAME + '</option>';
+						} else {
+							cityStr += '<option value="' + item.id + '" selected>' + item.NAME + '</option>';
+						}
+					});
+					$("#city").html(cityStr);
+					layui.form.render('select');
+				});
+			}
+
+			//加载行业分类
+			function loadIndustry(selectIndustry) {
+				$.get("/manage/system/sysIndustry/list", {
+					'page' : 1,
+					'limit' : 10000
+				}, function(r) {
+					if (r.code == 1) {
+						var industryStr = '<option value="">请选择行业分类</option>';
+						r.data.forEach(function(item, index) {
+							if (selectIndustry != item.id) {
+								industryStr += '<option value="' + item.id + '">' + item.chineseName + '</option>';
+							} else {
+								industryStr += '<option value="' + item.id + '" selected>' + item.chineseName + '</option>';
+							}
+						});
+						$("#industry").html(industryStr);
+						layui.form.render('select');
+					} else if (r.code == 5) {
+						layer.confirm(r.msg, {
+							icon : 3,
+							title : '提示'
+						}, function(index) {
+							window.location.href = "/manage/login.html";
+						});
+					} else {
+						layer.alert(r.msg);
+					}
+				});
+			}
+
+			//加载企业性质
+			function loadCompanyNature(selectcompanyNature) {
+				$.get("/manage/system/sysCompanyType/list", {
+					'page' : 1,
+					'limit' : 10000
+				}, function(r) {
+					if (r.code == 1) {
+						var companyNatureStr = '<option value="">请选择企业性质</option>';
+						r.data.forEach(function(item, index) {
+							if (selectcompanyNature != item.id) {
+								companyNatureStr += '<option value="' + item.id + '">' + item.chineseName + '</option>';
+							} else {
+								companyNatureStr += '<option value="' + item.id + '" selected>' + item.chineseName + '</option>';
+							}
+						});
+						$("#companyNature").html(companyNatureStr);
+						layui.form.render('select');
+					} else if (r.code == 5) {
+						layer.confirm(r.msg, {
+							icon : 3,
+							title : '提示'
+						}, function(index) {
+							window.location.href = "/manage/login.html";
+						});
+					} else {
+						layer.alert(r.msg);
+					}
+				});
+			}
+
+			layui.use('upload', function() {
+				var upload = layui.upload;
+				
+				//上传视频
+				var uploadPictrue = upload.render({
+					accept : 'video',
+					size : 20480,
+					exts : 'mp4|flv',
+					elem : '#uploadPictrue2',
+					url : '/updatePictureLimit',
+					before : function(obj) {
+						layer.load();
+						//上传loading
+					},
+					done : function(res) {
+						layer.closeAll('loading');
+						if (res.status == 1) {
+							$("#companyvideo").val(res.result);
+							$("#yulan2").attr("onclick", "window.open('" + res.result + "')");
+							$("#yulan2").show();
+							layer.msg('上传成功', {
+								icon : 6
+							});
+						} else {
+							layer.msg(res.msg, {
+								shift : 6
+							});
+						}
+					},
+					error : function() {
+						//请求异常回调
+						layer.msg('接口异常', {
+							shift : 6
+						});
+						layer.closeAll('loading');
+					}
+				});
+				
+			});
+		</script>
+		<script src="/manage/js/manage/crop.js"></script>
+	</body>
+</html>
