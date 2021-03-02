@@ -950,7 +950,9 @@ WHERE
     
     <select id="getCompanyByMemberIdAndSessionId" resultType="cn.org.chtf.card.manage.Exhibitors.model.EbsCompanyinfo">
         select *,
-			ebs_companyinfo.exhibitors_nature_id AS exhibitorsNatureId
+			ebs_companyinfo.exhibitors_nature_id AS exhibitorsNatureId,
+			ebs_companyinfo.audit_status as auditStatus,
+			ebs_companyinfo.audit_remark as auditRemark
         from ebs_companyinfo 
         where id = (select orgnization_id from web_member_session where member_id=#{memberId} order by addtime Desc limit 1)
     </select>

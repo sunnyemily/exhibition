@@ -19,8 +19,7 @@
                 <input type="hidden" name="id"/>
                 <div class="layui-form-item">
                     <label class="layui-form-label"><span>*</span>审核状态</label>
-                    <div class="layui-form-mid layui-word-aux"> &nbsp;<script>document.write(window.parent.member.memberUsername)</script>
-                    </div>
+                    <div class="layui-form-mid layui-word-aux" id="auditInfo"></div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label"><span>*</span>用户名</label>

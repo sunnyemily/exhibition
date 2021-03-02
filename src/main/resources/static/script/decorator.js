@@ -66,6 +66,16 @@ function loadCompany() {
         loadCity();
         $("select[name=city]").val(obj["city"]);
         form.render();
+        // 初始化数据
+        var auditStatusName = "";
+        if(obj["auditStatus"] == 1) {
+            auditStatusName = "待审核";
+        } else if(obj["auditStatus"] == 2) {
+            auditStatusName = "审核通过";
+        } else if(obj["auditStatus"] == 3) {
+            auditStatusName = "审核失败，驳回原因：" + obj["auditRemark"];
+        }
+        $("#auditInfo").text(auditStatusName);
         $("#legalpersonname").val(obj["legalpersonname"]);
         $("#legalpersoncardnumber").val(obj["legalpersoncardnumber"]);
         $("#prelegalpersoncardpath").attr("src", $("#legalpersoncardpath").val());
