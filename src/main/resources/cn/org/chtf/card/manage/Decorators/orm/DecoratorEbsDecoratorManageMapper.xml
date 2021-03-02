@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.Decorators.dao.DecoratorEbsDecoratorManageMapper">
+	
+	<select id="GetDownLoadInfo" resultType="map">
+		SELECT
+        	c.comany_type_id,
+			c.chinesename,
+			c.engname,
+			c.russianname,
+			c.chineseaddress,
+			c.engaddress,
+			c.postcode,
+			c.tel,
+			c.fax,
+			c.website,
+			c.email,			
+			c.jobtitle,
+			c.principal,
+			c.industryid,
+			c.busscope,
+			c.hopecustomers,
+			c.companyprofile,
+			c.purchaseintention,
+			c.exhibitors_nature_id,
+			c.buslicensepath,
+			c.companypicture,
+			c.companyvideo,
+			c.companypictures,
+			c.relateddocumentspath,
+			c.exhibits,
+			c.organizationcode,
+			c.id companyId,
+			c.chinesename,
+			c.contactperson,
+			c.phone,
+			ifnull(d.chinese_name,'') companyNature,
+			c.addtime,
+			c.useable,
+			c.url,
+			c.legalpersonname,
+			c.legalpersoncardnumber,
+			c.audit_status auditStatus,
+			case c.audit_status
+			when 1 then '待审核'
+			when 2 then '审核成功'
+			when 3 then '审核拒绝'
+			end as auditStatusName,
+			ifnull(c.audittime,'') audittime,
+			c.audit_remark auditRemark
+        FROM web_member a
+		LEFT JOIN web_member_session b on a.member_id = b.member_id
+		LEFT JOIN ebs_companyinfo c on b.orgnization_id = c.id		
+		LEFT JOIN sys_company_type d on c.exhibitors_nature_id = d.id and d.use_flag = 'Y'
+		WHERE a.member_type = 3
+		<if test="session != null and session != ''">
+			and b.id = #{session} and c.session = #{session}
+		</if>
+		<if test="auditStatus != null and auditStatus = 1">
+			and c.audit_status = #{auditStatus}
+		</if>
+	</select>
+
+    <select id="list" resultType="map">
+		SELECT
+			b.id sessionId,
+			a.member_id memberId,
+			a.member_username memberUsername,
+			c.id companyId,
+			c.chinesename,
+			c.contactperson,
+			c.phone,
+			d.chinese_name companyNature,
+			c.addtime,
+			c.useable,
+			c.url,
+			c.audit_status auditStatus,
+			c.audittime audittime
+        FROM web_member a
+		INNER JOIN web_member_session b on a.member_id = b.member_id and b.id = #{session}
+		INNER JOIN ebs_companyinfo c on b.orgnization_id = c.id
+		LEFT JOIN sys_company_type d on c.exhibitors_nature_id = d.id and d.use_flag = 'Y'
+		WHERE a.member_type = #{leixing}
+        <if test="leixing != null and leixing != 2">
+            and a.member_status = 0
+        </if>
+        <if test="companyName != null and companyName != ''">
+            and c.chinesename like concat ('%',#{companyName},'%')
+        </if>
+        <if test="memberUsername != null and memberUsername != ''">
+            and a.member_username like concat ('%',#{memberUsername},'%')
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and c.addtime >= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and c.addtime &lt;= #{endTime}
+        </if>
+        <if test="useable != null and useable != '' and useable != -1">
+            and c.useable = #{useable}
+        </if>
+        <if test="auditStatus == 1">
+            and c.audit_status = 1
+        </if>
+		<if test="auditStatus == 2">
+			and c.audit_status = 2
+		</if>
+		<if test="auditStatus == 3">
+			and c.audit_status = 3
+		</if>
+		<if test="phone != null and phone != ''">
+			and c.phone = #{phone}
+		</if>
+        order by c.addtime desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(*) FROM web_member a
+		INNER JOIN web_member_session b on a.member_id = b.member_id and b.id = #{session}
+		INNER JOIN ebs_companyinfo c on b.orgnization_id = c.id
+		<if test="personnelCardAuditstatus != null and personnelCardAuditstatus != ''">
+			LEFT JOIN (
+				select companyname, ifnull(sum(if(ebs_personnelcard.status = 0,1,0)),0) pendingAuditNumber
+				from ebs_personnelcard where session = #{session} group by companyname
+			) ebs_personnelcard on ebs_personnelcard.companyname = c.chinesename
+		</if>
+		LEFT JOIN sys_company_type d on c.exhibitors_nature_id = d.id and d.use_flag = 'Y'
+		LEFT JOIN ebs_tradinggroup on c.tradinggroupid = ebs_tradinggroup.id
+		LEFT JOIN (
+			SELECT
+				ebs_booth_apply.apply_id,
+				ebs_booth_apply.company_id,
+				ebs_booth_apply_list.tradinggroup_id tradinggroupid
+			FROM
+				ebs_booth_apply
+			LEFT JOIN
+				ebs_booth_apply_list on ebs_booth_apply.apply_id = ebs_booth_apply_list.apply_id
+				and !ISNULL(ebs_booth_apply_list.tradinggroup_id) and ebs_booth_apply_list.tradinggroup_id != 0
+				AND ebs_booth_apply.session_id = #{session}
+			GROUP BY
+				ebs_booth_apply.company_id,ebs_booth_apply_list.tradinggroup_id
+		) e on e.company_id=c.id
+		LEFT JOIN (
+			select DISTINCT company_id from ebs_booth where useable = 1 and session = #{session}
+		) f on c.id = f.company_id
+		LEFT JOIN system_user_rights on e.tradinggroupid = system_user_rights.tradinggroupid and system_user_rights.session = b.id and system_user_rights.userid = #{userId}
+		WHERE (ISNULL(e.tradinggroupid) or !ISNULL(system_user_rights.tradinggroupid)) and a.member_type = #{leixing}
+		<if test="leixing != 2 and tradingGroupId != null and tradingGroupId != ''">
+			and c.tradinggroupid = #{tradingGroupId}
+		</if>
+        <if test="booth == 1">
+            and isnull(e.apply_id)
+        </if>
+        <if test="booth == 2">
+            and !isnull(e.apply_id) and isnull(f.company_id)
+        </if>
+        <if test="booth == 3">
+            and !isnull(e.apply_id) and !isnull(f.company_id)
+        </if>
+        <if test="jytid != null and jytid != ''">
+        	and e.tradinggroupid = #{jytid}
+        </if>
+        <if test="leixing != null and leixing != 2">
+            and a.member_status = 0
+        </if>
+        <if test="companyName != null and companyName != ''">
+            and c.chinesename like concat ('%',#{companyName},'%')
+        </if>
+        <if test="memberUsername != null and memberUsername != ''">
+            and a.member_username like concat ('%',#{memberUsername},'%')
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and c.addtime >= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and c.addtime &lt;= #{endTime}
+        </if>
+        <if test="useable != '' and useable != -1">
+            and c.useable = #{useable}
+        </if>
+        <if test="auditStatus == 1">
+            and c.audit_status = 1
+        </if>
+        <if test="auditStatus == 0">
+            and c.audit_status != 1
+        </if>
+		<if test="status != null and status != ''">
+			and c.status = #{status}
+		</if>
+		<if test="personnelCardAuditstatus != null and personnelCardAuditstatus != ''">
+			and ebs_personnelcard.pendingAuditNumber > 0
+		</if>
+		<if test="phone != null and phone != ''">
+			and c.phone = #{phone}
+		</if>
+	</select>
+
+	<update id="updateCompanyInfo">
+		update ebs_companyinfo
+		<set>
+			id = #{id},
+			<if test="chinesename != null and chinesename != ''">chinesename = #{chinesename},</if>
+			<if test="engname != null and engname != ''">engname = #{engname},</if>
+			<if test="russianname != null and russianname != ''">russianname = #{russianname},</if>
+			<if test="chineseaddress != null and chineseaddress != ''">chineseaddress = #{chineseaddress},</if>
+			<if test="engaddress != null and engaddress != ''">engaddress = #{engaddress},</if>
+			<if test="postcode != null and postcode != ''">postcode = #{postcode},</if>
+			<if test="phone != null and phone != ''">phone = #{phone},</if>
+			<if test="tel != null and tel != ''">tel = #{tel},</if>
+			<if test="fax != null and fax != ''">fax = #{fax},</if>
+			<if test="website != null and website != ''">website = #{website},</if>
+			<if test="email != null and email != ''">email = #{email},</if>
+			<if test="country != null and country != ''">country = #{country},</if>
+			<if test="province != null and province != ''">province = #{province},</if>
+			<if test="city != null and city != ''">city = #{city},</if>
+			<if test="contactperson != null and contactperson != ''">contactperson = #{contactperson},</if>
+			<if test="jobtitle != null and jobtitle != ''">jobtitle = #{jobtitle},</if>
+			<if test="principal != null and principal != ''">principal = #{principal},</if>
+			<if test="industryid != null and industryid != ''">industryid = #{industryid},</if>
+			<if test="busscope != null and busscope != ''">busscope = #{busscope},</if>
+			<if test="hopecustomers != null and hopecustomers != ''">hopecustomers = #{hopecustomers},</if>
+			<if test="companyprofile != null and companyprofile != ''">companyprofile = #{companyprofile},</if>
+			<if test="buslicensepath != null and buslicensepath != ''">buslicensepath = #{buslicensepath},</if>
+			<if test="relateddocumentspath != null and relateddocumentspath != ''">relateddocumentspath = #{relateddocumentspath},</if>
+			<if test="purchaseintention != null and purchaseintention != ''">purchaseintention = #{purchaseintention},</if>
+			<if test="exhibitors_nature_id != null and exhibitors_nature_id != ''">exhibitors_nature_id = #{exhibitorsNatureId},</if>
+			<if test="companypicture != null and companypicture != ''">`companypicture` = #{companypicture},</if>
+			<if test="companyvideo != null and companyvideo != ''">`companyvideo` = #{companyvideo},</if>
+			<if test="companypictures != null and companypictures != ''">`companypictures` = #{companypictures},</if>
+			<if test="companylogo != null and companylogo != ''">`companylogo` = #{companylogo},</if>
+			<if test="organizationcode != null and organizationcode != ''">`organizationcode` = #{organizationcode},</if>
+			<if test="url != null and url != ''">`url` = #{url},</if>
+			<if test="useable != null and useable != ''">useable = #{useable},</if>
+			<if test="auditStatus != null">audit_status = #{auditStatus},</if>
+			<if test="auditRemark != null">audit_remark = #{auditRemark},</if>
+			<if test="tradinggroupid != null">tradinggroupid = #{tradinggroupid},</if>
+			<if test="auditType != null and auditType == 'reAudit'">audittime = null,</if>
+			<if test="audittime != null">`audittime` = #{audittime},</if>
+        </set>
+        where id = #{id}
+	</update>
+	
+	<select id="selectCompanyInfo" resultType="map">
+		SELECT
+			a.id companyId,
+			a.comany_type_id,
+			c.member_username memberUsername,
+			a.chinesename,
+			a.engname,
+			a.russianname,
+			a.chineseaddress,
+			a.engaddress,
+			a.postcode,
+			a.phone,
+			a.tel,
+			a.fax,
+			a.website,
+			a.email,
+			ifnull(a.country,0) as country,
+			ifnull(a.province,0) as province,
+			ifnull(a.city,0) as city,
+			a.contactperson,
+			a.jobtitle,
+			a.principal,
+			a.industryid,
+			a.busscope,
+			a.hopecustomers,
+			a.companyprofile,
+			a.companylogo,
+			ifnull(a.buslicensepath, d.apply_license) buslicensepath,
+			d.apply_file relateddocumentspath,
+			a.purchaseintention,
+			a.exhibitors_nature_id,
+			date(a.addtime) addtime,
+			a.companypicture,
+			a.companyvideo,
+			a.companypictures,
+			a.relateddocumentspath,
+			a.organizationcode,
+			a.url,
+			a.tradinggroupid,
+			a.legalpersonname,
+			a.legalpersoncardnumber,
+			a.legalpersoncardpath,
+			a.admissionapplicationform,
+			a.workshopcertificate,
+			a.technicalproofdocuments,
+			a.othersupportingdocuments,
+			a.previouscase,
+			a.audittime
+		FROM
+			ebs_companyinfo a
+		LEFT JOIN web_member_session b ON a.id = b.orgnization_id
+		LEFT JOIN web_member c ON b.member_id = c.member_id
+		LEFT JOIN ebs_booth_apply d ON d.company_id = a.id and d.session_id = #{session}
+		<where>
+			b.id = #{session}			
+			<if test="id != null">
+				and a.id = #{id}
+			</if>
+			<if test="phone != null">
+				and a.phone = #{phone}
+			</if>
+			<if test="email != null">
+				and a.email = #{email}
+			</if>
+		</where>
+		order by b.addtime desc limit 1
+	</select>
+	
+	
+	<select id="Previouslist" resultType="map">
+        SELECT
+        	s.sessionid as sessionname, 
+        	<if test="memberUsername != null and memberUsername != ''">       	
+        	b.member_id memberId,
+			b.member_username memberUsername,
+			</if>
+			c.id companyId,
+			c.chinesename,
+			c.contactperson,
+			c.phone,
+			d.chinese_name companyNature,
+			c.addtime,
+			c.useable,c.url
+        FROM ebs_companyinfo c       
+		inner join sys_session as s on s.id=c.session	
+		<if test="memberUsername != null and memberUsername != ''">
+		left join (
+			select a.member_username,a.member_id,b.id,b.orgnization_id from web_member as a
+			inner join web_member_session as b on a.member_id=b.member_id
+			where a.member_type=2
+		) as b on c.id=b.orgnization_id and c.session=b.id
+		</if>
+		LEFT JOIN sys_company_type d on c.exhibitors_nature_id = d.id and d.use_flag = 'Y'		
+		WHERE c.comany_type_id = 2
+		 and c.session != #{nowsession}  
+		<if test="session != null and session != ''">
+			and c.session = #{session}
+		</if>		     
+		<if test="memberUsername != null and memberUsername != ''">
+            and b.id = #{session} 
+        </if>
+        <if test="companyName != null and companyName != ''">
+            and c.chinesename like concat ('%',#{companyName},'%')
+        </if>
+        <if test="memberUsername != null and memberUsername != ''">
+            and b.member_username like concat ('%',#{memberUsername},'%')
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and c.addtime >= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and c.addtime &lt;= #{endTime}
+        </if>
+        <if test="useable != '' and useable != -1">
+            and c.useable = #{useable}
+        </if>
+        order by c.addtime desc	
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="Previouslistcount" resultType="int">
+		SELECT
+        	count(*)
+        FROM ebs_companyinfo c       
+		inner join sys_session as s on s.id=c.session	
+		<if test="memberUsername != null and memberUsername != ''">
+		left join (
+			select a.member_username,a.member_id,b.id,b.orgnization_id from web_member as a
+			inner join web_member_session as b on a.member_id=b.member_id
+			where a.member_type=2
+		) as b on c.id=b.orgnization_id and c.session=b.id
+		</if>				
+		WHERE c.comany_type_id = 2
+		 and c.session != #{nowsession}  
+		<if test="session != null and session != ''">
+			and c.session = #{session}
+		</if>		    
+		<if test="memberUsername != null and memberUsername != ''">
+            and b.id = #{session} 
+        </if>  
+        <if test="companyName != null and companyName != ''">
+            and c.chinesename like concat ('%',#{companyName},'%')
+        </if>
+        <if test="memberUsername != null and memberUsername != ''">
+            and b.member_username like concat ('%',#{memberUsername},'%')
+        </if>
+        <if test="startTime != null and startTime != ''">
+            and c.addtime >= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            and c.addtime &lt;= #{endTime}
+        </if>
+        <if test="useable != '' and useable != -1">
+            and c.useable = #{useable}
+        </if>
+	</select>
+	
+	<select id="loadCount" resultType="map">
+		SELECT
+      		count(DISTINCT c.id) EnterprisesNumber,
+			count(DISTINCT d.id) certificatesTotalNumber,
+			IFNULL(SUM(CASE WHEN status = 0 THEN 1 ELSE 0 END), 0) pendingAuditNumber,
+			IFNULL(SUM(CASE WHEN status = -1 THEN 1 ELSE 0 END), 0) failedAuditNumber,
+			IFNULL(SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END), 0) ReviewedCertificatesNumber,
+			IFNULL(SUM(CASE WHEN printstatus = 2 THEN 1 ELSE 0 END), 0) Printed,
+			IFNULL(SUM(CASE WHEN (status = 1 and isplastic = 1 and printstatus = 0) THEN 1 ELSE 0 END), 0) noPrinted,
+			IFNULL(SUM(CASE WHEN isgreen = 1 THEN 1 ELSE 0 END), 0) greenChannelCertificatesNumber
+        FROM web_member a
+		LEFT JOIN web_member_session b on a.member_id = b.member_id
+		LEFT JOIN ebs_companyinfo c on b.orgnization_id = c.id
+		LEFT JOIN ebs_personnelcard d on d.companyname = c.chinesename AND b.id = d.session
+		WHERE a.member_type = #{type} AND b.id = #{session} and a.member_status = 0 and c.useable = 1
+	</select>
+	
+</mapper>

@@ -271,5 +271,10 @@ public class EbsCompanyinfo implements Serializable{
      * 往届成稿案例
      */
     private String previouscase;
+
+    /**
+     * 审核时间
+     */
+    private Timestamp audittime;
     
 }

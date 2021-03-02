@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>修改企业信息</title>
+		<meta content="webkit" name="renderer">
+		<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+		<meta content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" name="viewport"/>
+		<link rel="stylesheet" href="/manage/css/xadmin.css">
+		<link href="/manage/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="/manage/layui/css/layui.css"  media="all">
+		<link href="/manage/css/style.css?v=4.1.0" rel="stylesheet">
+		<link href="/css/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+		<style type="text/css">
+			.layui-form-pane .layui-form-label {
+				width: 150px;
+			}
+			.layui-form-pane .layui-input-block {
+				margin-left: 150px;
+			}
+		</style>
+		<style type="text/css">
+	        .layui-table-cell {
+	            height: auto;
+	            line-height: 40px;
+	        }
+	    </style>
+	</head>
+	<body class="gray-bg">
+		<div class="modal inmodal" id="friendlink-model">
+			<div class="modal-content animated bounceInUp" id="vmUpdateEbsCompanyinfo">
+				<div class="ibox-content">
+					<fieldset class="layui-elem-field layui-field-title" style="border-top:0px">
+						<form class="layui-form layui-form-pane" action="">
+							<div class="layui-form-item">
+								<label class="layui-form-label">用户名</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" disabled="disabled" class="layui-input" id="memberUsername" type="text" v-model="ebsCompanyinfo.memberUsername">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="engaddress">统一社会信用代码</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" id="organizationcodeDiv">
+										<input autocomplete="off" disabled="disabled" class="layui-input" id="organizationcode" name="organizationcode" type="text" v-model="ebsCompanyinfo.organizationcode">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="chinesename">单位名称（中文）</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" disabled="disabled" class="layui-input" id="chinesename" name="chinesename" type="text" v-model="ebsCompanyinfo.chinesename">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="chineseaddress">单位地址（中文）</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" disabled="disabled" class="layui-input" id="chineseaddress" name="chineseaddress" lay-verify="required" type="text" v-model="ebsCompanyinfo.chineseaddress">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="phone">联系人手机</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" disabled="disabled" class="layui-input" id="phone" name="phone" lay-verify="required" type="text" v-model="ebsCompanyinfo.phone">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="tel">联系人电话</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" disabled="disabled" class="layui-input" id="tel" name="tel" lay-verify="required" type="text" v-model="ebsCompanyinfo.tel">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="email">电子邮箱</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" disabled="disabled" class="layui-input" id="email" name="email" lay-verify="required" type="text" v-model="ebsCompanyinfo.email">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="contactperson">联系人姓名</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" disabled="disabled" class="layui-input" id="contactperson" name="contactperson" lay-verify="required" type="text" v-model="ebsCompanyinfo.contactperson">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" style="height: 100px;line-height: 70px;">企业简介</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<textarea class="layui-textarea" disabled="disabled" id="companyprofile" name="companyprofile" lay-verify="required" rows="4" v-model="ebsCompanyinfo.companyprofile"></textarea>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="legalpersonname">法人姓名</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" disabled="disabled" class="layui-input" id="legalpersonname" name="legalpersonname" lay-verify="required" type="text" v-model="ebsCompanyinfo.legalpersonname">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="legalpersoncardnumber">法人身份证号</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" disabled="disabled" class="layui-input" id="legalpersoncardnumber" name="legalpersoncardnumber" lay-verify="required" type="text" v-model="ebsCompanyinfo.legalpersoncardnumber">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="legalpersoncardpath">法人身份证扫描件</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" id="legalpersoncardpath">
+										<img :src="ebsCompanyinfo.legalpersoncardpath" onclick="SeeImage(this.src)" style="width:441px;height:358px;margin-left: 2px;">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="buslicensepath">营业执照</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" id="buslicensepath">
+										<img :src="ebsCompanyinfo.buslicensepath" onclick="SeeImage(this.src)" style="width:358px;height:441px;margin-left: 2px;">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="admissionapplicationform">特装搭建施工准入资质单位申请表</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" id="admissionapplicationform">
+										<button type="button" style="margin-left: 2px;height: 40px;" class="layui-btn layui-btn-primary" onclick="vm.downloadAdmissionApplicationForm()">
+											<i class="layui-icon layui-icon-link"></i>下载文件
+										</button>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="workshopcertificate">制作工场车间的产权证明或租赁合同</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" id="workshopcertificate">
+										<button type="button" style="margin-left: 2px;height: 40px;" class="layui-btn layui-btn-primary" onclick="vm.downloadWorkshopCertificate()">
+											<i class="layui-icon layui-icon-link"></i>下载文件
+										</button>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="technicalproofdocuments">技术力量证明材料</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" id="technicalproofdocuments">
+										<button type="button" style="margin-left: 2px;height: 40px;" class="layui-btn layui-btn-primary" onclick="vm.downloadTechnicalProofDocuments()">
+											<i class="layui-icon layui-icon-link"></i>下载文件
+										</button>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="othersupportingdocuments">设计施工能力和资质的其他证明资料</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" id="othersupportingdocuments">
+										<button type="button" style="margin-left: 2px;height: 40px;" class="layui-btn layui-btn-primary" onclick="vm.downloadOtherSupportingDocuments()">
+											<i class="layui-icon layui-icon-link"></i>下载文件
+										</button>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="previouscase">往届成稿案例</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" id="previouscase">
+										<button type="button" style="margin-left: 2px;height: 40px;" class="layui-btn layui-btn-primary" onclick="vm.downloadPreviousCase()">
+											<i class="layui-icon layui-icon-link"></i>下载文件
+										</button>
+									</div>
+								</div>
+							</div>
+							<hr>
+<!--							<div class="layui-form-item">-->
+<!--								<div class="layui-input-block">-->
+<!--									<input type="radio" name="auditStatus" lay-filter="auditStatus" value="2" title="审核通过" checked>-->
+<!--									<input type="radio" name="auditStatus" lay-filter="auditStatus" value="3" title="审核未通过">-->
+<!--								</div>-->
+<!--							</div>-->
+							<div class="layui-form-item">
+		    					<label class="layui-form-label">拒绝原因</label>
+		    					<div class="layui-input-block">
+							    	<textarea placeholder="请输入内容" id="auditRemark" name="auditRemark" class="layui-textarea layui-bg-gray"></textarea>
+							    </div>
+							</div>
+							<div class="layui-form-item">
+								<div class="layui-input-block">
+									<button class="layui-btn" type="button" onclick="vm.agreeCompanyInfo()">通过</button>
+									<button class="layui-btn layui-btn-danger" type="button" onclick="vm.rejectCompanyInfo()">驳回</button>
+									<button class="layui-btn" type="button" onclick="vm.updateCompanyInfo()">打包下载全部附件</button>
+								</div>
+							</div>
+						</form>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+		<div id="mutiPictureTemplate" style="display:none">
+			<div class="item">
+				<img style="width:100px" src="" />
+				<div class="fc-upload-cover">
+					<i class="ivu-icon fa fa-eye"></i>
+					<i class="ivu-icon fa fa-trash"></i>
+				</div>
+			</div>
+		</div>
+		<script type="text/html" id="batchAuditProductBar">
+  			<div class="layui-btn-container">
+    			<button class="layui-btn layui-btn-sm layui-hide againAuditProduct" type="button" onclick="batchAgainAuditProduct()">批量重审</button>
+  			</div>
+		</script>
+		<script charset="utf-8" src="/manage/js/jquery.min.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/layui/layui.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/xadmin.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/vue.js" type="text/javascript"></script>
+		<script src="/manage/js/bootstrap.min.js?v=3.3.6"></script>
+		<script src="/manage/js/manage/common.js"></script>
+		<script src="/manage/js/content.js?v=1.0.0"></script>
+		<script src="/manage/js/manage/product/WebProduct/product.js"></script>
+		<script charset="UTF-8" type="text/javascript">
+			var form;
+			var layer;
+			var editEbsCompanyinfoId = sessionStorage.getItem("editEbsCompanyinfoId");
+			vm = new Vue({
+				el : "#vmUpdateEbsCompanyinfo",
+				data : {
+					ebsCompanyinfo : {}
+				},
+				methods : {
+					//特装搭建施工准入资质单位申请表
+					downloadAdmissionApplicationForm : function() {
+						if (vm.ebsCompanyinfo.admissionapplicationform == null || vm.ebsCompanyinfo.admissionapplicationform == '') {
+							layer.alert("企业未上传特装搭建施工准入资质单位申请表");
+						} else {
+							window.open(vm.ebsCompanyinfo.admissionapplicationform);
+						}
+					},
+					//制作工场车间的产权证明或租赁合同
+					downloadWorkshopCertificate : function() {
+						if (vm.ebsCompanyinfo.workshopcertificate == null || vm.ebsCompanyinfo.workshopcertificate == '') {
+							layer.alert("企业未上传制作工场车间的产权证明或租赁合同");
+						} else {
+							window.open(vm.ebsCompanyinfo.workshopcertificate);
+						}
+					},
+					//技术力量证明材料
+					downloadTechnicalProofDocuments : function() {
+						if (vm.ebsCompanyinfo.technicalproofdocuments == null || vm.ebsCompanyinfo.technicalproofdocuments == '') {
+							layer.alert("企业未上传技术力量证明材料");
+						} else {
+							window.open(vm.ebsCompanyinfo.technicalproofdocuments);
+						}
+					},
+					//设计施工能力和资质的其他证明资料
+					downloadOtherSupportingDocuments : function() {
+						if (vm.ebsCompanyinfo.othersupportingdocuments == null || vm.ebsCompanyinfo.othersupportingdocuments == '') {
+							layer.alert("企业未上传设计施工能力和资质的其他证明资料");
+						} else {
+							window.open(vm.ebsCompanyinfo.othersupportingdocuments);
+						}
+					},
+					//往届成稿案例
+					downloadPreviousCase : function() {
+						if (vm.ebsCompanyinfo.previouscase == null || vm.ebsCompanyinfo.previouscase == '') {
+							layer.alert("企业未上传往届成稿案例");
+						} else {
+							window.open(vm.ebsCompanyinfo.previouscase);
+						}
+					},
+					//修改企业信息
+					updateCompanyInfo : function() {
+						vm.ebsCompanyinfo.id = editEbsCompanyinfoId;
+						var auditStatus = $("input[type=radio][name=auditStatus]:checked").val();
+						var auditRemark = $("#auditRemark").val();
+						if(auditStatus==3 && auditRemark == ''){
+							layer.alert("请先填写拒绝原因");
+							return;
+						}
+						vm.ebsCompanyinfo.auditStatus = auditStatus;
+						vm.ebsCompanyinfo.auditRemark = auditRemark;
+
+						$.ajax({
+							type : 'post',
+							url : '/manage/Decorators/ebsDecoratorManage/updateCompanyInfo',
+							data : vm.ebsCompanyinfo,
+							success : function(r) {
+								if (r.code === 1) {
+									layer.msg("修改成功", {icon: 6, time: 500}, function () {
+		                                //关闭当前frame
+		                                xadmin.close();
+		                                // 可以对父窗口进行刷新
+		                                xadmin.father_reload();
+		                            });
+		                        } else {
+		                        	if(r.status==5){
+		                        		layer.alert(r.msg);
+		                        		parent.window.location.href='/manage/login.html';
+		                        	}else{
+			                            layer.alert(r.msg);
+		                        	}
+		                        }
+							}
+						});
+					},
+					//审核通过
+					agreeCompanyInfo : function() {
+						vm.ebsCompanyinfo.id = editEbsCompanyinfoId;
+						vm.ebsCompanyinfo.auditStatus = 2;
+						vm.ebsCompanyinfo.auditRemark = '';
+						vm.ebsCompanyinfo.auditType = 'auditAgree';
+
+						$.ajax({
+							type : 'post',
+							url : '/manage/Decorators/ebsDecoratorManage/agreeCompanyInfo',
+							data : vm.ebsCompanyinfo,
+							success : function(r) {
+								if (r.code === 1) {
+									layer.msg("保存成功", {icon: 6, time: 500}, function () {
+										//关闭当前frame
+										xadmin.close();
+										// 可以对父窗口进行刷新
+										xadmin.father_reload();
+									});
+								} else {
+									if(r.status==5){
+										layer.alert(r.msg);
+										parent.window.location.href='/manage/login.html';
+									}else{
+										layer.alert(r.msg);
+									}
+								}
+							}
+						});
+					},
+					//审核驳回
+					rejectCompanyInfo : function() {
+						vm.ebsCompanyinfo.id = editEbsCompanyinfoId;
+						var auditRemark = $("#auditRemark").val();
+						if(auditRemark == ''){
+							layer.alert("请先填写拒绝原因");
+							return;
+						}
+						vm.ebsCompanyinfo.auditStatus = 3;
+						vm.ebsCompanyinfo.auditRemark = auditRemark;
+						vm.ebsCompanyinfo.auditType = "auditReject";
+
+						$.ajax({
+							type : 'post',
+							url : '/manage/Decorators/ebsDecoratorManage/rejectCompanyInfo',
+							data : vm.ebsCompanyinfo,
+							success : function(r) {
+								if (r.code === 1) {
+									layer.msg("保存成功", {icon: 6, time: 500}, function () {
+										//关闭当前frame
+										xadmin.close();
+										// 可以对父窗口进行刷新
+										xadmin.father_reload();
+									});
+								} else {
+									if(r.status==5){
+										layer.alert(r.msg);
+										parent.window.location.href='/manage/login.html';
+									}else{
+										layer.alert(r.msg);
+									}
+								}
+							}
+						});
+					}
+				},
+				created : function() {
+					var _this = this;
+					layui.use(['form', 'layer', 'laydate'], function() {
+						addLisenter();
+						layer = layui.layer;
+						form = layui.form;
+						
+						//加载企业信息
+						$.ajax({
+							url : "/manage/Decorators/ebsDecoratorManage/selectCompanyInfo",
+							data : {
+								"id" : editEbsCompanyinfoId
+							},
+							dataType : "json",
+							type : "get",
+							success : function(result) {
+								if (result.code === 1) {
+									_this.ebsCompanyinfo = result.data;
+									if (result.data.legalpersoncardpath == null || result.data.legalpersoncardpath == '') {
+										$("#legalpersoncardpath").html("<input disabled=\"disabled\" class=\"layui-input\" type=\"text\" value=\"企业未上传法人身份证扫描件\">");
+									}
+									if (result.data.buslicensepath == null || result.data.buslicensepath == '') {
+										$("#buslicensepath").html("<input disabled=\"disabled\" class=\"layui-input\" type=\"text\" value=\"企业未上传营业执照\">");
+									}
+								} else {
+									layui.layer.alert("获取企业信息失败！");
+								}
+							}
+						});
+						
+						$("#auditRemark").val("");
+						//监控审核状态单选框
+						form.on('radio(auditStatus)', function(data){
+							$("#auditRemark").val("");
+							if(data.value==2){
+								$("#auditRemark").addClass("layui-bg-gray");
+								$("#auditRemark").attr("disabled",true);
+							}else{
+								$("#auditRemark").removeClass("layui-bg-gray");
+								$("#auditRemark").removeAttr("disabled");
+							}
+						});
+					});
+				}
+			});
+		</script>
+		<script src="/manage/js/manage/crop.js"></script>
+	</body>
+</html>
