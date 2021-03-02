@@ -22,6 +22,7 @@
 			c.busscope,
 			c.hopecustomers,
 			c.companyprofile,
+			ifnull(c.companyprofile,'') companyprofile,
 			c.purchaseintention,
 			c.exhibitors_nature_id,
 			c.buslicensepath,
@@ -48,17 +49,21 @@
 			when 3 then '审核拒绝'
 			end as auditStatusName,
 			ifnull(c.audittime,'') audittime,
-			c.audit_remark auditRemark
+			c.audit_remark auditRemark,
+			c.auditername
         FROM web_member a
-		LEFT JOIN web_member_session b on a.member_id = b.member_id
-		LEFT JOIN ebs_companyinfo c on b.orgnization_id = c.id		
+		LEFT JOIN web_member_session b on a.member_id = b.member_id and b.id = #{session}
+		RIGHT JOIN ebs_companyinfo c on b.orgnization_id = c.id
 		LEFT JOIN sys_company_type d on c.exhibitors_nature_id = d.id and d.use_flag = 'Y'
-		WHERE a.member_type = 3
-		<if test="session != null and session != ''">
-			and b.id = #{session} and c.session = #{session}
+		WHERE a.member_type = 3 and a.member_status = 0
+		<if test="auditStatus != null and auditStatus == 1">
+			and c.audit_status = 1
 		</if>
-		<if test="auditStatus != null and auditStatus = 1">
-			and c.audit_status = #{auditStatus}
+		<if test="auditStatus != null and auditStatus == 2">
+			and c.audit_status = 2
+		</if>
+		<if test="auditStatus != null and auditStatus == 3">
+			and c.audit_status = 3
 		</if>
 	</select>
 
@@ -120,48 +125,8 @@
 		SELECT count(*) FROM web_member a
 		INNER JOIN web_member_session b on a.member_id = b.member_id and b.id = #{session}
 		INNER JOIN ebs_companyinfo c on b.orgnization_id = c.id
-		<if test="personnelCardAuditstatus != null and personnelCardAuditstatus != ''">
-			LEFT JOIN (
-				select companyname, ifnull(sum(if(ebs_personnelcard.status = 0,1,0)),0) pendingAuditNumber
-				from ebs_personnelcard where session = #{session} group by companyname
-			) ebs_personnelcard on ebs_personnelcard.companyname = c.chinesename
-		</if>
 		LEFT JOIN sys_company_type d on c.exhibitors_nature_id = d.id and d.use_flag = 'Y'
-		LEFT JOIN ebs_tradinggroup on c.tradinggroupid = ebs_tradinggroup.id
-		LEFT JOIN (
-			SELECT
-				ebs_booth_apply.apply_id,
-				ebs_booth_apply.company_id,
-				ebs_booth_apply_list.tradinggroup_id tradinggroupid
-			FROM
-				ebs_booth_apply
-			LEFT JOIN
-				ebs_booth_apply_list on ebs_booth_apply.apply_id = ebs_booth_apply_list.apply_id
-				and !ISNULL(ebs_booth_apply_list.tradinggroup_id) and ebs_booth_apply_list.tradinggroup_id != 0
-				AND ebs_booth_apply.session_id = #{session}
-			GROUP BY
-				ebs_booth_apply.company_id,ebs_booth_apply_list.tradinggroup_id
-		) e on e.company_id=c.id
-		LEFT JOIN (
-			select DISTINCT company_id from ebs_booth where useable = 1 and session = #{session}
-		) f on c.id = f.company_id
-		LEFT JOIN system_user_rights on e.tradinggroupid = system_user_rights.tradinggroupid and system_user_rights.session = b.id and system_user_rights.userid = #{userId}
-		WHERE (ISNULL(e.tradinggroupid) or !ISNULL(system_user_rights.tradinggroupid)) and a.member_type = #{leixing}
-		<if test="leixing != 2 and tradingGroupId != null and tradingGroupId != ''">
-			and c.tradinggroupid = #{tradingGroupId}
-		</if>
-        <if test="booth == 1">
-            and isnull(e.apply_id)
-        </if>
-        <if test="booth == 2">
-            and !isnull(e.apply_id) and isnull(f.company_id)
-        </if>
-        <if test="booth == 3">
-            and !isnull(e.apply_id) and !isnull(f.company_id)
-        </if>
-        <if test="jytid != null and jytid != ''">
-        	and e.tradinggroupid = #{jytid}
-        </if>
+		WHERE a.member_type = #{leixing}
         <if test="leixing != null and leixing != 2">
             and a.member_status = 0
         </if>
@@ -177,20 +142,17 @@
         <if test="endTime != null and endTime != ''">
             and c.addtime &lt;= #{endTime}
         </if>
-        <if test="useable != '' and useable != -1">
-            and c.useable = #{useable}
-        </if>
-        <if test="auditStatus == 1">
-            and c.audit_status = 1
-        </if>
-        <if test="auditStatus == 0">
-            and c.audit_status != 1
-        </if>
-		<if test="status != null and status != ''">
-			and c.status = #{status}
+		<if test="useable != null and useable != '' and useable != -1">
+			and c.useable = #{useable}
 		</if>
-		<if test="personnelCardAuditstatus != null and personnelCardAuditstatus != ''">
-			and ebs_personnelcard.pendingAuditNumber > 0
+		<if test="auditStatus == 1">
+			and c.audit_status = 1
+		</if>
+		<if test="auditStatus == 2">
+			and c.audit_status = 2
+		</if>
+		<if test="auditStatus == 3">
+			and c.audit_status = 3
 		</if>
 		<if test="phone != null and phone != ''">
 			and c.phone = #{phone}
@@ -236,8 +198,9 @@
 			<if test="auditStatus != null">audit_status = #{auditStatus},</if>
 			<if test="auditRemark != null">audit_remark = #{auditRemark},</if>
 			<if test="tradinggroupid != null">tradinggroupid = #{tradinggroupid},</if>
-			<if test="auditType != null and auditType == 'reAudit'">audittime = null,</if>
+			<if test="auditType != null and auditType == 'reAudit'">audittime = null,auditername = null,</if>
 			<if test="audittime != null">`audittime` = #{audittime},</if>
+			<if test="auditername != null and auditername != ''">`auditername` = #{auditername},</if>
         </set>
         where id = #{id}
 	</update>

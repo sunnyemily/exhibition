@@ -134,6 +134,7 @@ public class DecoratorEbsDecoratorManageController {
     		if (map.get("auditType")!=null
 					&& ("auditAgree".equals(map.get("auditType")) || "auditReject".equals(map.get("auditType")))) {
 				map.put("audittime", new java.sql.Timestamp(System.currentTimeMillis()));
+				map.put("auditername", user.getUsername());
 			}
 			//修改企业信息
 			decoratorEbsDecoratorManageService.updateCompanyInfo(map);
@@ -309,7 +310,8 @@ public class DecoratorEbsDecoratorManageController {
 			for (int j = 0; j < list.size(); j++) {
 				HSSFRow row = sheet.createRow(1 + j);
 				row.setHeightInPoints(18);
-				row.createCell(0).setCellValue("companyId");
+				row.createCell(0).setCellValue(
+						String.valueOf(list.get(j).get("companyId")));
 				row.createCell(1).setCellValue(
 						String.valueOf(list.get(j).get("chinesename")));
 				row.createCell(2).setCellValue(
@@ -335,7 +337,7 @@ public class DecoratorEbsDecoratorManageController {
 				row.createCell(12).setCellValue(
 						String.valueOf(list.get(j).get("auditRemark")));
 				row.createCell(13).setCellValue(
-						String.valueOf(list.get(j).get("companyId")));
+						String.valueOf(list.get(j).get("auditername")));
 				
 			}
 			String fileName = "搭建商.xls";

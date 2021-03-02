@@ -32,6 +32,17 @@
                 </div>
                 <div class="ibox-content">
                     <div class="fixed-table-toolbar" style="height:50px;">
+                        <div class="bars pull-left">
+                            <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
+                                <button class="btn btn-default btn-outline" type="button" name="refresh" onclick="location.reload()" title="刷新" id="refresh">
+                                    <i class="glyphicon glyphicon-repeat"></i>
+                                </button>
+                                <button class="btn btn-default btn-outline" type="button" name="exportExcel" onclick="downLoadExcel()" title="导出EXCEL" id="downexcel">
+                                    <i class="glyphicon glyphicon-arrow-down"></i>
+                                </button>
+                                <a href="" target="_blank" style="display:none;padding-left:5px" id="xiazai">下载导出文件</a>
+                            </div>
+                        </div>
                         <div class="columns columns-right btn-group pull-right">
                             <button class="btn btn-default btn-outline" type="button" name="search" title="搜索"
                                     onclick="reloadTableDataCurrent()" id="search">
@@ -39,15 +50,13 @@
                             </button>
                         </div>
                         <div class="pull-right search">
-                            <input class="form-control input-outline" type="text" placeholder="请输入用户名"
-                                   id="memberUsername">
+                            <input class="form-control input-outline" type="text" placeholder="请输入用户名" id="memberUsername">
                         </div>
                         <div class="pull-right search" style="padding-right:3px">
                             <input class="form-control input-outline" type="text" placeholder="请输入手机号" id="phone">
                         </div>
                         <div class="pull-right search" style="padding-right:3px">
-                            <input class="form-control input-outline" type="text" placeholder="请输入企业名称"
-                                   id="companyName">
+                            <input class="form-control input-outline" type="text" placeholder="请输入企业名称" id="companyName">
                         </div>
                         <div class="pull-right search" style="padding-right:3px">
                             <table>
@@ -67,78 +76,11 @@
                         <div class="pull-right search" style="padding-right:10px">
                         </div>
                     </div>
-					<div class="fixed-table-toolbar" style="height:50px;">
-						<div class="pull-right search" style="padding-right:3px">
-							<table>
-								<tr>
-									<td>批量导出：</td>
-									<td>
-										<select class="form-control input-outline" id="exportStatus">
-											<option value="" selected>导出全部账号</option>
-											<option value="1">导出全部待认证账号</option>
-											<option value="2">导出全部不通过账号</option>
-											<option value="3">导出全部不通过账号</option>
-										</select>
-									</td>
-									<td>
-										<button class="btn btn-default btn-outline" type="button" name="exportExcel"
-												onclick="downLoadExcel()" title="导出" id="downexcel">
-											<i class="glyphicon glyphicon-arrow-down"></i>
-										</button>
-										<a href="" target="_blank" style="display:none;padding-left:5px" id="xiazai">下载导出文件</a>
-									</td>
-								</tr>
-							</table>
-						</div>
-					</div>
                     <table id="test" lay-filter="test"></table>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<!--		<div style="display: none;" id="auditDiv">-->
-<!--			<fieldset class="layui-elem-field noborder">-->
-<!--				<form class="layui-form layui-form-pane" action="">-->
-<!--					<input type="hidden" id="companyId">-->
-<!--					<div class="layui-form-item">-->
-<!--    					<label class="layui-form-label" style="width:110px;height:50px;margin-top: 10px;">产品</label>-->
-<!--    					<div class="layui-input-block">-->
-<!--					    	<table id="productTable" lay-filter="productTable"></table>-->
-<!--					    </div>-->
-<!--					</div>-->
-<!--					<div class="layui-form-item">-->
-<!--						<div class="layui-input-block">-->
-<!--							<input type="radio" name="auditStatus" lay-filter="auditStatus" value="2" title="审核通过" checked>-->
-<!--							<input type="radio" name="auditStatus" lay-filter="auditStatus" value="3" title="审核未通过">-->
-<!--						</div>-->
-<!--					</div>-->
-<!--					<div class="layui-form-item">-->
-<!--    					<label class="layui-form-label" style="width:110px;">拒绝原因</label>-->
-<!--    					<div class="layui-input-block">-->
-<!--					    	<textarea placeholder="请输入内容" id="auditRemark" name="auditRemark" class="layui-textarea layui-bg-gray" disabled></textarea>-->
-<!--					    </div>-->
-<!--					</div>-->
-<!--					<div class="layui-form-item">-->
-<!--					    <div class="layui-input-block">-->
-<!--					      <button type="button" class="layui-btn" lay-submit="" lay-filter="auditSave">确定</button>-->
-<!--					    </div>-->
-<!--					</div>-->
-<!--				</form>-->
-<!--			</fieldset>-->
-<!--		</div>-->
-<div id="auditRejectDiv" hidden="hidden" style="padding: 20px;">
-    <fieldset class="layui-elem-field layui-field-title">
-        <form class="layui-form layui-form-pane" action="">
-            <div class="layui-form-item">
-                <label class="layui-form-label" style="width:110px;">拒绝原因</label>
-                <div class="layui-input-block">
-                    <textarea placeholder="请输入内容" id="auditRemark" name="auditRemark"
-                              class="layui-textarea layui-bg-gray"></textarea>
-                </div>
-            </div>
-        </form>
-    </fieldset>
 </div>
 <script src="/manage/js/bootstrap.min.js?v=3.3.6"></script>
 <script src="/manage/js/content.js?v=1.0.0"></script>
@@ -146,20 +88,16 @@
 </body>
 <script type="text/javascript">
     var table;
-    layui.use(['layer', 'table', 'form'], function () {
+    layui.use(['layer', 'table'], function () {
         var layer = layui.layer;
-        var form = layui.form;
         table = layui.table;
         var $ = layui.jquery;
         var editEbsCompanyinfoId = '';
-        // loadTradingGroupNoDefaultValue(form, "tradingGroup", 2);
         table.render({
             elem: '#test',
             url: '/manage/Decorators/ebsDecoratorManage/list',
             where: {
                 leixing: 3,
-                // useable : $("#useable").val(),
-                // tradingGroupId : $("#tradingGroup").val(),
                 companyName: $("#companyName").val(),
                 phone: $("#phone").val(),
                 memberUsername: $("#memberUsername").val()
@@ -271,8 +209,6 @@
                 xadmin.open('查看搭建商信息', 'EbsDecoratorView.html');
             }
             if (obj.event === 'reject') {
-                // sessionStorage.setItem("editEbsCompanyinfoId", data.companyId);
-                // xadmin.open('查看搭建商信息', 'EbsDecoratorView.html');
                 rejectAudit(data.companyId);
             }
         });
@@ -448,7 +384,7 @@
         $.ajax({
             url: "/manage/Decorators/ebsDecoratorManage/DownLoadFile",
             data: {
-                auditStatus: $("#exportStatus").val()
+                auditStatus: $("#auditStatus").val()
             },
             dataType: "json",
             type: "get",
