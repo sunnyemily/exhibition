@@ -620,12 +620,12 @@ function getCheckBoxVal(name) {
 
 function getStatusName(card) {
     if (card.status == 1) {
-        return yishenhe;
-    }
-    if (card.status == 0) {
         return weishenhe;
     }
-    if (card.status == -1) {
+    if (card.status == 2) {
+        return yishenhe;
+    }
+    if (card.status == 3) {
         return weitongguo;
     }
 }

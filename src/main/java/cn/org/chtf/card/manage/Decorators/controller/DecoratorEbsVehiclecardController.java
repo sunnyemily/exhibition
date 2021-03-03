@@ -318,6 +318,7 @@ public class DecoratorEbsVehiclecardController {
     			per.setReviewremark("");
     		}
     		per.setStatus(Integer.valueOf(String.valueOf(map.get("status"))));
+    		per.setAudittime(new java.sql.Timestamp(System.currentTimeMillis()));
     		
     		LogDocumentaudit log = new LogDocumentaudit();
     		log.setAct(Integer.valueOf(String.valueOf(map.get("act"))));

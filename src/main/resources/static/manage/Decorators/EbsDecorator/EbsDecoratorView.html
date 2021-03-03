@@ -187,12 +187,6 @@
 								</div>
 							</div>
 							<hr>
-<!--							<div class="layui-form-item">-->
-<!--								<div class="layui-input-block">-->
-<!--									<input type="radio" name="auditStatus" lay-filter="auditStatus" value="2" title="审核通过" checked>-->
-<!--									<input type="radio" name="auditStatus" lay-filter="auditStatus" value="3" title="审核未通过">-->
-<!--								</div>-->
-<!--							</div>-->
 							<div class="layui-form-item">
 		    					<label class="layui-form-label">拒绝原因</label>
 		    					<div class="layui-input-block">
@@ -201,8 +195,8 @@
 							</div>
 							<div class="layui-form-item">
 								<div class="layui-input-block">
-									<button class="layui-btn" type="button" onclick="vm.agreeCompanyInfo()">通过</button>
-									<button class="layui-btn layui-btn-danger" type="button" onclick="vm.rejectCompanyInfo()">驳回</button>
+									<button class="layui-btn" type="button" id="agreeBtn" onclick="vm.agreeCompanyInfo()">通过</button>
+									<button class="layui-btn layui-btn-danger" id="rejectBtn" type="button" onclick="vm.rejectCompanyInfo()">驳回</button>
 									<button class="layui-btn" type="button" onclick="vm.updateCompanyInfo()">打包下载全部附件</button>
 								</div>
 							</div>
@@ -402,6 +396,10 @@
 							success : function(result) {
 								if (result.code === 1) {
 									_this.ebsCompanyinfo = result.data;
+									if (result.data.auditStatus != 1) {
+										$("#agreeBtn").hide();
+										$("#rejectBtn").hide();
+									}
 									if (result.data.legalpersoncardpath == null || result.data.legalpersoncardpath == '') {
 										$("#legalpersoncardpath").html("<input disabled=\"disabled\" class=\"layui-input\" type=\"text\" value=\"企业未上传法人身份证扫描件\">");
 									}

@@ -2,7 +2,7 @@
 <html class="x-admin-sm" lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>搭建商管理</title>
+    <title>搭建商报馆管理</title>
     <meta content="webkit" name="renderer">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" name="viewport"/>
@@ -20,11 +20,11 @@
 </head>
 <body>
 <div class="wrapper wrapper-content  animated fadeInRight">
-    <div class="row" id="vmEbsCompanyinfo">
+    <div class="row" id="vmEbsStadium">
         <div class="col-sm-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>搭建商信息</h5>
+                    <h5>搭建商报馆信息</h5>
                     <div class="ibox-tools">
                         <a class="collapse-link"> <i class="fa fa-chevron-up"></i> </a><a class="close-link"> <i
                             class="fa fa-times"></i> </a>
@@ -37,10 +37,6 @@
                                 <button class="btn btn-default btn-outline" type="button" name="refresh" onclick="location.reload()" title="刷新" id="refresh">
                                     <i class="glyphicon glyphicon-repeat"></i>
                                 </button>
-                                <button class="btn btn-default btn-outline" type="button" name="exportExcel" onclick="downLoadExcel()" title="导出EXCEL" id="downexcel">
-                                    <i class="glyphicon glyphicon-arrow-down"></i>
-                                </button>
-                                <a href="" target="_blank" style="display:none;padding-left:5px" id="xiazai">下载导出文件</a>
                             </div>
                         </div>
                         <div class="columns columns-right btn-group pull-right">
@@ -50,25 +46,36 @@
                             </button>
                         </div>
                         <div class="pull-right search">
-                            <input class="form-control input-outline" type="text" placeholder="请输入用户名" id="memberUsername">
+                            <input class="form-control input-outline" type="text" placeholder="请输入展商名称" id="relationcompanyname">
                         </div>
                         <div class="pull-right search" style="padding-right:3px">
-                            <input class="form-control input-outline" type="text" placeholder="请输入手机号" id="phone">
-                        </div>
-                        <div class="pull-right search" style="padding-right:3px">
-                            <input class="form-control input-outline" type="text" placeholder="请输入企业名称" id="companyName">
+                            <input class="form-control input-outline" type="text" placeholder="请输入搭建商名称" id="companyname">
                         </div>
                         <div class="pull-right search" style="padding-right:3px">
                             <table>
                                 <tr>
                                     <td>审核状态：</td>
                                     <td>
-                                        <select class="form-control input-outline" id="auditStatus"
+                                        <select class="form-control input-outline" id="status"
                                                 onchange="reloadTableDataCurrent()">
-                                            <option value="" selected>全部</option>
-                                            <option value="1">未审核</option>
+                                            <option value="99" selected>全部</option>
+                                            <option value="1">待审核</option>
                                             <option value="2">审核通过</option>
-                                            <option value="3">审核失败</option>
+                                            <option value="3">审核不通过</option>
+                                        </select></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="pull-right search" style="padding-right:3px">
+                            <table>
+                                <tr>
+                                    <td>缴费状态：</td>
+                                    <td>
+                                        <select class="form-control input-outline" id="paystatus"
+                                                onchange="reloadTableDataCurrent()">
+                                            <option value="99" selected>全部</option>
+                                            <option value="0">待缴费</option>
+                                            <option value="1">已缴费</option>
                                         </select></td>
                                 </tr>
                             </table>
@@ -88,7 +95,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" style="width:110px;">拒绝原因</label>
                 <div class="layui-input-block">
-                    <textarea placeholder="请输入内容" id="auditRemark" name="auditRemark"
+                    <textarea placeholder="请输入内容" id="reviewremark" name="reviewremark"
                               class="layui-textarea layui-bg-gray"></textarea>
                 </div>
             </div>
@@ -108,12 +115,12 @@
         var editEbsCompanyinfoId = '';
         table.render({
             elem: '#test',
-            url: '/manage/Decorators/ebsDecoratorManage/list',
+            url: '/manage/Decorators/ebsStadiumManage/list',
             where: {
-                leixing: 3,
-                companyName: $("#companyName").val(),
-                phone: $("#phone").val(),
-                memberUsername: $("#memberUsername").val()
+                relationcompanyname: $("#relationcompanyname").val(),
+                companyname: $("#companyname").val(),
+                status: $("#status").val(),
+                paystatus: $("#paystatus").val()
             },
             response: {
                 statusCode: 1
@@ -125,24 +132,20 @@
                     type: 'checkbox'
                 }, {
                     align: 'center',
-                    field: 'companyId',
-                    title: 'ID'
+                    field: 'stadiumId',
+                    title: '报馆单编号'
                 }, {
                     align: 'center',
-                    field: 'chinesename',
-                    title: '企业名称'
+                    field: 'relationcompanyname',
+                    title: '展商'
                 }, {
                     align: 'center',
-                    field: 'contactperson',
-                    title: '联系人姓名'
-                }, {
-                    align: 'center',
-                    field: 'phone',
-                    title: '联系人手机'
+                    field: 'companyname',
+                    title: '搭建商'
                 }, {
                     align: 'center',
                     field: 'addtime',
-                    title: '注册日期',
+                    title: '注册时间',
                     templet: function (d) {
                         if (d.addtime == null || d.addtime == '') {
                             return '';
@@ -151,16 +154,30 @@
                     }
                 }, {
                     align: 'center',
-                    field: 'auditStatus',
+                    field: 'status',
                     title: '审核状态',
                     templet: function (d) {
-                        switch (d.auditStatus) {
+                        switch (d.status) {
                             case 1:
                                 return '待审核';
                             case 2:
-                                return '审核成功';
+                                return '审核通过';
                             case 3:
-                                return '审核拒绝';
+                                return '审核不通过';
+                            default :
+                                return '';
+                        }
+                    }
+                }, {
+                    align: 'center',
+                    field: 'paystatus',
+                    title: '缴费状态',
+                    templet: function (d) {
+                        switch (d.paystatus) {
+                            case 0:
+                                return '待缴费';
+                            case 1:
+                                return '已缴费';
                             default :
                                 return '';
                         }
@@ -168,7 +185,7 @@
                 }, {
                     align: 'center',
                     field: 'audittime',
-                    title: '审核日期',
+                    title: '审核时间',
                     templet: function (d) {
                         if (d.audittime == null || d.audittime == '') {
                             return '';
@@ -181,11 +198,11 @@
                     title: '操作',
                     templet: function (d) {
                         var btn = "<a class=\"layui-btn layui-btn-primary layui-btn-xs\" lay-event=\"view\">查看详情</a>";
-                        if (d.auditStatus != 1) {
-                            btn += "<a class=\"layui-btn layui-btn layui-btn-xs\" onclick=\"againAudit('" + d.companyId + "')\">重审</a>";
+                        if (d.status != 1) {
+                            btn += "<a class=\"layui-btn layui-btn layui-btn-xs\" onclick=\"againAudit('" + d.stadiumId + "')\">重审</a>";
                         }
-                        if (d.auditStatus == 1) {
-                            btn += "<a class=\"layui-btn layui-btn-xs\" onclick=\"agreeCompanyInfo('" + d.companyId + "')\">通过</a>";
+                        if (d.status == 1) {
+                            btn += "<a class=\"layui-btn layui-btn-xs\" onclick=\"agreeStadiumInfo('" + d.stadiumId + "')\">通过</a>";
                             btn += "<a class=\"layui-btn layui-btn-xs layui-btn-danger\" lay-event=\"reject\">驳回</a>";
                         }
                         return btn;
@@ -218,17 +235,17 @@
         table.on('tool(test)', function (obj) {
             var data = obj.data;
             if (obj.event === 'view') {
-                sessionStorage.setItem("editEbsCompanyinfoId", data.companyId);
-                xadmin.open('查看搭建商信息', 'EbsDecoratorView.html');
+                sessionStorage.setItem("editEbsStadiumId", data.stadiumId);
+                xadmin.open('查看搭建商报馆信息', 'EbsStadiumView.html');
             }
             if (obj.event === 'reject') {
-                rejectAudit(data.companyId);
+                rejectAudit(data.stadiumId);
             }
         });
         //展示审核拒绝窗口
-        window.rejectAudit = function showRejectAuditModal(companyId) {
-            sessionStorage.setItem("editEbsCompanyinfoId", companyId);
-            $("#companyId").val(companyId);
+        window.rejectAudit = function showRejectAuditModal(stadiumId) {
+            sessionStorage.setItem("editEbsStadiumId", stadiumId);
+            $("#stadiumId").val(stadiumId);
             layer.open({
                 type: 1
                 , area: ['50%', '200px']
@@ -236,17 +253,17 @@
                 , title: '审核驳回'
                 , btn: ['确认']
                 , btn1: function (index) {
-                    if ($("#auditRemark").val() == null || $("#auditRemark").val() == "") {
+                    if ($("#reviewremark").val() == null || $("#reviewremark").val() == "") {
                         layer.alert("请先填写驳回原因");
                         return;
                     }
                     $.ajax({
                         type: 'post'
-                        , url: '/manage/Decorators/ebsDecoratorManage/rejectCompanyInfo'
+                        , url: '/manage/Decorators/ebsStadiumManage/rejectStadiumInfo'
                         , data: {
-                            id: companyId
-                            , auditStatus: 3
-                            , auditRemark: $("#auditRemark").val()
+                            id: stadiumId
+                            , status: 3
+                            , reviewremark: $("#reviewremark").val()
                             , auditType: "auditReject"
                         }
                         , success: function (r) {
@@ -264,15 +281,15 @@
             });
         }
         //重审
-        window.againAudit = function (companyId) {
+        window.againAudit = function (stadiumId) {
             layer.confirm('确认重新审核?', function (index) {
                 var params = {};
-                params.id = companyId;
-                params.auditStatus = 1;
-                params.auditRemark = '';
+                params.id = stadiumId;
+                params.status = 1;
+                params.reviewremark = '';
                 params.auditType = "reAudit";
                 $.ajax({
-                    url: "/manage/Decorators/ebsDecoratorManage/updateCompanyInfo",
+                    url: "/manage/Decorators/ebsStadiumManage/updateStadiumInfo",
                     data: params,
                     type: "post",
                     beforeSend: function () {
@@ -298,15 +315,15 @@
             });
         }
         //审核通过
-        window.agreeCompanyInfo = function (companyId) {
+        window.agreeStadiumInfo = function (stadiumId) {
             layer.confirm('确认审核通过?', function (index) {
                 var params = {};
-                params.id = companyId;
-                params.auditStatus = 2;
-                params.auditRemark = '';
+                params.id = stadiumId;
+                params.status = 2;
+                params.reviewremark = '';
                 params.auditType = 'auditAgree';
                 $.ajax({
-                    url: "/manage/Decorators/ebsDecoratorManage/agreeCompanyInfo",
+                    url: "/manage/Decorators/ebsStadiumManage/agreeStadiumInfo",
                     data: params,
                     type: "post",
                     beforeSend: function () {
@@ -331,92 +348,7 @@
                 });
             });
         }
-        //审核不通过
-        window.rejectCompanyInfo = function (companyId) {
-
-            var params = {};
-            params.id = companyId;
-            params.auditStatus = 3;
-            params.auditRemark = $("#auditRemark").val();
-            params.auditType = 'auditReject';
-            $.ajax({
-                url: "/manage/Decorators/ebsDecoratorManage/rejectCompanyInfo",
-                data: params,
-                type: "post",
-                beforeSend: function () {
-                    layer.load(1, {shade: [0.5, '#000']});
-                },
-                complete: function () {
-                    layer.closeAll("loading");
-                },
-                success: function (r) {
-                    if (r.code === 1) {
-                        layer.msg("操作成功", {icon: 6, time: 500}, function () {
-                            reloadTableDataCurrent();
-                        });
-                    } else {
-                        if (r.status == 5) {
-                            layer.alert(r.msg);
-                            parent.window.location.href = '/manage/login.html';
-                        }
-                        layer.alert(r.msg);
-                    }
-                }
-            });
-        }
-        //重置密码
-        window.resetPassword = function (memberid, loginname) {
-            var params = {};
-            params.memberid = memberid;
-            params.loginname = loginname;
-            $.ajax({
-                url: "/manage/Decorators/ebsGuestbexhibition/ResetPassword",
-                data: JSON.stringify(params),
-                dataType: "json",
-                type: "post",
-                beforeSend: function () {
-                    layer.load(1, {shade: [0.5, '#000']});
-                },
-                complete: function () {
-                    layer.closeAll("loading");
-                },
-                contentType: "application/json",
-                success: function (result) {
-                    if (result.code === 200) {
-                        layer.alert("密码已重置为：123456");
-                    } else {
-                        layer.alert(result.msg);
-                    }
-                }
-            });
-        }
     });
-
-    //导出excel
-    function downLoadExcel() {
-        $.ajax({
-            url: "/manage/Decorators/ebsDecoratorManage/DownLoadFile",
-            data: {
-                auditStatus: $("#auditStatus").val()
-            },
-            dataType: "json",
-            type: "get",
-            success: function (result) {
-                if (result.code === 1) {
-                    layer.msg('导出成功', {
-                        icon: 1,
-                        time: 1000
-                    });
-                    $("#xiazai").attr("href", result.src);
-                    $("#xiazai").show();
-                } else {
-                    layer.alert(result.msg, {
-                        icon: 5
-                    });
-                }
-            }
-        });
-    }
 
     //重新加载数据
     function reloadTableDataCurrent() {
@@ -425,59 +357,10 @@
                 curr: 1
             },
             where: {
-                leixing: 3,
-                // useable : $("#useable").val(),
-                // tradingGroupId : $("#tradingGroup").val(),
-                auditStatus: $("#auditStatus").val(),
-                companyName: $("#companyName").val(),
-                phone: $("#phone").val(),
-                memberUsername: $("#memberUsername").val()
-            }
-        });
-    }
-
-    //删除企业信息
-    function deleteCompanyInfo(companyId, sessionId, memberId, companyName) {
-        layer.confirm('确认删除企业：' + companyName + '?', {
-            icon: 2,
-            title: '删除企业'
-        }, function (index) {
-            $.ajax({
-                type: 'post',
-                url: '/manage/Decorators/ebsDecoratorManage/deleteCompanyInfo',
-                data: {
-                    id: companyId,
-                    sessionId: sessionId,
-                    memberId: memberId
-                },
-                success: function (r) {
-                    if (r.code == 1) {
-                        layer.alert("删除成功");
-                        reloadTableDataCurrent();
-                    } else {
-                        layer.alert(r.msg);
-                    }
-                }
-            });
-        });
-    }
-
-    //加入或移出黑名单
-    function blackList(companyId, useable) {
-        $.ajax({
-            type: 'post',
-            url: '/manage/Decorators/ebsDecoratorManage/updateCompanyInfo',
-            data: {
-                id: companyId,
-                useable: useable
-            },
-            success: function (r) {
-                if (r.code == 1) {
-                    layer.alert("操作成功");
-                    reloadTableDataCurrent();
-                } else {
-                    layer.alert(r.msg);
-                }
+                relationcompanyname: $("#relationcompanyname").val(),
+                companyname: $("#companyname").val(),
+                status: $("#status").val(),
+                paystatus: $("#paystatus").val()
             }
         });
     }

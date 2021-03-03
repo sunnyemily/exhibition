@@ -46,7 +46,7 @@ public class EbsStadium implements Serializable{
     private String agentname;
 
     /**
-     * 0待审核 -1审核未通过  1审核通过
+     * 审核状态，1-未审核，2-审核通过，3-审核不通过
      */
     private Integer status;
 

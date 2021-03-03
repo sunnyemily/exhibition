@@ -69,13 +69,13 @@ function loadCompany() {
         // 初始化数据
         var auditStatusName = "";
         if(obj["auditStatus"] == 1) {
-            auditStatusName = "待审核";
+            auditStatusName = "<span style ='color:blue'>待审核</span>";
         } else if(obj["auditStatus"] == 2) {
-            auditStatusName = "审核通过";
+            auditStatusName = "<span style ='color:green'>审核通过</span>";
         } else if(obj["auditStatus"] == 3) {
-            auditStatusName = "审核失败，驳回原因：" + obj["auditRemark"];
+            auditStatusName = "<span style ='color:red'>审核失败，驳回原因：" + obj["auditRemark"] + "</span>";
         }
-        $("#auditInfo").text(auditStatusName);
+        $("#auditInfo").html(auditStatusName);
         $("#legalpersonname").val(obj["legalpersonname"]);
         $("#legalpersoncardnumber").val(obj["legalpersoncardnumber"]);
         $("#prelegalpersoncardpath").attr("src", $("#legalpersoncardpath").val());

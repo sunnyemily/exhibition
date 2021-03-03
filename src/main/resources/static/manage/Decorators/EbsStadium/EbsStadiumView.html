@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="en" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>查看搭建商报馆信息</title>
+		<meta content="webkit" name="renderer">
+		<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+		<meta content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" name="viewport"/>
+		<link rel="stylesheet" href="/manage/css/xadmin.css">
+		<link href="/manage/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="/manage/layui/css/layui.css"  media="all">
+		<link href="/manage/css/style.css?v=4.1.0" rel="stylesheet">
+		<link href="/css/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+		<style type="text/css">
+			.layui-form-pane .layui-form-label {
+				width: 150px;
+			}
+			.layui-form-pane .layui-input-block {
+				margin-left: 150px;
+			}
+		</style>
+		<style type="text/css">
+	        .layui-table-cell {
+	            height: auto;
+	            line-height: 40px;
+	        }
+	    </style>
+	</head>
+	<body class="gray-bg">
+		<div class="modal inmodal" id="friendlink-model">
+			<div class="modal-content animated bounceInUp" id="vmUpdateEbsStadiuminfo">
+				<div class="ibox-content">
+					<fieldset class="layui-elem-field layui-field-title" style="border-top:0px">
+						<form class="layui-form layui-form-pane" action="">
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="relationcompanyname">展商名称</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" disabled="disabled" class="layui-input" id="relationcompanyname" type="text" v-model="ebsStadiuminfo.relationcompanyname">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="companyname">搭建商名称</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" disabled="disabled" class="layui-input" id="companyname" name="companyname" type="text" v-model="ebsStadiuminfo.companyname">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="safetyresponsibilitycommit">特装展位搭建安全责任承诺书</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" id="safetyresponsibilitycommit">
+										<button type="button" style="margin-left: 2px;height: 40px;" class="layui-btn layui-btn-primary" onclick="vm.downloadSafetyResponsibilityCommit()">
+											<i class="layui-icon layui-icon-link"></i>下载文件
+										</button>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="fitmentapplication">特装展位装修工程申请表</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" id="fitmentapplication">
+										<button type="button" style="margin-left: 2px;height: 40px;" class="layui-btn layui-btn-primary" onclick="vm.downloadFitmentApplication()">
+											<i class="layui-icon layui-icon-link"></i>下载文件
+										</button>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="effectdiagram">特装工程效果图</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" id="effectdiagram">
+										<button type="button" style="margin-left: 2px;height: 40px;" class="layui-btn layui-btn-primary" onclick="vm.downloadEffectDiagram()">
+											<i class="layui-icon layui-icon-link"></i>下载文件
+										</button>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="constructiondiagram">特装工程施工图</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" id="constructiondiagram">
+										<button type="button" style="margin-left: 2px;height: 40px;" class="layui-btn layui-btn-primary" onclick="vm.downloadConstructionDiagram()">
+											<i class="layui-icon layui-icon-link"></i>下载文件
+										</button>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="pointdiagram">特装工程载荷图或点位图</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" id="pointdiagram">
+										<button type="button" style="margin-left: 2px;height: 40px;" class="layui-btn layui-btn-primary" onclick="vm.downloadPointDiagram()">
+											<i class="layui-icon layui-icon-link"></i>下载文件
+										</button>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="circuitdiagram">特装工程电路图</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" id="circuitdiagram">
+										<button type="button" style="margin-left: 2px;height: 40px;" class="layui-btn layui-btn-primary" onclick="vm.downloadCircuitDiagram()">
+											<i class="layui-icon layui-icon-link"></i>下载文件
+										</button>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="workercertificatecopy">施工人员身份证，电焊工上岗证等复印件</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" id="workercertificatecopy">
+										<button type="button" style="margin-left: 2px;height: 40px;" class="layui-btn layui-btn-primary" onclick="vm.downloadWorkerCertificateCopy()">
+											<i class="layui-icon layui-icon-link"></i>下载文件
+										</button>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="equipmentqualifiedprove">特装展位器材及用料说明</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" id="equipmentqualifiedprove">
+										<button type="button" style="margin-left: 2px;height: 40px;" class="layui-btn layui-btn-primary" onclick="vm.downloadEquipmentQualifiedProve()">
+											<i class="layui-icon layui-icon-link"></i>下载文件
+										</button>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="workercasualtyprove">参与施工的工作人员进行施工意外伤害保险的相关证明</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" id="workercasualtyprove">
+										<button type="button" style="margin-left: 2px;height: 40px;" class="layui-btn layui-btn-primary" onclick="vm.downloadWorkerCasualtyProve()">
+											<i class="layui-icon layui-icon-link"></i>下载文件
+										</button>
+									</div>
+								</div>
+							</div>
+							<hr>
+							<div class="layui-form-item">
+		    					<label class="layui-form-label">拒绝原因</label>
+		    					<div class="layui-input-block">
+							    	<textarea placeholder="请输入内容" id="reviewremark" name="reviewremark" class="layui-textarea layui-bg-gray"></textarea>
+							    </div>
+							</div>
+							<div class="layui-form-item">
+								<div class="layui-input-block">
+									<button class="layui-btn" type="button" id="agreeBtn" onclick="vm.agreeStadiumInfo()">通过</button>
+									<button class="layui-btn layui-btn-danger" id="rejectBtn" type="button" onclick="vm.rejectStadiumInfo()">驳回</button>
+									<button class="layui-btn" type="button" onclick="vm.updateCompanyInfo()">打包下载全部附件</button>
+								</div>
+							</div>
+						</form>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+		<script charset="utf-8" src="/manage/js/jquery.min.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/layui/layui.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/xadmin.js" type="text/javascript"></script>
+		<script charset="utf-8" src="/manage/js/vue.js" type="text/javascript"></script>
+		<script src="/manage/js/bootstrap.min.js?v=3.3.6"></script>
+		<script src="/manage/js/manage/common.js"></script>
+		<script src="/manage/js/content.js?v=1.0.0"></script>
+		<script charset="UTF-8" type="text/javascript">
+			var form;
+			var layer;
+			var editEbsStadiumInfoId = sessionStorage.getItem("editEbsStadiumId");
+			vm = new Vue({
+				el : "#vmUpdateEbsStadiuminfo",
+				data : {
+					ebsStadiuminfo : {}
+				},
+				methods : {
+					//特装展位搭建安全责任承诺书
+					downloadSafetyResponsibilityCommit : function() {
+						if (vm.ebsStadiuminfo.safetyresponsibilitycommit == null || vm.ebsStadiuminfo.safetyresponsibilitycommit == '') {
+							layer.alert("企业未上传特装展位搭建安全责任承诺书");
+						} else {
+							window.open(vm.ebsStadiuminfo.safetyresponsibilitycommit);
+						}
+					},
+					//特装展位装修工程申请表
+					downloadFitmentApplication : function() {
+						if (vm.ebsStadiuminfo.fitmentapplication == null || vm.ebsStadiuminfo.fitmentapplication == '') {
+							layer.alert("企业未上传特装展位装修工程申请表");
+						} else {
+							window.open(vm.ebsStadiuminfo.fitmentapplication);
+						}
+					},
+					//特装工程效果图
+					downloadEffectDiagram : function() {
+						if (vm.ebsStadiuminfo.effectdiagram == null || vm.ebsStadiuminfo.effectdiagram == '') {
+							layer.alert("企业未上传特装工程效果图");
+						} else {
+							window.open(vm.ebsStadiuminfo.effectdiagram);
+						}
+					},
+					//特装工程施工图
+					downloadConstructionDiagram : function() {
+						if (vm.ebsStadiuminfo.constructiondiagram == null || vm.ebsStadiuminfo.constructiondiagram == '') {
+							layer.alert("企业未上传特装工程施工图");
+						} else {
+							window.open(vm.ebsStadiuminfo.constructiondiagram);
+						}
+					},
+					//特装工程载荷图或点位图
+					downloadPointDiagram : function() {
+						if (vm.ebsStadiuminfo.pointdiagram == null || vm.ebsStadiuminfo.pointdiagram == '') {
+							layer.alert("企业未上传特装工程载荷图或点位图");
+						} else {
+							window.open(vm.ebsStadiuminfo.pointdiagram);
+						}
+					},
+					//特装工程电路图
+					downloadCircuitDiagram : function() {
+						if (vm.ebsStadiuminfo.circuitdiagram == null || vm.ebsStadiuminfo.circuitdiagram == '') {
+							layer.alert("企业未上传特装工程电路图");
+						} else {
+							window.open(vm.ebsStadiuminfo.circuitdiagram);
+						}
+					},
+					//施工人员身份证，电焊工上岗证等复印件
+					downloadWorkerCertificateCopy : function() {
+						if (vm.ebsStadiuminfo.workercertificatecopy == null || vm.ebsStadiuminfo.workercertificatecopy == '') {
+							layer.alert("企业未上传施工人员身份证，电焊工上岗证等复印件");
+						} else {
+							window.open(vm.ebsStadiuminfo.workercertificatecopy);
+						}
+					},
+					//特装展位器材及用料说明
+					downloadEquipmentQualifiedProve : function() {
+						if (vm.ebsStadiuminfo.equipmentqualifiedprove == null || vm.ebsStadiuminfo.equipmentqualifiedprove == '') {
+							layer.alert("企业未上传特装展位器材及用料说明");
+						} else {
+							window.open(vm.ebsStadiuminfo.equipmentqualifiedprove);
+						}
+					},
+					//参与施工的工作人员进行施工意外伤害保险的相关证明
+					downloadWorkerCasualtyProve : function() {
+						if (vm.ebsStadiuminfo.workercasualtyprove == null || vm.ebsStadiuminfo.workercasualtyprove == '') {
+							layer.alert("企业未上传参与施工的工作人员进行施工意外伤害保险的相关证明");
+						} else {
+							window.open(vm.ebsStadiuminfo.workercasualtyprove);
+						}
+					},
+					//审核通过
+					agreeStadiumInfo : function() {
+						vm.ebsStadiuminfo.id = editEbsStadiumInfoId;
+						vm.ebsStadiuminfo.status = 2;
+						vm.ebsStadiuminfo.reviewremark = '';
+						vm.ebsStadiuminfo.auditType = 'auditAgree';
+
+						$.ajax({
+							type : 'post',
+							url : '/manage/Decorators/ebsStadiumManage/agreeStadiumInfo',
+							data : vm.ebsStadiuminfo,
+							success : function(r) {
+								if (r.code === 1) {
+									layer.msg("保存成功", {icon: 6, time: 500}, function () {
+										//关闭当前frame
+										xadmin.close();
+										// 可以对父窗口进行刷新
+										xadmin.father_reload();
+									});
+								} else {
+									if(r.status==5){
+										layer.alert(r.msg);
+										parent.window.location.href='/manage/login.html';
+									}else{
+										layer.alert(r.msg);
+									}
+								}
+							}
+						});
+					},
+					//审核驳回
+					rejectStadiumInfo : function() {
+						vm.ebsStadiuminfo.id = editEbsStadiumInfoId;
+						var reviewremark = $("#reviewremark").val();
+						if(reviewremark == ''){
+							layer.alert("请先填写拒绝原因");
+							return;
+						}
+						vm.ebsStadiuminfo.status = 3;
+						vm.ebsStadiuminfo.reviewremark = reviewremark;
+						vm.ebsStadiuminfo.auditType = "auditReject";
+
+						$.ajax({
+							type : 'post',
+							url : '/manage/Decorators/ebsStadiumManage/rejectStadiumInfo',
+							data : vm.ebsStadiuminfo,
+							success : function(r) {
+								if (r.code === 1) {
+									layer.msg("保存成功", {icon: 6, time: 500}, function () {
+										//关闭当前frame
+										xadmin.close();
+										// 可以对父窗口进行刷新
+										xadmin.father_reload();
+									});
+								} else {
+									if(r.status==5){
+										layer.alert(r.msg);
+										parent.window.location.href='/manage/login.html';
+									}else{
+										layer.alert(r.msg);
+									}
+								}
+							}
+						});
+					}
+				},
+				created : function() {
+					var _this = this;
+					layui.use(['form', 'layer'], function() {
+						layer = layui.layer;
+						form = layui.form;
+						
+						//加载企业信息
+						$.ajax({
+							url : "/manage/Decorators/ebsStadiumManage/selectStadiumInfo",
+							data : {
+								"id" : editEbsStadiumInfoId
+							},
+							dataType : "json",
+							type : "get",
+							success : function(result) {
+								if (result.code === 1) {
+									_this.ebsStadiuminfo = result.data;
+									if (result.data.status != 1) {
+										$("#agreeBtn").hide();
+										$("#rejectBtn").hide();
+									}
+								} else {
+									layui.layer.alert("获取搭建商报馆信息失败！");
+								}
+							}
+						});
+						
+						$("#reviewremark").val("");
+						//监控审核状态单选框
+						form.on('radio(status)', function(data){
+							$("#reviewremark").val("");
+							if(data.value==2){
+								$("#reviewremark").addClass("layui-bg-gray");
+								$("#reviewremark").attr("disabled",true);
+							}else{
+								$("#reviewremark").removeClass("layui-bg-gray");
+								$("#reviewremark").removeAttr("disabled");
+							}
+						});
+					});
+				}
+			});
+		</script>
+		<script src="/manage/js/manage/crop.js"></script>
+	</body>
+</html>

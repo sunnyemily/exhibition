@@ -995,7 +995,7 @@ public class DecoratorEbsPersonnelcardController {
 			per.setId(Integer.valueOf(String.valueOf(map.get("id"))));
 			if ("1".equals(map.get("status"))) {//审核通过时
 				per.setRemark("");
-				per.setAudittime(new java.sql.Timestamp(new Date().getTime()));
+				per.setAudittime(new java.sql.Timestamp(System.currentTimeMillis()));
 				//审核通过时,iccode为空则生成
 				EbsPersonnelcard eplc = decoratorEbsPersonnelcardService.findById(per.getId());
 				if(eplc.getIccode() == null || "".equals(eplc.getIccode())){
@@ -1014,10 +1014,10 @@ public class DecoratorEbsPersonnelcardController {
 				}	
 			} else if ("-1".equals(map.get("status"))) {
 				per.setRemark(String.valueOf(map.get("remark")));
-				per.setAudittime(new java.sql.Timestamp(new Date().getTime()));
+				per.setAudittime(new java.sql.Timestamp(System.currentTimeMillis()));
 			} else {
 				per.setRemark("");
-				per.setAudittime(new java.sql.Timestamp(new Date().getTime()));
+				per.setAudittime(new java.sql.Timestamp(System.currentTimeMillis()));
 			}
 			per.setStatus(Integer.valueOf(String.valueOf(map.get("status"))));
 	

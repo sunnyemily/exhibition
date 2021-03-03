@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.org.chtf.card.manage.Decorators.dao.DecoratorEbsStadiumManageMapper">
+
+    <select id="list" resultType="map">
+		SELECT
+			b.id sessionId,
+			a.member_id memberId,
+			a.member_username memberUsername,
+			d.id stadiumId,
+			d.relationcompanyname,
+			d.companyname,
+			d.addtime,
+			d.status,
+			d.paystatus,
+			d.audittime audittime
+        FROM web_member a
+		INNER JOIN web_member_session b on a.member_id = b.member_id and b.id = #{session}
+		INNER JOIN ebs_companyinfo c on b.orgnization_id = c.id
+		INNER JOIN ebs_stadium d on d.companyid = c.id
+		WHERE a.member_type = 3 and a.member_status = 0
+        <if test="companyname != null and companyname != ''">
+            and d.companyname like concat ('%',#{companyname},'%')
+        </if>
+        <if test="relationcompanyname != null and relationcompanyname != ''">
+            and d.relationcompanyname like concat ('%',#{relationcompanyname},'%')
+        </if>
+        <if test="useable != null and useable != '' and useable != -1">
+            and c.useable = #{useable}
+        </if>
+        <if test="status == 1">
+            and d.status = 1
+        </if>
+		<if test="status == 2">
+			and d.status = 2
+		</if>
+		<if test="status == 3">
+			and d.status = 3
+		</if>
+		<if test="paystatus == 0">
+			and d.paystatus = 0
+		</if>
+		<if test="paystatus == 1">
+			and d.paystatus = 1
+		</if>
+        order by d.addtime desc
+		limit #{index}, #{size}
+    </select>
+    
+    <select id="listcount" resultType="int">
+		SELECT count(*)
+		FROM web_member a
+		INNER JOIN web_member_session b on a.member_id = b.member_id and b.id = #{session}
+		INNER JOIN ebs_companyinfo c on b.orgnization_id = c.id
+		INNER JOIN ebs_stadium d on d.companyid = c.id
+		WHERE a.member_type = 3 and a.member_status = 0
+		<if test="companyname != null and companyname != ''">
+			and d.companyname like concat ('%',#{companyname},'%')
+		</if>
+		<if test="relationcompanyname != null and relationcompanyname != ''">
+			and d.relationcompanyname like concat ('%',#{relationcompanyname},'%')
+		</if>
+		<if test="useable != null and useable != '' and useable != -1">
+			and c.useable = #{useable}
+		</if>
+		<if test="status == 1">
+			and d.status = 1
+		</if>
+		<if test="status == 2">
+			and d.status = 2
+		</if>
+		<if test="status == 3">
+			and d.status = 3
+		</if>
+		<if test="paystatus == 0">
+			and d.paystatus = 0
+		</if>
+		<if test="paystatus == 1">
+			and d.paystatus = 1
+		</if>
+	</select>
+
+	<update id="updateStadiumInfo">
+		update ebs_stadium
+		<set>
+			id = #{id},
+			<if test="isback != null">isback = #{isback},</if>
+			<if test="jiaoyituan != null and jiaoyituan != ''">jiaoyituan = #{jiaoyituan},</if>
+			<if test="session != null and session != ''">session = #{session},</if>
+			<if test="companyid != null">companyid = #{companyid},</if>
+			<if test="companyname != null and companyname != ''">companyname = #{companyname},</if>
+			<if test="remark != null and remark != ''">remark = #{remark},</if>
+			<if test="agent != null">agent = #{agent},</if>
+			<if test="status != null">status = #{status},</if>
+			<if test="printstatus != null">printstatus = #{printstatus},</if>
+			<if test="printtype != null">printtype = #{printtype},</if>
+			<if test="printtime != null and printtime != ''">printtime = #{printtime},</if>
+			<if test="printnumber != null and printnumber != ''">printnumber = #{printnumber},</if>
+			<if test="makecardtime != null and makecardtime != ''">makecardtime = #{makecardtime},</if>
+			<if test="isforensics != null">isforensics = #{isforensics},</if>
+			<if test="forensicstime != null and forensicstime != ''">forensicstime = #{forensicstime},</if>
+			<if test="certificatenumber != null and certificatenumber != ''">certificatenumber = #{certificatenumber},</if>
+			<if test="reviewremark != null and reviewremark != ''">reviewremark = #{reviewremark},</if>
+			<if test="isplastic != null">isplastic = #{isplastic},</if>
+			<if test="plastictime != null and plastictime != ''">plastictime = #{plastictime},</if>
+			<if test="relationcompanyid != null">relationcompanyid = #{relationcompanyid},</if>
+			<if test="relationcompanyname != null and relationcompanyname != ''">relationcompanyname = #{relationcompanyname},</if>
+			<if test="paystatus != null">paystatus = #{paystatus},</if>
+			<if test="audittime != null">audittime = #{audittime},</if>
+			<if test="auditername != null and auditername != ''">auditername = #{auditername},</if>
+			<if test="safetyresponsibilitycommit != null and safetyresponsibilitycommit != ''">safetyresponsibilitycommit = #{safetyresponsibilitycommit},</if>
+			<if test="fitmentapplication != null and fitmentapplication != ''">`fitmentapplication` = #{fitmentapplication},</if>
+			<if test="effectdiagram != null and effectdiagram != ''">`effectdiagram` = #{effectdiagram},</if>
+			<if test="constructiondiagram != null and constructiondiagram != ''">`constructiondiagram` = #{constructiondiagram},</if>
+			<if test="pointdiagram != null and pointdiagram != ''">`pointdiagram` = #{pointdiagram},</if>
+			<if test="circuitdiagram != null and circuitdiagram != ''">`circuitdiagram` = #{circuitdiagram},</if>
+			<if test="workercertificatecopy != null and workercertificatecopy != ''">`workercertificatecopy` = #{workercertificatecopy},</if>
+			<if test="equipmentqualifiedprove != null and equipmentqualifiedprove != ''">equipmentqualifiedprove = #{equipmentqualifiedprove},</if>
+			<if test="workercasualtyprove != null and workercasualtyprove != ''">`workercasualtyprove` = #{workercasualtyprove},</if>
+			<if test="auditType != null and auditType == 'reAudit'">audittime = null,auditername = null,</if>
+        </set>
+        where id = #{id}
+	</update>
+	
+	<select id="selectStadiumInfo" resultType="map">
+		SELECT
+			a.id stadiumId,
+			a.isback,
+			a.jiaoyituan,
+			a.session,
+			a.companyid,
+			a.companyname,
+			a.remark,
+			a.agent,
+			a.status,
+			a.printstatus,
+			a.printtype,
+			a.printtime,
+			a.printnumber,
+			a.makecardtime,
+			a.isforensics,
+			a.forensicstime,
+			a.certificatenumber,
+			a.reviewremark,
+			a.isplastic,
+			a.plastictime,
+			a.relationcompanyid,
+			a.relationcompanyname,
+			a.paystatus,
+			a.auditername,
+			a.safetyresponsibilitycommit,
+			a.fitmentapplication,
+			a.effectdiagram,
+			a.constructiondiagram,
+			a.pointdiagram,
+			a.circuitdiagram,
+			a.workercertificatecopy,
+			a.equipmentqualifiedprove,
+			a.workercasualtyprove,
+			date(a.addtime) addtime,
+			date(a.audittime) audittime
+		FROM ebs_stadium a
+		LEFT JOIN ebs_companyinfo b on a.companyid = b.id
+		LEFT JOIN web_member_session c on b.id = c.orgnization_id
+		LEFT JOIN web_member d ON c.member_id = d.member_id
+		<where>
+			c.id = #{session}
+			<if test="id != null">
+				and a.id = #{id}
+			</if>
+		</where>
+		order by a.addtime desc limit 1
+	</select>
+	
+</mapper>
