@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.org.chtf.card.manage.Decorators.dao.DecoratorEbsNoticeMapper">
+  <resultMap id="BaseResultMap" type="cn.org.chtf.card.manage.Exhibitors.model.EbsNotice">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="notice_order" jdbcType="INTEGER" property="noticeOrder" />
+    <result column="session" jdbcType="VARCHAR" property="session" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="author_id" jdbcType="VARCHAR" property="authorId" />
+    <result column="author_name" jdbcType="VARCHAR" property="authorName" />
+    <result column="author_account" jdbcType="VARCHAR" property="authorAccount" />
+    <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="cn.org.chtf.card.manage.Exhibitors.model.EbsNotice">
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, title, notice_order, session, status, author_id, author_name, author_account, add_time, update_time
+  </sql>
+  <sql id="Blob_Column_List">
+    content
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from ebs_notice
+    where id = #{noticeId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ebs_notice
+    where id = #{noticeId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.org.chtf.card.manage.Exhibitors.model.EbsNotice">
+    insert into ebs_notice (id, title, notice_order,
+      session, status, author_id,
+      author_name, author_account, content)
+    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{noticeOrder,jdbcType=INTEGER},
+      #{session,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{authorId,jdbcType=INTEGER},
+      #{authorName,jdbcType=VARCHAR}, #{authorAccount,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.org.chtf.card.manage.Exhibitors.model.EbsNotice">
+    insert into ebs_notice
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="noticeOrder != null">
+        notice_order,
+      </if>
+      <if test="session != null">
+        session,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="authorId != null">
+        author_id,
+      </if>
+      <if test="authorName != null">
+        author_name,
+      </if>
+      <if test="authorAccount != null">
+        author_account,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="noticeOrder != null">
+        #{noticeOrder,jdbcType=INTEGER},
+      </if>
+      <if test="session != null">
+        #{session,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="authorId != null">
+        #{authorId,jdbcType=INTEGER},
+      </if>
+      <if test="authorName != null">
+        #{authorName,jdbcType=VARCHAR},
+      </if>
+      <if test="authorAccount != null">
+        #{authorAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.org.chtf.card.manage.Exhibitors.model.EbsNotice">
+    update ebs_notice
+    <set>
+      <if test="id != null">
+        id = #{id,jdbcType=INTEGER},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="noticeOrder != null">
+        notice_order = #{noticeOrder,jdbcType=INTEGER},
+      </if>
+      <if test="session != null">
+        session = #{session,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="authorId != null">
+        author_id = #{authorId,jdbcType=VARCHAR},
+      </if>
+      <if test="authorName != null">
+        author_name = #{authorName,jdbcType=VARCHAR},
+      </if>
+      <if test="authorAccount != null">
+        author_account = #{authorAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="getNotices"  parameterType="cn.org.chtf.card.support.util.PageModel"  resultMap="ResultMapWithBLOBs">
+  	SELECT
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+	FROM
+		ebs_notice
+	WHERE
+      <if test="session != null and session != ''">
+        session = #{session,jdbcType=VARCHAR} AND
+      </if>
+      title LIKE '%${keywords}%'
+	ORDER BY ${field} ${order}, update_time DESC
+	LIMIT #{start,jdbcType=INTEGER}, #{limit,jdbcType=INTEGER};
+  </select>
+  <select id="getTotal"  parameterType="cn.org.chtf.card.support.util.PageModel"  resultType="java.lang.Integer">
+    select count(*) from ebs_notice
+    WHERE
+    <if test="session != null and session != ''">
+      session = #{session,jdbcType=VARCHAR} AND
+    </if>
+    title LIKE '%${keywords}%'
+  </select> 
+  <delete id="deleteNotices"  parameterType="java.util.List">
+    delete from ebs_notice
+    where id in
+        <foreach collection="noticeIdList" item="noticeId" index="index"
+            open="(" close=")" separator=",">
+            #{noticeId,jdbcType=INTEGER}
+        </foreach>;
+  </delete>
+</mapper>
