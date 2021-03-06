@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
@@ -81,6 +82,23 @@ public class DecoratorEbsStadiumManageController {
             map.put("session", strSessionid);
             Map<String, Object> stadiumInfo = decoratorEbsStadiumManageService.selectStadiumInfo(map);
             return R.ok().put("code", WConst.SUCCESS).put("msg", WConst.QUERYSUCCESS).put("data", stadiumInfo);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return R.error().put("code", WConst.ERROR).put("msg", WConst.QUERYFAILD);
+        }
+    }
+
+    @RequestMapping("/downloadAttachment")
+    public R downloadAttachment(@RequestParam Map<String, Object> map, HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String strSessionid = sysSessionService.getSessionID(request);
+            map.put("session", strSessionid);
+            String companyZipPath = decoratorEbsStadiumManageService.downloadAttachment(map);
+            if (companyZipPath != null && !"".equals(companyZipPath)) {
+                return R.ok().put("code", WConst.SUCCESS).put("msg", WConst.QUERYSUCCESS).put("path", companyZipPath);
+            } else {
+                return R.ok().put("code", WConst.ERROR).put("msg", "没有找到附件");
+            }
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return R.error().put("code", WConst.ERROR).put("msg", WConst.QUERYFAILD);

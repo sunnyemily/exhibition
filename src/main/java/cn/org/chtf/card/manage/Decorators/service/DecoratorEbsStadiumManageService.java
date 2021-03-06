@@ -17,4 +17,6 @@ public interface DecoratorEbsStadiumManageService {
     int updateStadiumInfo(Map<String, Object> map);
 
     Map<String, Object> selectStadiumInfo(Map<String, Object> map);
+
+    String downloadAttachment(Map<String, Object> map);
 }
