@@ -41,6 +41,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
+import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -1497,6 +1498,54 @@ public class SiteController {
             return new ResultModel(WConst.LOGINOVERTIME, WConst.LOGINOVERTIMEMSG, null);
         }
         return ebsPersonnelcardService.delete(idList, memberId);
+    }
+
+    /**
+     * 获取人员证件列表
+     *
+     * @param map 分页及搜索实体
+     * @return
+     */
+    @RequestMapping(value = "/personcard/download")
+    @ResponseBody
+    public void personCardDownload(@RequestBody Map<String,Object> map, HttpServletResponse response) {
+        String path = map.get("path").toString();
+        File file = new File("./static" + path);
+        String[] filePathSplit = path.split("/");
+        response.setContentType("application/force-download");
+        response.addHeader("Content-Disposition", "attachment;fileName=" + filePathSplit[filePathSplit.length - 1]);
+
+        byte[] buffer = new byte[1024];
+        FileInputStream fis = null;
+        BufferedInputStream bis = null;
+        try {
+            fis = new FileInputStream(file);
+            bis = new BufferedInputStream(fis);
+            OutputStream os = response.getOutputStream();
+            int i = bis.read(buffer);
+            while (i != -1) {
+                os.write(buffer, 0, i);
+                i = bis.read(buffer);
+            }
+
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }  finally {
+            if (bis != null) {
+                try {
+                    bis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     /**

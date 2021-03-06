@@ -241,8 +241,20 @@ function openLookModal(obj) {
 function downloadFile(obj) {
 	$("#reset").click();
 	obj = obj.data;
-	$("#downloadFile").attr("href", obj.imagepath);
-	$("#downloadFile")[0].click();
+	// $("#downloadFile").attr("href", obj.imagepath);
+	// $("#downloadFile")[0].click();
+	window.open(obj.imagepath);
+	// var params = {};
+	// params.path = obj.imagepath;
+	// $.ajax({
+	// 	url: "/personcard/download",
+	// 	data: JSON.stringify(params),
+	// 	type: "post",
+	// 	contentType: "application/json",
+	// 	success: function (result) {
+	//
+	// 	}
+	// });
 }
 function loadCountry() {
 	var country = $("select[name=country]");
