@@ -1530,7 +1530,7 @@ public class SiteController {
 
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
-        }  finally {
+        } finally {
             if (bis != null) {
                 try {
                     bis.close();

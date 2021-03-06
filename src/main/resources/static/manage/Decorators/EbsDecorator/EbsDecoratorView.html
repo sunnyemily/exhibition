@@ -197,7 +197,7 @@
 								<div class="layui-input-block">
 									<button class="layui-btn" type="button" id="agreeBtn" onclick="vm.agreeCompanyInfo()">通过</button>
 									<button class="layui-btn layui-btn-danger" id="rejectBtn" type="button" onclick="vm.rejectCompanyInfo()">驳回</button>
-									<button class="layui-btn" type="button" onclick="vm.updateCompanyInfo()">打包下载全部附件</button>
+									<button class="layui-btn" type="button" onclick="vm.downloadAttachment()">打包下载全部附件</button>
 								</div>
 							</div>
 						</form>
@@ -309,6 +309,22 @@
 			                            layer.alert(r.msg);
 		                        	}
 		                        }
+							}
+						});
+					},
+					//打包下载全部附件
+					downloadAttachment : function() {
+						vm.ebsCompanyinfo.id = editEbsCompanyinfoId;
+						$.ajax({
+							type : 'post',
+							url : '/manage/Decorators/ebsDecoratorManage/downloadAttachment',
+							data : vm.ebsCompanyinfo,
+							success : function(r) {
+								if (r.code === 1) {
+									window.open(r.path);
+								} else {
+									layer.alert(r.msg);
+								}
 							}
 						});
 					},
