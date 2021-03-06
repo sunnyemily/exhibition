@@ -241,7 +241,7 @@ function openLookModal(obj) {
 function downloadFile(obj) {
 	$("#reset").click();
 	obj = obj.data;
-	$("#downloadFile").attr("href","/upload/file/2021-02-21/f5303335-6dd3-40ca-9146-c2f64dddb526.docx");
+	$("#downloadFile").attr("href", obj.imagepath);
 	$("#downloadFile")[0].click();
 }
 function loadCountry() {

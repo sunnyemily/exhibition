@@ -84,11 +84,11 @@ var limit = ${limit};
 <#include 'vehiclecard-edit.html'>
 <script type="text/html" id="toolBar">
 <#if !isTimeout>
-{{# if(d.status == 3){ }}
+{{# if(d.status == 1){ }}
 <a class="layui-btn layui-btn-xs" lay-event="download" id="downloadFile" target="_blank">下载证书</a>
 <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
 {{# } }}
-{{# if(d.status != 1){ }}
+{{# if(d.status == 0){ }}
 <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 {{# } }}
