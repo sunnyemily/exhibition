@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -35,4 +36,8 @@ public class EbsNotice implements Serializable {
     private Timestamp addTime;
 
     private Timestamp updateTime;
+
+    public String getUpdateTimeStr() {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(this.getUpdateTime());
+    }
 }

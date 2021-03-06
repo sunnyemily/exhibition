@@ -35,7 +35,7 @@ var hasCertification = ${applyInfo.hasCertification?string("true","false")};
 		<div class="left-head"><i class="fa fa-th-list"></i>功能管理</div>
 		<div style="height:20px;"></div>
 		<#if type=="decorator">
-			<div class="left-item" data-page="home"><i class="fa fa-desktop"></i>首页<i class="fa jt fa-chevron-right"></i></div>
+			<div class="left-item" data-page="notice"><i class="fa fa-home"></i>首页<i class="fa jt fa-chevron-right"></i></div>
 		</#if>
 		<#if type=="exhibitor">	
 		<div class="left-item" data-page="apply"><i class="fa fa-desktop"></i>申请展位<i class="fa jt fa-chevron-right"></i></div>	
@@ -118,9 +118,13 @@ var hasCertification = ${applyInfo.hasCertification?string("true","false")};
 		<div class="left-item"  data-page="exit"><i class="fa fa-power-off"></i>退出<i class="fa jt fa-chevron-right"></i></div>
 	</div>
 	<div class="member-right">
-		<iframe src="/${language}/${type}-info.html">
-			
+		<#if type=="decorator">
+		<iframe src="/${language}/${type}-notice.html">
 		</iframe>
+		<#else>
+		<iframe src="/${language}/${type}-info.html">
+		</iframe>
+		</#if>
 	</div>
 </div>
 <script>

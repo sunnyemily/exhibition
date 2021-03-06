@@ -215,6 +215,27 @@ body{font-size:12px;color:#888;font-family: "Microsoft YaHei"}
 }
 .right-container{border:#e7e7e7;background-color:#fff;min-height:363px;font-size:14px;line-height:24px;}
 .right-container .right-content{width:820px;width:calc(100% - 80px);margin:15px auto;}
+.notice-left{width:300px;float:right;margin-top:10px;border:1px solid #e7e7e7;background-color:#fff;min-height:650px;}
+.notice-left .left-head{color:#fff; height: 40px; line-height: 40px;}
+.notice-left a{display:block;border-bottom:1px solid #e7e7e7;color:#888;}
+.notice-left .jt{color:#888;float: left;}
+.notice-left a span{width:220px;overflow: hidden; text-overflow: ellipsis;white-space: nowrap;word-break: break-all; display:inline-block}
+.notice-left a:hover{color:#fff;}
+.notice-left a:hover .jt{color:#fff;}
+.notice-right{width:760px;float:left;min-height:650px;}
+.notice-right .regist-path{text-align:right;padding-right:18px;margin-bottom:5px;margin: 10px 0px 18px 0px;}
+.notice-gradient{
+    background: -moz-linear-gradient(left, #153880 0%, #3863a4 100%);
+    background: -webkit-gradient(linear, left, right, color-stop(0%,#153880), color-stop(100%,#3863a4));
+    background: -webkit-linear-gradient(left, #153880 0%,#3863a4 100%);
+    background: -o-linear-gradient(left, #153880 0%,#3863a4 100%);
+    background: -ms-linear-gradient(left, #153880 0%,#3863a4 100%);
+    background: linear-gradient(to right, #153880 0%,#3863a4 100%);
+}
+.notice-right-container{border:#e7e7e7;background-color:#fff;min-height:650px;font-size:14px;line-height:24px;}
+.notice-right-container .right-title{width:820px;width:calc(100% - 80px);height:30px;text-align:center;margin:15px auto;}
+.notice-right-container .right-time{width:820px;width:calc(100% - 80px);height:30px;text-align:center;margin:15px auto;}
+.notice-right-container .right-content{width:820px;width:calc(100% - 80px);overflow:auto;margin:15px auto;}
 .summary-head{background-color:#f0f0f0;height: 40px;line-height: 40px;}
 /**layui调色部分**/
 .layui-btn,.layui-form-checked[lay-skin="primary"] i {
