@@ -966,9 +966,14 @@ public class SiteController {
         page.setSession(sessionId);
         page.setOrder("DESC");
         page.setField("updateTime");
+        page.setStatus(1);
         List<EbsNotice> notices = (List<EbsNotice>) decoratorEbsNoticeService.getNotices(page).getResult();
         model.addAttribute("notices", notices);
-        model.addAttribute("notice", notices.get(0));
+        if (notices != null && notices.size() > 0) {
+            model.addAttribute("notice", notices.get(0));
+        } else {
+            model.addAttribute("notice", null);
+        }
         String templateName = "web/" + language + "/notice";
 
         return templateName;

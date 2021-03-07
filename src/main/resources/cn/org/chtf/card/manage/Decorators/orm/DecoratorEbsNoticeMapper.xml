@@ -72,6 +72,12 @@
       <if test="content != null">
         content,
       </if>
+      <if test="addTime != null">
+        add_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -100,6 +106,12 @@
       </if>
       <if test="content != null">
         #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="addTime != null">
+        #{addTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -133,6 +145,9 @@
       <if test="content != null">
         content = #{content,jdbcType=LONGVARCHAR},
       </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -147,6 +162,9 @@
       <if test="session != null and session != ''">
         session = #{session,jdbcType=VARCHAR} AND
       </if>
+    <if test="status != null and status != ''">
+      status = #{status,jdbcType=INTEGER} AND
+    </if>
       title LIKE '%${keywords}%'
 	ORDER BY ${field} ${order}, update_time DESC
 	LIMIT #{start,jdbcType=INTEGER}, #{limit,jdbcType=INTEGER};

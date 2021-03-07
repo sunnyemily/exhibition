@@ -18,12 +18,15 @@
 <div class="regist-body">
 	<div class="notice-left">
 		<div class="left-head notice-gradient"><i class="fa fa-th-list"></i>公告</div>
+		<#if notices?? && (notices?size > 0) >
 		<#list notices as info>
 		<a  class="left-item" href="/${language}/notice-${info.id}.html" title="${info.title}"><i class="fa jt fa-chevron-left"></i><span>${info.title}</span></a>
 		</#list>
+		</#if>
 	</div>
 	<div class="notice-right">
 		<div class="notice-right-container">
+			<#if notice?? >
 			<div class="right-title" >
 				${notice.title}
 			</div>
@@ -33,6 +36,7 @@
 			<div class="right-content">
 				${notice.content}
 			</div>
+			</#if>
 		</div>
 	</div>
 	<div style="clear:both;"></div>

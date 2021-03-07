@@ -350,7 +350,8 @@
 			<if test="circuitdiagram != null">`circuitdiagram`,</if>
 			<if test="workercertificatecopy != null">`workercertificatecopy`,</if>
 			<if test="equipmentqualifiedprove != null">`equipmentqualifiedprove`,</if>
-			<if test="workercasualtyprove != null">`workercasualtyprove`</if>
+			<if test="workercasualtyprove != null">`workercasualtyprove`,</if>
+			<if test="updatetime != null">`updatetime`</if>
         </trim>
         )
         values (
@@ -383,7 +384,8 @@
 			<if test="circuitdiagram != null">#{circuitdiagram},</if>
 			<if test="workercertificatecopy != null">#{workercertificatecopy},</if>
 			<if test="equipmentqualifiedprove != null">#{equipmentqualifiedprove},</if>
-			<if test="workercasualtyprove != null">#{workercasualtyprove}</if>
+			<if test="workercasualtyprove != null">#{workercasualtyprove},</if>
+			<if test="updatetime != null">#{updatetime}</if>
         </trim>
         )
     </insert>
@@ -424,7 +426,8 @@
 			<if test="circuitdiagram != null">`circuitdiagram` = #{circuitdiagram},</if>
 			<if test="workercertificatecopy != null">`workercertificatecopy` = #{workercertificatecopy},</if>
 			<if test="equipmentqualifiedprove != null">`equipmentqualifiedprove` = #{equipmentqualifiedprove},</if>
-			<if test="workercasualtyprove != null">`workercasualtyprove` = #{workercasualtyprove}</if>
+			<if test="workercasualtyprove != null">`workercasualtyprove` = #{workercasualtyprove},</if>
+			<if test="updatetime != null">`updatetime` = #{updatetime}</if>
         </set>
         where id = #{id}
     </update>

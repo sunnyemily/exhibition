@@ -33,9 +33,9 @@
                         </div>
                         <div class="pull-right search">
                             审核状态：<input type="radio" name="status" value="0" title="全部" checked/>
-                            <input type="radio" name="status" value="1" title="未审核"/>
-                            <input type="radio" name="status" value="2" title="已审核"/>
-                            <input type="radio" name="status" value="3" title="未通过"/>
+                            <input type="radio" name="status" value="3" title="未审核"/>
+                            <input type="radio" name="status" value="4" title="已审核"/>
+                            <input type="radio" name="status" value="5" title="未通过"/>
                         </div>
 						<div class="pull-right search">
 							缴费状态：<input type="radio" name="paystatus" value="0" title="全部" checked/>

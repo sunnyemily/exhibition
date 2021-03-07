@@ -21,6 +21,7 @@ public class DecoratorEbsNoticeServiceImpl implements DecoratorEbsNoticeService 
     @Override
     public ResultModel updateNotice(EbsNotice notice) {
         ResultModel result = null;
+        notice.setUpdateTime(new java.sql.Timestamp(System.currentTimeMillis()));
         try {
             if (notice.getId() == null || notice.getId() == 0) {
                 decoratorEbsNoticeMapper.insertSelective(notice);

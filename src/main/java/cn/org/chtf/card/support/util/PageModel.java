@@ -122,6 +122,8 @@ public class PageModel{
 	 * 栏目ID
 	 */
 	private Integer menuId;
+
+	private Integer status;
 	
 	
 	public Integer getPage() {
@@ -192,5 +194,13 @@ public class PageModel{
 
 	public void setPlatenumber(String platenumber) {
 		this.platenumber = platenumber;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 }

@@ -579,7 +579,7 @@ form.on('submit(update)', function (data) {
     var url = "/stadium/save";
     var index = layer.load(2);
     data.field.agent = window.parent.member.memberId;
-    data.field.status = 0;
+    data.field.status = 1;
     data.field.relationcompanyid = $("#relationcompanyid").val();
     data.field.relationcompanyname = $("#relationcompanyid").find("option:selected").text();
     data.field.safetyresponsibilitycommit = $("#safetyresponsibilitycommit").val();
@@ -628,6 +628,7 @@ function getStatusName(card) {
     if (card.status == 3) {
         return weitongguo;
     }
+    return "";
 }
 
 function getPayStatusName(card) {

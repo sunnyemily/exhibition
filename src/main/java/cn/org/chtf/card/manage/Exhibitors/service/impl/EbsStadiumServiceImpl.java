@@ -3,10 +3,7 @@ package cn.org.chtf.card.manage.Exhibitors.service.impl;
 import cn.org.chtf.card.common.utils.RequestParamsUtil;
 import cn.org.chtf.card.manage.Exhibitors.dao.EbsStadiumMapper;
 import cn.org.chtf.card.manage.Exhibitors.model.EbsStadium;
-import cn.org.chtf.card.manage.Exhibitors.model.EbsVehiclecard;
 import cn.org.chtf.card.manage.Exhibitors.service.EbsStadiumService;
-import cn.org.chtf.card.manage.MakeEvidence.dao.CmCertificateTypeMapper;
-import cn.org.chtf.card.manage.MakeEvidence.model.CmCertificateType;
 import cn.org.chtf.card.support.util.PageModel;
 import cn.org.chtf.card.support.util.ResultModel;
 import cn.org.chtf.card.support.util.WConst;
@@ -14,11 +11,12 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 搭建商管理-报馆管理ServiceImpl
@@ -103,6 +101,7 @@ public class EbsStadiumServiceImpl implements EbsStadiumService {
     public ResultModel addOrUpdate(EbsStadium ebsStadium) {
         ResultModel result = null;
         try {
+            ebsStadium.setUpdatetime(new Timestamp(System.currentTimeMillis()));
             int c = 0;
             if (ebsStadium.getId() == null || ebsStadium.getId().equals(0)) {
                 c = save(ebsStadium);
@@ -144,10 +143,10 @@ public class EbsStadiumServiceImpl implements EbsStadiumService {
                 map.put("status", "1");
                 break;
             case 4:
-                map.put("status", "0");
+                map.put("status", "2");
                 break;
             case 5:
-                map.put("status", "-1");
+                map.put("status", "3");
                 break;
         }
 
