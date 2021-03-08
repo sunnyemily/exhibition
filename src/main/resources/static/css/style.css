@@ -222,7 +222,7 @@ body{font-size:12px;color:#888;font-family: "Microsoft YaHei"}
 .notice-left a span{width:220px;overflow: hidden; text-overflow: ellipsis;white-space: nowrap;word-break: break-all; display:inline-block}
 .notice-left a:hover{color:#fff;}
 .notice-left a:hover .jt{color:#fff;}
-.notice-right{width:760px;float:left;min-height:650px;}
+.notice-right{width:630px;float:left;min-height:650px;}
 .notice-right .regist-path{text-align:right;padding-right:18px;margin-bottom:5px;margin: 10px 0px 18px 0px;}
 .notice-gradient{
     background: -moz-linear-gradient(left, #153880 0%, #3863a4 100%);
