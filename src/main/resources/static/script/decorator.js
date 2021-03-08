@@ -267,11 +267,11 @@ layui.use('upload', function () {
     var upload = layui.upload;
     var uploadLegalPersonCardPath = upload.render({
         accept: 'images'
-        , size: 2048
+        , size: 100
         , exts: 'jpg|jpeg|png|gif|bmp'
         , elem: '#btnLegalPersonCardPath' //绑定元素
         , url: '/updatePictureLimit' //上传接口
-        , data: {width: 358, height: 441, size: 100}
+        , data: {width: 441, height: 358, size: 100}
         , done: function (res) {
             if (res.status == 1) {
                 $("#legalpersoncardpath").val(res.result);
@@ -295,10 +295,40 @@ layui.use('upload', function () {
             layer.closeAll('loading');
         }
     });
+    var uploadBusLicensePath = upload.render({
+        accept: 'images'
+        , size: 2048
+        , exts: 'jpg|jpeg|png|gif|bmp'
+        , elem: '#btnBusLicensePath' //绑定元素
+        , url: '/updatePictureLimit' //上传接口
+        , data: {width: 516, height: 390, size: 2048}
+        , done: function (res) {
+            if (res.status == 1) {
+                $("#buslicensepath").val(res.result);
+                $("#prebuslicensepath").attr("src", res.result);
+                layer.msg(uploadSuccessful, {icon: 6});
+            } else if (res.status == 4) {
+                window.location.href = "/error/permission.html";
+            } else if (res.status == 5) {
+                layer.confirm(res.msg, {icon: 3, title: tishi}, function (index) {
+                    window.location.href = "/" + window.parent.language + "/" + window.parent.type + "-login.html";
+                    layer.close(index);
+                });
+            } else {
+                layer.msg(res.msg, {shift: 6});
+            }
+            layer.closeAll('loading');
+        }
+        , error: function () {
+            //请求异常回调
+            layer.msg(interfaceException, {shift: 6});
+            layer.closeAll('loading');
+        }
+    });
     //上传文件：特装搭建施工准入资质单位申请表
     var uploadAdmissionApplicationFormFile = upload.render({
         accept: 'file'
-        , size: 1024 * 15
+        , size: 1024 * 5
         , exts: 'doc|docx'
         , elem: '#btnAdmissionApplicationForm' //绑定元素
         , url: '/uploadFile' //上传接口
@@ -330,7 +360,7 @@ layui.use('upload', function () {
     //上传文件：制作工场车间的产权证明或租赁合同
     var uploadAdmissionApplicationFormFile = upload.render({
         accept: 'file'
-        , size: 1024 * 15
+        , size: 1024 * 5
         , exts: 'doc|docx'
         , elem: '#btnWorkshopCertificate' //绑定元素
         , url: '/uploadFile' //上传接口
@@ -494,8 +524,8 @@ $(document).ready(function () {
         layer.full(index);
     });
     $("#btnBuslicensepathCropper").on("click",function(){
-        var w = 800;
-        var h = 1060;
+        var w = 516;
+        var h = 390;
         var index = layer.open({
             title:pictureToolTitle,
             type: 2,

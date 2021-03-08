@@ -744,8 +744,8 @@ layui.use('upload', function () {
     //上传文件：特装展位搭建安全责任承诺书
     var uploadSafetyResponsibilityCommitFile = upload.render({
         accept: 'file'
-        , size: 1024 * 15
-        , exts: 'zip|rar'
+        , size: 1024 * 5
+        , exts: 'doc|docx'
         , elem: '#btnSafetyResponsibilityCommit' //绑定元素
         , url: '/uploadFile' //上传接口
         , before: function (obj) {
@@ -776,8 +776,8 @@ layui.use('upload', function () {
     //上传文件：特装展位装修工程申请表
     var uploadFitmentApplicationFile = upload.render({
         accept: 'file'
-        , size: 1024 * 15
-        , exts: 'zip|rar'
+        , size: 1024 * 5
+        , exts: 'doc|docx'
         , elem: '#btnFitmentApplication' //绑定元素
         , url: '/uploadFile' //上传接口
         , before: function (obj) {
@@ -808,8 +808,8 @@ layui.use('upload', function () {
     //上传文件：特装工程效果图
     var uploadEffectDiagramFile = upload.render({
         accept: 'file'
-        , size: 1024 * 15
-        , exts: 'zip|rar'
+        , size: 1024 * 5
+        , exts: 'pdf'
         , elem: '#btnEffectDiagram' //绑定元素
         , url: '/uploadFile' //上传接口
         , before: function (obj) {
@@ -840,8 +840,8 @@ layui.use('upload', function () {
     //上传文件：特装工程施工图
     var uploadConstructionDiagramFile = upload.render({
         accept: 'file'
-        , size: 1024 * 15
-        , exts: 'zip|rar'
+        , size: 1024 * 5
+        , exts: 'pdf'
         , elem: '#btnConstructionDiagram' //绑定元素
         , url: '/uploadFile' //上传接口
         , before: function (obj) {
@@ -872,8 +872,8 @@ layui.use('upload', function () {
     //上传文件：特装工程载荷图或点位图
     var uploadPointDiagramFile = upload.render({
         accept: 'file'
-        , size: 1024 * 15
-        , exts: 'zip|rar'
+        , size: 1024 * 5
+        , exts: 'pdf'
         , elem: '#btnPointDiagram' //绑定元素
         , url: '/uploadFile' //上传接口
         , before: function (obj) {
@@ -904,8 +904,8 @@ layui.use('upload', function () {
     //上传文件：特装工程电路图
     var uploadCircuitDiagramFile = upload.render({
         accept: 'file'
-        , size: 1024 * 15
-        , exts: 'zip|rar'
+        , size: 1024 * 5
+        , exts: 'pdf'
         , elem: '#btnCircuitDiagram' //绑定元素
         , url: '/uploadFile' //上传接口
         , before: function (obj) {

@@ -110,15 +110,15 @@
                         <td>*营业执照</td>
                         <input type="hidden" name="buslicensepath" id="buslicensepath" value=""  lay-verify="required" lay-reqText="必须上传营业执照"  />
                         <td width="40%">
-                            <button type="button" class="layui-btn" id="idpic" style="display:none">
+                            <button type="button" class="layui-btn" id="btnBusLicensePath" style="display:none">
                                 <i class="layui-icon">&#xe67c;</i>上传图片
                             </button>
                             <button type="button" class="layui-btn" id="btnBuslicensepathCropper">
                                 <i class="layui-icon">&#xe67c;</i>裁剪助手
                             </button>
-                            <div class="layui-form-mid layui-word-aux"><br />格式为JPG，上传文件小于2M，尺寸800*1060（宽*高）像素。</div>
+                            <div class="layui-form-mid layui-word-aux"><br />格式为JPG，上传文件小于2M，尺寸516*390（宽*高）像素。</div>
                         </td>
-                        <td colspan="2" class="prepic"><image src="" width="390" height="516" id="prebuslicensepath" /></td>
+                        <td colspan="2" class="prepic"><image src="" width="516" height="390" id="prebuslicensepath" /></td>
                     </tr>
                     <tr>
                         <td>*特装搭建施工准入资质单位申请表</td>
@@ -127,7 +127,7 @@
                             <button type="button" class="layui-btn" id="btnAdmissionApplicationForm">
                                 <i class="layui-icon">&#xe67c;</i>上传文件
                             </button>
-                            <div class="layui-form-mid layui-word-aux"><br />此处可上传特装搭建施工准入资质单位申请表,上传文件为DOC和DOCX类型并且大小要在15MB以内。</div>
+                            <div class="layui-form-mid layui-word-aux"><br />此处可上传特装搭建施工准入资质单位申请表,上传文件为DOC和DOCX类型并且大小要在5MB以内。</div>
                         </td>
                         <td colspan="2" class="prepic" id="admissionApplicationFormContainer"></td>
                     </tr>
@@ -138,7 +138,7 @@
                             <button type="button" class="layui-btn" id="btnWorkshopCertificate">
                                 <i class="layui-icon">&#xe67c;</i>上传文件
                             </button>
-                            <div class="layui-form-mid layui-word-aux"><br />此处可上传制作工场车间的产权证明或租赁合同,上传文件为DOC和DOCX类型并且大小要在15MB以内。</div>
+                            <div class="layui-form-mid layui-word-aux"><br />此处可上传制作工场车间的产权证明或租赁合同,上传文件为DOC和DOCX类型并且大小要在5MB以内。</div>
                         </td>
                         <td colspan="2" class="prepic" id="workshopCertificateContainer"></td>
                     </tr>
