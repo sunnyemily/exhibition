@@ -100,10 +100,10 @@
 							<button type="button" class="layui-btn" id="btnLegalPersonCardPathCropper">
 								<i class="layui-icon">&#xe67c;</i>裁剪助手
 							</button>
-							<div class="layui-form-mid layui-word-aux"><br/>格式为JPG，上传文件小于100K，尺寸441*358（宽*高）像素。</div>
+							<div class="layui-form-mid layui-word-aux"><br/>格式为JPG，上传文件小于2M，尺寸693*472（宽*高）像素。</div>
 						</td>
 						<td colspan="2" class="prepic">
-							<image src="" width="441" height="358" id="prelegalpersoncardpath"/>
+							<image src="" width="195" height="132" id="prelegalpersoncardpath"/>
 						</td>
 					</tr>
                     <tr>
@@ -116,9 +116,9 @@
                             <button type="button" class="layui-btn" id="btnBuslicensepathCropper">
                                 <i class="layui-icon">&#xe67c;</i>裁剪助手
                             </button>
-                            <div class="layui-form-mid layui-word-aux"><br />格式为JPG，上传文件小于2M，尺寸516*390（宽*高）像素。</div>
+                            <div class="layui-form-mid layui-word-aux"><br />格式为JPG，上传文件小于2M，尺寸800*1060（宽*高）像素。</div>
                         </td>
-                        <td colspan="2" class="prepic"><image src="" width="516" height="390" id="prebuslicensepath" /></td>
+                        <td colspan="2" class="prepic"><image src="" width="195" height="258" id="prebuslicensepath" /></td>
                     </tr>
                     <tr>
                         <td>*特装搭建施工准入资质单位申请表</td>

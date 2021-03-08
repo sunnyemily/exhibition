@@ -133,6 +133,7 @@ public class DecoratorEbsPersonnelcardController {
 			// map.put("zhegjianleixing", result.getId());
 			map.put("session", strSessionid);
 			map = ResultVOUtil.TiaoZhengFenYe(map);
+			map.put("jyt", "yes");
 			List<EbsPersonnelcard> list = decoratorEbsPersonnelcardService.list(map);
 			int count = decoratorEbsPersonnelcardService.listcount(map);
 			return R.ok().put("data", list).put("code", WConst.SUCCESS)

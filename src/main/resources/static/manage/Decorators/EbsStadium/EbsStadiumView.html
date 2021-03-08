@@ -72,9 +72,7 @@
 								<label class="layui-form-label" for="effectdiagram">特装工程效果图</label>
 								<div class="layui-input-block">
 									<div class="layui-input-inline layui-show-xs-block" id="effectdiagram">
-										<button type="button" style="margin-left: 2px;height: 40px;" class="layui-btn layui-btn-primary" onclick="vm.downloadEffectDiagram()">
-											<i class="layui-icon layui-icon-link"></i>下载文件
-										</button>
+										<img :src="ebsStadiuminfo.effectdiagram" onclick="SeeImage(this.src)" style="width:693px;height:472px;margin-left: 2px;">
 									</div>
 								</div>
 							</div>
@@ -82,9 +80,7 @@
 								<label class="layui-form-label" for="constructiondiagram">特装工程施工图</label>
 								<div class="layui-input-block">
 									<div class="layui-input-inline layui-show-xs-block" id="constructiondiagram">
-										<button type="button" style="margin-left: 2px;height: 40px;" class="layui-btn layui-btn-primary" onclick="vm.downloadConstructionDiagram()">
-											<i class="layui-icon layui-icon-link"></i>下载文件
-										</button>
+										<img :src="ebsStadiuminfo.constructiondiagram" onclick="SeeImage(this.src)" style="width:693px;height:472px;margin-left: 2px;">
 									</div>
 								</div>
 							</div>
@@ -92,9 +88,7 @@
 								<label class="layui-form-label" for="pointdiagram">特装工程载荷图或点位图</label>
 								<div class="layui-input-block">
 									<div class="layui-input-inline layui-show-xs-block" id="pointdiagram">
-										<button type="button" style="margin-left: 2px;height: 40px;" class="layui-btn layui-btn-primary" onclick="vm.downloadPointDiagram()">
-											<i class="layui-icon layui-icon-link"></i>下载文件
-										</button>
+										<img :src="ebsStadiuminfo.pointdiagram" onclick="SeeImage(this.src)" style="width:693px;height:472px;margin-left: 2px;">
 									</div>
 								</div>
 							</div>
@@ -102,9 +96,7 @@
 								<label class="layui-form-label" for="circuitdiagram">特装工程电路图</label>
 								<div class="layui-input-block">
 									<div class="layui-input-inline layui-show-xs-block" id="circuitdiagram">
-										<button type="button" style="margin-left: 2px;height: 40px;" class="layui-btn layui-btn-primary" onclick="vm.downloadCircuitDiagram()">
-											<i class="layui-icon layui-icon-link"></i>下载文件
-										</button>
+										<img :src="ebsStadiuminfo.circuitdiagram" onclick="SeeImage(this.src)" style="width:693px;height:472px;margin-left: 2px;">
 									</div>
 								</div>
 							</div>

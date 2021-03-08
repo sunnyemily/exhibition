@@ -513,8 +513,8 @@ function addLisenter() {
 /**(cropper area) */
 $(document).ready(function () {
     $("#btnLegalPersonCardPathCropper").on("click", function () {
-        var w = 441;
-        var h = 358;
+        var w = 693;
+        var h = 472;
         var index = layer.open({
             title: pictureToolTitle,
             type: 2,
@@ -524,8 +524,8 @@ $(document).ready(function () {
         layer.full(index);
     });
     $("#btnBuslicensepathCropper").on("click",function(){
-        var w = 516;
-        var h = 390;
+        var w = 800;
+        var h = 1060;
         var index = layer.open({
             title:pictureToolTitle,
             type: 2,

@@ -1037,41 +1037,46 @@ form.on('select(cardtype)', function (data) {
 });
 /**(cropper area) */
 $(document).ready(function () {
-    $("#btnimagepathCropper").on("click", function () {
-        var w = 600;
-        var h = 749;
+    $("#btnEffectDiagramCropper").on("click", function () {
+        var w = 693;
+        var h = 472;
         var index = layer.open({
             title: pictureToolTitle,
             type: 2,
-            content: ['/plugins/cropper/index.html?w=' + w + '&h=' + h + '&mutipic=0&i=imagepath&pre=preimagepath', 'no'],
+            content: ['/plugins/cropper/index.html?w=' + w + '&h=' + h + '&mutipic=0&i=effectdiagram&pre=preeffectdiagram', 'no'],
             area: [clientWidth + "px", clientHeight + "px"]
         });
         layer.full(index);
     });
-    $("#btnidphotopathCropper").on("click", function () {
-        var w, h;
-        if (cardName == pressCard) {
-            w = 606;
-            h = 436;
-        } else {
-            w = 693;
-            h = 472;
-        }
+    $("#btnConstructionDiagramCropper").on("click", function () {
+        var w = 693;
+        var h = 472;
         var index = layer.open({
             title: pictureToolTitle,
             type: 2,
-            content: ['/plugins/cropper/index.html?w=' + w + '&h=' + h + '&mutipic=0&i=idphotopath&pre=preidphotopath', 'no'],
+            content: ['/plugins/cropper/index.html?w=' + w + '&h=' + h + '&mutipic=0&i=constructiondiagram&pre=preconstructiondiagram', 'no'],
             area: [clientWidth + "px", clientHeight + "px"]
         });
         layer.full(index);
     });
-    $("#btnBusinesslicenseCropper").on("click", function () {
-        var w = 800;
-        var h = 1060;
+    $("#btnPointDiagramCropper").on("click", function () {
+        var w = 693;
+        var h = 472;
         var index = layer.open({
             title: pictureToolTitle,
             type: 2,
-            content: ['/plugins/cropper/index.html?w=' + w + '&h=' + h + '&mutipic=0&i=businesslicense&pre=prebusinesslicensepath', 'no'],
+            content: ['/plugins/cropper/index.html?w=' + w + '&h=' + h + '&mutipic=0&i=pointdiagram&pre=prepointdiagram', 'no'],
+            area: [clientWidth + "px", clientHeight + "px"]
+        });
+        layer.full(index);
+    });
+    $("#btnCircuitDiagramCropper").on("click", function () {
+        var w = 693;
+        var h = 472;
+        var index = layer.open({
+            title: pictureToolTitle,
+            type: 2,
+            content: ['/plugins/cropper/index.html?w=' + w + '&h=' + h + '&mutipic=0&i=circuitdiagram&pre=precircuitdiagram', 'no'],
             area: [clientWidth + "px", clientHeight + "px"]
         });
         layer.full(index);
