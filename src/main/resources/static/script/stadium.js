@@ -809,7 +809,7 @@ layui.use('upload', function () {
     var uploadEffectDiagramFile = upload.render({
         accept: 'file'
         , size: 1024 * 5
-        , exts: 'pdf'
+        , exts: 'jpg|jpeg|png|gif|bmp'
         , elem: '#btnEffectDiagram' //绑定元素
         , url: '/uploadFile' //上传接口
         , before: function (obj) {
@@ -841,7 +841,7 @@ layui.use('upload', function () {
     var uploadConstructionDiagramFile = upload.render({
         accept: 'file'
         , size: 1024 * 5
-        , exts: 'pdf'
+        , exts: 'jpg|jpeg|png|gif|bmp'
         , elem: '#btnConstructionDiagram' //绑定元素
         , url: '/uploadFile' //上传接口
         , before: function (obj) {
@@ -873,7 +873,7 @@ layui.use('upload', function () {
     var uploadPointDiagramFile = upload.render({
         accept: 'file'
         , size: 1024 * 5
-        , exts: 'pdf'
+        , exts: 'jpg|jpeg|png|gif|bmp'
         , elem: '#btnPointDiagram' //绑定元素
         , url: '/uploadFile' //上传接口
         , before: function (obj) {
@@ -905,7 +905,7 @@ layui.use('upload', function () {
     var uploadCircuitDiagramFile = upload.render({
         accept: 'file'
         , size: 1024 * 5
-        , exts: 'pdf'
+        , exts: 'jpg|jpeg|png|gif|bmp'
         , elem: '#btnCircuitDiagram' //绑定元素
         , url: '/uploadFile' //上传接口
         , before: function (obj) {
