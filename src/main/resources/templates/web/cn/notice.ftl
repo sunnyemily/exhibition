@@ -20,7 +20,17 @@
 		<div class="left-head notice-gradient"><i class="fa fa-th-list"></i>公告</div>
 		<#if notices?? && (notices?size > 0) >
 		<#list notices as info>
-		<a  class="left-item" href="/${language}/notice-${info.id}.html" title="${info.title}"><i class="fa jt fa-chevron-left"></i><span>${info.title}</span></a>
+		<a  class="left-item" href="/${language}/notice-${info.id}.html" title="${info.title}">
+			<i class="fa jt fa-chevron-left"></i>
+			<table>
+				<tr>
+					<td><span>${info.title}</span></td>
+				</tr>
+				<tr>
+					<td><span>${info.updateTimeStr}</span></td>
+				</tr>
+			</table>
+		</a>
 		</#list>
 		</#if>
 	</div>

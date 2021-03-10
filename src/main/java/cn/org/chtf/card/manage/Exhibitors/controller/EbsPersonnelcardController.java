@@ -631,9 +631,9 @@ public class EbsPersonnelcardController {
 		String strSessionid = sysSessionService.getSessionID(request);
 		map.put("session", strSessionid);
 		String iccode = map.get("iccode").toString();
-		String[] strArgs = iccode.split("=");
-		String Value = CryptographyUtil.decrypt(strArgs[1], Charset.forName("utf8"), "lbh@MaoC");
-		map.put("iccode", Value);
+//		String[] strArgs = iccode.split("=");
+//		String Value = CryptographyUtil.decrypt(strArgs[0], Charset.forName("utf8"), "lbh@MaoC");
+		map.put("iccode", iccode);
 		List<EbsPersonnelcard> ebsPersonnelcard = ebsPersonnelcardService.findByMap(map);
 		return R.ok().put("code", WConst.SUCCESS).put("msg", WConst.QUERYSUCCESS).put("data", ebsPersonnelcard);
 	}
