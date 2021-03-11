@@ -158,6 +158,9 @@ var deleteSuccessfully='删除成功';
 var uploadSuccessfully="上传成功";
 var interfaceException="接口异常";
 var pictureToolTitle = '图片裁剪工具';
+var phoneIsIllegal = '请输入正确的手机号';
+var emailIsIllegal = '请输入正确的邮箱';
+var plateNumberIsIllegal = '请输入正确的车牌号';
 </script>
 <script src="/script/validate.js"></script>
 <script src="/script/vehiclecard.js"></script>

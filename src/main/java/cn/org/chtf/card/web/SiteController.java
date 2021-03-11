@@ -645,7 +645,7 @@ public class SiteController {
     }
 
     @RequestMapping(value = {"/{language}/{type}-vehiclecard-{paperType}.html"})
-    public String vehiclecard(@PathVariable String language, @PathVariable String type, @PathVariable String paperType, Model model, HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+    public String vehiclecard(@PathVariable String language, @PathVariable String type, @PathVariable String paperType, Integer companyId, Model model, HttpSession session, HttpServletRequest request, HttpServletResponse response) {
         setCommonContent(model);
         safeCheck(language, type, session, request, response);
         model.addAttribute("pageName", "vehiclecard");
@@ -730,6 +730,30 @@ public class SiteController {
         }
         model.addAttribute("isTimeout", isTimeout);
         model.addAttribute("needCarPicture", needCarPicture);
+
+        int memberId = 0;
+        Member member = (Member) session.getAttribute("member");
+        if (member != null) {
+            memberId = member.getMemberId();
+        }
+        //6.设置非交易团和记者证的公司名称
+        if (!type.equals("delegation") && !type.equals("reporter")) {
+            EbsCompanyinfo company = ebsCompanyinfoDao.getCompanyByMemberIdAndSessionId(member.getMemberId(), Integer.parseInt(exhibitionInfo.get("sessionId").toString()));
+            model.addAttribute("company", company);
+        } else {
+            if (companyId != null) {//有默认值
+                EbsCompanyinfo company = ebsCompanyinfoDao.findById(companyId);
+                model.addAttribute("company", company);
+            }
+            //读取交易团所添加企业列表
+            Map<String, Object> filter = new HashMap<String, Object>();
+            filter.put("memberId", member.getMemberId());
+            filter.put("sessionIds", this.exhibitionInfo.get("sessionId").toString());
+            filter.put("start", 0);
+            filter.put("limit", 5000);
+            List<Map<String, Object>> companys = ebsCompanyinfoDao.getTraddingGroupCompanys(filter);
+            model.addAttribute("companys", companys);
+        }
 
         String templateName = "web/" + language + "/vehiclecard";
 

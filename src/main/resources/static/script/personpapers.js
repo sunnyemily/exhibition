@@ -116,6 +116,15 @@ layui.use(['form'], function () {
 $("#add").on("click", function () {
 	//clear all values
 	$("#reset").click();
+	$("#name").val("");
+	$("#sex").val("0");
+	$("#country").val("");
+	$("#province").val("");
+	$("#city").val("");
+	$("#jobtitle").val("");
+	$("#companyid").val("");
+	$("#cardtype").val("");
+	$("#cardnumber").val("");
 	$("#imagepath").val("");
 	$("#preimagepath").attr("src", "");
 	$("#preidphotopath").attr("src", "");
@@ -233,9 +242,6 @@ function openLookModal(obj) {
 	$("#preimagepath").attr("src", $("#imagepath").val());
 	$("#preidphotopath").attr("src", $("#idphotopath").val());
 	$("#prebusinesslicense").attr("src", $("#businesslicense").val());
-	$("input").attr("disabled", "disabled");
-	$("select").attr("disabled", "disabled");
-	$("button").attr("disabled", "disabled");
 	$("#edit-model").show();
 }
 function downloadFile(obj) {

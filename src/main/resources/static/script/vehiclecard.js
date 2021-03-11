@@ -98,18 +98,28 @@ layui.use(['form'], function () {
 			if (value.length < 2) {
 				return title2;
 			}
+		},
+		platenumber: function (value) {
+			var pattern = /^(([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z](([0-9]{5}[DF])|([DF]([A-HJ-NP-Z0-9])[0-9]{4})))|([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z][A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9挂学警港澳使领]))$/;
+			if(!pattern.test(value)) {
+				return plateNumberIsIllegal;
+			}
 		}
 	});
 });
 $("#add").on("click", function () {
-	//clear all values
 	$("#reset").click();
+	$("#drivername").val("");
+	$("#phone").val("");
+	$("#platenumber").val("");
+	$("#remark").val("");
 	$("#drivinglicense").val("");
 	$("#predrivinglicense").attr("src", "");
 	$("input[name=id]").val("");
 	$("input").removeAttr("disabled");
 	$("select").removeAttr("disabled");
 	$("button").removeAttr("disabled");
+	//clear all values
 	$("#edit-model").show();
 });
 $(".close").on("click", function () {
@@ -206,9 +216,6 @@ function openLookModal(obj) {
 	});
 
 	$("#predrivinglicense").attr("src", $("#drivinglicense").val());
-	$("input").attr("disabled", "disabled");
-	$("select").attr("disabled", "disabled");
-	$("button").attr("disabled", "disabled");
 	$("#edit-model").show();
 }
 function downloadFile(obj) {
@@ -230,8 +237,36 @@ $(".btnsearch").click(function () {
 	reloadTableData();
 });
 
+// 验证手机号
+function isPhoneNo(phone) {
+	var pattern = /^1[34578]\d{9}$/;
+	return pattern.test(phone);
+}
+
+// 验证邮箱
+function isEmail(email) {
+	var pattern = /^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;
+	return pattern.test(email);
+}
+
+// 验证车牌号
+function isPlateNumberNo(platenumber) {
+	var pattern = /^(([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z](([0-9]{5}[DF])|([DF]([A-HJ-NP-Z0-9])[0-9]{4})))|([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领][A-Z][A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9挂学警港澳使领]))$/;
+	return pattern.test(platenumber);
+}
+
 //监听提交
 form.on('submit(update)', function (data) {
+	// var phone = $("#phone").val();
+	// if (isPhoneNo(phone) == false) {
+	// 	layer.msg(phoneIsIllegal, { icon: 6 });
+	// 	$("#phone").focus();
+	// }
+	var platenumber = $("#platenumber").val();
+	if (isPlateNumberNo(platenumber) == false) {
+		layer.msg(plateNumberIsIllegal, { icon: 6 });
+		$("#platenumber").focus();
+	}
 	var url = "/vehiclecard/save";
 	var index = layer.load(2);
 	data.field.status = 0;

@@ -28,13 +28,17 @@
 										</#if>
 										</select>
 										<#else>
-										<input class="layui-input" autocomplete="off" id="companyname" name="companyname" type="text"  lay-verify="required" value="<#if company??>${company.chinesename!''}</#if>" <#if company??>disabled</#if> />
+											<#if type!="decorator">
+											<input class="layui-input" autocomplete="off" id="companyname" name="companyname" type="text"  lay-verify="required" value="<#if company??>${company.chinesename!''}</#if>" <#if company??>disabled</#if> />
+											<#else>
+											<input class="layui-input" autocomplete="off" id="companyname" name="companyname" type="text"  lay-verify="required" value="<#if company??>${company.chinesename!''}</#if>" readonly />
+											</#if>
 										</#if>
 								</td>
 							</tr>
 							<tr>
 								<td>*手机号</td>
-								<td colspan="3"><input class="layui-input" autocomplete="off" id="phone" name="phone" type="text"  lay-verify="required"></td>
+								<td colspan="3"><input class="layui-input" autocomplete="off" id="phone" name="phone" type="text"  lay-verify="required|phone"></td>
 							</tr>
 							<#else>
 							<tr>
@@ -51,7 +55,7 @@
 							</tr>
 							<tr>
 								<td>*车牌号码</td>
-								<td colspan="3"><input class="layui-input" autocomplete="off" id="platenumber" name="platenumber" type="text"  lay-verify="required"></td>
+								<td colspan="3"><input class="layui-input" autocomplete="off" id="platenumber" name="platenumber" type="text"  lay-verify="required|platenumber"></td>
 							</tr>
 							<tr>
 								<td><#if needCarPicture>*</#if>车辆行驶证</td>
@@ -71,7 +75,7 @@
 							<tr>
 								<td>备注</td>
 								<td colspan="3">
-									<textarea name="remark" placeholder="备注" class="layui-textarea"></textarea>
+									<textarea id="remark" name="remark" placeholder="备注" class="layui-textarea"></textarea>
 								</td>
 							</tr>
 							<tr class="papers-edit-bg">

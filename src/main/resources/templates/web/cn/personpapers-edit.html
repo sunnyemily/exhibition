@@ -54,7 +54,11 @@
 									</#if>
 								  </select>
 								  <#else>
+									<#if type!="decorator">
 								  	<input class="layui-input" autocomplete="off" id="companyname" name="companyname" type="text"  lay-verify="required" value="<#if company??>${company.chinesename!''}</#if>" <#if company??>disabled</#if> />
+									<#else>
+									<input class="layui-input" autocomplete="off" id="companyname" name="companyname" type="text"  lay-verify="required" value="<#if company??>${company.chinesename!''}</#if>" readonly />
+									</#if>
 								  </#if>
 								</td>
 								<td>证件类型</td>

@@ -135,7 +135,7 @@ public class EbsVehiclecardServiceImpl implements EbsVehiclecardService {
 	public ResultModel getVehicleCards(EbsVehiclecard vehiclecard, PageModel page) {
 		ResultModel result = null;
 		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("name", page.getKeywords());
+		map.put("drivername", page.getKeywords());
 		map.put("phone", page.getPhone());
 		map.put("platenumber", page.getPlatenumber());
 		map.put("companyname", vehiclecard.getCompanyname());
