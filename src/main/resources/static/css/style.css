@@ -233,7 +233,7 @@ body{font-size:12px;color:#888;font-family: "Microsoft YaHei"}
     background: -ms-linear-gradient(left, #153880 0%,#3863a4 100%);
     background: linear-gradient(to right, #153880 0%,#3863a4 100%);
 }
-.notice-right-container{border:#e7e7e7;background-color:#fff;min-height:650px;font-size:14px;line-height:24px;}
+.notice-right-container{border:#e7e7e7;background-color:#fff;min-height:650px;font-size:14px;line-height:20px;}
 .notice-right-container .right-title{width:820px;width:calc(100% - 80px);height:30px;text-align:center;margin:15px auto;}
 .notice-right-container .right-time{width:820px;width:calc(100% - 80px);height:30px;text-align:center;margin:15px auto;}
 .notice-right-container .right-content{width:820px;width:calc(100% - 80px);overflow:auto;margin:15px auto;}

@@ -54,12 +54,12 @@
 <script>
 $(document).ready(function(){
 	var leftHeight = $(".notice-left").height();
-	var rightHeight = $(".right-content").height();
-	if(leftHeight>rightHeight+50){
-		$(".right-content").height(leftHeight-50);
+	var rightHeight = $(".notice-right-container").height();
+	if(leftHeight>rightHeight){
+		$(".notice-right-container").height(leftHeight);
 	}
 	else{
-		$(".notice-left").height(rightHeight+50);
+		$(".notice-left").height(rightHeight);
 	}
 }
 );
