@@ -92,10 +92,11 @@ var limit = ${limit};
 <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 {{# } }}
-<#else>
 {{# if(d.status == -1){ }}
 <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
 {{# } }}
+<#else>
+<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
 </#if>
 </script>
 
