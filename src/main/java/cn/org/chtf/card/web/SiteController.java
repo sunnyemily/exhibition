@@ -42,6 +42,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -1014,6 +1015,7 @@ public class SiteController {
         page.setSession(sessionId);
         page.setOrder("DESC");
         page.setField("updateTime");
+        page.setStatus(1);
         List<EbsNotice> notices = (List<EbsNotice>) decoratorEbsNoticeService.getNotices(page).getResult();
         model.addAttribute("notices", notices);
         if (noticeId == null || noticeId.intValue() == 0) {
@@ -1535,44 +1537,121 @@ public class SiteController {
      * @param map 分页及搜索实体
      * @return
      */
-    @RequestMapping(value = "/personcard/download")
+    @GetMapping(value = {"/personcard/download", "/vehiclecard/download"})
     @ResponseBody
-    public void personCardDownload(@RequestBody Map<String,Object> map, HttpServletResponse response) {
-        String path = map.get("path").toString();
+    public void personCardDownload(@RequestParam String path, @RequestParam String downloadType, HttpServletResponse pipeline) {
+//        String path = map.get("path").toString();
+//        String url = request.getScheme()+"://"+request.getServerName() + ":" + request.getLocalPort() + path;
+//        CloseableHttpClient httpClient = HttpClients.createDefault();
+//
+//        try {
+//
+//            HttpGet httpGet = new HttpGet(url);
+//            httpGet.setHeader("Accept", "*/*");
+//            httpGet.setHeader("Content-type", "application/x-www-form-urlencoded");
+//
+//            CloseableHttpResponse response = httpClient.execute(httpGet);
+//            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+//                pipeline.setCharacterEncoding("utf-8");
+//                if (response.getEntity().getContentType().getValue().contains("text/html")) {
+//                    pipeline.setContentType("text/html;charset=utf-8");
+//                    pipeline.getOutputStream().write("文件不存在".getBytes("utf-8"));
+//                } else {
+//                    Header[] headers = response.getAllHeaders();
+//                    for (Header header : headers) {
+//                        if ("Server".equalsIgnoreCase(header.getName())
+//                                || "Via".equalsIgnoreCase(header.getName())
+//                                || "X-Kong-Upstream-Latency".equalsIgnoreCase(header.getName())
+//                                || "X-Kong-Proxy-Latency".equalsIgnoreCase(header.getName())
+//                                || "Access-Control-Allow-Credentials".equalsIgnoreCase(header.getName())
+//                                || "Access-Control-Allow-Methods".equalsIgnoreCase(header.getName())
+//                                || "Access-Control-Allow-Headers".equalsIgnoreCase(header.getName())
+//                                || "Connection".equalsIgnoreCase(header.getName())) {
+//                            continue;
+//                        }
+//
+//                        pipeline.setHeader(header.getName(), header.getValue());
+//                    }
+//
+//                    String downloadFileName = "人员证书";
+//                    if ("vehiclecard".equals(map.get("downloadType"))) {
+//                        downloadFileName = "车辆证书";
+//                    }
+//                    response.addHeader( "Content-Type", "application/octet-stream");
+//                    response.addHeader( "Content-Disposition", "attachment; filename="
+//                            + new String(downloadFileName.getBytes( "UTF-8"), "ISO-8859-1")
+//                            + ".jpg;filename*=UTF-8''" + new String(downloadFileName.getBytes( "UTF-8"), "ISO-8859-1"));
+//
+////                    pipeline.setContentType("application/force-download;charset=utf-8");
+//                    response.getEntity().writeTo(pipeline.getOutputStream());
+//                }
+//            }
+//
+//            //释放链接
+//            if (null != response) {
+//                response.close();
+//            }
+//            if (null != pipeline.getOutputStream()) {
+//                pipeline.getOutputStream().close();
+//            }
+//        } catch (Exception e) {
+//            try {
+//                pipeline.setContentType("text/html;charset=utf-8");
+//                pipeline.getOutputStream().write("下载失败".getBytes("utf-8"));
+//                if (null != pipeline.getOutputStream()) {
+//                    pipeline.getOutputStream().close();
+//                }
+//            } catch (IOException e1) {
+//                e1.printStackTrace();;
+//                System.out.println("图片下载已经捕获异常，关闭连接时异常，原因：" + e.getMessage());
+//            }
+//            e.printStackTrace();
+//            System.out.println("图片下载异常，原因：" + e.getMessage());
+//        } finally {
+//            try {
+//                httpClient.close();
+////                pipeline = null;
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        String path = map.get("path").toString();
+        String filename = "人员证书";
+        if ("vehiclecard".equals(downloadType)) {
+            filename = "车辆证书";
+        }
         File file = new File("./static" + path);
-        String[] filePathSplit = path.split("/");
-        response.setContentType("application/force-download");
-        response.addHeader("Content-Disposition", "attachment;fileName=" + filePathSplit[filePathSplit.length - 1]);
 
-        byte[] buffer = new byte[1024];
-        FileInputStream fis = null;
-        BufferedInputStream bis = null;
         try {
-            fis = new FileInputStream(file);
-            bis = new BufferedInputStream(fis);
-            OutputStream os = response.getOutputStream();
-            int i = bis.read(buffer);
-            while (i != -1) {
-                os.write(buffer, 0, i);
-                i = bis.read(buffer);
-            }
+            pipeline.reset();// 清空输出流
 
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        } finally {
-            if (bis != null) {
-                try {
-                    bis.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            String resultFileName = filename + System.currentTimeMillis() + ".jpg";
+            resultFileName = URLEncoder.encode(resultFileName, "UTF-8");
+            pipeline.setCharacterEncoding("UTF-8");
+            pipeline.setHeader("Content-disposition", "attachment; filename=" + resultFileName);// 设定输出文件头
+            pipeline.setContentType("image/jpeg;charset=UTF-8");// 定义输出类型
+            //输入流：本地文件路径
+            DataInputStream in = new DataInputStream(new FileInputStream(file));
+            //输出流
+            OutputStream out = pipeline.getOutputStream();
+            //输出文件
+            int bytes = 0;
+            byte[] bufferOut = new byte[1024];
+            while ((bytes = in.read(bufferOut)) != -1) {
+                out.write(bufferOut, 0, bytes);
             }
-            if (fis != null) {
-                try {
-                    fis.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            out.close();
+            in.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            pipeline.reset();
+            try {
+                OutputStreamWriter writer = new OutputStreamWriter(pipeline.getOutputStream(), "UTF-8");
+                String data = "<script language='javascript'>alert(\"\\u64cd\\u4f5c\\u5f02\\u5e38\\uff01\");</script>";
+                writer.write(data);
+                writer.close();
+            } catch (IOException e1) {
+                e1.printStackTrace();
             }
         }
     }

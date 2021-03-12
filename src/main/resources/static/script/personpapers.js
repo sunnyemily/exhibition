@@ -247,20 +247,9 @@ function openLookModal(obj) {
 function downloadFile(obj) {
 	$("#reset").click();
 	obj = obj.data;
-	// $("#downloadFile").attr("href", obj.imagepath);
-	// $("#downloadFile")[0].click();
-	window.open(obj.imagepath);
-	// var params = {};
-	// params.path = obj.imagepath;
-	// $.ajax({
-	// 	url: "/personcard/download",
-	// 	data: JSON.stringify(params),
-	// 	type: "post",
-	// 	contentType: "application/json",
-	// 	success: function (result) {
-	//
-	// 	}
-	// });
+	var url = "/personcard/download?downloadType=personcard&path=" + obj.imagepath;
+	$("#downloadFile").attr("href", url);
+	$("#downloadFile")[0].click();
 }
 function loadCountry() {
 	var country = $("select[name=country]");
@@ -507,13 +496,13 @@ function getStatusName(card) {
 		return yidayin;
 	}
 	if (card.status == 1) {
-		return yishenhe;
+		return "<span style='color:green'>" + yishenhe + "</span>";
 	}
 	if (card.status == 0) {
-		return weishenhe;
+		return "<span style='color:blue'>" + weishenhe + "</span>";
 	}
 	if (card.status == -1) {
-		return weitongguo;
+		return "<span style='color:red'>" + weitongguo + "</span>";
 	}
 }
 function deleteCards(obj) {

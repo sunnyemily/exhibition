@@ -221,9 +221,9 @@ function openLookModal(obj) {
 function downloadFile(obj) {
 	$("#reset").click();
 	obj = obj.data;
-	// $("#downloadFile").attr("href", obj.drivinglicense);
-	// $("#downloadFile")[0].click();
-	window.open(obj.drivinglicense);
+	var url = "/vehiclecard/download?downloadType=vehiclecard&path=" + obj.drivinglicense;
+	$("#downloadFile").attr("href", url);
+	$("#downloadFile")[0].click();
 }
 $(document).ready(function () {
 	form = layui.form;
@@ -306,13 +306,13 @@ function getStatusName(card) {
 		return yidayin;
 	}
 	if (card.status == 1) {
-		return yishenhe;
+		return "<span style='color:green'>" + yishenhe + "</span>";
 	}
 	if (card.status == 0) {
-		return weishenhe;
+		return "<span style='color:blue'>" + weishenhe + "</span>";
 	}
 	if (card.status == -1) {
-		return weitongguo;
+		return "<span style='color:red'>" + weitongguo + "</span>";
 	}
 }
 function deleteCards(obj) {
