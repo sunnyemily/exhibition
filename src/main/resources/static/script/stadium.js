@@ -128,13 +128,13 @@ $("#add").on("click", function () {
     $("#fitmentapplication").val("");
     $("#fitmentApplicationContainer").html("");
     $("#effectdiagram").val("");
-    $("#effectDiagramContainer").html("");
     $("#constructiondiagram").val("");
-    $("#constructionDiagramContainer").html("");
     $("#pointdiagram").val("");
-    $("#pointDiagramContainer").html("");
     $("#circuitdiagram").val("");
-    $("#circuitDiagramContainer").html("");
+    $("#preeffectdiagram").attr("src", "");
+    $("#preconstructiondiagram").attr("src", "");
+    $("#prepointdiagram").attr("src", "");
+    $("#precircuitdiagram").attr("src", "");
     $("#workercertificatecopy").val("");
     $("#workerCertificateCopyContainer").html("");
     $("#equipmentqualifiedprove").val("");
@@ -210,29 +210,13 @@ function openEditModal(obj) {
         $("#fitmentApplicationContainer").html("");
     }
     $("#effectdiagram").val(obj["effectdiagram"]);
-    if (obj["effectdiagram"] != "") {
-        $("#effectDiagramContainer").html("<a href='" + obj["effectdiagram"] + "' target='_blank'>" + previourTitle + "</a>");
-    } else {
-        $("#effectDiagramContainer").html("");
-    }
+    $("#preeffectdiagram").attr("src", $("#effectdiagram").val());
     $("#constructiondiagram").val(obj["constructiondiagram"]);
-    if (obj["constructiondiagram"] != "") {
-        $("#constructionDiagramContainer").html("<a href='" + obj["constructiondiagram"] + "' target='_blank'>" + previourTitle + "</a>");
-    } else {
-        $("#constructionDiagramContainer").html("");
-    }
+    $("#preconstructiondiagram").attr("src", $("#constructiondiagram").val());
     $("#pointdiagram").val(obj["pointdiagram"]);
-    if (obj["pointdiagram"] != "") {
-        $("#pointDiagramContainer").html("<a href='" + obj["pointdiagram"] + "' target='_blank'>" + previourTitle + "</a>");
-    } else {
-        $("#pointDiagramContainer").html("");
-    }
+    $("#prepointdiagram").attr("src", $("#pointdiagram").val());
     $("#circuitdiagram").val(obj["circuitdiagram"]);
-    if (obj["circuitdiagram"] != "") {
-        $("#circuitDiagramContainer").html("<a href='" + obj["circuitdiagram"] + "' target='_blank'>" + previourTitle + "</a>");
-    } else {
-        $("#circuitDiagramContainer").html("");
-    }
+    $("#precircuitdiagram").attr("src", $("#circuitdiagram").val());
     $("#workercertificatecopy").val(obj["workercertificatecopy"]);
     if (obj["workercertificatecopy"] != "") {
         $("#workerCertificateCopyContainer").html("<a href='" + obj["workercertificatecopy"] + "' target='_blank'>" + previourTitle + "</a>");
@@ -324,29 +308,13 @@ function openLookModal(obj) {
         $("#fitmentApplicationContainer").html("");
     }
     $("#effectdiagram").val(obj["effectdiagram"]);
-    if (obj["effectdiagram"] != "") {
-        $("#effectDiagramContainer").html("<a href='" + obj["effectdiagram"] + "' target='_blank'>" + previourTitle + "</a>");
-    } else {
-        $("#effectDiagramContainer").html("");
-    }
+    $("#preeffectdiagram").attr("src", $("#effectdiagram").val());
     $("#constructiondiagram").val(obj["constructiondiagram"]);
-    if (obj["constructiondiagram"] != "") {
-        $("#constructionDiagramContainer").html("<a href='" + obj["constructiondiagram"] + "' target='_blank'>" + previourTitle + "</a>");
-    } else {
-        $("#constructionDiagramContainer").html("");
-    }
+    $("#preconstructiondiagram").attr("src", $("#constructiondiagram").val());
     $("#pointdiagram").val(obj["pointdiagram"]);
-    if (obj["pointdiagram"] != "") {
-        $("#pointDiagramContainer").html("<a href='" + obj["pointdiagram"] + "' target='_blank'>" + previourTitle + "</a>");
-    } else {
-        $("#pointDiagramContainer").html("");
-    }
+    $("#prepointdiagram").attr("src", $("#pointdiagram").val());
     $("#circuitdiagram").val(obj["circuitdiagram"]);
-    if (obj["circuitdiagram"] != "") {
-        $("#circuitDiagramContainer").html("<a href='" + obj["circuitdiagram"] + "' target='_blank'>" + previourTitle + "</a>");
-    } else {
-        $("#circuitDiagramContainer").html("");
-    }
+    $("#precircuitdiagram").attr("src", $("#circuitdiagram").val());
     $("#workercertificatecopy").val(obj["workercertificatecopy"]);
     if (obj["workercertificatecopy"] != "") {
         $("#workerCertificateCopyContainer").html("<a href='" + obj["workercertificatecopy"] + "' target='_blank'>" + previourTitle + "</a>");
