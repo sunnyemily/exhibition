@@ -30,6 +30,8 @@ import cn.org.chtf.card.manage.system.service.*;
 import cn.org.chtf.card.support.util.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -49,6 +51,9 @@ import java.util.*;
 
 @Controller
 public class SiteController {
+
+    private Logger logger = LoggerFactory.getLogger(SiteController.class);
+
     Map<String, Object> exhibitionInfo;
 
     SiteController() {
@@ -1539,7 +1544,7 @@ public class SiteController {
      */
     @GetMapping(value = {"/personcard/download", "/vehiclecard/download"})
     @ResponseBody
-    public void personCardDownload(@RequestParam String path, @RequestParam String downloadType, HttpServletResponse pipeline) {
+    public void personCardDownload(@RequestParam String path, @RequestParam String downloadType, HttpServletRequest request, HttpServletResponse pipeline) {
 //        String path = map.get("path").toString();
 //        String url = request.getScheme()+"://"+request.getServerName() + ":" + request.getLocalPort() + path;
 //        CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -1616,6 +1621,13 @@ public class SiteController {
 //            }
 //        }
 //        String path = map.get("path").toString();
+        if (path == null || "".equals(path)) {
+            path = request.getParameter("path");
+        }
+        if (downloadType == null || "".equals(downloadType)) {
+            downloadType = request.getParameter("downloadType");
+        }
+        logger.info("证书下载，path：" + path + ",downloadType:" + downloadType);
         String filename = "人员证书";
         if ("vehiclecard".equals(downloadType)) {
             filename = "车辆证书";

@@ -220,10 +220,20 @@ function openLookModal(obj) {
 }
 function downloadFile(obj) {
 	$("#reset").click();
-	obj = obj.data;
-	var url = "/vehiclecard/download?downloadType=vehiclecard&path=" + obj.drivinglicense;
-	$("#downloadFile").attr("href", url);
-	$("#downloadFile")[0].click();
+	var data = obj.data;
+	var url = "/vehiclecard/download?downloadType=vehiclecard&path=" + data.drivinglicense;
+	$("#downloadFile" + data.id).attr("href", url);
+	$("#downloadFile" + data.id)[0].click();
+	// $.ajax({
+	// 	url: "/vehiclecard/download",
+	// 	data: "downloadType=vehiclecard&path=" + data.drivinglicense,
+	// 	dataType: "json",
+	// 	type: "get",
+	// 	contentType: 'application/json;charset=utf-8',
+	// 	success: function () {
+	//
+	// 	}
+	// });
 }
 $(document).ready(function () {
 	form = layui.form;

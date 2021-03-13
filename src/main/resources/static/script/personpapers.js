@@ -59,6 +59,7 @@ function renderTable() {
 		var data = obj.data; // 获得当前行数据
 		var layEvent = obj.event; // 获得 lay-event 对应的值
 		var tr = obj.tr; // 获得当前行 tr 的DOM对象
+		var index = $(this).closest("tr").index();
 
 		if (layEvent === 'del') { // 删除
 			deleteCards(obj);
@@ -67,7 +68,7 @@ function renderTable() {
 		} else if (layEvent === 'detail') { // 查看
 			openLookModal(obj);
 		} else if (layEvent === 'download') { // 下载文件
-			downloadFile(obj);
+			downloadFile(obj, index);
 		}
 	});
 	table.on('sort(test)', function (obj) { // 注：sort是排序事件名，test是table原始容器的属性
@@ -244,12 +245,22 @@ function openLookModal(obj) {
 	$("#prebusinesslicense").attr("src", $("#businesslicense").val());
 	$("#edit-model").show();
 }
-function downloadFile(obj) {
+function downloadFile(obj, index) {
 	$("#reset").click();
-	obj = obj.data;
-	var url = "/personcard/download?downloadType=personcard&path=" + obj.imagepath;
-	$("#downloadFile").attr("href", url);
-	$("#downloadFile")[0].click();
+	var data = obj.data;
+	var url = "/personcard/download?downloadType=personcard&path=" + data.imagepath;
+	$("#downloadFile" + data.id).attr("href", url);
+	$("#downloadFile" + data.id)[0].click();
+	// $.ajax({
+	// 	url: "/personcard/download",
+	// 	data: "downloadType=personcard&path=" + data.imagepath,
+	// 	dataType: "json",
+	// 	type: "get",
+	// 	contentType: 'application/json;charset=utf-8',
+	// 	success: function () {
+	//
+	// 	}
+	// });
 }
 function loadCountry() {
 	var country = $("select[name=country]");
