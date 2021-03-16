@@ -85,7 +85,7 @@ var limit = ${limit};
 <script type="text/html" id="toolBar">
 <#if !isTimeout>
 {{# if(d.status == 1){ }}
-<a class="layui-btn layui-btn-xs" lay-event="download" id="downloadFile{{d.id}}" target="_blank">下载证书</a>
+<#--<a class="layui-btn layui-btn-xs" lay-event="download" id="downloadFile{{d.id}}" target="_blank">下载证书</a>-->
 <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
 {{# } }}
 {{# if(d.status == 0){ }}

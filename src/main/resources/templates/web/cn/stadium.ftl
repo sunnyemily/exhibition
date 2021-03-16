@@ -54,7 +54,7 @@
 <script type="text/html" id="toolBar">
     <#if !isTimeout>
         {{# if(d.status == 2 && d.paystatus == 0){ }}
-        <a class="layui-btn layui-btn-xs" lay-event="pay">缴费</a>
+<#--        <a class="layui-btn layui-btn-xs" lay-event="pay">缴费</a>-->
         <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
         {{# } }}
 		{{# if(d.status == 2 && d.paystatus == 1){ }}
