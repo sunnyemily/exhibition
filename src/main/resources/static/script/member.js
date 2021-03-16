@@ -34,11 +34,15 @@ $(document).ready(function(){
 			return;
 		}
 		if(page=="exit"){
-			logout();
-			return;
+			layer.confirm('确定退出吗？', function() {
+				logout();
+				return;
+			});
 		}
 		//2.2其他则进行页面跳转
-		$("iframe").attr("src",url);
+		if(page!="exit") {
+			$("iframe").attr("src", url);
+		}
 	});
 	//三、首个菜单默认打开
 	openFirstMenu();
