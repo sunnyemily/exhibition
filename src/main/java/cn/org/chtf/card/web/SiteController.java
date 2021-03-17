@@ -1095,6 +1095,22 @@ public class SiteController {
     }
 
     /**
+     * 获取指定条件的搭建商报馆展商列表
+     *
+     * @return
+     */
+    @GetMapping(value = "/listStadiumCompany")
+    @ResponseBody
+    public List<Map<String, Object>> listStadiumCompany(@RequestParam String companyName) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("index", 0);
+        map.put("size", 100000);
+        map.put("companyName", companyName);
+        List<Map<String, Object>> companyList = ebsCompanyinfoDao.getStadiumCompanys(map);
+        return companyList;
+    }
+
+    /**
      * 添加报馆申请
      */
     @PostMapping("/stadium/save")

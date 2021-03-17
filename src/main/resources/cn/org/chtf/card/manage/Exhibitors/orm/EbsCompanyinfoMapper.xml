@@ -1153,6 +1153,9 @@ GROUP BY chinesename
 		WHERE
 		ebs_companyinfo.session = #{sessionIds}
 		and ebs_companyinfo.comany_type_id != 3
+		<if test="companyName != null">
+			and c.chinesename like concat ('%',#{companyName},'%')
+		</if>
 		order by ebs_companyinfo.id
 		LIMIT ${start}, ${limit}
 	</select>
