@@ -11,17 +11,18 @@
 							<tr>
 								<td>*展商名称</td>
 								<td colspan=3"">
-<!--							      <select lay-search style="width: 300px;" name="relationcompanyid" id="relationcompanyid">-->
+									<div class="stadium-company-tip">
 								  <select name="relationcompanyid" id="relationcompanyid" lay-filter="relationcompanyid" class="layui-select" lay-verify="required"
 										  lay-filter="selectTemplate" lay-search>
-									  <#if companys??>
+									<#if companys??>
 							      	<#list companys as c>
-									<option value="${c.id}">${c.chinesename}</option>
+										<option value="${c.id}">${c.chinesename}</option>
 									</#list>
 									<#else>
-									<option value="${company.id!'0'}">${company.chinesename!''}</option>
+										<option value="${company.id!'0'}">${company.chinesename!''}</option>
 									</#if>
 								  </select>
+									</div>
 								</td>
 							</tr>
 							<tr>

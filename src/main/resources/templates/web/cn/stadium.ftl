@@ -138,5 +138,7 @@
 <script src="/script/validate.js"></script>
 <script src="/script/stadium.js"></script>
 <script src="/manage/js/content.js?v=1.0.0"></script>
+<link href="/plugins/layui/css/modules/layer/default/layer.css" rel="stylesheet" type="text/css" />
+<script src="/plugins/layui/lay/modules/layer.js" charset="utf-8"></script>
 </body>
 </html>

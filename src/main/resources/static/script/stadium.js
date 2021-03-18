@@ -80,12 +80,41 @@ function renderTable() {
             , where: where
         });
     });
+    showCompanyTip();
+}
+
+function hideCompanyTip() {
+    var layerTips = 0;
+    var item = document.getElementsByClassName('stadium-company-tip')[0];
+    item.onmouseover = function () {
+        return false;
+    };
+    item.onmouseout = function() {
+        return false;
+    };
+}
+
+function showCompanyTip() {
+    var layerTips = 0;
+    var item = document.getElementsByClassName('stadium-company-tip')[0];
+    item.onmouseover = function () {
+        var that = this;
+        layerTips = layer.tips("<span style='color:#000;'>请输入展商名称并选择</span>", that, {
+            tips: [2, '#fff'],
+            time: 0,
+            area: 'auto',
+            maxWidth: 500
+        });
+    };
+    item.onmouseout = function() {
+        layer.close(layerTips);
+    };
 }
 
 // 重新加载数据
 function reloadTableData() {
     where.paystatus = $("input[name=paystatus]:checked").val(),
-    where.status = $("input[name=status]:checked").val();
+        where.status = $("input[name=status]:checked").val();
     table.reload('id', {
         method: 'post'
         , url: '/stadium/list'
@@ -118,6 +147,7 @@ layui.use(['form'], function () {
 $("#add").on("click", function () {
     //clear all values
     $("#reset").click();
+    showCompanyTip();
     $("#imagepath").val("");
     $("#preimagepath").attr("src", "");
     $("#preidphotopath").attr("src", "");
@@ -152,6 +182,7 @@ $(".close").on("click", function () {
 
 function openEditModal(obj) {
     $("#reset").click();
+    showCompanyTip();
     obj = obj.data;
     $("#editform input[type=hidden]").each(function () {
         var name = $(this).attr("name");
@@ -243,6 +274,7 @@ function openEditModal(obj) {
 
 function openLookModal(obj) {
     $("#reset").click();
+    hideCompanyTip();
     obj = obj.data;
     $("#editform input[type=hidden]").each(function () {
         var name = $(this).attr("name");
