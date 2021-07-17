@@ -198,12 +198,14 @@
                     title: '操作',
                     templet: function (d) {
                         var btn = "<a class=\"layui-btn layui-btn-primary layui-btn-xs\" lay-event=\"view\">查看详情</a>";
-                        if (d.status != 1) {
-                            btn += "<a class=\"layui-btn layui-btn layui-btn-xs\" onclick=\"againAudit('" + d.stadiumId + "')\">重审</a>";
-                        }
-                        if (d.status == 1) {
-                            btn += "<a class=\"layui-btn layui-btn-xs\" onclick=\"agreeStadiumInfo('" + d.stadiumId + "')\">通过</a>";
-                            btn += "<a class=\"layui-btn layui-btn-xs layui-btn-danger\" lay-event=\"reject\">驳回</a>";
+                        if (d.stadiumFlag == "true") {
+                            if (d.status != 1) {
+                                btn += "<a class=\"layui-btn layui-btn layui-btn-xs\" onclick=\"againAudit('" + d.stadiumId + "')\">重审</a>";
+                            }
+                            if (d.status == 1) {
+                                btn += "<a class=\"layui-btn layui-btn-xs\" onclick=\"agreeStadiumInfo('" + d.stadiumId + "')\">通过</a>";
+                                btn += "<a class=\"layui-btn layui-btn-xs layui-btn-danger\" lay-event=\"reject\">驳回</a>";
+                            }
                         }
                         return btn;
                     }

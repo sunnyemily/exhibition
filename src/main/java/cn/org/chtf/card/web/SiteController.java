@@ -2,6 +2,8 @@ package cn.org.chtf.card.web;
 
 
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.org.chtf.card.common.constant.RequestConstant;
 import cn.org.chtf.card.common.utils.R;
 import cn.org.chtf.card.manage.Decorators.service.DecoratorEbsNoticeService;
 import cn.org.chtf.card.manage.Exhibitors.dao.EbsCompanyinfoMapper;
@@ -28,8 +30,12 @@ import cn.org.chtf.card.manage.system.model.SysIndustry;
 import cn.org.chtf.card.manage.system.model.SystemDictionaries;
 import cn.org.chtf.card.manage.system.service.*;
 import cn.org.chtf.card.support.util.*;
+import cn.org.chtf.card.support.util.http.HttpUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +56,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
+@Slf4j
 public class SiteController {
 
     private Logger logger = LoggerFactory.getLogger(SiteController.class);
@@ -63,6 +70,8 @@ public class SiteController {
     MenuService menuService;
     @Resource(name = "MemberServiceImpl")
     MemberService memberService;
+    @Resource
+    HttpUtil httpUtil;
 
     @Autowired
     SysSessionService sessionService;
@@ -530,6 +539,9 @@ public class SiteController {
         } else if (cardStopDate != null && cardStopDate.equals("")) {
             cardStopDate = this.exhibitionInfo.get("certificatesEndDate").toString();
         }
+        if (type.equals("decorator")) {
+            cardStopDate = getCertificateEndDate(request);
+        }
         model.addAttribute("cardStopDate", cardStopDate);
         //5.是否超过限制时间
         Boolean isTimeout = false;
@@ -710,7 +722,7 @@ public class SiteController {
             needCarPicture = agent.getUploadvehiclelicense() == 0 ? false : true;
         }
         if (certificateModal.getChinesename().contains("布撤展车证")) {
-            cardStopDate = this.exhibitionInfo.get("certificatesFprEndDate").toString();
+            cardStopDate = getCertificateEndDate(request);
             if (type.equals("decorator")) {
                 needCarPicture = true;
             }
@@ -764,6 +776,35 @@ public class SiteController {
         String templateName = "web/" + language + "/vehiclecard";
 
         return templateName;
+    }
+
+    /**
+     * 获取搭建商办证截止时间
+     * @param request
+     * @return
+     */
+    private String getCertificateEndDate(HttpServletRequest request) {
+        // 获取搭建商办证截止时间
+        String endDate = null;
+        try {
+            String currentUrl = CryptographyUtil.GeCurrenttUrl(request);
+            String url = RequestConstant.getUrl(currentUrl, RequestConstant.APPLY_CERTIFICATES_END_DATE_TYPE);
+            String response = httpUtil.doGet(url);
+            log.info("获取搭建商办证截止时间，请求地址:{}，返回结果:{}", url, response);
+            JSONObject jsonObject = JSON.parseObject(response);
+            if (jsonObject != null) {
+                Object code = jsonObject.get("code");
+                Object endate = jsonObject.get("endate");
+                if (code != null && StrUtil.isNotEmpty(code.toString())
+                        && StrUtil.equals("200", code.toString())
+                        && endate != null && StrUtil.isNotEmpty(endate.toString())) {
+                    endDate = endate.toString();
+                }
+            }
+        } catch (Exception ex) {
+            log.info("获取搭建商办证截止时间异常", ex.getMessage());
+        }
+        return endDate;
     }
 
     @RequestMapping(value = {"/{language}/{type}-enterprise.html"})
@@ -980,9 +1021,46 @@ public class SiteController {
         model.addAttribute("applyInfo", memberService.getExhibitorApplyInfo(session, sessionId));
         model.addAttribute("companytypes", companytypes);
         model.addAttribute("industries", industries);
+        //3.判断搭建商审核时间是否超过范围
+        boolean auditFlag = getAuditFlag(request);
+        model.addAttribute("auditFlag", auditFlag + "");
         String templateName = "web/" + language + "/" + "decorator";
 
         return templateName;
+    }
+
+    /**
+     * 获取搭建商资质审核时间，判断是否已经超出范围
+     * @param request
+     * @return
+     */
+    private boolean getAuditFlag(HttpServletRequest request) {
+        // 获取搭建商资质审核时间，判断是否已经超出范围
+        boolean auditFlag = true;
+        try {
+            String currentUrl = CryptographyUtil.GeCurrenttUrl(request);
+            String url = RequestConstant.getUrl(currentUrl, RequestConstant.QUALIFICATION_REVIEW_END_DATE_TYPE);
+            String response = httpUtil.doGet(url);
+            log.info("获取搭建商资质审核时间，请求地址:{}，返回结果:{}", url, response);
+            JSONObject jsonObject = JSON.parseObject(response);
+            if (jsonObject != null) {
+                Object code = jsonObject.get("code");
+                Object endate = jsonObject.get("endate");
+                if (code != null && StrUtil.isNotEmpty(code.toString())
+                        && StrUtil.equals("200", code.toString())
+                        && endate != null && StrUtil.isNotEmpty(endate.toString())) {
+                    // 比较当前系统时间和资质审核时间
+                    String nowDate = cn.hutool.core.date.DateUtil.today();
+                    int result = nowDate.compareTo(endate.toString());
+                    if (result > 0) {
+                        auditFlag = false;
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            log.info("获取搭建商资质审核时间异常", ex.getMessage());
+        }
+        return auditFlag;
     }
 
     @RequestMapping(value = {"/{language}/{type}-notice.html"})
@@ -1048,7 +1126,7 @@ public class SiteController {
         //5.报馆申请截止日期
         String stadiumStopDate = "";
         if (type.equals("decorator")) {
-            Object stadiumDecoratorEndDate = exhibitionInfo.get("stadiumDecoratorEndDate");
+            Object stadiumDecoratorEndDate = getStadiumEndDate(request);
             if (stadiumDecoratorEndDate != null) {
                 stadiumStopDate = (String) stadiumDecoratorEndDate;
             } else {
@@ -1076,11 +1154,16 @@ public class SiteController {
         }
         model.addAttribute("isTimeout", isTimeout);
 
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("start", 0);
-        map.put("limit", 10000);
-        map.put("sessionIds", (Integer) this.exhibitionInfo.get("sessionId"));
-        List<Map<String, Object>> companys = ebsCompanyinfoDao.getStadiumCompanys(map);
+        String listData = getExhibitorList(request);
+        List<Map<String, Object>> companys = new ArrayList<>();
+        if (StrUtil.isNotEmpty(listData)) {
+            List<Object> objectList =JSON.parseArray(listData);
+            for (Object object : objectList){
+                //取出list里面的值转为map
+                Map<String,Object> ret = (Map<String, Object>) object;
+                companys.add(ret);
+            }
+        }
         model.addAttribute("companys", companys);
 
         Member member = (Member) session.getAttribute("member");
@@ -1092,6 +1175,64 @@ public class SiteController {
         String templateName = "web/" + language + "/stadium";
 
         return templateName;
+    }
+
+    /**
+     * 获取展商列表
+     * @param request
+     * @return
+     */
+    private String getExhibitorList(HttpServletRequest request) {
+        // 获取展商列表
+        String listData = null;
+        try {
+            String currentUrl = CryptographyUtil.GeCurrenttUrl(request);
+            String url = RequestConstant.getUrl(currentUrl, RequestConstant.EXHIBITOR_LIST_TYPE);
+            String response = httpUtil.doGet(url);
+            log.info("获取展商列表，请求地址:{}，返回结果:{}", url, response);
+            JSONObject jsonObject = JSON.parseObject(response);
+            if (jsonObject != null) {
+                Object code = jsonObject.get("code");
+                Object data = jsonObject.get("data");
+                if (code != null && StrUtil.isNotEmpty(code.toString())
+                        && StrUtil.equals("200", code.toString())
+                        && data != null && StrUtil.isNotEmpty(data.toString())) {
+                    listData = data.toString();
+                }
+            }
+        } catch (Exception ex) {
+            log.info("获取展商列表异常", ex.getMessage());
+        }
+        return listData;
+    }
+
+    /**
+     * 获取报馆申请截止时间
+     * @param request
+     * @return
+     */
+    private String getStadiumEndDate(HttpServletRequest request) {
+        // 获取报馆申请截止时间
+        String endDate = null;
+        try {
+            String currentUrl = CryptographyUtil.GeCurrenttUrl(request);
+            String url = RequestConstant.getUrl(currentUrl, RequestConstant.STADIUM_DECORATOR_END_DATE_TYPE);
+            String response = httpUtil.doGet(url);
+            log.info("获取报馆申请截止时间，请求地址:{}，返回结果:{}", url, response);
+            JSONObject jsonObject = JSON.parseObject(response);
+            if (jsonObject != null) {
+                Object code = jsonObject.get("code");
+                Object endate = jsonObject.get("endate");
+                if (code != null && StrUtil.isNotEmpty(code.toString())
+                        && StrUtil.equals("200", code.toString())
+                        && endate != null && StrUtil.isNotEmpty(endate.toString())) {
+                    endDate = endate.toString();
+                }
+            }
+        } catch (Exception ex) {
+            log.info("获取报馆申请截止时间异常", ex.getMessage());
+        }
+        return endDate;
     }
 
     /**

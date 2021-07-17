@@ -16,7 +16,7 @@
 										  lay-filter="selectTemplate" lay-search>
 									<#if companys??>
 							      	<#list companys as c>
-										<option value="${c.id}">${c.chinesename}</option>
+										<option value="${c.id}">${c.companyname}</option>
 									</#list>
 									<#else>
 										<option value="${company.id!'0'}">${company.chinesename!''}</option>

@@ -132,18 +132,20 @@ function getAngular(angular){
 }
 
 //获取审核按钮
-function GetShenHeButton(status,printstatus){
+function GetShenHeButton(status,printstatus,auditFlag){
 	var zt="";
-	switch(status){
-		case 0:
-			zt+='<a class="layui-btn layui-btn-xs layui-hide audit layui-btn-primary" lay-event="shenhe">审核</a>';
-			zt+='<a class="layui-btn layui-btn-xs layui-hide edit" lay-event="edit">修改</a>';
-			zt+='<a class="layui-btn layui-btn-xs layui-hide del layui-btn-danger" lay-event="del">删除</a>';
-			break;
-		case 1:
-		case -1:
-			if(printstatus!=2) zt+='<a class="layui-btn layui-btn-xs layui-hide againAudit" lay-event="againAudit">重审</a>';
-			break;
+	if (auditFlag == "true") {
+		switch (status) {
+			case 0:
+				zt += '<a class="layui-btn layui-btn-xs layui-hide audit layui-btn-primary" lay-event="shenhe">审核</a>';
+				zt += '<a class="layui-btn layui-btn-xs layui-hide edit" lay-event="edit">修改</a>';
+				zt += '<a class="layui-btn layui-btn-xs layui-hide del layui-btn-danger" lay-event="del">删除</a>';
+				break;
+			case 1:
+			case -1:
+				if (printstatus != 2) zt += '<a class="layui-btn layui-btn-xs layui-hide againAudit" lay-event="againAudit">重审</a>';
+				break;
+		}
 	}
 	return zt;
 }

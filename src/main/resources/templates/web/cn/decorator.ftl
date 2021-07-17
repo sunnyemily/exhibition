@@ -178,7 +178,7 @@
                 </table>
                 <#if (applyInfo.boothCount > 0) >
                     <input type="hidden" id="edit" value="1"/>
-                <#else>
+                <#elseif (auditFlag == "true") >
                     <div class="layui-form-item">
                         <div class="layui-input-block form-input">
                             <button class="layui-btn bt-lay-submit" lay-submit lay-filter="formDemo">保存</button>

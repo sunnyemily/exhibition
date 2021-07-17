@@ -127,4 +127,6 @@ public class EbsVehiclecard implements Serializable{
     private String phone;
     private Timestamp audittime;
 
+    private String auditFlag;
+
 }

@@ -1,5 +1,9 @@
 package cn.org.chtf.card.manage.Decorators.controller;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.org.chtf.card.common.constant.RequestConstant;
 import cn.org.chtf.card.common.utils.R;
 import cn.org.chtf.card.common.utils.ResultVOUtil;
 import cn.org.chtf.card.manage.AuditRecord.model.LogDocumentaudit;
@@ -21,7 +25,10 @@ import cn.org.chtf.card.manage.system.service.SysSessionService;
 import cn.org.chtf.card.manage.user.pojo.User;
 import cn.org.chtf.card.support.util.CryptographyUtil;
 import cn.org.chtf.card.support.util.WConst;
+import cn.org.chtf.card.support.util.http.HttpUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
@@ -30,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -46,6 +54,7 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/manage/Decorators/ebsPersonnelcard")
+@Slf4j
 public class DecoratorEbsPersonnelcardController {
 
 	@Autowired
@@ -77,6 +86,9 @@ public class DecoratorEbsPersonnelcardController {
 	
 	@Autowired
     private CommonService commonService;
+
+	@Resource
+	private HttpUtil httpUtil;
 
     /**批量重审,批量审核通过
      * @param isStr
@@ -136,6 +148,12 @@ public class DecoratorEbsPersonnelcardController {
 			map.put("jyt", "yes");
 			List<EbsPersonnelcard> list = decoratorEbsPersonnelcardService.list(map);
 			int count = decoratorEbsPersonnelcardService.listcount(map);
+			// 获取搭建商办证截止时间，判断是否已经超出范围
+			boolean auditFlag = getAuditFlag(request);
+			if (CollectionUtil.isNotEmpty(list)) {
+				final String auditFlagStr = auditFlag + "";
+				list.stream().forEach(item -> item.setAuditFlag(auditFlagStr));
+			}
 			return R.ok().put("data", list).put("code", WConst.SUCCESS)
 					.put("msg", WConst.QUERYSUCCESS).put("count", count);
 		} catch (Exception e) {
@@ -143,6 +161,40 @@ public class DecoratorEbsPersonnelcardController {
 			return R.error().put("code", WConst.ERROR)
 					.put("msg", WConst.QUERYFAILD);
 		}
+	}
+
+	/**
+	 * 获取搭建商办证截止时间，判断是否已经超出范围
+	 * @param request
+	 * @return
+	 */
+	private boolean getAuditFlag(HttpServletRequest request) {
+		// 获取搭建商办证截止时间，判断是否已经超出范围
+		boolean auditFlag = true;
+		try {
+			String currentUrl = CryptographyUtil.GeCurrenttUrl(request);
+			String url = RequestConstant.getUrl(currentUrl, RequestConstant.APPLY_CERTIFICATES_END_DATE_TYPE);
+			String response = httpUtil.doGet(url);
+			log.info("获取搭建商办证截止时间，请求地址:{}，返回结果:{}", url, response);
+			JSONObject jsonObject = JSON.parseObject(response);
+			if (jsonObject != null) {
+				Object code = jsonObject.get("code");
+				Object endate = jsonObject.get("endate");
+				if (code != null && StrUtil.isNotEmpty(code.toString())
+						&& StrUtil.equals("200", code.toString())
+						&& endate != null && StrUtil.isNotEmpty(endate.toString())) {
+					// 比较当前系统时间和搭建商办证截止时间
+					String nowDate = DateUtil.today();
+					int result = nowDate.compareTo(endate.toString());
+					if (result > 0) {
+						auditFlag = false;
+					}
+				}
+			}
+		} catch (Exception ex) {
+			log.info("获取搭建商办证截止时间异常", ex.getMessage());
+		}
+		return auditFlag;
 	}
 
 	@RequestMapping("/Previouslist")

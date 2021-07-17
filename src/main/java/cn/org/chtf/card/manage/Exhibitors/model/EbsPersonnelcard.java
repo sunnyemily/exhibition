@@ -251,4 +251,6 @@ public class EbsPersonnelcard implements Serializable{
     private String profession;
 
     private Timestamp audittime;
+
+    private String auditFlag;
 }

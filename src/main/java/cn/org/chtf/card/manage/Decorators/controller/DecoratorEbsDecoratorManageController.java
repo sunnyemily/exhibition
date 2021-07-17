@@ -1,5 +1,9 @@
 package cn.org.chtf.card.manage.Decorators.controller;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.org.chtf.card.common.constant.RequestConstant;
 import cn.org.chtf.card.common.utils.R;
 import cn.org.chtf.card.common.utils.ResultVOUtil;
 import cn.org.chtf.card.common.vo.ResultVO;
@@ -15,7 +19,10 @@ import cn.org.chtf.card.manage.system.service.SysSessionService;
 import cn.org.chtf.card.manage.user.pojo.User;
 import cn.org.chtf.card.support.util.CryptographyUtil;
 import cn.org.chtf.card.support.util.WConst;
+import cn.org.chtf.card.support.util.http.HttpUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
@@ -24,12 +31,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +48,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/manage/Decorators/ebsDecoratorManage")
+@Slf4j
 public class DecoratorEbsDecoratorManageController {
 
     @Autowired
@@ -76,6 +84,9 @@ public class DecoratorEbsDecoratorManageController {
     @Autowired
     private MemberSessionMapper memberSessionMapper;
 
+    @Resource
+    private HttpUtil httpUtil;
+
     @RequestMapping("/list")
     public R list(@RequestParam Map<String, Object> map, HttpServletRequest request, HttpSession session) {
         try {
@@ -86,11 +97,52 @@ public class DecoratorEbsDecoratorManageController {
             map = ResultVOUtil.TiaoZhengFenYe(map);
             List<Map<String, Object>> list = decoratorEbsDecoratorManageService.list(map);
             int count = decoratorEbsDecoratorManageService.listcount(map);
+            // 获取搭建商资质审核时间，判断是否已经超出范围
+            boolean auditFlag = getAuditFlag(request);
+            if (CollectionUtil.isNotEmpty(list)) {
+                final String auditFlagStr = auditFlag + "";
+                list.stream().forEach(item -> item.put("auditFlag", auditFlagStr));
+            }
+
             return R.ok().put("data", list).put("code", WConst.SUCCESS).put("msg", WConst.QUERYSUCCESS).put("count", count);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return R.error().put("code", WConst.ERROR).put("msg", WConst.QUERYFAILD);
         }
+    }
+
+    /**
+     * 获取搭建商资质审核时间，判断是否已经超出范围
+     * @param request
+     * @return
+     */
+    private boolean getAuditFlag(HttpServletRequest request) {
+        // 获取搭建商资质审核时间，判断是否已经超出范围
+        boolean auditFlag = true;
+        try {
+            String currentUrl = CryptographyUtil.GeCurrenttUrl(request);
+            String url = RequestConstant.getUrl(currentUrl, RequestConstant.QUALIFICATION_REVIEW_END_DATE_TYPE);
+            String response = httpUtil.doGet(url);
+            log.info("获取搭建商资质审核时间，请求地址:{}，返回结果:{}", url, response);
+            JSONObject jsonObject = JSON.parseObject(response);
+            if (jsonObject != null) {
+                Object code = jsonObject.get("code");
+                Object endate = jsonObject.get("endate");
+                if (code != null && StrUtil.isNotEmpty(code.toString())
+                        && StrUtil.equals("200", code.toString())
+                        && endate != null && StrUtil.isNotEmpty(endate.toString())) {
+                    // 比较当前系统时间和资质审核时间
+                    String nowDate = DateUtil.today();
+                    int result = nowDate.compareTo(endate.toString());
+                    if (result > 0) {
+                        auditFlag = false;
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            log.info("获取搭建商资质审核时间异常", ex.getMessage());
+        }
+        return auditFlag;
     }
 
     @RequestMapping("/Previouslist")
@@ -108,9 +160,57 @@ public class DecoratorEbsDecoratorManageController {
         }
     }
 
-    @RequestMapping(value = {"/updateCompanyInfo", "/joinBlackList", "/outBlackList", "/agreeCompanyInfo", "/rejectCompanyInfo"})
+    @RequestMapping(value = {"/updateCompanyInfo", "/joinBlackList", "/outBlackList"})
     public R updateCompanyInfo(@RequestParam Map<String, Object> map, HttpServletRequest request, HttpSession session) {
         try {
+            String strSessionid = sysSessionService.getSessionID(request);
+            User user = (User) session.getAttribute("user");
+            if (map.get("phone") != null && !"".equals(map.get("phone"))) {
+                //校验手机号是否存在
+                Map<String, Object> map2 = new HashMap<>(3);
+                map2.put("session", strSessionid);
+                map2.put("phone", map.get("phone"));
+                Map<String, Object> selectCompanyInfo1 = decoratorEbsDecoratorManageService.selectCompanyInfo(map2);
+                if (selectCompanyInfo1 != null
+                        && !Integer.valueOf(selectCompanyInfo1.get("companyId").toString()).equals(Integer.valueOf(map.get("id").toString()))) {
+                    return R.error(WConst.ERROR, "您填写的手机号已存在，请重新填写");
+                }
+                //校验邮箱是否存在
+                map2.put("phone", null);
+                map2.put("email", map.get("email"));
+                Map<String, Object> selectCompanyInfo2 = decoratorEbsDecoratorManageService.selectCompanyInfo(map2);
+                if (selectCompanyInfo2 != null
+                        && !Integer.valueOf(selectCompanyInfo2.get("companyId").toString()).equals(Integer.valueOf(map.get("id").toString()))) {
+                    return R.error(WConst.ERROR, "您填写的邮箱已存在，请重新填写");
+                }
+            }
+            if (map.get("auditType") != null
+                    && ("auditAgree".equals(map.get("auditType")) || "auditReject".equals(map.get("auditType")))) {
+                map.put("audittime", new java.sql.Timestamp(System.currentTimeMillis()));
+                map.put("auditername", user.getUsername());
+            }
+            //修改企业信息
+            decoratorEbsDecoratorManageService.updateCompanyInfo(map);
+
+            sysOperationLogService.CreateEntity("修改企业信息", strSessionid, 0, user.getId(),
+                    Integer.valueOf(map.get("id").toString()), JSONObject.toJSONString(map));
+
+            return R.ok().put("code", WConst.SUCCESS).put("msg", WConst.SAVED);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return R.error().put("code", WConst.ERROR).put("msg", WConst.SAVEDERROR);
+        }
+    }
+
+    @RequestMapping(value = {"/auditCompanyInfo", "/agreeCompanyInfo", "/rejectCompanyInfo"})
+    public R auditCompanyInfo(@RequestParam Map<String, Object> map, HttpServletRequest request, HttpSession session) {
+        try {
+            // 首先验证是否可以进行资质审核
+            boolean auditFlag = getAuditFlag(request);
+            if (!auditFlag) {
+                return R.error(WConst.ERROR, "已超过资质审核时间");
+            }
+
             String strSessionid = sysSessionService.getSessionID(request);
             User user = (User) session.getAttribute("user");
             if (map.get("phone") != null && !"".equals(map.get("phone"))) {
