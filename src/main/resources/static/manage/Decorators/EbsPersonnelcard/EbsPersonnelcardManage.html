@@ -260,12 +260,12 @@
 						align : 'center',
 						field : 'agentname',
 						title : '代办员'
-					}, {fixed: 'right', 
+					}, {fixed: 'right',
 						align : 'center',
 						field : 'status',
 						title : '操作',
 						templet : function(d) {
-							return GetShenHeButton(d.status,d.printstatus,d.auditFlag);
+							return GetShenHeButton2(d.status,d.printstatus,d.auditFlag);
 						},
 						width : 200
 					}
@@ -276,6 +276,7 @@
 					btnList.push({className:"againAudit",url:"Exhibitors/ebsPersonnelcard/againAudit"});
 					btnList.push({className:"edit",url:"Exhibitors/ebsPersonnelcard/update"});
         			btnList.push({className:"del",url:"Exhibitors/ebsPersonnelcard/deleteById"});
+        			btnList.push({className:"show",url:"Exhibitors/ebsPersonnelcard/UpdateAuditStatus"});
 					getUserPermissions(btnList);
 				}
 			});
@@ -294,6 +295,10 @@
 					sessionStorage.setItem("editCardTypeName", data.cardtypename);
 					sessionStorage.setItem("editEbsPersonnelcardId", data.id);
 					xadmin.open('编辑搭建商管理-人员证件管理', 'EbsPersonnelcardEdit.html');
+				} else if (obj.event === 'view') {
+					sessionStorage.setItem("viewCardTypeName", data.cardtypename);
+					sessionStorage.setItem("viewEbsPersonnelcardId", data.id);
+					xadmin.open('编辑搭建商管理-人员证件详情', 'EbsPersonnelcardView.html');
 				}
 			});
 		});

@@ -132,9 +132,12 @@ function getAngular(angular){
 }
 
 //获取审核按钮
-function GetShenHeButton(status,printstatus,auditFlag){
+function GetShenHeButton2(status,printstatus,auditFlag){
 	var zt="";
+	zt += '<a class="layui-btn layui-btn-xs view" lay-event="view">查看</a>';
+	// 允许审核：未超过审核截止时间
 	if (auditFlag == "true") {
+		// 审核状态，0待审核，-1审核未通过，1审核通过
 		switch (status) {
 			case 0:
 				zt += '<a class="layui-btn layui-btn-xs layui-hide audit layui-btn-primary" lay-event="shenhe">审核</a>';
@@ -146,6 +149,23 @@ function GetShenHeButton(status,printstatus,auditFlag){
 				if (printstatus != 2) zt += '<a class="layui-btn layui-btn-xs layui-hide againAudit" lay-event="againAudit">重审</a>';
 				break;
 		}
+	}
+	return zt;
+}
+
+//获取审核按钮
+function GetShenHeButton(status,printstatus){
+	var zt="";
+	switch(status){
+		case 0:
+			zt+='<a class="layui-btn layui-btn-xs layui-hide audit layui-btn-primary" lay-event="shenhe">审核</a>';
+			zt+='<a class="layui-btn layui-btn-xs layui-hide edit" lay-event="edit">修改</a>';
+			zt+='<a class="layui-btn layui-btn-xs layui-hide del layui-btn-danger" lay-event="del">删除</a>';
+			break;
+		case 1:
+		case -1:
+			if(printstatus!=2) zt+='<a class="layui-btn layui-btn-xs layui-hide againAudit" lay-event="againAudit">重审</a>';
+			break;
 	}
 	return zt;
 }

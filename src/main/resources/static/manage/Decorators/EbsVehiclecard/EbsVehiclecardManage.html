@@ -243,8 +243,9 @@
 						field : 'status',
 						title : '操作',
 						templet : function(d) {
-							return GetShenHeButton(d.status,d.printstatus,d.auditFlag);
-						}
+							return GetShenHeButton2(d.status,d.printstatus,d.auditFlag);
+						},
+						width : 200
 					}
 				]],
 				parseData : function(res) {
@@ -270,9 +271,9 @@
 			//监听工具条
 			table.on('tool(test)', function(obj) {
 				var data = obj.data;
-				if (obj.event === 'detail') {
+				if (obj.event === 'view') {
 					sessionStorage.setItem("viewEbsVehiclecardId", data.id);
-					xadmin.open('搭建商管理-车辆证件审核详情', 'EbsVehiclecardView.html');
+					xadmin.open('搭建商管理-车辆证件详情', 'EbsVehiclecardView.html');
 				} else if (obj.event === 'againAudit') {//重审
 					againAudit(data.id);
 				} else if (obj.event === 'shenhe') {//审核
