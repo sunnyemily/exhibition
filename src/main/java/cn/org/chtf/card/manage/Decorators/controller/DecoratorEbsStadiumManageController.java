@@ -81,9 +81,11 @@ public class DecoratorEbsStadiumManageController {
         boolean stadiumFlag = true;
         try {
             String currentUrl = CryptographyUtil.GeCurrenttUrl(request);
+            log.info("获取报馆申请截止时间，当前请求地址:{}", currentUrl);
             String url = RequestConstant.getUrl(currentUrl, RequestConstant.STADIUM_DECORATOR_END_DATE_TYPE);
+            log.info("获取报馆申请截止时间，请求地址:{}", url);
             String response = httpUtil.doGet(url);
-            log.info("获取报馆申请截止时间，请求地址:{}，返回结果:{}", url, response);
+            log.info("获取报馆申请截止时间，当前请求地址:{}，请求地址:{}，返回结果:{}", currentUrl, url, response);
             JSONObject jsonObject = JSON.parseObject(response);
             if (jsonObject != null) {
                 Object code = jsonObject.get("code");
@@ -100,7 +102,7 @@ public class DecoratorEbsStadiumManageController {
                 }
             }
         } catch (Exception ex) {
-            log.info("获取报馆申请截止时间异常", ex.getMessage());
+            log.error("获取报馆申请截止时间异常", ex.getMessage());
         }
         return stadiumFlag;
     }

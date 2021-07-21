@@ -788,9 +788,11 @@ public class SiteController {
         String endDate = null;
         try {
             String currentUrl = CryptographyUtil.GeCurrenttUrl(request);
+            log.info("获取搭建商办证截止时间，当前请求地址:{}", currentUrl);
             String url = RequestConstant.getUrl(currentUrl, RequestConstant.APPLY_CERTIFICATES_END_DATE_TYPE);
+            log.info("获取搭建商办证截止时间，请求地址:{}", url);
             String response = httpUtil.doGet(url);
-            log.info("获取搭建商办证截止时间，请求地址:{}，返回结果:{}", url, response);
+            log.info("获取搭建商办证截止时间，当前请求地址:{}，请求地址:{}，返回结果:{}", currentUrl, url, response);
             JSONObject jsonObject = JSON.parseObject(response);
             if (jsonObject != null) {
                 Object code = jsonObject.get("code");
@@ -802,7 +804,7 @@ public class SiteController {
                 }
             }
         } catch (Exception ex) {
-            log.info("获取搭建商办证截止时间异常", ex.getMessage());
+            log.error("获取搭建商办证截止时间异常", ex.getMessage());
         }
         return endDate;
     }
@@ -1039,9 +1041,11 @@ public class SiteController {
         boolean auditFlag = true;
         try {
             String currentUrl = CryptographyUtil.GeCurrenttUrl(request);
+            log.info("获取搭建商资质审核时间，当前请求地址:{}", currentUrl);
             String url = RequestConstant.getUrl(currentUrl, RequestConstant.QUALIFICATION_REVIEW_END_DATE_TYPE);
+            log.info("获取搭建商资质审核时间，请求地址:{}", url);
             String response = httpUtil.doGet(url);
-            log.info("获取搭建商资质审核时间，请求地址:{}，返回结果:{}", url, response);
+            log.info("获取搭建商资质审核时间，当前请求地址:{}，请求地址:{}，返回结果:{}", currentUrl, url, response);
             JSONObject jsonObject = JSON.parseObject(response);
             if (jsonObject != null) {
                 Object code = jsonObject.get("code");
@@ -1058,7 +1062,7 @@ public class SiteController {
                 }
             }
         } catch (Exception ex) {
-            log.info("获取搭建商资质审核时间异常", ex.getMessage());
+            log.error("获取搭建商资质审核时间异常", ex.getMessage());
         }
         return auditFlag;
     }
@@ -1187,9 +1191,11 @@ public class SiteController {
         String listData = null;
         try {
             String currentUrl = CryptographyUtil.GeCurrenttUrl(request);
+            log.info("获取展商列表，当前请求地址:{}", currentUrl);
             String url = RequestConstant.getUrl(currentUrl, RequestConstant.EXHIBITOR_LIST_TYPE);
+            log.info("获取展商列表，请求地址:{}", url);
             String response = httpUtil.doGet(url);
-            log.info("获取展商列表，请求地址:{}，返回结果:{}", url, response);
+            log.info("获取展商列表，当前请求地址:{}，请求地址:{}，返回结果:{}", currentUrl, url, response);
             JSONObject jsonObject = JSON.parseObject(response);
             if (jsonObject != null) {
                 Object code = jsonObject.get("code");
@@ -1201,7 +1207,7 @@ public class SiteController {
                 }
             }
         } catch (Exception ex) {
-            log.info("获取展商列表异常", ex.getMessage());
+            log.error("获取展商列表异常", ex.getMessage());
         }
         return listData;
     }
@@ -1216,9 +1222,11 @@ public class SiteController {
         String endDate = null;
         try {
             String currentUrl = CryptographyUtil.GeCurrenttUrl(request);
+            log.info("获取报馆申请截止时间，当前请求地址:{}", currentUrl);
             String url = RequestConstant.getUrl(currentUrl, RequestConstant.STADIUM_DECORATOR_END_DATE_TYPE);
+            log.info("获取报馆申请截止时间，请求地址:{}", url);
             String response = httpUtil.doGet(url);
-            log.info("获取报馆申请截止时间，请求地址:{}，返回结果:{}", url, response);
+            log.info("获取报馆申请截止时间，当前请求地址:{}，请求地址:{}，返回结果:{}", currentUrl, url, response);
             JSONObject jsonObject = JSON.parseObject(response);
             if (jsonObject != null) {
                 Object code = jsonObject.get("code");
@@ -1230,7 +1238,7 @@ public class SiteController {
                 }
             }
         } catch (Exception ex) {
-            log.info("获取报馆申请截止时间异常", ex.getMessage());
+            log.error("获取报馆申请截止时间异常", ex.getMessage());
         }
         return endDate;
     }

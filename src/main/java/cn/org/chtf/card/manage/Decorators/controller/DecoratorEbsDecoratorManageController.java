@@ -121,9 +121,11 @@ public class DecoratorEbsDecoratorManageController {
         boolean auditFlag = true;
         try {
             String currentUrl = CryptographyUtil.GeCurrenttUrl(request);
+            log.info("获取搭建商资质审核时间，当前请求地址:{}", currentUrl);
             String url = RequestConstant.getUrl(currentUrl, RequestConstant.QUALIFICATION_REVIEW_END_DATE_TYPE);
+            log.info("获取搭建商资质审核时间，请求地址:{}", url);
             String response = httpUtil.doGet(url);
-            log.info("获取搭建商资质审核时间，请求地址:{}，返回结果:{}", url, response);
+            log.info("获取搭建商资质审核时间，当前请求地址:{}，请求地址:{}，返回结果:{}", currentUrl, url, response);
             JSONObject jsonObject = JSON.parseObject(response);
             if (jsonObject != null) {
                 Object code = jsonObject.get("code");
@@ -140,7 +142,7 @@ public class DecoratorEbsDecoratorManageController {
                 }
             }
         } catch (Exception ex) {
-            log.info("获取搭建商资质审核时间异常", ex.getMessage());
+            log.error("获取搭建商资质审核时间异常", ex.getMessage());
         }
         return auditFlag;
     }
