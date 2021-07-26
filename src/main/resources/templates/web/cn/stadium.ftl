@@ -16,7 +16,7 @@
                     <form class="layui-form">
                         <div class="bars pull-left">
                             <div class="layui-btn-group">
-                                <#if !isTimeout>
+                                <#if !isTimeout && isAuditAgree>
                                     <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="add">
                                         <i class="layui-icon">&#xe654;</i>
                                     </button>
@@ -52,7 +52,7 @@
 </div>
 <#include 'stadium-edit.html'>
 <script type="text/html" id="toolBar">
-    <#if !isTimeout>
+    <#if !isTimeout && isAuditAgree>
         {{# if(d.status == 2 && d.paystatus == 0){ }}
 <#--        <a class="layui-btn layui-btn-xs" lay-event="pay">缴费</a>-->
         <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
@@ -64,9 +64,9 @@
         <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
         {{# } }}
     <#else>
-        {{# if(d.status == -1 || d.status == 0){ }}
+<#--        {{# if(d.status == -1 || d.status == 0){ }}-->
         <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
-        {{# } }}
+<#--        {{# } }}-->
     </#if>
 </script>
 

@@ -1175,6 +1175,11 @@ public class SiteController {
                 member.getMemberId(),
                 Integer.parseInt(exhibitionInfo.get("sessionId").toString()));
         model.addAttribute("company", company);
+        boolean isAuditAgree = true;
+        if (company.getAuditStatus() != 2) {
+            isAuditAgree = false;
+        }
+        model.addAttribute("isAuditAgree", isAuditAgree);
 
         String templateName = "web/" + language + "/stadium";
 
