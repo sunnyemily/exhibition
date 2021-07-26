@@ -248,12 +248,12 @@ public class EbsCompanyinfo implements Serializable{
     private String legalpersoncardpath;
 
     /**
-     * 特装搭建施工准入资质单位申请表
+     * 特装搭建服务商资质认证申请表
      */
     private String admissionapplicationform;
 
     /**
-     * 制作工场车间的产权证明或租赁合同
+     * 近两年特装搭建300平方米以上合同扫描件
      */
     private String workshopcertificate;
 
@@ -268,7 +268,7 @@ public class EbsCompanyinfo implements Serializable{
     private String othersupportingdocuments;
 
     /**
-     * 往届成稿案例
+     * 承诺书或无违法违规记录证明
      */
     private String previouscase;
 

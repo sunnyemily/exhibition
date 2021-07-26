@@ -111,7 +111,7 @@ var hasCertification = ${applyInfo.hasCertification?string("true","false")};
 		<#elseif type=="exhibitor" || type=="online">
 		<div class="left-item" data-page="company"><i class="fa fa-cog"></i>修改企业信息<i class="fa jt fa-chevron-right"></i></div>
 		<#elseif type=="decorator">
-		<div class="left-item" data-page="decorator"><i class="fa fa-cog"></i>企业资质<i class="fa jt fa-chevron-right"></i></div>
+		<div class="left-item" data-page="decorator"><i class="fa fa-cog"></i>资质认证<i class="fa jt fa-chevron-right"></i></div>
 		<div class="left-item" data-page="stadium"><i class="fa fa-inbox"></i>报馆管理<i class="fa jt fa-chevron-right"></i></div>
 		</#if>
 		<div class="left-item" data-page="password"><i class="fa fa-lock"></i>修改密码<i class="fa jt fa-chevron-right"></i></div>

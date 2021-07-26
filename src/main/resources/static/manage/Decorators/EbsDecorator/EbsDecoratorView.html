@@ -137,7 +137,7 @@
 								</div>
 							</div>
 							<div class="layui-form-item">
-								<label class="layui-form-label" for="admissionapplicationform">特装搭建施工准入资质单位申请表</label>
+								<label class="layui-form-label" for="admissionapplicationform">特装搭建服务商资质认证申请表</label>
 								<div class="layui-input-block">
 									<div class="layui-input-inline layui-show-xs-block" id="admissionapplicationform">
 										<button type="button" style="margin-left: 2px;height: 40px;" class="layui-btn layui-btn-primary" onclick="vm.downloadAdmissionApplicationForm()">
@@ -147,7 +147,7 @@
 								</div>
 							</div>
 							<div class="layui-form-item">
-								<label class="layui-form-label" for="workshopcertificate">制作工场车间的产权证明或租赁合同</label>
+								<label class="layui-form-label" for="workshopcertificate">近两年特装搭建300平方米以上合同扫描件</label>
 								<div class="layui-input-block">
 									<div class="layui-input-inline layui-show-xs-block" id="workshopcertificate">
 										<button type="button" style="margin-left: 2px;height: 40px;" class="layui-btn layui-btn-primary" onclick="vm.downloadWorkshopCertificate()">
@@ -177,7 +177,7 @@
 								</div>
 							</div>
 							<div class="layui-form-item">
-								<label class="layui-form-label" for="previouscase">往届成稿案例</label>
+								<label class="layui-form-label" for="previouscase">承诺书或无违法违规记录证明</label>
 								<div class="layui-input-block">
 									<div class="layui-input-inline layui-show-xs-block" id="previouscase">
 										<button type="button" style="margin-left: 2px;height: 40px;" class="layui-btn layui-btn-primary" onclick="vm.downloadPreviousCase()">
@@ -237,18 +237,18 @@
 					ebsCompanyinfo : {}
 				},
 				methods : {
-					//特装搭建施工准入资质单位申请表
+					//特装搭建服务商资质认证申请表
 					downloadAdmissionApplicationForm : function() {
 						if (vm.ebsCompanyinfo.admissionapplicationform == null || vm.ebsCompanyinfo.admissionapplicationform == '') {
-							layer.alert("企业未上传特装搭建施工准入资质单位申请表");
+							layer.alert("企业未上传特装搭建服务商资质认证申请表");
 						} else {
 							window.open(vm.ebsCompanyinfo.admissionapplicationform);
 						}
 					},
-					//制作工场车间的产权证明或租赁合同
+					//近两年特装搭建300平方米以上合同扫描件
 					downloadWorkshopCertificate : function() {
 						if (vm.ebsCompanyinfo.workshopcertificate == null || vm.ebsCompanyinfo.workshopcertificate == '') {
-							layer.alert("企业未上传制作工场车间的产权证明或租赁合同");
+							layer.alert("企业未上传近两年特装搭建300平方米以上合同扫描件");
 						} else {
 							window.open(vm.ebsCompanyinfo.workshopcertificate);
 						}
@@ -269,10 +269,10 @@
 							window.open(vm.ebsCompanyinfo.othersupportingdocuments);
 						}
 					},
-					//往届成稿案例
+					//承诺书或无违法违规记录证明
 					downloadPreviousCase : function() {
 						if (vm.ebsCompanyinfo.previouscase == null || vm.ebsCompanyinfo.previouscase == '') {
-							layer.alert("企业未上传往届成稿案例");
+							layer.alert("企业未上传承诺书或无违法违规记录证明");
 						} else {
 							window.open(vm.ebsCompanyinfo.previouscase);
 						}

@@ -325,11 +325,11 @@ layui.use('upload', function () {
             layer.closeAll('loading');
         }
     });
-    //上传文件：特装搭建施工准入资质单位申请表
+    //上传文件：特装搭建服务商资质认证申请表
     var uploadAdmissionApplicationFormFile = upload.render({
         accept: 'file'
         , size: 1024 * 5
-        , exts: 'doc|docx'
+        , exts: 'pdf'
         , elem: '#btnAdmissionApplicationForm' //绑定元素
         , url: '/uploadFile' //上传接口
         , before: function (obj) {
@@ -357,11 +357,11 @@ layui.use('upload', function () {
             layer.closeAll('loading');
         }
     });
-    //上传文件：制作工场车间的产权证明或租赁合同
+    //上传文件：近两年特装搭建300平方米以上合同扫描件
     var uploadAdmissionApplicationFormFile = upload.render({
         accept: 'file'
         , size: 1024 * 5
-        , exts: 'doc|docx'
+        , exts: 'pdf'
         , elem: '#btnWorkshopCertificate' //绑定元素
         , url: '/uploadFile' //上传接口
         , before: function (obj) {
@@ -393,7 +393,7 @@ layui.use('upload', function () {
     var uploadTechnicalProofDocumentsFile = upload.render({
         accept: 'file'
         , size: 1024 * 15
-        , exts: 'rar|zip'
+        , exts: 'pdf'
         , elem: '#btnTechnicalProofDocuments' //绑定元素
         , url: '/uploadFile' //上传接口
         , before: function (obj) {
@@ -425,7 +425,7 @@ layui.use('upload', function () {
     var uploadTechnicalProofDocumentsFile = upload.render({
         accept: 'file'
         , size: 1024 * 15
-        , exts: 'rar|zip'
+        , exts: 'pdf'
         , elem: '#btnOtherSupportingDocuments' //绑定元素
         , url: '/uploadFile' //上传接口
         , before: function (obj) {
@@ -453,11 +453,11 @@ layui.use('upload', function () {
             layer.closeAll('loading');
         }
     });
-    //上传文件：往届成稿案例
+    //上传文件：承诺书或无违法违规记录证明
     var uploadPreviousCaseFile = upload.render({
         accept: 'file'
         , size: 1024 * 15
-        , exts: 'rar|zip'
+        , exts: 'jpg|pdf'
         , elem: '#btnPreviousCase' //绑定元素
         , url: '/uploadFile' //上传接口
         , before: function (obj) {

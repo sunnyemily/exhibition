@@ -4,7 +4,7 @@
 <body>
 <div class="bg10"></div>
 <div class="right-status-bar">
-    <div>当前位置 / ${typeName} / 修改企业资质</div>
+    <div>当前位置 / ${typeName} / 修改资质认证</div>
 </div>
 <div class="bg10"></div>
 <script>
@@ -12,7 +12,7 @@
     var language = "${language}";
 </script>
 <div class="apply-content" id="editform">
-    <div class="form-head">修改企业资质</div>
+    <div class="form-head">修改资质认证</div>
     <div class="form-content">
         <fieldset class="layui-elem-field noborder">
             <form class="layui-form  layui-form-pane">
@@ -121,24 +121,24 @@
                         <td colspan="2" class="prepic"><image src="" width="195" height="258" id="prebuslicensepath" /></td>
                     </tr>
                     <tr>
-                        <td>*特装搭建施工准入资质单位申请表</td>
-                        <input type="hidden" name="admissionapplicationform" id="admissionapplicationform" value="" lay-verify="required" lay-reqText="必须上传特装搭建施工准入资质单位申请表" />
+                        <td>*特装搭建服务商资质认证申请表</td>
+                        <input type="hidden" name="admissionapplicationform" id="admissionapplicationform" value="" lay-verify="required" lay-reqText="必须上传特装搭建服务商资质认证申请表" />
                         <td width="40%">
                             <button type="button" class="layui-btn" id="btnAdmissionApplicationForm">
                                 <i class="layui-icon">&#xe67c;</i>上传文件
                             </button>
-                            <div class="layui-form-mid layui-word-aux"><br />此处可上传特装搭建施工准入资质单位申请表,上传文件为DOC和DOCX类型并且大小要在5MB以内。</div>
+                            <div class="layui-form-mid layui-word-aux"><br />此处可上传特装搭建服务商资质认证申请表,上传文件为PDF类型并且大小要在5MB以内,<font color="red">请盖章后上传</font>。</div>
                         </td>
                         <td colspan="2" class="prepic" id="admissionApplicationFormContainer"></td>
                     </tr>
                     <tr>
-                        <td>*制作工场车间的产权证明或租赁合同</td>
-                        <input type="hidden" name="workshopcertificate" id="workshopcertificate" value="" lay-verify="required" lay-reqText="必须上传制作工场车间的产权证明或租赁合同" />
+                        <td>*近两年特装搭建300平方米以上合同扫描件</td>
+                        <input type="hidden" name="workshopcertificate" id="workshopcertificate" value="" lay-verify="required" lay-reqText="必须上传近两年特装搭建300平方米以上合同扫描件" />
                         <td width="40%">
                             <button type="button" class="layui-btn" id="btnWorkshopCertificate">
                                 <i class="layui-icon">&#xe67c;</i>上传文件
                             </button>
-                            <div class="layui-form-mid layui-word-aux"><br />此处可上传制作工场车间的产权证明或租赁合同,上传文件为DOC和DOCX类型并且大小要在5MB以内。</div>
+                            <div class="layui-form-mid layui-word-aux"><br />此处可上传应征人在近两年内每年特装搭建面积在300平方米（含）以上，或每年特装搭建服务总金额100万元（含）以上的合同扫描件,上传文件为PDF类型并且大小要在5MB以内。</div>
                         </td>
                         <td colspan="2" class="prepic" id="workshopCertificateContainer"></td>
                     </tr>
@@ -149,7 +149,7 @@
                             <button type="button" class="layui-btn" id="btnTechnicalProofDocuments">
                                 <i class="layui-icon">&#xe67c;</i>上传文件
                             </button>
-                            <div class="layui-form-mid layui-word-aux"><br />此处可上传设计师、工程师的专业资格证书复印件以及其他与展览工程有关工种人员上岗证复印件,上传文件为RAR和ZIP类型并且大小要在15MB以内。</div>
+                            <div class="layui-form-mid layui-word-aux"><br />此处可上传设计师、工程师的专业资格证书复印件以及其他与展览工程有关工种人员上岗证复印件,上传文件为PDF类型并且大小要在15MB以内。</div>
                         </td>
                         <td colspan="2" class="prepic" id="technicalProofDocumentsContainer"></td>
                     </tr>
@@ -160,18 +160,18 @@
                             <button type="button" class="layui-btn" id="btnOtherSupportingDocuments">
                                 <i class="layui-icon">&#xe67c;</i>上传文件
                             </button>
-                            <div class="layui-form-mid layui-word-aux"><br />此处可上传设计施工能力和资质的其他证明资料,上传文件为RAR和ZIP类型并且大小要在15MB以内。</div>
+                            <div class="layui-form-mid layui-word-aux"><br />此处可上传设计施工能力和资质的其他证明资料,上传文件为PDF类型并且大小要在15MB以内。</div>
                         </td>
                         <td colspan="2" class="prepic" id="otherSupportingDocumentsContainer"></td>
                     </tr>
                     <tr>
-                        <td>往届成稿案例</td>
+                        <td>承诺书或无违法违规记录证明</td>
                         <input type="hidden" name="previouscase" id="previouscase" value="" />
                         <td width="40%">
                             <button type="button" class="layui-btn" id="btnPreviousCase">
                                 <i class="layui-icon">&#xe67c;</i>上传文件
                             </button>
-                            <div class="layui-form-mid layui-word-aux"><br />此处可上传往届成稿案例,上传文件为RAR和ZIP类型并且大小要在15MB以内。</div>
+                            <div class="layui-form-mid layui-word-aux"><br />此处可上传承诺书或无违法违规记录证明,上传文件为JPG和PDF类型并且大小要在15MB以内。</div>
                         </td>
                         <td colspan="2" class="prepic" id="previousCaseContainer"></td>
                     </tr>

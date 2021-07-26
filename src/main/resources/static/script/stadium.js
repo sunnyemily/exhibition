@@ -745,7 +745,7 @@ layui.use('upload', function () {
     var uploadSafetyResponsibilityCommitFile = upload.render({
         accept: 'file'
         , size: 1024 * 5
-        , exts: 'doc|docx'
+        , exts: 'pdf'
         , elem: '#btnSafetyResponsibilityCommit' //绑定元素
         , url: '/uploadFile' //上传接口
         , before: function (obj) {
@@ -777,7 +777,7 @@ layui.use('upload', function () {
     var uploadFitmentApplicationFile = upload.render({
         accept: 'file'
         , size: 1024 * 5
-        , exts: 'doc|docx'
+        , exts: 'pdf'
         , elem: '#btnFitmentApplication' //绑定元素
         , url: '/uploadFile' //上传接口
         , before: function (obj) {
@@ -937,7 +937,7 @@ layui.use('upload', function () {
     var uploadWorkerCertificateCopyFile = upload.render({
         accept: 'file'
         , size: 1024 * 15
-        , exts: 'zip|rar'
+        , exts: 'pdf'
         , elem: '#btnWorkerCertificateCopy' //绑定元素
         , url: '/uploadFile' //上传接口
         , before: function (obj) {
@@ -969,7 +969,7 @@ layui.use('upload', function () {
     var uploadEquipmentQualifiedProveFile = upload.render({
         accept: 'file'
         , size: 1024 * 15
-        , exts: 'zip|rar'
+        , exts: 'pdf'
         , elem: '#btnEquipmentQualifiedProve' //绑定元素
         , url: '/uploadFile' //上传接口
         , before: function (obj) {
@@ -1001,7 +1001,7 @@ layui.use('upload', function () {
     var uploadWorkerCasualtyProveFile = upload.render({
         accept: 'file'
         , size: 1024 * 15
-        , exts: 'zip|rar'
+        , exts: 'pdf'
         , elem: '#btnWorkerCasualtyProve' //绑定元素
         , url: '/uploadFile' //上传接口
         , before: function (obj) {
