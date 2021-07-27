@@ -252,7 +252,8 @@
 			a.technicalproofdocuments,
 			a.othersupportingdocuments,
 			a.previouscase,
-			a.audittime
+			a.audittime,
+		    a.audit_remark as auditRemark
 		FROM
 			ebs_companyinfo a
 		LEFT JOIN web_member_session b ON a.id = b.orgnization_id

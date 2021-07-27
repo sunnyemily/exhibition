@@ -72,7 +72,9 @@
 								<label class="layui-form-label" for="effectdiagram">特装工程效果图</label>
 								<div class="layui-input-block">
 									<div class="layui-input-inline layui-show-xs-block" id="effectdiagram">
-										<img :src="ebsStadiuminfo.effectdiagram" onclick="SeeImage(this.src)" style="width:693px;height:472px;margin-left: 2px;">
+										<button type="button" style="margin-left: 2px;height: 40px;" class="layui-btn layui-btn-primary" onclick="vm.downloadEffectDiagram()">
+											<i class="layui-icon layui-icon-link"></i>下载文件
+										</button>
 									</div>
 								</div>
 							</div>
@@ -80,7 +82,9 @@
 								<label class="layui-form-label" for="constructiondiagram">特装工程施工图</label>
 								<div class="layui-input-block">
 									<div class="layui-input-inline layui-show-xs-block" id="constructiondiagram">
-										<img :src="ebsStadiuminfo.constructiondiagram" onclick="SeeImage(this.src)" style="width:693px;height:472px;margin-left: 2px;">
+										<button type="button" style="margin-left: 2px;height: 40px;" class="layui-btn layui-btn-primary" onclick="vm.downloadConstructionDiagram()">
+											<i class="layui-icon layui-icon-link"></i>下载文件
+										</button>
 									</div>
 								</div>
 							</div>
@@ -88,7 +92,9 @@
 								<label class="layui-form-label" for="pointdiagram">特装工程载荷图或点位图</label>
 								<div class="layui-input-block">
 									<div class="layui-input-inline layui-show-xs-block" id="pointdiagram">
-										<img :src="ebsStadiuminfo.pointdiagram" onclick="SeeImage(this.src)" style="width:693px;height:472px;margin-left: 2px;">
+										<button type="button" style="margin-left: 2px;height: 40px;" class="layui-btn layui-btn-primary" onclick="vm.downloadPointDiagram()">
+											<i class="layui-icon layui-icon-link"></i>下载文件
+										</button>
 									</div>
 								</div>
 							</div>
@@ -96,7 +102,9 @@
 								<label class="layui-form-label" for="circuitdiagram">特装工程电路图</label>
 								<div class="layui-input-block">
 									<div class="layui-input-inline layui-show-xs-block" id="circuitdiagram">
-										<img :src="ebsStadiuminfo.circuitdiagram" onclick="SeeImage(this.src)" style="width:693px;height:472px;margin-left: 2px;">
+										<button type="button" style="margin-left: 2px;height: 40px;" class="layui-btn layui-btn-primary" onclick="vm.downloadCircuitDiagram()">
+											<i class="layui-icon layui-icon-link"></i>下载文件
+										</button>
 									</div>
 								</div>
 							</div>
@@ -134,13 +142,11 @@
 							<div class="layui-form-item">
 		    					<label class="layui-form-label">拒绝原因</label>
 		    					<div class="layui-input-block">
-							    	<textarea placeholder="请输入内容" id="reviewremark" name="reviewremark" class="layui-textarea layui-bg-gray"></textarea>
+							    	<textarea disabled="disabled" id="reviewremark" name="reviewremark" class="layui-textarea layui-bg-gray" v-model="ebsStadiuminfo.reviewremark"></textarea>
 							    </div>
 							</div>
 							<div class="layui-form-item">
 								<div class="layui-input-block">
-									<button class="layui-btn" type="button" id="agreeBtn" onclick="vm.agreeStadiumInfo()">通过</button>
-									<button class="layui-btn layui-btn-danger" id="rejectBtn" type="button" onclick="vm.rejectStadiumInfo()">驳回</button>
 									<button class="layui-btn" type="button" onclick="vm.downloadAttachment()">打包下载全部附件</button>
 								</div>
 							</div>
@@ -253,71 +259,6 @@
 								}
 							}
 						});
-					},
-					//审核通过
-					agreeStadiumInfo : function() {
-						vm.ebsStadiuminfo.id = editEbsStadiumInfoId;
-						vm.ebsStadiuminfo.status = 2;
-						vm.ebsStadiuminfo.reviewremark = '';
-						vm.ebsStadiuminfo.auditType = 'auditAgree';
-
-						$.ajax({
-							type : 'post',
-							url : '/manage/Decorators/ebsStadiumManage/agreeStadiumInfo',
-							data : vm.ebsStadiuminfo,
-							success : function(r) {
-								if (r.code === 1) {
-									layer.msg("保存成功", {icon: 6, time: 500}, function () {
-										//关闭当前frame
-										xadmin.close();
-										// 可以对父窗口进行刷新
-										xadmin.father_reload();
-									});
-								} else {
-									if(r.status==5){
-										layer.alert(r.msg);
-										parent.window.location.href='/manage/login.html';
-									}else{
-										layer.alert(r.msg);
-									}
-								}
-							}
-						});
-					},
-					//审核驳回
-					rejectStadiumInfo : function() {
-						vm.ebsStadiuminfo.id = editEbsStadiumInfoId;
-						var reviewremark = $("#reviewremark").val();
-						if(reviewremark == ''){
-							layer.alert("请先填写拒绝原因");
-							return;
-						}
-						vm.ebsStadiuminfo.status = 3;
-						vm.ebsStadiuminfo.reviewremark = reviewremark;
-						vm.ebsStadiuminfo.auditType = "auditReject";
-
-						$.ajax({
-							type : 'post',
-							url : '/manage/Decorators/ebsStadiumManage/rejectStadiumInfo',
-							data : vm.ebsStadiuminfo,
-							success : function(r) {
-								if (r.code === 1) {
-									layer.msg("保存成功", {icon: 6, time: 500}, function () {
-										//关闭当前frame
-										xadmin.close();
-										// 可以对父窗口进行刷新
-										xadmin.father_reload();
-									});
-								} else {
-									if(r.status==5){
-										layer.alert(r.msg);
-										parent.window.location.href='/manage/login.html';
-									}else{
-										layer.alert(r.msg);
-									}
-								}
-							}
-						});
 					}
 				},
 				created : function() {
@@ -337,26 +278,9 @@
 							success : function(result) {
 								if (result.code === 1) {
 									_this.ebsStadiuminfo = result.data;
-									if (result.data.status != 1) {
-										$("#agreeBtn").hide();
-										$("#rejectBtn").hide();
-									}
 								} else {
 									layui.layer.alert("获取搭建商报馆信息失败！");
 								}
-							}
-						});
-						
-						$("#reviewremark").val("");
-						//监控审核状态单选框
-						form.on('radio(status)', function(data){
-							$("#reviewremark").val("");
-							if(data.value==2){
-								$("#reviewremark").addClass("layui-bg-gray");
-								$("#reviewremark").attr("disabled",true);
-							}else{
-								$("#reviewremark").removeClass("layui-bg-gray");
-								$("#reviewremark").removeAttr("disabled");
 							}
 						});
 					});

@@ -158,13 +158,13 @@ $("#add").on("click", function () {
     $("#fitmentapplication").val("");
     $("#fitmentApplicationContainer").html("");
     $("#effectdiagram").val("");
+    $("#effectDiagramContainer").html("");
     $("#constructiondiagram").val("");
+    $("#constructionDiagramContainer").html("");
     $("#pointdiagram").val("");
+    $("#pointDiagramContainer").html("");
     $("#circuitdiagram").val("");
-    $("#preeffectdiagram").attr("src", "");
-    $("#preconstructiondiagram").attr("src", "");
-    $("#prepointdiagram").attr("src", "");
-    $("#precircuitdiagram").attr("src", "");
+    $("#circuitDiagramContainer").html("");
     $("#workercertificatecopy").val("");
     $("#workerCertificateCopyContainer").html("");
     $("#equipmentqualifiedprove").val("");
@@ -241,13 +241,29 @@ function openEditModal(obj) {
         $("#fitmentApplicationContainer").html("");
     }
     $("#effectdiagram").val(obj["effectdiagram"]);
-    $("#preeffectdiagram").attr("src", $("#effectdiagram").val());
+    if (obj["effectdiagram"] != "") {
+        $("#effectDiagramContainer").html("<a href='" + obj["effectdiagram"] + "' target='_blank'>" + previourTitle + "</a>");
+    } else {
+        $("#effectDiagramContainer").html("");
+    }
     $("#constructiondiagram").val(obj["constructiondiagram"]);
-    $("#preconstructiondiagram").attr("src", $("#constructiondiagram").val());
+    if (obj["constructiondiagram"] != "") {
+        $("#constructionDiagramContainer").html("<a href='" + obj["constructiondiagram"] + "' target='_blank'>" + previourTitle + "</a>");
+    } else {
+        $("#constructionDiagramContainer").html("");
+    }
     $("#pointdiagram").val(obj["pointdiagram"]);
-    $("#prepointdiagram").attr("src", $("#pointdiagram").val());
+    if (obj["pointdiagram"] != "") {
+        $("#pointDiagramContainer").html("<a href='" + obj["pointdiagram"] + "' target='_blank'>" + previourTitle + "</a>");
+    } else {
+        $("#pointDiagramContainer").html("");
+    }
     $("#circuitdiagram").val(obj["circuitdiagram"]);
-    $("#precircuitdiagram").attr("src", $("#circuitdiagram").val());
+    if (obj["circuitdiagram"] != "") {
+        $("#circuitDiagramContainer").html("<a href='" + obj["circuitdiagram"] + "' target='_blank'>" + previourTitle + "</a>");
+    } else {
+        $("#circuitDiagramContainer").html("");
+    }
     $("#workercertificatecopy").val(obj["workercertificatecopy"]);
     if (obj["workercertificatecopy"] != "") {
         $("#workerCertificateCopyContainer").html("<a href='" + obj["workercertificatecopy"] + "' target='_blank'>" + previourTitle + "</a>");
@@ -339,14 +355,29 @@ function openLookModal(obj) {
     } else {
         $("#fitmentApplicationContainer").html("");
     }
-    $("#effectdiagram").val(obj["effectdiagram"]);
-    $("#preeffectdiagram").attr("src", $("#effectdiagram").val());
+    if (obj["effectdiagram"] != "") {
+        $("#effectDiagramContainer").html("<a href='" + obj["effectdiagram"] + "' target='_blank'>" + previourTitle + "</a>");
+    } else {
+        $("#effectDiagramContainer").html("");
+    }
     $("#constructiondiagram").val(obj["constructiondiagram"]);
-    $("#preconstructiondiagram").attr("src", $("#constructiondiagram").val());
+    if (obj["constructiondiagram"] != "") {
+        $("#constructionDiagramContainer").html("<a href='" + obj["constructiondiagram"] + "' target='_blank'>" + previourTitle + "</a>");
+    } else {
+        $("#constructionDiagramContainer").html("");
+    }
     $("#pointdiagram").val(obj["pointdiagram"]);
-    $("#prepointdiagram").attr("src", $("#pointdiagram").val());
+    if (obj["pointdiagram"] != "") {
+        $("#pointDiagramContainer").html("<a href='" + obj["pointdiagram"] + "' target='_blank'>" + previourTitle + "</a>");
+    } else {
+        $("#pointDiagramContainer").html("");
+    }
     $("#circuitdiagram").val(obj["circuitdiagram"]);
-    $("#precircuitdiagram").attr("src", $("#circuitdiagram").val());
+    if (obj["circuitdiagram"] != "") {
+        $("#circuitDiagramContainer").html("<a href='" + obj["circuitdiagram"] + "' target='_blank'>" + previourTitle + "</a>");
+    } else {
+        $("#circuitDiagramContainer").html("");
+    }
     $("#workercertificatecopy").val(obj["workercertificatecopy"]);
     if (obj["workercertificatecopy"] != "") {
         $("#workerCertificateCopyContainer").html("<a href='" + obj["workercertificatecopy"] + "' target='_blank'>" + previourTitle + "</a>");
@@ -809,7 +840,7 @@ layui.use('upload', function () {
     var uploadEffectDiagramFile = upload.render({
         accept: 'file'
         , size: 1024 * 5
-        , exts: 'jpg|jpeg|png|gif|bmp'
+        , exts: 'pdf'
         , elem: '#btnEffectDiagram' //绑定元素
         , url: '/uploadFile' //上传接口
         , before: function (obj) {
@@ -841,7 +872,7 @@ layui.use('upload', function () {
     var uploadConstructionDiagramFile = upload.render({
         accept: 'file'
         , size: 1024 * 5
-        , exts: 'jpg|jpeg|png|gif|bmp'
+        , exts: 'pdf'
         , elem: '#btnConstructionDiagram' //绑定元素
         , url: '/uploadFile' //上传接口
         , before: function (obj) {
@@ -873,7 +904,7 @@ layui.use('upload', function () {
     var uploadPointDiagramFile = upload.render({
         accept: 'file'
         , size: 1024 * 5
-        , exts: 'jpg|jpeg|png|gif|bmp'
+        , exts: 'pdf'
         , elem: '#btnPointDiagram' //绑定元素
         , url: '/uploadFile' //上传接口
         , before: function (obj) {
@@ -905,7 +936,7 @@ layui.use('upload', function () {
     var uploadCircuitDiagramFile = upload.render({
         accept: 'file'
         , size: 1024 * 5
-        , exts: 'jpg|jpeg|png|gif|bmp'
+        , exts: 'pdf'
         , elem: '#btnCircuitDiagram' //绑定元素
         , url: '/uploadFile' //上传接口
         , before: function (obj) {
