@@ -331,13 +331,13 @@ public class DecoratorEbsDecoratorManageController {
             map.put("session", strSessionid);
             String companyZipPath = decoratorEbsDecoratorManageService.downloadAttachment(map);
             if (companyZipPath != null && !"".equals(companyZipPath)) {
-                return R.ok().put("code", WConst.SUCCESS).put("msg", WConst.QUERYSUCCESS).put("path", companyZipPath);
+                return R.ok().put("code", WConst.SUCCESS).put("msg", WConst.DOWNLOAD_SUCCESS).put("path", companyZipPath);
             } else {
                 return R.ok().put("code", WConst.ERROR).put("msg", "没有找到附件");
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return R.error().put("code", WConst.ERROR).put("msg", WConst.QUERYFAILD);
+            return R.error().put("code", WConst.ERROR).put("msg", WConst.DOWNLOAD_FAILED);
         }
     }
 

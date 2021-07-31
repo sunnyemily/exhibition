@@ -48,6 +48,9 @@ public class WConst{
 	public static final String QUERYFAILD = "查询失败";
 	public static final String HAVECHILDERROR = "删除失败，请先删除此几点下的所有子节点";
 
+	public static final String DOWNLOAD_SUCCESS = "下载成功";
+	public static final String DOWNLOAD_FAILED = "下载失败";
+
 	/**
 	 * 常用静态返回实体
 	 */
