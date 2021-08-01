@@ -36,21 +36,25 @@ import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -134,6 +138,8 @@ public class SiteController {
     private SysIndustryService sysIndustryService;
     @Autowired
     private EbsBoothApplyService applyService;
+    @Resource
+    private ResourceLoader resourceLoader;
 
 
     @RequestMapping(value = {"/{language}/default.html"})
@@ -1329,6 +1335,80 @@ public class SiteController {
             return new ResultModel(WConst.LOGINOVERTIME, WConst.LOGINOVERTIMEMSG, null);
         }
         return stadiumService.delete(idList, memberId);
+    }
+
+    @RequestMapping(value = "/stadium/downloadFitmentApplicationTemplate")
+    public void downloadFitmentApplicationTemplate(HttpServletResponse response, HttpServletRequest request) {
+        InputStream inputStream = null;
+        ServletOutputStream servletOutputStream = null;
+        try {
+            String filename = "附件2.特装展位装修工程申请表.doc";
+            String path = "file/附件2.特装展位装修工程申请表.doc";
+            org.springframework.core.io.Resource resource = resourceLoader.getResource("classpath:"+path);
+            response.setContentType("application/x-msdownload;");
+            response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+            response.addHeader("charset", "utf-8");
+            response.addHeader("Pragma", "no-cache");
+            String encodeName = URLEncoder.encode(filename, StandardCharsets.UTF_8.toString());
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + encodeName + "\"; filename*=utf-8''" + encodeName);
+
+            inputStream = resource.getInputStream();
+            servletOutputStream = response.getOutputStream();
+            IOUtils.copy(inputStream, servletOutputStream);
+            response.flushBuffer();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (servletOutputStream != null) {
+                    servletOutputStream.close();
+                }
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+                // 召唤jvm的垃圾回收器
+                System.gc();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @RequestMapping(value = "/stadium/downloadSafetyResponsibilityCommitTemplate")
+    public void downloadSafetyResponsibilityCommitTemplate(HttpServletResponse response, HttpServletRequest request) {
+        InputStream inputStream = null;
+        ServletOutputStream servletOutputStream = null;
+        try {
+            String filename = "附件3.特装展位搭建和用电安全责任承诺书.doc";
+            String path = "file/附件3.特装展位搭建和用电安全责任承诺书.doc";
+            org.springframework.core.io.Resource resource = resourceLoader.getResource("classpath:"+path);
+            response.setContentType("application/x-msdownload;");
+            response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+            response.addHeader("charset", "utf-8");
+            response.addHeader("Pragma", "no-cache");
+            String encodeName = URLEncoder.encode(filename, StandardCharsets.UTF_8.toString());
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + encodeName + "\"; filename*=utf-8''" + encodeName);
+
+            inputStream = resource.getInputStream();
+            servletOutputStream = response.getOutputStream();
+            IOUtils.copy(inputStream, servletOutputStream);
+            response.flushBuffer();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (servletOutputStream != null) {
+                    servletOutputStream.close();
+                }
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+                // 召唤jvm的垃圾回收器
+                System.gc();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @RequestMapping(value = {"/{language}/{type}-info.html"})
