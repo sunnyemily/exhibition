@@ -122,7 +122,7 @@
                     </tr>
                     <tr>
                         <td>*特装搭建服务商资质认证申请表<br/>
-                            <a href="http://www.gjcjzx.org.cn/doc/附件1.特装搭建服务商资质认证申请表.doc" download=""><font color="blue">模板下载</font></a>
+                            <a href="/decorator-files/downloadAdmissionApplicationFormTemplate" download=""><font color="blue">模板下载</font></a>
                         </td>
                         <input type="hidden" name="admissionapplicationform" id="admissionapplicationform" value="" lay-verify="required" lay-reqText="必须上传特装搭建服务商资质认证申请表" />
                         <td width="40%">

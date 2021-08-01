@@ -1337,7 +1337,7 @@ public class SiteController {
         return stadiumService.delete(idList, memberId);
     }
 
-    @RequestMapping(value = "/stadium/downloadFitmentApplicationTemplate")
+    @RequestMapping(value = "/decorator-files/downloadFitmentApplicationTemplate")
     public void downloadFitmentApplicationTemplate(HttpServletResponse response, HttpServletRequest request) {
         InputStream inputStream = null;
         ServletOutputStream servletOutputStream = null;
@@ -1374,7 +1374,7 @@ public class SiteController {
         }
     }
 
-    @RequestMapping(value = "/stadium/downloadSafetyResponsibilityCommitTemplate")
+    @RequestMapping(value = "/decorator-files/downloadSafetyResponsibilityCommitTemplate")
     public void downloadSafetyResponsibilityCommitTemplate(HttpServletResponse response, HttpServletRequest request) {
         InputStream inputStream = null;
         ServletOutputStream servletOutputStream = null;
@@ -2382,5 +2382,42 @@ public class SiteController {
         Integer sessionId = Integer.parseInt(exhibitionInfo.get("sessionId").toString());
         company.setSession(sessionId.toString());
         return memberService.regist(isActive, member, company, session);
+    }
+
+    @RequestMapping(value = "/decorator-files/downloadAdmissionApplicationFormTemplate")
+    public void downloadAdmissionApplicationFormTemplate(HttpServletResponse response, HttpServletRequest request) {
+        InputStream inputStream = null;
+        ServletOutputStream servletOutputStream = null;
+        try {
+            String filename = "附件1.特装搭建服务商资质认证申请表.doc";
+            String path = "file/附件1.特装搭建服务商资质认证申请表.doc";
+            org.springframework.core.io.Resource resource = resourceLoader.getResource("classpath:"+path);
+            response.setContentType("application/x-msdownload;");
+            response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+            response.addHeader("charset", "utf-8");
+            response.addHeader("Pragma", "no-cache");
+            String encodeName = URLEncoder.encode(filename, StandardCharsets.UTF_8.toString());
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + encodeName + "\"; filename*=utf-8''" + encodeName);
+
+            inputStream = resource.getInputStream();
+            servletOutputStream = response.getOutputStream();
+            IOUtils.copy(inputStream, servletOutputStream);
+            response.flushBuffer();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (servletOutputStream != null) {
+                    servletOutputStream.close();
+                }
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+                // 召唤jvm的垃圾回收器
+                System.gc();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
