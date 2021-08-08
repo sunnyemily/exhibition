@@ -39,8 +39,19 @@ $(document).ready(function(){
 				return;
 			});
 		}
+		if(page=="stadium"){
+			$.get("/api/company/get", function (result) {
+				var auditStatus = result.result.company.auditStatus;
+				if (auditStatus != 2) {
+					layer.alert("请完善资质认证信息，等待资质认证通过，才能进行下一步报馆管理操作。");
+					return;
+				} else {
+					$("iframe").attr("src", url);
+				}
+			});
+		}
 		//2.2其他则进行页面跳转
-		if(page!="exit") {
+		if(page!="exit" && page!="stadium") {
 			$("iframe").attr("src", url);
 		}
 	});
