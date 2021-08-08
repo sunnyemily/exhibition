@@ -253,6 +253,7 @@
 			a.othersupportingdocuments,
 			a.previouscase,
 			a.audittime,
+		    a.audit_status as auditStatus,
 		    a.audit_remark as auditRemark
 		FROM
 			ebs_companyinfo a
