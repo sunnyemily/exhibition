@@ -68,11 +68,18 @@ function loadCompany() {
         form.render();
         // 初始化数据
         var auditStatusName = "";
-        if(obj["auditStatus"] == 1) {
+        var auditStatus = obj["auditStatus"];
+        var auditStartTime = result.result.decoratorAuditStartTime;
+        var auditEndTime = result.result.decoratorAuditEndTime;
+        if(auditStatus == 1) {
             auditStatusName = "<span style ='color:blue'>待审核</span>";
-        } else if(obj["auditStatus"] == 2) {
-            auditStatusName = "<span style ='color:green'>审核通过</span>";
-        } else if(obj["auditStatus"] == 3) {
+        } else if(auditStatus == 2) {
+            if (auditStartTime != null && auditEndTime != null) {
+                auditStatusName = "<span style ='color:green'>认证通过：" + auditStartTime + "至" + auditEndTime + "</span>";
+            } else {
+                auditStatusName = "<span style ='color:green'>认证通过</span>";
+            }
+        } else if(auditStatus == 3) {
             auditStatusName = "<span style ='color:red'>审核失败，驳回原因：" + obj["auditRemark"] + "</span>";
         }
         $("#auditInfo").html(auditStatusName);

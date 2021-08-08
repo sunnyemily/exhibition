@@ -7,8 +7,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import cn.hutool.core.util.StrUtil;
+import cn.org.chtf.card.manage.Decorators.controller.DecoratorUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,6 +80,9 @@ public class EbsCompanyinfoServiceImpl implements EbsCompanyinfoService {
 	
 	@Autowired
 	private FileService fileService;
+
+	@Resource
+	private DecoratorUtil decoratorUtil;
 
 	/**
 	 * 查询企业信息列表
@@ -329,6 +336,38 @@ public class EbsCompanyinfoServiceImpl implements EbsCompanyinfoService {
 			Map<String, Object> resultMap = new HashMap<String, Object>();
 			resultMap.put("member", member);
 			resultMap.put("company", company);
+			result = new ResultModel(WConst.SUCCESS, "查询成功", resultMap);
+		} catch (Exception e) {
+			result = new ResultModel(WConst.ERROR, WConst.SAVEDERROR,
+					e.getMessage());
+		}
+		// TODO Auto-generated method stub
+		return result;
+	}
+
+	/**
+	 * @author wushixing
+	 */
+	@Override
+	public ResultModel getMemberCompany(HttpSession session, HttpServletRequest request) {
+		ResultModel result = null;
+		try {
+
+			Member member = (Member) session.getAttribute("member");
+			EbsCompanyinfo company = ebsCompanyinfoDao
+					.getCompanyByMemberIdAndSessionId(member.getMemberId(),
+							member.getMemberSessionId());
+			Map<String, Object> resultMap = new HashMap<String, Object>();
+			resultMap.put("member", member);
+			resultMap.put("company", company);
+			String decoratorAuditStartTime = decoratorUtil.getDecoratorAuditStartTime(request);
+			if (StrUtil.isNotEmpty(decoratorAuditStartTime)) {
+				resultMap.put("decoratorAuditStartTime", decoratorUtil.getDateStr(decoratorAuditStartTime));
+			}
+			String decoratorAuditEndTime = decoratorUtil.getDecoratorAuditEndTime(request);
+			if (StrUtil.isNotEmpty(decoratorAuditEndTime)) {
+				resultMap.put("decoratorAuditEndTime", decoratorUtil.getDateStr(decoratorAuditEndTime));
+			}
 			result = new ResultModel(WConst.SUCCESS, "查询成功", resultMap);
 		} catch (Exception e) {
 			result = new ResultModel(WConst.ERROR, WConst.SAVEDERROR,

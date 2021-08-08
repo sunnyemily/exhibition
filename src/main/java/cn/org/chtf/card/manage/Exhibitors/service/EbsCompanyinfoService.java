@@ -9,6 +9,7 @@ import cn.org.chtf.card.support.util.ResultModel;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -67,6 +68,13 @@ public interface EbsCompanyinfoService {
 	 * @return
 	 */
 	ResultModel getMemberCompany(HttpSession session);
+	/**
+	 * @author wushixing
+	 * @apiNote 获取会员关联企业信息，适用于交易团外的其他企业
+	 * @param session
+	 * @return
+	 */
+	ResultModel getMemberCompany(HttpSession session, HttpServletRequest request);
 	/**
 	 * @author wushixing
 	 * @apiNote 获取会员关联企业信息，适用于交易团外的其他企业

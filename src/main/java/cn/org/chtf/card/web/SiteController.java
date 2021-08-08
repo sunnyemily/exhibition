@@ -2044,8 +2044,8 @@ public class SiteController {
      */
     @RequestMapping(value = {"/api/company/get"})
     @ResponseBody
-    public ResultModel getCompanyByMember(HttpSession session) {
-        return companyService.getMemberCompany(session);
+    public ResultModel getCompanyByMember(HttpSession session, HttpServletRequest request) {
+        return companyService.getMemberCompany(session, request);
     }
 
     /**

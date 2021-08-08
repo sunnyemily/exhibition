@@ -1,9 +1,6 @@
 package cn.org.chtf.card.manage.Decorators.controller;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.org.chtf.card.common.constant.RequestConstant;
 import cn.org.chtf.card.common.utils.R;
 import cn.org.chtf.card.common.utils.ResultVOUtil;
 import cn.org.chtf.card.common.vo.ResultVO;
@@ -19,8 +16,6 @@ import cn.org.chtf.card.manage.system.service.SysSessionService;
 import cn.org.chtf.card.manage.user.pojo.User;
 import cn.org.chtf.card.support.util.CryptographyUtil;
 import cn.org.chtf.card.support.util.WConst;
-import cn.org.chtf.card.support.util.http.HttpUtil;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.*;
@@ -85,7 +80,7 @@ public class DecoratorEbsDecoratorManageController {
     private MemberSessionMapper memberSessionMapper;
 
     @Resource
-    private HttpUtil httpUtil;
+    private DecoratorUtil decoratorUtil;
 
     @RequestMapping("/list")
     public R list(@RequestParam Map<String, Object> map, HttpServletRequest request, HttpSession session) {
@@ -98,7 +93,7 @@ public class DecoratorEbsDecoratorManageController {
             List<Map<String, Object>> list = decoratorEbsDecoratorManageService.list(map);
             int count = decoratorEbsDecoratorManageService.listcount(map);
             // 获取搭建商资质审核时间，判断是否已经超出范围
-            boolean auditFlag = getAuditFlag(request);
+            boolean auditFlag = decoratorUtil.getDecoratorAuditFlag(request);
             if (CollectionUtil.isNotEmpty(list)) {
                 final String auditFlagStr = auditFlag + "";
                 list.stream().forEach(item -> item.put("auditFlag", auditFlagStr));
@@ -109,42 +104,6 @@ public class DecoratorEbsDecoratorManageController {
             System.out.println(e.getMessage());
             return R.error().put("code", WConst.ERROR).put("msg", WConst.QUERYFAILD);
         }
-    }
-
-    /**
-     * 获取搭建商资质审核时间，判断是否已经超出范围
-     * @param request
-     * @return
-     */
-    private boolean getAuditFlag(HttpServletRequest request) {
-        // 获取搭建商资质审核时间，判断是否已经超出范围
-        boolean auditFlag = true;
-        try {
-            String currentUrl = CryptographyUtil.GeCurrenttUrl(request);
-            log.info("获取搭建商资质审核结束时间，当前请求地址:{}", currentUrl);
-            String url = RequestConstant.getUrl(currentUrl, RequestConstant.QUALIFICATION_REVIEW_END_DATE_TYPE);
-            log.info("获取搭建商资质审核结束时间，请求地址:{}", url);
-            String response = httpUtil.doGet(url);
-            log.info("获取搭建商资质审核结束时间，当前请求地址:{}，请求地址:{}，返回结果:{}", currentUrl, url, response);
-            JSONObject jsonObject = JSON.parseObject(response);
-            if (jsonObject != null) {
-                Object code = jsonObject.get("code");
-                Object endate = jsonObject.get("endate");
-                if (code != null && StrUtil.isNotEmpty(code.toString())
-                        && StrUtil.equals("200", code.toString())
-                        && endate != null && StrUtil.isNotEmpty(endate.toString())) {
-                    // 比较当前系统时间和资质审核时间
-                    String nowDate = DateUtil.today();
-                    int result = nowDate.compareTo(endate.toString());
-                    if (result > 0) {
-                        auditFlag = false;
-                    }
-                }
-            }
-        } catch (Exception ex) {
-            log.error("获取搭建商资质审核结束时间异常", ex.getMessage());
-        }
-        return auditFlag;
     }
 
     @RequestMapping("/Previouslist")
@@ -208,7 +167,7 @@ public class DecoratorEbsDecoratorManageController {
     public R auditCompanyInfo(@RequestParam Map<String, Object> map, HttpServletRequest request, HttpSession session) {
         try {
             // 首先验证是否可以进行资质审核
-            boolean auditFlag = getAuditFlag(request);
+            boolean auditFlag = decoratorUtil.getDecoratorAuditFlag(request);
             if (!auditFlag) {
                 return R.error(WConst.ERROR, "已超过资质审核时间");
             }
@@ -316,75 +275,13 @@ public class DecoratorEbsDecoratorManageController {
             String strSessionid = sysSessionService.getSessionID(request);
             map.put("session", strSessionid);
             Map<String, Object> companyInfo = decoratorEbsDecoratorManageService.selectCompanyInfo(map);
-            companyInfo.put("auditStartTime", getAuditStartTime(request));
-            companyInfo.put("auditEndTime", getAuditEndTime(request));
+            companyInfo.put("auditStartTime", decoratorUtil.getDecoratorAuditStartTime(request));
+            companyInfo.put("auditEndTime", decoratorUtil.getDecoratorAuditEndTime(request));
             return R.ok().put("code", WConst.SUCCESS).put("msg", WConst.QUERYSUCCESS).put("data", companyInfo);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return R.error().put("code", WConst.ERROR).put("msg", WConst.QUERYFAILD);
         }
-    }
-
-    /**
-     * 获取搭建商资质审核开始时间
-     * @param request
-     * @return
-     */
-    private String getAuditStartTime(HttpServletRequest request) {
-        // 获取搭建商资质审核时间
-        String auditEndTime = null;
-        try {
-            String currentUrl = CryptographyUtil.GeCurrenttUrl(request);
-            log.info("获取搭建商资质审核开始时间，当前请求地址:{}", currentUrl);
-            String url = RequestConstant.getUrl(currentUrl, RequestConstant.QUALIFICATION_REVIEW_END_DATE_TYPE);
-            log.info("获取搭建商资质审核开始时间，请求地址:{}", url);
-            String response = httpUtil.doGet(url);
-            log.info("获取搭建商资质审核开始时间，当前请求地址:{}，请求地址:{}，返回结果:{}", currentUrl, url, response);
-            JSONObject jsonObject = JSON.parseObject(response);
-            if (jsonObject != null) {
-                Object code = jsonObject.get("code");
-                Object endate = jsonObject.get("endate");
-                if (code != null && StrUtil.isNotEmpty(code.toString())
-                        && StrUtil.equals("200", code.toString())
-                        && endate != null && StrUtil.isNotEmpty(endate.toString())) {
-                    auditEndTime = endate.toString();
-                }
-            }
-        } catch (Exception ex) {
-            log.error("获取搭建商资质审核开始时间异常", ex.getMessage());
-        }
-        return auditEndTime;
-    }
-
-    /**
-     * 获取搭建商资质审核结束时间
-     * @param request
-     * @return
-     */
-    private String getAuditEndTime(HttpServletRequest request) {
-        // 获取搭建商资质审核时间
-        String auditEndTime = null;
-        try {
-            String currentUrl = CryptographyUtil.GeCurrenttUrl(request);
-            log.info("获取搭建商资质审核结束时间，当前请求地址:{}", currentUrl);
-            String url = RequestConstant.getUrl(currentUrl, RequestConstant.QUALIFICATION_REVIEW_END_DATE_TYPE);
-            log.info("获取搭建商资质审核结束时间，请求地址:{}", url);
-            String response = httpUtil.doGet(url);
-            log.info("获取搭建商资质审核结束时间，当前请求地址:{}，请求地址:{}，返回结果:{}", currentUrl, url, response);
-            JSONObject jsonObject = JSON.parseObject(response);
-            if (jsonObject != null) {
-                Object code = jsonObject.get("code");
-                Object endate = jsonObject.get("endate");
-                if (code != null && StrUtil.isNotEmpty(code.toString())
-                        && StrUtil.equals("200", code.toString())
-                        && endate != null && StrUtil.isNotEmpty(endate.toString())) {
-                    auditEndTime = endate.toString();
-                }
-            }
-        } catch (Exception ex) {
-            log.error("获取搭建商资质审核结束时间异常", ex.getMessage());
-        }
-        return auditEndTime;
     }
 
     @RequestMapping("/downloadAttachment")
