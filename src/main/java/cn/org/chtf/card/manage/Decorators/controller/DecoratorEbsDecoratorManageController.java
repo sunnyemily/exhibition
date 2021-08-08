@@ -201,8 +201,19 @@ public class DecoratorEbsDecoratorManageController {
             }
             //修改企业信息
             decoratorEbsDecoratorManageService.updateCompanyInfo(map);
-
-            sysOperationLogService.CreateEntity("修改企业信息", strSessionid, 0, user.getId(),
+            // auditType：reAudit-重审；auditAgree-审核通过；auditReject-审核不通过
+            String act = "修改企业信息";
+            Object auditType = map.get("auditType");
+            if (auditType != null) {
+                if ("reAudit".equals(auditType.toString())) {
+                    act = "搭建商重审";
+                } else if ("auditAgree".equals(auditType.toString())) {
+                    act = "搭建商审核通过";
+                } else if ("auditReject".equals(auditType.toString())) {
+                    act = "搭建商审核不通过";
+                }
+            }
+            sysOperationLogService.CreateEntity(act, strSessionid, 0, user.getId(),
                     Integer.valueOf(map.get("id").toString()), JSONObject.toJSONString(map));
 
             return R.ok().put("code", WConst.SUCCESS).put("msg", WConst.SAVED);
