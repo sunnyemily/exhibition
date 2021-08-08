@@ -121,11 +121,11 @@ public class DecoratorEbsDecoratorManageController {
         boolean auditFlag = true;
         try {
             String currentUrl = CryptographyUtil.GeCurrenttUrl(request);
-            log.info("获取搭建商资质审核时间，当前请求地址:{}", currentUrl);
+            log.info("获取搭建商资质审核结束时间，当前请求地址:{}", currentUrl);
             String url = RequestConstant.getUrl(currentUrl, RequestConstant.QUALIFICATION_REVIEW_END_DATE_TYPE);
-            log.info("获取搭建商资质审核时间，请求地址:{}", url);
+            log.info("获取搭建商资质审核结束时间，请求地址:{}", url);
             String response = httpUtil.doGet(url);
-            log.info("获取搭建商资质审核时间，当前请求地址:{}，请求地址:{}，返回结果:{}", currentUrl, url, response);
+            log.info("获取搭建商资质审核结束时间，当前请求地址:{}，请求地址:{}，返回结果:{}", currentUrl, url, response);
             JSONObject jsonObject = JSON.parseObject(response);
             if (jsonObject != null) {
                 Object code = jsonObject.get("code");
@@ -142,7 +142,7 @@ public class DecoratorEbsDecoratorManageController {
                 }
             }
         } catch (Exception ex) {
-            log.error("获取搭建商资质审核时间异常", ex.getMessage());
+            log.error("获取搭建商资质审核结束时间异常", ex.getMessage());
         }
         return auditFlag;
     }
@@ -315,13 +315,76 @@ public class DecoratorEbsDecoratorManageController {
         try {
             String strSessionid = sysSessionService.getSessionID(request);
             map.put("session", strSessionid);
-
             Map<String, Object> companyInfo = decoratorEbsDecoratorManageService.selectCompanyInfo(map);
+            companyInfo.put("auditStartTime", getAuditStartTime(request));
+            companyInfo.put("auditEndTime", getAuditEndTime(request));
             return R.ok().put("code", WConst.SUCCESS).put("msg", WConst.QUERYSUCCESS).put("data", companyInfo);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return R.error().put("code", WConst.ERROR).put("msg", WConst.QUERYFAILD);
         }
+    }
+
+    /**
+     * 获取搭建商资质审核开始时间
+     * @param request
+     * @return
+     */
+    private String getAuditStartTime(HttpServletRequest request) {
+        // 获取搭建商资质审核时间
+        String auditEndTime = null;
+        try {
+            String currentUrl = CryptographyUtil.GeCurrenttUrl(request);
+            log.info("获取搭建商资质审核开始时间，当前请求地址:{}", currentUrl);
+            String url = RequestConstant.getUrl(currentUrl, RequestConstant.QUALIFICATION_REVIEW_END_DATE_TYPE);
+            log.info("获取搭建商资质审核开始时间，请求地址:{}", url);
+            String response = httpUtil.doGet(url);
+            log.info("获取搭建商资质审核开始时间，当前请求地址:{}，请求地址:{}，返回结果:{}", currentUrl, url, response);
+            JSONObject jsonObject = JSON.parseObject(response);
+            if (jsonObject != null) {
+                Object code = jsonObject.get("code");
+                Object endate = jsonObject.get("endate");
+                if (code != null && StrUtil.isNotEmpty(code.toString())
+                        && StrUtil.equals("200", code.toString())
+                        && endate != null && StrUtil.isNotEmpty(endate.toString())) {
+                    auditEndTime = endate.toString();
+                }
+            }
+        } catch (Exception ex) {
+            log.error("获取搭建商资质审核开始时间异常", ex.getMessage());
+        }
+        return auditEndTime;
+    }
+
+    /**
+     * 获取搭建商资质审核结束时间
+     * @param request
+     * @return
+     */
+    private String getAuditEndTime(HttpServletRequest request) {
+        // 获取搭建商资质审核时间
+        String auditEndTime = null;
+        try {
+            String currentUrl = CryptographyUtil.GeCurrenttUrl(request);
+            log.info("获取搭建商资质审核结束时间，当前请求地址:{}", currentUrl);
+            String url = RequestConstant.getUrl(currentUrl, RequestConstant.QUALIFICATION_REVIEW_END_DATE_TYPE);
+            log.info("获取搭建商资质审核结束时间，请求地址:{}", url);
+            String response = httpUtil.doGet(url);
+            log.info("获取搭建商资质审核结束时间，当前请求地址:{}，请求地址:{}，返回结果:{}", currentUrl, url, response);
+            JSONObject jsonObject = JSON.parseObject(response);
+            if (jsonObject != null) {
+                Object code = jsonObject.get("code");
+                Object endate = jsonObject.get("endate");
+                if (code != null && StrUtil.isNotEmpty(code.toString())
+                        && StrUtil.equals("200", code.toString())
+                        && endate != null && StrUtil.isNotEmpty(endate.toString())) {
+                    auditEndTime = endate.toString();
+                }
+            }
+        } catch (Exception ex) {
+            log.error("获取搭建商资质审核结束时间异常", ex.getMessage());
+        }
+        return auditEndTime;
     }
 
     @RequestMapping("/downloadAttachment")

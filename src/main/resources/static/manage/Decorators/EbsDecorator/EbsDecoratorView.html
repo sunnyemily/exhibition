@@ -188,6 +188,22 @@
 							</div>
 							<hr>
 							<div class="layui-form-item">
+								<label class="layui-form-label">认证开始时间</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" disabled="disabled" class="layui-input" id="auditStartTime" type="text" style="color: green">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label">认证结束时间</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block">
+										<input autocomplete="off" disabled="disabled" class="layui-input" id="auditEndTime" type="text" style="color: red">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
 								<label class="layui-form-label">审核状态</label>
 								<div class="layui-input-block">
 									<div class="layui-input-inline layui-show-xs-block">
@@ -393,6 +409,9 @@
 									if (result.data.buslicensepath == null || result.data.buslicensepath == '') {
 										$("#buslicensepath").html("<input disabled=\"disabled\" class=\"layui-input\" type=\"text\" value=\"企业未上传营业执照\">");
 									}
+									// 审核时间
+									$("#auditStartTime").val(result.data.auditStartTime);
+									$("#auditEndTime").val(result.data.auditEndTime);
 									// 审核状态，2-审核通过，3-审核不通过
 									var auditStatus = result.data.auditStatus;
 									if (auditStatus == 2) {
