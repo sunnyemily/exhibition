@@ -24,10 +24,12 @@
         <div class="col-sm-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>搭建商信息</h5>
-                    <div class="ibox-tools">
-                        <a class="collapse-link"> <i class="fa fa-chevron-up"></i> </a><a class="close-link"> <i
-                            class="fa fa-times"></i> </a>
+                    <div style="width:96%;float:left;">
+                        <h5>搭建商信息</h5>
+                        <h5 style="float:right;color: red" id="auditTimeText">认证通过：2021年7月3日至2022年12月31日</h5>
+                    </div>
+                    <div class="ibox-tools" style="width:4%;float:right;">
+                        <a class="collapse-link"> <i class="fa fa-chevron-up"></i> </a><a class="close-link"> <i class="fa fa-times"></i> </a>
                     </div>
                 </div>
                 <div class="ibox-content">
@@ -106,6 +108,20 @@
         table = layui.table;
         var $ = layui.jquery;
         var editEbsCompanyinfoId = '';
+        // 获取搭建商资质审核开始时间和结束时间
+        $.ajax({
+            type: 'get',
+            url: '/manage/Decorators/ebsDecoratorManage/getDecoratorAuditTimeText',
+            data: null,
+            success: function (r) {
+                if (r.code == 1) {
+                    var auditTimeText = r.data.auditTimeText;
+                    $("#auditTimeText").html(auditTimeText);
+                } else {
+                    layer.alert(r.msg);
+                }
+            }
+        });
         table.render({
             elem: '#test',
             url: '/manage/Decorators/ebsDecoratorManage/list',

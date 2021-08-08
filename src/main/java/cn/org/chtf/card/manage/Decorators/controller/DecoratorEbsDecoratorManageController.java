@@ -1,6 +1,7 @@
 package cn.org.chtf.card.manage.Decorators.controller;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.org.chtf.card.common.utils.R;
 import cn.org.chtf.card.common.utils.ResultVOUtil;
 import cn.org.chtf.card.common.vo.ResultVO;
@@ -278,6 +279,29 @@ public class DecoratorEbsDecoratorManageController {
             companyInfo.put("auditStartTime", decoratorUtil.getDecoratorAuditStartTime(request));
             companyInfo.put("auditEndTime", decoratorUtil.getDecoratorAuditEndTime(request));
             return R.ok().put("code", WConst.SUCCESS).put("msg", WConst.QUERYSUCCESS).put("data", companyInfo);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return R.error().put("code", WConst.ERROR).put("msg", WConst.QUERYFAILD);
+        }
+    }
+
+    @GetMapping("/getDecoratorAuditTimeText")
+    public R selectCompanyInfo(HttpServletRequest request) {
+        try {
+            StringBuffer sb = new StringBuffer();
+            sb.append("认证通过：");
+            String decoratorAuditStartTime = decoratorUtil.getDecoratorAuditStartTime(request);
+            if (StrUtil.isNotEmpty(decoratorAuditStartTime)) {
+                sb.append(decoratorUtil.getDateStr(decoratorAuditStartTime));
+            }
+            sb.append("至");
+            String decoratorAuditEndTime = decoratorUtil.getDecoratorAuditEndTime(request);
+            if (StrUtil.isNotEmpty(decoratorAuditEndTime)) {
+                sb.append(decoratorUtil.getDateStr(decoratorAuditEndTime));
+            }
+            Map<String, Object> dataMap = new HashMap<>();
+            dataMap.put("auditTimeText", sb.toString());
+            return R.ok().put("code", WConst.SUCCESS).put("msg", WConst.QUERYSUCCESS).put("data", dataMap);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return R.error().put("code", WConst.ERROR).put("msg", WConst.QUERYFAILD);
