@@ -202,7 +202,7 @@ public class DecoratorEbsDecoratorManageController {
             //修改企业信息
             decoratorEbsDecoratorManageService.updateCompanyInfo(map);
             // auditType：reAudit-重审；auditAgree-审核通过；auditReject-审核不通过
-            String act = "修改企业信息";
+            String act = "修改搭建商信息";
             Object auditType = map.get("auditType");
             if (auditType != null) {
                 if ("reAudit".equals(auditType.toString())) {
