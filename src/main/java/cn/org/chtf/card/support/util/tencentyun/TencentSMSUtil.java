@@ -99,6 +99,16 @@ public class TencentSMSUtil {
 	 * 会议举办通知
 	 */
 	public static String  HUIYI_CONFERENCE_NOTICE="742985";
+
+	/**
+	 * 搭建商审核通过短信模板id
+	 */
+	public static String DECORATOR_AUDIT_AGREE_TEMPLATE_ID = "1080006";
+
+	/**
+	 * 搭建商审核不通过短信模板id
+	 */
+	public static String DECORATOR_AUDIT_REJECT_TEMPLATE_ID = "1080007";
 	
 	
 	public final static String PHONE_VALIDATE_CODE = "手机验证码";

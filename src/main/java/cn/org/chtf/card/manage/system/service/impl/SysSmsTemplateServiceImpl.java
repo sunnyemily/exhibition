@@ -6,13 +6,13 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
+import cn.hutool.json.JSONUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSONObject;
 import com.tencentcloudapi.sms.v20190711.models.SendSmsResponse;
-import com.tencentcloudapi.sms.v20190711.models.SendStatus;
-
 import cn.org.chtf.card.manage.Exhibitors.dao.EbsSendMessageLogMapper;
 import cn.org.chtf.card.manage.Exhibitors.model.EbsSendMessageLog;
 import cn.org.chtf.card.manage.member.pojo.Member;
@@ -28,16 +28,29 @@ import cn.org.chtf.card.support.util.tencentyun.TencentSMSUtil;
  * @author lm
  */
 @Service
+@Slf4j
 public class SysSmsTemplateServiceImpl implements SysSmsTemplateService {
 
     @Autowired
     private SysSmsTemplateMapper sysSmsTemplateDao;
-    
+
     @Autowired
     private EbsSendMessageLogMapper ebsSendMessageLogDao;
-    
+
     //是否启用腾讯短信
     private Boolean isNew = true;
+
+	@Value("${exhibition.decorator.sms.auditAgree.date}")
+	private String decoratorAuditAgreeDate;
+
+	@Value("${exhibition.decorator.sms.auditAgree.deposit}")
+	private String decoratorAuditAgreeDeposit;
+
+	@Value("${exhibition.decorator.sms.auditAgree.contact.person}")
+	private String decoratorAuditAgreePerson;
+
+	@Value("${exhibition.decorator.sms.auditAgree.contact.telephone}")
+	private String decoratorAuditAgreeTelephone;
 
     /**
      * 查询列表
@@ -46,7 +59,7 @@ public class SysSmsTemplateServiceImpl implements SysSmsTemplateService {
     public List<SysSmsTemplate> list(Map<String, Object> map) {
         return sysSmsTemplateDao.list(map);
     }
-    
+
     /**
      * 数量
      */
@@ -101,20 +114,20 @@ public class SysSmsTemplateServiceImpl implements SysSmsTemplateService {
      * @param sessionId 届次id
      * @param session session
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
     public Boolean sendRegistValidateSMS(String phone,String companyName,Integer sessionId,HttpSession session) throws Exception {
     	Boolean result = false;
     	if(isNew){
-    		String validateCode = TencentSMSUtil.getRandomString();	    	
+    		String validateCode = TencentSMSUtil.getRandomString();
 	    	//1.1将验证码存入session
 		    session.removeAttribute(SMSUtil.REGIST_CODEKEY);
 		    session.setAttribute(SMSUtil.REGIST_CODEKEY,validateCode);
-    		String BianHao = TencentSMSUtil.PHONE_VALIDATE_TEMPLATE_NEWID;    		
-    		String[] params = new String[1];		    
+    		String BianHao = TencentSMSUtil.PHONE_VALIDATE_TEMPLATE_NEWID;
+    		String[] params = new String[1];
 		    params[0] = validateCode;
 		    String[] receivers = {"86 "+phone};
-			SendSmsResponse smsResult = TencentSMSUtil.sendSMS(receivers, params, BianHao);		    	
+			SendSmsResponse smsResult = TencentSMSUtil.sendSMS(receivers, params, BianHao);
 	    	EbsSendMessageLog eml = new EbsSendMessageLog();
 	    	eml.setType(BianHao);
 	    	eml.setNumber(phone);
@@ -122,12 +135,12 @@ public class SysSmsTemplateServiceImpl implements SysSmsTemplateService {
 	    	eml.setReceiver(phone);
 	    	eml.setSendcode(smsResult.getSendStatusSet()[0].getCode());
 	    	ebsSendMessageLogDao.save(eml);
-	    	
+
 	    	if("Ok".equals(smsResult.getSendStatusSet()[0].getCode())) {
 	    		result = true;
-			}  
+			}
     	}
-    	else{  
+    	else{
 	    	String smsContent = sysSmsTemplateDao.findByTitleAndSessionId(TencentSMSUtil.PHONE_VALIDATE_CODE, sessionId).getSmsTemplate();
 	    	Map<String,Object> param = new HashMap<String,Object>();
 	    	//1.设置验证码
@@ -193,7 +206,7 @@ public class SysSmsTemplateServiceImpl implements SysSmsTemplateService {
 //    		}
 //    	}
 //    	result = smsSendResult;
-    	
+
     	return result;
     }
     /**
@@ -231,13 +244,13 @@ public class SysSmsTemplateServiceImpl implements SysSmsTemplateService {
 					BianHao = TencentSMSUtil.CAIGOUSHANG_REGIST_SUCCESS_TEMPLATE_ID;
 					break;
 			}
-	    	
+
 	    	String[] params = new String[3];
-		    params[0] = companyName;	
+		    params[0] = companyName;
 		    params[1] = userName;
 		    params[2] = password;
 		    String[] receivers = {"86 "+phone};
-			SendSmsResponse smsResult = TencentSMSUtil.sendSMS(receivers, params, BianHao);		    	
+			SendSmsResponse smsResult = TencentSMSUtil.sendSMS(receivers, params, BianHao);
 	    	EbsSendMessageLog eml = new EbsSendMessageLog();
 	    	eml.setType(BianHao);
 	    	eml.setNumber(phone);
@@ -245,7 +258,7 @@ public class SysSmsTemplateServiceImpl implements SysSmsTemplateService {
 	    	eml.setReceiver(companyName);
 	    	eml.setSendcode(smsResult.getSendStatusSet()[0].getCode());
 	    	ebsSendMessageLogDao.save(eml);
-	    	
+
 	    	if("Ok".equals(smsResult.getSendStatusSet()[0].getCode())) {
 	    		result = true;
 			}
@@ -274,7 +287,7 @@ public class SysSmsTemplateServiceImpl implements SysSmsTemplateService {
 	    			break;
 	    	}
 	    	smsContent = smsContent.replace("${loginUrl}", loginUrl);
-	    	
+
 	    	Map<String,Object> param = new HashMap<String,Object>();
 	    	//1.用户名参数
 	    	param.put("userName", userName);
@@ -296,16 +309,16 @@ public class SysSmsTemplateServiceImpl implements SysSmsTemplateService {
 	    	eml.setReceiver(companyName);
 	    	eml.setSendcode(sendResult.getCode().toString());
 	    	ebsSendMessageLogDao.save(eml);
-	    	
+
 	    	if(sendResult.getCode()==200&&Long.valueOf(sendResult.getBody())>0) {
 	    		result = true;
-			}	    	
+			}
 	    }
 	    return result;
     }
-   
+
     /**
-     * 
+     *
      */
     public Boolean sendBoothConfirmSMS(String phone,String companyName,String boothNO,Integer sessionId,String type) throws Exception {
     	Boolean result = false;
@@ -322,10 +335,10 @@ public class SysSmsTemplateServiceImpl implements SysSmsTemplateService {
         		return true;
         	}
     		String[] params = new String[2];
-		    params[0] = companyName;	
+		    params[0] = companyName;
 		    params[1] = boothNO;
 		    String[] receivers = {"86 "+phone};
-			SendSmsResponse smsResult = TencentSMSUtil.sendSMS(receivers, params, BianHao);		    	
+			SendSmsResponse smsResult = TencentSMSUtil.sendSMS(receivers, params, BianHao);
 	    	EbsSendMessageLog eml = new EbsSendMessageLog();
 	    	eml.setType(BianHao);
 	    	eml.setNumber(phone);
@@ -333,10 +346,10 @@ public class SysSmsTemplateServiceImpl implements SysSmsTemplateService {
 	    	eml.setReceiver(companyName);
 	    	eml.setSendcode(smsResult.getSendStatusSet()[0].getCode());
 	    	ebsSendMessageLogDao.save(eml);
-	    	
+
 	    	if("Ok".equals(smsResult.getSendStatusSet()[0].getCode())) {
 	    		result = true;
-			}    		
+			}
     	}
     	else{
     		String smsContent = sysSmsTemplateDao.findByTitleAndSessionId(SMSUtil.BOOTH_CONFIRM_SUCCESS_CODE, sessionId).getSmsTemplate();
@@ -372,15 +385,13 @@ public class SysSmsTemplateServiceImpl implements SysSmsTemplateService {
         	if(sendResult.getCode()==200&&Long.valueOf(sendResult.getBody())>0) {
         		result = true;
     		}
-    	}   
+    	}
     	return result;
     }
     /**
      * 发送取证报表短信
      * @param phone 接收人手机号码
      * @param companyName 注册公司名称
-     * @param userName 用户名
-     * @param password 密码
      * @param sessionId 届次id
      * @return
      * @throws Exception
@@ -388,7 +399,7 @@ public class SysSmsTemplateServiceImpl implements SysSmsTemplateService {
     public Boolean sendTakeReportSMS(String phone,String companyName,Integer sessionId) throws Exception {
     	Boolean result = false;
     	if(isNew){
-    		
+
     	}
     	else{
 	    	String smsContent = sysSmsTemplateDao.findByTitleAndSessionId(SMSUtil.TAKE_REPORT_CODE, sessionId).getSmsTemplate();
@@ -418,7 +429,7 @@ public class SysSmsTemplateServiceImpl implements SysSmsTemplateService {
     /**
      * 发送代办员开通短信
      * @param phone 接收人手机号码
-     * @param companyName 注册公司名称
+     * @param agentName 注册公司名称
      * @param userName 用户名
      * @param password 密码
      * @param sessionId 届次id
@@ -426,18 +437,18 @@ public class SysSmsTemplateServiceImpl implements SysSmsTemplateService {
      * @throws Exception
      */
     public Boolean sendOpenAgentSMS(String phone,String agentName,String userName,String password,Integer sessionId, Integer iType) throws Exception {
-    	Boolean result = false;    	
+    	Boolean result = false;
     	if(isNew){
     		String BianHao = TencentSMSUtil.JIAOYITUAN_OPEN_TEMPLATE_ID;
     		if(iType==1){//记者登录地址替换
     			BianHao = TencentSMSUtil.JIZHE_OPEN_TEMPLATE_ID;
     		}
     		String[] params = new String[3];
-		    params[0] = agentName;	
+		    params[0] = agentName;
 		    params[1] = userName;
 		    params[2] = password;
 		    String[] receivers = {"86 "+phone};
-			SendSmsResponse smsResult = TencentSMSUtil.sendSMS(receivers, params, BianHao);		    	
+			SendSmsResponse smsResult = TencentSMSUtil.sendSMS(receivers, params, BianHao);
 	    	EbsSendMessageLog eml = new EbsSendMessageLog();
 	    	eml.setType(BianHao);
 	    	eml.setNumber(phone);
@@ -445,12 +456,12 @@ public class SysSmsTemplateServiceImpl implements SysSmsTemplateService {
 	    	eml.setReceiver(agentName);
 	    	eml.setSendcode(smsResult.getSendStatusSet()[0].getCode());
 	    	ebsSendMessageLogDao.save(eml);
-	    	
+
 	    	if("Ok".equals(smsResult.getSendStatusSet()[0].getCode())) {
 	    		result = true;
-			}  
+			}
     	}
-    	else{    	
+    	else{
 	    	String smsContent = sysSmsTemplateDao.findByTitleAndSessionId(SMSUtil.AGENT_OPEN_CODE, sessionId).getSmsTemplate();
 	    	Map<String,Object> param = new HashMap<String,Object>();
 	    	//1.用户名参数
@@ -494,12 +505,12 @@ public class SysSmsTemplateServiceImpl implements SysSmsTemplateService {
     public Boolean sendExhibitionToTraddingGroupSMS(String phone,String companyName,String traddingGroupName,String tradingGroupContactPerson,String tradingGroupContactPhone,Integer sessionId) throws Exception {
     	Boolean result = false;
     	if(isNew){
-    		String BianHao = TencentSMSUtil.LINGSAN_TURN_JIAOYITUAN_TEMPLATE_ID;    		
+    		String BianHao = TencentSMSUtil.LINGSAN_TURN_JIAOYITUAN_TEMPLATE_ID;
     		String[] params = new String[2];
-		    params[0] = companyName;	
+		    params[0] = companyName;
 		    params[1] = traddingGroupName;
 		    String[] receivers = {"86 "+phone};
-			SendSmsResponse smsResult = TencentSMSUtil.sendSMS(receivers, params, BianHao);		    	
+			SendSmsResponse smsResult = TencentSMSUtil.sendSMS(receivers, params, BianHao);
 	    	EbsSendMessageLog eml = new EbsSendMessageLog();
 	    	eml.setType(BianHao);
 	    	eml.setNumber(phone);
@@ -507,10 +518,10 @@ public class SysSmsTemplateServiceImpl implements SysSmsTemplateService {
 	    	eml.setReceiver(companyName);
 	    	eml.setSendcode(smsResult.getSendStatusSet()[0].getCode());
 	    	ebsSendMessageLogDao.save(eml);
-	    	
+
 	    	if("Ok".equals(smsResult.getSendStatusSet()[0].getCode())) {
 	    		result = true;
-			}  
+			}
     	}
     	else{
 	    	String smsContent = sysSmsTemplateDao.findByTitleAndSessionId(SMSUtil.EXHIBITOR_TO_TRADDINGGROUP_NOTICE_CODE, sessionId).getSmsTemplate();
@@ -547,7 +558,6 @@ public class SysSmsTemplateServiceImpl implements SysSmsTemplateService {
      * 发送后台验证码
      * @param safeCode 验证码
      * @param phone 接收人手机号
-     * @param traddingGroupName 交易团名称
      * @param sessionId 届次id
      * @return
      * @throws Exception
@@ -556,11 +566,11 @@ public class SysSmsTemplateServiceImpl implements SysSmsTemplateService {
     public Boolean sendConsoleValidateSMS(String safeCode,String phone,Integer sessionId) throws Exception {
     	Boolean result = false;
     	if(isNew){
-    		String BianHao = TencentSMSUtil.CONSOLE_LOGIN_TEMPLATE_ID;    		
+    		String BianHao = TencentSMSUtil.CONSOLE_LOGIN_TEMPLATE_ID;
     		String[] params = new String[1];
-		    params[0] = safeCode;	
+		    params[0] = safeCode;
 		    String[] receivers = {"86 "+phone};
-			SendSmsResponse smsResult = TencentSMSUtil.sendSMS(receivers, params, BianHao);		    	
+			SendSmsResponse smsResult = TencentSMSUtil.sendSMS(receivers, params, BianHao);
 	    	EbsSendMessageLog eml = new EbsSendMessageLog();
 	    	eml.setType(BianHao);
 	    	eml.setNumber(phone);
@@ -568,10 +578,10 @@ public class SysSmsTemplateServiceImpl implements SysSmsTemplateService {
 	    	eml.setReceiver(phone);
 	    	eml.setSendcode(smsResult.getSendStatusSet()[0].getCode());
 	    	ebsSendMessageLogDao.save(eml);
-	    	
+
 	    	if("Ok".equals(smsResult.getSendStatusSet()[0].getCode())) {
 	    		result = true;
-			}  
+			}
     	}
     	else{
 	    	String smsContent = sysSmsTemplateDao.findByTitleAndSessionId(SMSUtil.CONSOLE_VALIDATE_CODE, sessionId).getSmsTemplate();
@@ -598,21 +608,21 @@ public class SysSmsTemplateServiceImpl implements SysSmsTemplateService {
     	}
     	return result;
     }
-    
+
     /*
      * 找回密码
-     * 
+     *
      */
     @Override
     public Boolean sendFindPasswordSMS(String companyName,String passwordCode,String phone,Integer sessionId) throws Exception {
     	Boolean result = false;
     	if(isNew){
-    		String BianHao = TencentSMSUtil.FIND_PASSWORD_TEMPLATE_ID;    		
+    		String BianHao = TencentSMSUtil.FIND_PASSWORD_TEMPLATE_ID;
     		String[] params = new String[2];
-		    params[0] = companyName;	
-		    params[1] = passwordCode;	
+		    params[0] = companyName;
+		    params[1] = passwordCode;
 		    String[] receivers = {"86 "+phone};
-			SendSmsResponse smsResult = TencentSMSUtil.sendSMS(receivers, params, BianHao);		    	
+			SendSmsResponse smsResult = TencentSMSUtil.sendSMS(receivers, params, BianHao);
 	    	EbsSendMessageLog eml = new EbsSendMessageLog();
 	    	eml.setType(BianHao);
 	    	eml.setNumber(phone);
@@ -620,10 +630,10 @@ public class SysSmsTemplateServiceImpl implements SysSmsTemplateService {
 	    	eml.setReceiver(phone);
 	    	eml.setSendcode(smsResult.getSendStatusSet()[0].getCode());
 	    	ebsSendMessageLogDao.save(eml);
-	    	
+
 	    	if("Ok".equals(smsResult.getSendStatusSet()[0].getCode())) {
 	    		result = true;
-			}  
+			}
     	}
     	else{
 	    	String smsContent = sysSmsTemplateDao.findByTitleAndSessionId(SMSUtil.FIND_PASSWORD_CODE, sessionId).getSmsTemplate();
@@ -651,7 +661,7 @@ public class SysSmsTemplateServiceImpl implements SysSmsTemplateService {
     	}
     	return result;
     }
-    
+
     public Boolean sendMessage(String number, String smsContent, String receiver, String type) throws Exception {
     	Boolean result = false;
     	String[] receivers = {number};
@@ -673,17 +683,17 @@ public class SysSmsTemplateServiceImpl implements SysSmsTemplateService {
 
     /*
      * 手机验证码
-     * 
+     *
      */
 	@Override
 	public boolean sendRegistValidateSMS(String validateCode, String phone,	Integer sessionId) throws Exception {
 		Boolean result = false;
 		if(isNew){
-    		String BianHao = TencentSMSUtil.PHONE_VALIDATE_TEMPLATE_NEWID;    		
-    		String[] params = new String[1];		    
+    		String BianHao = TencentSMSUtil.PHONE_VALIDATE_TEMPLATE_NEWID;
+    		String[] params = new String[1];
 		    params[0] = validateCode;
 		    String[] receivers = {"86 "+phone};
-			SendSmsResponse smsResult = TencentSMSUtil.sendSMS(receivers, params, BianHao);		    	
+			SendSmsResponse smsResult = TencentSMSUtil.sendSMS(receivers, params, BianHao);
 	    	EbsSendMessageLog eml = new EbsSendMessageLog();
 	    	eml.setType(BianHao);
 	    	eml.setNumber(phone);
@@ -691,16 +701,16 @@ public class SysSmsTemplateServiceImpl implements SysSmsTemplateService {
 	    	eml.setReceiver(phone);
 	    	eml.setSendcode(smsResult.getSendStatusSet()[0].getCode());
 	    	ebsSendMessageLogDao.save(eml);
-	    	
+
 	    	if("Ok".equals(smsResult.getSendStatusSet()[0].getCode())) {
 	    		result = true;
-			}  
+			}
     	}
     	else{
 	    	String companyName = "";
 	    	String smsContent = sysSmsTemplateDao.findByTitleAndSessionId(SMSUtil.PHONE_VALIDATE_CODE, sessionId).getSmsTemplate();
 	    	Map<String,Object> param = new HashMap<String,Object>();
-	    	//1.设置验证码    	
+	    	//1.设置验证码
 	    	param.put("phoneValidateCode", validateCode);
 	    	//2.设置接收通知的公司名字
 	    	param.put("companyName", companyName);
@@ -727,17 +737,17 @@ public class SysSmsTemplateServiceImpl implements SysSmsTemplateService {
 
 	/*
 	 * 线上展厅消息提醒
-	 * 
+	 *
 	 */
 	@Override
 	public boolean sendMessageForOnline(String phone, String name, Integer sessionId) throws Exception {
 		Boolean result = false;
 		if(isNew){
-    		String BianHao = TencentSMSUtil.MESSAGE_TEMPLATE_ID;    		
+    		String BianHao = TencentSMSUtil.MESSAGE_TEMPLATE_ID;
     		String[] params = new String[1];
 		    params[0] = name;
 		    String[] receivers = {"86 "+phone};
-			SendSmsResponse smsResult = TencentSMSUtil.sendSMS(receivers, params, BianHao);		    	
+			SendSmsResponse smsResult = TencentSMSUtil.sendSMS(receivers, params, BianHao);
 	    	EbsSendMessageLog eml = new EbsSendMessageLog();
 	    	eml.setType(BianHao);
 	    	eml.setNumber(phone);
@@ -745,10 +755,10 @@ public class SysSmsTemplateServiceImpl implements SysSmsTemplateService {
 	    	eml.setReceiver(phone);
 	    	eml.setSendcode(smsResult.getSendStatusSet()[0].getCode());
 	    	ebsSendMessageLogDao.save(eml);
-	    	
+
 	    	if("Ok".equals(smsResult.getSendStatusSet()[0].getCode())) {
 	    		result = true;
-			}  
+			}
     	}
     	else{
 	    	String smsContent = name+" 您好，贵公司收到新的咨询信息，请登录线上展厅会员中心查看。【绿博会】";//sysSmsTemplateDao.findByTitleAndSessionId(SMSUtil.FIND_PASSWORD_CODE, sessionId).getSmsTemplate();
@@ -775,5 +785,113 @@ public class SysSmsTemplateServiceImpl implements SysSmsTemplateService {
 			}
     	}
     	return result;
+	}
+
+	/**
+	 * 发送搭建商审核通过短信
+	 * @param phone 接收人手机号
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public Boolean sendDecoratorAuditAgree(String phone) throws Exception {
+		Boolean result = false;
+		if(isNew){
+			String BianHao = TencentSMSUtil.DECORATOR_AUDIT_AGREE_TEMPLATE_ID;
+			String[] params = new String[4];
+			params[0] = decoratorAuditAgreeDate;
+			params[1] = decoratorAuditAgreeDeposit;
+			params[2] = decoratorAuditAgreePerson;
+			params[3] = decoratorAuditAgreeTelephone;
+			String[] receivers = {"86 "+ phone};
+			SendSmsResponse smsResult = TencentSMSUtil.sendSMS(receivers, params, BianHao);
+			log.info("发送搭建商审核通过短信，手机号:{}，发送结果:{}", phone, JSONUtil.toJsonStr(smsResult));
+			EbsSendMessageLog eml = new EbsSendMessageLog();
+			eml.setType(BianHao);
+			eml.setNumber(phone);
+			eml.setContent(JSONObject.toJSONString(smsResult));
+			eml.setReceiver(phone);
+			eml.setSendcode(smsResult.getSendStatusSet()[0].getCode());
+			ebsSendMessageLogDao.save(eml);
+
+			if("Ok".equals(smsResult.getSendStatusSet()[0].getCode())) {
+				result = true;
+			}
+		}
+		else{
+			String smsContent = sysSmsTemplateDao.findByTitle(SMSUtil.DECORATOR_AUDIT_AGREE).getSmsTemplate();
+			Map<String,Object> param = new HashMap<>();
+			//1.日期、保证金、联系人、联系电话
+			param.put("date", decoratorAuditAgreeDate);
+			param.put("deposit", decoratorAuditAgreeDeposit);
+			param.put("contactPerson", decoratorAuditAgreePerson);
+			param.put("contactTelephone", decoratorAuditAgreeTelephone);
+			//3.处理参数
+			smsContent = SMSUtil.processParameter(smsContent, param);
+			//4.设置接收人
+			String[] receivers = {phone};
+			//5.发送短信
+			HttpResult sendResult = SMSUtil.sendSMS(receivers, smsContent);
+			//记录日志
+			EbsSendMessageLog eml = new EbsSendMessageLog();
+			eml.setType(SMSUtil.DECORATOR_AUDIT_AGREE);
+			eml.setNumber(phone);
+			eml.setContent(smsContent);
+			eml.setReceiver(phone);
+			eml.setSendcode(sendResult.getCode().toString());
+			ebsSendMessageLogDao.save(eml);
+			if(sendResult.getCode()==200&&Long.valueOf(sendResult.getBody())>0) {
+				result = true;
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * 发送搭建商审核不通过短信
+	 * @param phone 接收人手机号
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public Boolean sendDecoratorAuditReject(String phone) throws Exception {
+		Boolean result = false;
+		if(isNew){
+			String smsCode = TencentSMSUtil.DECORATOR_AUDIT_REJECT_TEMPLATE_ID;
+			String[] params = new String[0];
+			String[] receivers = {"86 "+ phone};
+			SendSmsResponse smsResult = TencentSMSUtil.sendSMS(receivers, params, smsCode);
+			log.info("发送搭建商审核不通过短信，手机号:{}，发送结果:{}", phone, JSONUtil.toJsonStr(smsResult));
+			EbsSendMessageLog eml = new EbsSendMessageLog();
+			eml.setType(smsCode);
+			eml.setNumber(phone);
+			eml.setContent(JSONObject.toJSONString(smsResult));
+			eml.setReceiver(phone);
+			eml.setSendcode(smsResult.getSendStatusSet()[0].getCode());
+			ebsSendMessageLogDao.save(eml);
+
+			if("Ok".equals(smsResult.getSendStatusSet()[0].getCode())) {
+				result = true;
+			}
+		}
+		else{
+			String smsContent = sysSmsTemplateDao.findByTitle(SMSUtil.DECORATOR_AUDIT_REJECT).getSmsTemplate();
+			//4.设置接收人
+			String[] receivers = {phone};
+			//5.发送短信
+			HttpResult sendResult = SMSUtil.sendSMS(receivers, smsContent);
+			//记录日志
+			EbsSendMessageLog eml = new EbsSendMessageLog();
+			eml.setType(SMSUtil.DECORATOR_AUDIT_REJECT);
+			eml.setNumber(phone);
+			eml.setContent(smsContent);
+			eml.setReceiver(phone);
+			eml.setSendcode(sendResult.getCode().toString());
+			ebsSendMessageLogDao.save(eml);
+			if(sendResult.getCode()==200&&Long.valueOf(sendResult.getBody())>0) {
+				result = true;
+			}
+		}
+		return result;
 	}
 }

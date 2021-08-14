@@ -14,6 +14,7 @@ import cn.org.chtf.card.manage.member.service.MemberService;
 import cn.org.chtf.card.manage.membersession.dao.MemberSessionMapper;
 import cn.org.chtf.card.manage.system.service.SysOperationLogService;
 import cn.org.chtf.card.manage.system.service.SysSessionService;
+import cn.org.chtf.card.manage.system.service.SysSmsTemplateService;
 import cn.org.chtf.card.manage.user.pojo.User;
 import cn.org.chtf.card.support.util.CryptographyUtil;
 import cn.org.chtf.card.support.util.WConst;
@@ -76,6 +77,9 @@ public class DecoratorEbsDecoratorManageController {
 
     @Autowired
     private SysOperationLogService sysOperationLogService;
+
+    @Autowired
+    private SysSmsTemplateService sysSmsTemplateService;
 
     @Autowired
     private MemberSessionMapper memberSessionMapper;
@@ -173,27 +177,27 @@ public class DecoratorEbsDecoratorManageController {
                 return R.error(WConst.ERROR, "已超过资质审核时间");
             }
 
-            String strSessionid = sysSessionService.getSessionID(request);
             User user = (User) session.getAttribute("user");
-            if (map.get("phone") != null && !"".equals(map.get("phone"))) {
-                //校验手机号是否存在
-                Map<String, Object> map2 = new HashMap<>(3);
-                map2.put("session", strSessionid);
-                map2.put("phone", map.get("phone"));
-                Map<String, Object> selectCompanyInfo1 = decoratorEbsDecoratorManageService.selectCompanyInfo(map2);
-                if (selectCompanyInfo1 != null
-                        && !Integer.valueOf(selectCompanyInfo1.get("companyId").toString()).equals(Integer.valueOf(map.get("id").toString()))) {
-                    return R.error(WConst.ERROR, "您填写的手机号已存在，请重新填写");
-                }
-                //校验邮箱是否存在
-                map2.put("phone", null);
-                map2.put("email", map.get("email"));
-                Map<String, Object> selectCompanyInfo2 = decoratorEbsDecoratorManageService.selectCompanyInfo(map2);
-                if (selectCompanyInfo2 != null
-                        && !Integer.valueOf(selectCompanyInfo2.get("companyId").toString()).equals(Integer.valueOf(map.get("id").toString()))) {
-                    return R.error(WConst.ERROR, "您填写的邮箱已存在，请重新填写");
-                }
-            }
+            String strSessionid = sysSessionService.getSessionID(request);
+//            if (map.get("phone") != null && !"".equals(map.get("phone"))) {
+//                //校验手机号是否存在
+//                Map<String, Object> map2 = new HashMap<>(3);
+//                map2.put("session", strSessionid);
+//                map2.put("phone", map.get("phone"));
+//                Map<String, Object> selectCompanyInfo1 = decoratorEbsDecoratorManageService.selectCompanyInfo(map2);
+//                if (selectCompanyInfo1 != null
+//                        && !Integer.valueOf(selectCompanyInfo1.get("companyId").toString()).equals(Integer.valueOf(map.get("id").toString()))) {
+//                    return R.error(WConst.ERROR, "您填写的手机号已存在，请重新填写");
+//                }
+//                //校验邮箱是否存在
+//                map2.put("phone", null);
+//                map2.put("email", map.get("email"));
+//                Map<String, Object> selectCompanyInfo2 = decoratorEbsDecoratorManageService.selectCompanyInfo(map2);
+//                if (selectCompanyInfo2 != null
+//                        && !Integer.valueOf(selectCompanyInfo2.get("companyId").toString()).equals(Integer.valueOf(map.get("id").toString()))) {
+//                    return R.error(WConst.ERROR, "您填写的邮箱已存在，请重新填写");
+//                }
+//            }
             if (map.get("auditType") != null
                     && ("auditAgree".equals(map.get("auditType")) || "auditReject".equals(map.get("auditType")))) {
                 map.put("audittime", new java.sql.Timestamp(System.currentTimeMillis()));
@@ -216,9 +220,21 @@ public class DecoratorEbsDecoratorManageController {
             sysOperationLogService.CreateEntity(act, strSessionid, 0, user.getId(),
                     Integer.valueOf(map.get("id").toString()), JSONObject.toJSONString(map));
 
+            if (auditType != null) {
+                //查询指定搭建商信息
+                Map<String, Object> dbMap = new HashMap<>(1);
+                dbMap.put("id", map.get("id"));
+                Map<String, Object> selectCompanyInfo = decoratorEbsDecoratorManageService.selectCompanyInfo(dbMap);
+                if ("reAudit".equals(auditType.toString()) || "auditReject".equals(auditType.toString())) {
+                    sysSmsTemplateService.sendDecoratorAuditReject(selectCompanyInfo.get("phone").toString());
+                } else if ("auditAgree".equals(auditType.toString())) {
+                    sysSmsTemplateService.sendDecoratorAuditAgree(selectCompanyInfo.get("phone").toString());
+                }
+            }
+
             return R.ok().put("code", WConst.SUCCESS).put("msg", WConst.SAVED);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.error("审核搭建商异常", e);
             return R.error().put("code", WConst.ERROR).put("msg", WConst.SAVEDERROR);
         }
     }

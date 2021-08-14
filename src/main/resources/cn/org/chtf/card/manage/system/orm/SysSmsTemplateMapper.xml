@@ -133,4 +133,14 @@
         from sys_sms_template as a
         where a.sms_title = #{title} and a.sms_session_id=#{sessionId}
     </select>
+
+    <select id="findByTitle" resultType="cn.org.chtf.card.manage.system.model.SysSmsTemplate">
+        select
+			a.sms_id as smsId,
+			a.sms_session_id as smsSessionId,
+			a.sms_title as smsTitle,
+			a.sms_template as smsTemplate
+        from sys_sms_template as a
+        where a.sms_title = #{title}
+    </select>
 </mapper>

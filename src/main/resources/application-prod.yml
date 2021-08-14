@@ -1,0 +1,88 @@
+server:
+  port: 6080
+  tomcat:
+    basedir: /virtualhost/exhibition/tmp
+spring:
+  #-------------------online mysql config----------------------#
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://172.16.1.41:3306/db_exhibition?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
+    username: exhibition
+    password: Sj2MGGMk65beJPd2
+    tomcat:
+      initial-size: 10
+      max-active: 20
+      max-idle: 8
+      max-wait: 60000
+      min-idle: 8
+  #-------------------online redis config----------------------#
+  redis:
+    database: 0
+    host: 172.16.1.41
+    password: 20200809#Maocuhui
+    port: 6379
+    timeout: 5000
+  freemarker:
+    settings:
+      number_format: '#'
+  #-------------------online upload file config----------------------#
+  http:
+    multipart:
+      max-file-size: 500Mb
+      max-request-size: 500Mb
+  session:
+    store-type: none
+#-----------http config--------------#
+http:
+  #创建连接的最长时间
+  connectTimeout: 1000
+  #从连接池中获取到连接的最长时间
+  connectionRequestTimeout: 500
+  #并发数
+  defaultMaxPerRoute: 20
+  #最大连接数
+  maxTotal: 100
+  #数据传输的最长时间
+  socketTimeout: 10000
+  #提交请求前测试连接是否可用
+  staleConnectionCheckEnabled: true
+#-----------log config--------------#
+logging:
+  level:
+    cn:
+      org:
+        chtf:
+          card: debug
+    root: info
+  path: /virtualhost/exhibition/log
+#-----------mybatis config--------------#
+mybatis:
+  mapper-locations: classpath:cn/org/chtf/card/manage/*/orm/*.xml
+#-------------------tencent cloud config----------------------#
+appID: wx1c162fe49252ee18
+appSecret: d32bf2447131c729d1b0034a29b76270
+exhibition:
+  #请求地址跟获取第三方信息使用的域名映射关系：哈洽会
+  chtf:
+    mapping:
+      domain: https://card.chtf.org.cn
+      request: http://card.chtf.org.cn
+  #请求地址跟获取第三方信息使用的域名映射关系：新材料产业博览会
+  hljhzw:
+    mapping:
+      domain: https://card.hljhzw.org.cn
+      request: http://card.hljhzw.org.cn
+  #请求地址跟获取第三方信息使用的域名映射关系：绿博会
+  hljlbh:
+    mapping:
+      domain: https://card.hljlbh.org.cn
+      request: http://card.hljlbh.org.cn
+  #搭建商审核通过短信的缴纳保证金时间、保证金、联系人、联系的电话
+  decorator:
+    sms:
+      auditAgree:
+        contact:
+          person: 林帅
+          telephone: 45182340100
+        date: 2021年8月30日
+        deposit: 100

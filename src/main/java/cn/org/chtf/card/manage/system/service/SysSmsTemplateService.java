@@ -148,4 +148,20 @@ public interface SysSmsTemplateService {
 	boolean sendRegistValidateSMS(String randomString, String phone,Integer sessionId) throws Exception;
 
 	boolean sendMessageForOnline(String phone, String name, Integer sessionId) throws Exception;
+
+	/**
+	 * 发送搭建商审核通过短信
+	 * @param phone 接收人手机号
+	 * @return
+	 * @throws Exception
+	 */
+	public Boolean sendDecoratorAuditAgree(String phone) throws Exception;
+
+	/**
+	 * 发送搭建商审核不通过短信
+	 * @param phone 接收人手机号
+	 * @return
+	 * @throws Exception
+	 */
+	public Boolean sendDecoratorAuditReject(String phone) throws Exception;
 }

@@ -1,0 +1,25 @@
+endpoints:
+  enabled: false
+  health:
+    enabled: true
+    path: /manage/health
+  info:
+    enabled: true
+    path: /manage/info
+  metrics:
+    enabled: true
+    path: /manage/metrics
+management:
+  health:
+    redis:
+      enabled: false
+  security:
+    enabled: false
+spring:
+  profiles:
+    active: @env@
+info:
+  app:
+    description: This is the website of exhibition Inc.
+    name: exhibition
+    version: 1.0.0

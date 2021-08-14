@@ -57,6 +57,14 @@ public interface SysSmsTemplateMapper {
 	 * @return
 	 */
 	SysSmsTemplate findByTitleAndSessionId(@Param("title") String  title,@Param("sessionId") Integer sessionId);
+
+
+    /**
+     * 获取指定标定的短信模板
+     * @param title
+     * @return
+     */
+    SysSmsTemplate findByTitle(@Param("title") String  title);
 	
 
 }

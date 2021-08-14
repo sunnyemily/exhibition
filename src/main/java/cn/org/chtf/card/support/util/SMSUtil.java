@@ -38,6 +38,8 @@ public class SMSUtil {
 	public final static String EXHIBITOR_TO_TRADDINGGROUP_NOTICE_CODE = "零散转交易团通知";
 	public final static String FIND_PASSWORD_CODE = "找回密码短信";
 	public final static String CONSOLE_VALIDATE_CODE = "后台登录验证短信";
+	public final static String DECORATOR_AUDIT_AGREE = "搭建商审核通过短信";
+	public final static String DECORATOR_AUDIT_REJECT = "搭建商审核不通过短信";
 	
 	private static String randString = "023456789ABCDEFGHIJKMNPQRSTUVWXYZ";
 	private static int stringNum = 6;// 随机产生字符数量

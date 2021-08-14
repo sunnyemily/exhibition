@@ -259,9 +259,9 @@
 			ebs_companyinfo a
 		LEFT JOIN web_member_session b ON a.id = b.orgnization_id
 		LEFT JOIN web_member c ON b.member_id = c.member_id
-		LEFT JOIN ebs_booth_apply d ON d.company_id = a.id and d.session_id = #{session}
+		LEFT JOIN ebs_booth_apply d ON d.company_id = a.id
 		<where>
-			b.id = #{session}			
+			1 = 1
 			<if test="id != null">
 				and a.id = #{id}
 			</if>
@@ -272,7 +272,7 @@
 				and a.email = #{email}
 			</if>
 		</where>
-		order by b.addtime desc limit 1
+		order by a.addtime desc limit 1
 	</select>
 	
 	
