@@ -225,10 +225,13 @@ public class DecoratorEbsDecoratorManageController {
                 Map<String, Object> dbMap = new HashMap<>(1);
                 dbMap.put("id", map.get("id"));
                 Map<String, Object> selectCompanyInfo = decoratorEbsDecoratorManageService.selectCompanyInfo(dbMap);
-                if ("reAudit".equals(auditType.toString()) || "auditReject".equals(auditType.toString())) {
-                    sysSmsTemplateService.sendDecoratorAuditReject(selectCompanyInfo.get("phone").toString());
-                } else if ("auditAgree".equals(auditType.toString())) {
-                    sysSmsTemplateService.sendDecoratorAuditAgree(selectCompanyInfo.get("phone").toString());
+                if (selectCompanyInfo != null && selectCompanyInfo.get("phone") != null) {
+                    String phone = selectCompanyInfo.get("phone").toString();
+                    if ("reAudit".equals(auditType.toString()) || "auditReject".equals(auditType.toString())) {
+                        sysSmsTemplateService.sendDecoratorAuditReject(phone);
+                    } else if ("auditAgree".equals(auditType.toString())) {
+                        sysSmsTemplateService.sendDecoratorAuditAgree(phone);
+                    }
                 }
             }
 
@@ -316,7 +319,6 @@ public class DecoratorEbsDecoratorManageController {
     public R selectCompanyInfo(HttpServletRequest request) {
         try {
             StringBuffer sb = new StringBuffer();
-            sb.append("认证通过：");
             String decoratorAuditStartTime = decoratorUtil.getDecoratorAuditStartTime(request);
             if (StrUtil.isNotEmpty(decoratorAuditStartTime)) {
                 sb.append(decoratorUtil.getDateStr(decoratorAuditStartTime));
@@ -350,6 +352,25 @@ public class DecoratorEbsDecoratorManageController {
             System.out.println(e.getMessage());
             return R.error().put("code", WConst.ERROR).put("msg", WConst.DOWNLOAD_FAILED);
         }
+    }
+
+    /**
+     * 重置密码
+     * @param map
+     * @return
+     */
+    @RequestMapping("/resetPassword")
+    public ResultVO ResetPassword(@RequestBody Map<String,Object> map, HttpServletRequest request, HttpSession session){
+        String strSessionid = sysSessionService.getSessionID(request);
+        User user = (User)session.getAttribute("user");
+        String pass = CryptographyUtil.md5(WConst.DEFAULT_PASSWORD, String.valueOf(map.get("loginname")));
+        EbsGuestbexhibition ebsGuestbexhibition = new EbsGuestbexhibition();
+        ebsGuestbexhibition.setLoginpass(pass);
+        ebsGuestbexhibition.setMemberid(Integer.valueOf(String.valueOf(map.get("memberid"))));
+        ebsGuestbexhibitionService.ResetPassword(ebsGuestbexhibition);
+        sysOperationLogService.CreateEntity("初始化登录密码", strSessionid, 0, user.getId(),
+                0, JSONObject.toJSONString(map));
+        return ResultVOUtil.success();
     }
 
     @RequestMapping("/UseScatteredExhibitors")

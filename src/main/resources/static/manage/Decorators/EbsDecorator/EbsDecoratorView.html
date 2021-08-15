@@ -188,22 +188,6 @@
 							</div>
 							<hr>
 							<div class="layui-form-item">
-								<label class="layui-form-label">认证开始时间</label>
-								<div class="layui-input-block">
-									<div class="layui-input-inline layui-show-xs-block">
-										<input autocomplete="off" disabled="disabled" class="layui-input" id="auditStartTime" type="text" style="color: green">
-									</div>
-								</div>
-							</div>
-							<div class="layui-form-item">
-								<label class="layui-form-label">认证结束时间</label>
-								<div class="layui-input-block">
-									<div class="layui-input-inline layui-show-xs-block">
-										<input autocomplete="off" disabled="disabled" class="layui-input" id="auditEndTime" type="text" style="color: red">
-									</div>
-								</div>
-							</div>
-							<div class="layui-form-item">
 								<label class="layui-form-label">审核状态</label>
 								<div class="layui-input-block">
 									<div class="layui-input-inline layui-show-xs-block">
@@ -216,6 +200,22 @@
 								<div class="layui-input-block">
 									<div class="layui-input-inline layui-show-xs-block">
 										<textarea class="layui-textarea" id="auditRemark" name="auditRemark" rows="4" v-model="ebsCompanyinfo.auditRemark"></textarea>
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="approveStartTime">认证开始时间</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" style="width:80%">
+										<input class="layui-input" autocomplete="off" id="approveStartTime" name="approveStartTime" v-model="ebsCompanyinfo.approveStartTime" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd'})">
+									</div>
+								</div>
+							</div>
+							<div class="layui-form-item">
+								<label class="layui-form-label" for="approveEndTime">认证结束时间</label>
+								<div class="layui-input-block">
+									<div class="layui-input-inline layui-show-xs-block" style="width:80%">
+										<input class="layui-input" autocomplete="off" id="approveEndTime" name="approveEndTime" v-model="ebsCompanyinfo.approveEndTime" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd'})">
 									</div>
 								</div>
 							</div>
@@ -322,9 +322,25 @@
 					//审核通过
 					agreeCompanyInfo : function() {
 						vm.ebsCompanyinfo.id = editEbsCompanyinfoId;
+						var approveStartTime = $("#approveStartTime").val();
+						if(approveStartTime == null || approveStartTime == ""){
+							layer.alert("请先选择认证开始时间");
+							return;
+						}
+						var approveEndTime = $("#approveEndTime").val();
+						if(approveEndTime == null || approveEndTime == ""){
+							layer.alert("请先选择认证结束时间");
+							return;
+						}
+						if(approveStartTime > approveEndTime){
+							layer.alert("认证开始时间必须早于认证结束时间");
+							return;
+						}
 						vm.ebsCompanyinfo.auditStatus = 2;
 						vm.ebsCompanyinfo.auditRemark = '';
 						vm.ebsCompanyinfo.auditType = 'auditAgree';
+						vm.ebsCompanyinfo.approveStartTime = approveStartTime;
+						vm.ebsCompanyinfo.approveEndTime = approveEndTime;
 
 						$.ajax({
 							type : 'post',
@@ -412,11 +428,13 @@
 									// 审核时间
 									$("#auditStartTime").val(result.data.auditStartTime);
 									$("#auditEndTime").val(result.data.auditEndTime);
-									// 审核状态，2-审核通过，3-审核不通过
+									// 审核状态，1-待审核，2-审核通过，3-审核不通过
 									var auditStatus = result.data.auditStatus;
-									if (auditStatus == 2) {
+									if (auditStatus == 1 || auditStatus == "1") {
+										$("#auditStatusName").val("待审核");
+									} else if (auditStatus == 2 || auditStatus == "2") {
 										$("#auditStatusName").val("审核通过");
-									} else if (auditStatus == 3) {
+									} else if (auditStatus == 3 || auditStatus == "3") {
 										$("#auditStatusName").val("审核不通过");
 									}
 								} else {
@@ -429,5 +447,6 @@
 			});
 		</script>
 		<script src="/manage/js/manage/crop.js"></script>
+		<script type="text/javascript" src="/manage/plugins/My97DatePicker/WdatePicker.js"></script>
 	</body>
 </html>

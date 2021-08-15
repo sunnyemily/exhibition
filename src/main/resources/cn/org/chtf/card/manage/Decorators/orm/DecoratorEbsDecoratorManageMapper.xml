@@ -50,7 +50,9 @@
 			end as auditStatusName,
 			ifnull(c.audittime,'') audittime,
 			c.audit_remark auditRemark,
-			c.auditername
+			c.auditername,
+			c.approve_start_time approveStartTime,
+			c.approve_end_time approveEndTime
         FROM web_member a
 		LEFT JOIN web_member_session b on a.member_id = b.member_id and b.id = #{session}
 		RIGHT JOIN ebs_companyinfo c on b.orgnization_id = c.id
@@ -81,7 +83,9 @@
 			c.useable,
 			c.url,
 			c.audit_status auditStatus,
-			c.audittime audittime
+			c.audittime audittime,
+			c.approve_start_time approveStartTime,
+			c.approve_end_time approveEndTime
         FROM web_member a
 		INNER JOIN web_member_session b on a.member_id = b.member_id and b.id = #{session}
 		INNER JOIN ebs_companyinfo c on b.orgnization_id = c.id
@@ -201,6 +205,8 @@
 			<if test="auditType != null and auditType == 'reAudit'">audittime = null,auditername = null,</if>
 			<if test="audittime != null">`audittime` = #{audittime},</if>
 			<if test="auditername != null and auditername != ''">`auditername` = #{auditername},</if>
+			<if test="approveStartTime != null and approveStartTime != ''">`approve_start_time` = #{approveStartTime},</if>
+			<if test="approveEndTime != null and approveEndTime != ''">`approve_end_time` = #{approveEndTime},</if>
         </set>
         where id = #{id}
 	</update>
@@ -254,7 +260,9 @@
 			a.previouscase,
 			a.audittime,
 		    a.audit_status as auditStatus,
-		    a.audit_remark as auditRemark
+		    a.audit_remark as auditRemark,
+			a.approve_start_time approveStartTime,
+			a.approve_end_time approveEndTime
 		FROM
 			ebs_companyinfo a
 		LEFT JOIN web_member_session b ON a.id = b.orgnization_id

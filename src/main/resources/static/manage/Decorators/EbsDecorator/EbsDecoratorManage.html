@@ -26,7 +26,7 @@
                 <div class="ibox-title">
                     <div style="width:96%;float:left;">
                         <h5>搭建商信息</h5>
-                        <h5 style="float:right;color: red" id="auditTimeText">认证通过：2021年7月3日至2022年12月31日</h5>
+                        <h5 style="float:right;color: red" id="auditTimeText"></h5>
                     </div>
                     <div class="ibox-tools" style="width:4%;float:right;">
                         <a class="collapse-link"> <i class="fa fa-chevron-up"></i> </a><a class="close-link"> <i class="fa fa-times"></i> </a>
@@ -97,9 +97,32 @@
         </form>
     </fieldset>
 </div>
+<div id="auditAgreeDiv" hidden="hidden" style="padding: 20px;">
+    <fieldset class="layui-elem-field layui-field-title">
+        <form class="layui-form layui-form-pane" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="approveStartTime">认证开始时间</label>
+                <div class="layui-input-block">
+                    <div class="layui-input-inline layui-show-xs-block" style="width:80%">
+                        <input class="layui-input" autocomplete="off" id="approveStartTime" name="approveStartTime" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd'})">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="approveEndTime">认证结束时间</label>
+                <div class="layui-input-block">
+                    <div class="layui-input-inline layui-show-xs-block" style="width:80%">
+                        <input class="layui-input" autocomplete="off" id="approveEndTime" name="approveEndTime" type="text" onclick="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd'})">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </fieldset>
+</div>
 <script src="/manage/js/bootstrap.min.js?v=3.3.6"></script>
 <script src="/manage/js/content.js?v=1.0.0"></script>
 <script src="/manage/js/manage/common.js?v=1.0.0"></script>
+<script type="text/javascript" src="/manage/plugins/My97DatePicker/WdatePicker.js"></script>
 </body>
 <script type="text/javascript">
     var table;
@@ -193,7 +216,7 @@
                     }
                 }, {
                     fixed: 'right',
-                    width: 200,
+                    width: 250,
                     title: '操作',
                     templet: function (d) {
                         var btn = "<a class=\"layui-btn layui-btn-primary layui-btn-xs\" lay-event=\"view\">查看详情</a>";
@@ -206,6 +229,7 @@
                                 btn += "<a class=\"layui-btn layui-btn-xs layui-btn-danger\" lay-event=\"reject\">驳回</a>";
                             }
                         }
+                        btn += "<a class=\"layui-btn layui-btn-primary layui-btn-xs\" onclick=\"resetPassword('" + d.memberId + "','" + d.memberUsername + "')\">重置密码</a>";
                         return btn;
                     }
                 }]],
@@ -254,19 +278,20 @@
                 , title: '审核驳回'
                 , btn: ['确认']
                 , btn1: function (index) {
-                    if ($("#auditRemark").val() == null || $("#auditRemark").val() == "") {
+                    var auditRemark = $("#auditRemark").val();
+                    if (auditRemark == null || auditRemark == "") {
                         layer.alert("请先填写驳回原因");
                         return;
                     }
+                    var params = {};
+                    params.id = companyId;
+                    params.auditStatus = 3;
+                    params.auditRemark = auditRemark;
+                    params.auditType = 'auditReject';
                     $.ajax({
                         type: 'post'
                         , url: '/manage/Decorators/ebsDecoratorManage/rejectCompanyInfo'
-                        , data: {
-                            id: companyId
-                            , auditStatus: 3
-                            , auditRemark: $("#auditRemark").val()
-                            , auditType: "auditReject"
-                        }
+                        , data: params
                         , success: function (r) {
                             if (r.code == 1) {
                                 layer.alert("保存成功");
@@ -317,41 +342,58 @@
         }
         //审核通过
         window.agreeCompanyInfo = function (companyId) {
-            layer.confirm('确认审核通过?', function (index) {
-                var params = {};
-                params.id = companyId;
-                params.auditStatus = 2;
-                params.auditRemark = '';
-                params.auditType = 'auditAgree';
-                $.ajax({
-                    url: "/manage/Decorators/ebsDecoratorManage/agreeCompanyInfo",
-                    data: params,
-                    type: "post",
-                    beforeSend: function () {
-                        layer.load(1, {shade: [0.5, '#000']});
-                    },
-                    complete: function () {
-                        layer.closeAll("loading");
-                    },
-                    success: function (r) {
-                        if (r.code === 1) {
-                            layer.msg("操作成功", {icon: 6, time: 500}, function () {
-                                reloadTableDataCurrent();
-                            });
-                        } else {
-                            if (r.status == 5) {
-                                layer.alert(r.msg);
-                                parent.window.location.href = '/manage/login.html';
-                            }
-                            layer.alert(r.msg);
-                        }
+            sessionStorage.setItem("editEbsCompanyinfoId", companyId);
+            $("#companyId").val(companyId);
+            $("#approveStartTime").val("");
+            $("#approveEndTime").val("");
+            layer.open({
+                type: 1
+                , area: ['50%', '230px']
+                , content: $("#auditAgreeDiv")
+                , title: '审核通过'
+                , btn: ['确认']
+                , btn1: function (index) {
+                    var approveStartTime = $("#approveStartTime").val();
+                    if(approveStartTime == null || approveStartTime == ""){
+                        layer.alert("请先选择认证开始时间");
+                        return;
                     }
-                });
+                    var approveEndTime = $("#approveEndTime").val();
+                    if(approveEndTime == null || approveEndTime == ""){
+                        layer.alert("请先选择认证结束时间");
+                        return;
+                    }
+                    if(approveStartTime > approveEndTime){
+                        layer.alert("认证开始时间必须早于认证结束时间");
+                        return;
+                    }
+                    var params = {};
+                    params.id = companyId;
+                    params.auditStatus = 2;
+                    params.auditRemark = '';
+                    params.auditType = 'auditAgree';
+                    params.approveStartTime = approveStartTime;
+                    params.approveEndTime = approveEndTime;
+                    $.ajax({
+                        type: 'post'
+                        , url: '/manage/Decorators/ebsDecoratorManage/agreeCompanyInfo'
+                        , data: params
+                        , success: function (r) {
+                            if (r.code == 1) {
+                                layer.alert("保存成功");
+                                layer.close(index);
+                                reloadTableDataCurrent();
+                            } else {
+                                layer.alert(r.msg);
+                            }
+                        }
+                    })
+                }
+                , btnAlign: 'c'
             });
         }
         //审核不通过
         window.rejectCompanyInfo = function (companyId) {
-
             var params = {};
             params.id = companyId;
             params.auditStatus = 3;
@@ -384,28 +426,30 @@
         }
         //重置密码
         window.resetPassword = function (memberid, loginname) {
-            var params = {};
-            params.memberid = memberid;
-            params.loginname = loginname;
-            $.ajax({
-                url: "/manage/Decorators/ebsGuestbexhibition/ResetPassword",
-                data: JSON.stringify(params),
-                dataType: "json",
-                type: "post",
-                beforeSend: function () {
-                    layer.load(1, {shade: [0.5, '#000']});
-                },
-                complete: function () {
-                    layer.closeAll("loading");
-                },
-                contentType: "application/json",
-                success: function (result) {
-                    if (result.code === 200) {
-                        layer.alert("密码已重置为：123456");
-                    } else {
-                        layer.alert(result.msg);
+            layer.confirm('确认重置密码?', function (index) {
+                var params = {};
+                params.memberid = memberid;
+                params.loginname = loginname;
+                $.ajax({
+                    url: "/manage/Decorators/ebsDecoratorManage/resetPassword",
+                    data: JSON.stringify(params),
+                    dataType: "json",
+                    type: "post",
+                    beforeSend: function () {
+                        layer.load(1, {shade: [0.5, '#000']});
+                    },
+                    complete: function () {
+                        layer.closeAll("loading");
+                    },
+                    contentType: "application/json",
+                    success: function (result) {
+                        if (result.code === 200) {
+                            layer.alert("密码已重置为：123456");
+                        } else {
+                            layer.alert(result.msg);
+                        }
                     }
-                }
+                });
             });
         }
     });
