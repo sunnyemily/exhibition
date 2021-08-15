@@ -225,13 +225,16 @@ public class DecoratorEbsDecoratorManageController {
                 Map<String, Object> dbMap = new HashMap<>(1);
                 dbMap.put("id", map.get("id"));
                 Map<String, Object> selectCompanyInfo = decoratorEbsDecoratorManageService.selectCompanyInfo(dbMap);
-                if (selectCompanyInfo != null && selectCompanyInfo.get("phone") != null) {
-                    String phone = selectCompanyInfo.get("phone").toString();
+                Object phoneObject = selectCompanyInfo.get("phone");
+                if (selectCompanyInfo != null
+                        && phoneObject != null && !"".equals(phoneObject.toString())) {
                     if ("reAudit".equals(auditType.toString()) || "auditReject".equals(auditType.toString())) {
-                        sysSmsTemplateService.sendDecoratorAuditReject(phone);
+                        sysSmsTemplateService.sendDecoratorAuditReject(phoneObject.toString());
                     } else if ("auditAgree".equals(auditType.toString())) {
-                        sysSmsTemplateService.sendDecoratorAuditAgree(phone);
+                        sysSmsTemplateService.sendDecoratorAuditAgree(phoneObject.toString());
                     }
+                } else {
+                    log.info("审核搭建商未发送短信，搭建商手机号为空，搭建商id:{}", map.get("id"));
                 }
             }
 
