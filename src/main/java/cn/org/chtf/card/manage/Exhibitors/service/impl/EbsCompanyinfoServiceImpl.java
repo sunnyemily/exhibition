@@ -377,6 +377,27 @@ public class EbsCompanyinfoServiceImpl implements EbsCompanyinfoService {
 		return result;
 	}
 
+	/**
+	 * @author wushixing
+	 */
+	@Override
+	public ResultModel getMemberDecorator(HttpSession session, HttpServletRequest request) {
+		ResultModel result = null;
+		try {
+			Member member = (Member) session.getAttribute("member");
+			EbsCompanyinfo company = ebsCompanyinfoDao.getDecoratorByMemberId(member.getMemberId());
+			Map<String, Object> resultMap = new HashMap<String, Object>();
+			resultMap.put("member", member);
+			resultMap.put("company", company);
+			result = new ResultModel(WConst.SUCCESS, "查询成功", resultMap);
+		} catch (Exception e) {
+			result = new ResultModel(WConst.ERROR, WConst.SAVEDERROR,
+					e.getMessage());
+		}
+		// TODO Auto-generated method stub
+		return result;
+	}
+
 	@Override
 	public ResultModel updateMemberCompany(EbsCompanyinfo company,
 			HttpSession session) {

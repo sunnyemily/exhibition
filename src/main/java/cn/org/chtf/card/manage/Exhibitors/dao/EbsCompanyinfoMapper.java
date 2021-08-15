@@ -62,6 +62,14 @@ public interface EbsCompanyinfoMapper {
      * @return
      */
     EbsCompanyinfo getCompanyByMemberIdAndSessionId(@Param("memberId") Integer memberId,@Param("sessionId") Integer sessionId);
+
+    /**
+     * 根据会员id获取搭建商公司信息
+     * @author wushixing
+     * @param memberId 会员id
+     * @return
+     */
+    EbsCompanyinfo getDecoratorByMemberId(@Param("memberId") Integer memberId);
     
     /**
      * 根据会员id获取最新一条企业

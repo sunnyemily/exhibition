@@ -77,6 +77,13 @@ public interface EbsCompanyinfoService {
 	ResultModel getMemberCompany(HttpSession session, HttpServletRequest request);
 	/**
 	 * @author wushixing
+	 * @apiNote 获取会员关联搭建商企业信息
+	 * @param session
+	 * @return
+	 */
+	ResultModel getMemberDecorator(HttpSession session, HttpServletRequest request);
+	/**
+	 * @author wushixing
 	 * @apiNote 获取会员关联企业信息，适用于交易团外的其他企业
 	 * @param session
 	 * @return

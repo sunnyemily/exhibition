@@ -2054,6 +2054,18 @@ public class SiteController {
      * @param session
      * @return
      */
+    @RequestMapping(value = {"/api/decorator/get"})
+    @ResponseBody
+    public ResultModel getDecoratorByMember(HttpSession session, HttpServletRequest request) {
+        return companyService.getMemberDecorator(session, request);
+    }
+
+    /**
+     * 获取会员关联企业信息
+     *
+     * @param session
+     * @return
+     */
     @RequestMapping(value = {"/api/company/update"})
     @ResponseBody
     public ResultModel updateMemberCompany(EbsCompanyinfo company, HttpSession session) {

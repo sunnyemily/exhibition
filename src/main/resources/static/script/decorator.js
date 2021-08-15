@@ -22,7 +22,7 @@ layui.use('form', function () {
 });
 
 function loadCompany() {
-    $.get("/api/company/get", function (result) {
+    $.get("/api/decorator/get", function (result) {
         var obj = result.result.company;
         layer.closeAll();
         $("#editform input[type=hidden]").each(function () {
@@ -69,13 +69,14 @@ function loadCompany() {
         // 初始化数据
         var auditStatusName = "";
         var auditStatus = obj["auditStatus"];
-        var auditStartTime = result.result.decoratorAuditStartTime;
-        var auditEndTime = result.result.decoratorAuditEndTime;
+        var approveStartTime = obj["approveStartTime"];
+        var approveEndTime = obj["approveEndTime"];
         if(auditStatus == 1) {
             auditStatusName = "<span style ='color:blue'>待审核</span>";
         } else if(auditStatus == 2) {
-            if (auditStartTime != null && auditEndTime != null) {
-                auditStatusName = "<span style ='color:green'>认证通过：" + auditStartTime + "至" + auditEndTime + "</span>";
+            if (approveStartTime != null && approveStartTime != ""
+                        && approveEndTime != null && approveEndTime != "") {
+                auditStatusName = "<span style ='color:green'>认证通过：" + approveStartTime + "至" + approveEndTime + "</span>";
             } else {
                 auditStatusName = "<span style ='color:green'>认证通过</span>";
             }

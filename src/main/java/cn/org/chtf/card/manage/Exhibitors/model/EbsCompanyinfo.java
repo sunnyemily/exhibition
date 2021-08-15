@@ -276,5 +276,15 @@ public class EbsCompanyinfo implements Serializable{
      * 审核时间
      */
     private Timestamp audittime;
+
+    /**
+     * 认证开始时间
+     */
+    private String approveStartTime;
+
+    /**
+     * 认证结束时间
+     */
+    private String approveEndTime;
     
 }
