@@ -1,5 +1,6 @@
 package cn.org.chtf.card.manage.Decorators.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.org.chtf.card.common.utils.R;
 import cn.org.chtf.card.manage.Decorators.dao.DecoratorEbsDecoratorManageMapper;
 import cn.org.chtf.card.manage.Decorators.service.DecoratorEbsDecoratorManageService;
@@ -256,5 +257,17 @@ public class DecoratorEbsDecoratorManageServiceImpl implements DecoratorEbsDecor
     @Override
     public List<Map<String, Object>> GetDownLoadInfo(Map<String, Object> map) {
         return decoratorEbsDecoratorManageDao.GetDownLoadInfo(map);
+    }
+
+    /**
+     * 查询认证过期搭建商数据列表
+     */
+    @Override
+    public List<Map<String, Object>> listApproveExpiredData() {
+        List<Map<String, Object>> dataList = decoratorEbsDecoratorManageDao.listApproveExpiredData();
+        if (CollectionUtil.isEmpty(dataList)) {
+            return new ArrayList<>();
+        }
+        return dataList;
     }
 }

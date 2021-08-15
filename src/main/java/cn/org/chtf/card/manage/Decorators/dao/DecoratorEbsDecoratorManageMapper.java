@@ -42,4 +42,9 @@ public interface DecoratorEbsDecoratorManageMapper {
 	Map<String, Object> loadCount(Map<String, Object> map);
 
 	List<Map<String, Object>> GetDownLoadInfo(Map<String, Object> map);
+
+	/**
+	 * 查询认证过期搭建商数据列表
+	 */
+	List<Map<String, Object>> listApproveExpiredData();
 }

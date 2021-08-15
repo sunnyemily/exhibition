@@ -388,5 +388,19 @@
 		LEFT JOIN ebs_personnelcard d on d.companyname = c.chinesename AND b.id = d.session
 		WHERE a.member_type = #{type} AND b.id = #{session} and a.member_status = 0 and c.useable = 1
 	</select>
+
+	<select id="listApproveExpiredData" resultType="map">
+		SELECT
+		a.id,
+		a.audit_status auditStatus,
+		a.audittime audittime,
+		a.approve_start_time approveStartTime,
+		a.approve_end_time approveEndTime
+		FROM ebs_companyinfo a
+		WHERE a.comany_type_id = 3
+		and a.audit_status in (2,3)
+		and <![CDATA[ (a.approve_end_time < now()) ]]>
+		order by a.addtime desc;
+	</select>
 	
 </mapper>
