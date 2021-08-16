@@ -65,7 +65,7 @@ public class RequestConstant {
 
     @PostConstruct
     public void init() {
-        requestMap.put(hljlbhRequest, hljhzwDomain);
+        requestMap.put(hljlbhRequest, hljlbhDomain);
         requestMap.put(chtfRequest, chtfDomain);
         requestMap.put(hljhzwRequest, hljhzwDomain);
 

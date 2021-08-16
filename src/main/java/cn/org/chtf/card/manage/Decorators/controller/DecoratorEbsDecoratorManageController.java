@@ -322,14 +322,21 @@ public class DecoratorEbsDecoratorManageController {
     public R selectCompanyInfo(HttpServletRequest request) {
         try {
             StringBuffer sb = new StringBuffer();
-            String decoratorAuditStartTime = decoratorUtil.getDecoratorAuditStartTime(request);
-            if (StrUtil.isNotEmpty(decoratorAuditStartTime)) {
-                sb.append(decoratorUtil.getDateStr(decoratorAuditStartTime));
-            }
-            sb.append("至");
-            String decoratorAuditEndTime = decoratorUtil.getDecoratorAuditEndTime(request);
-            if (StrUtil.isNotEmpty(decoratorAuditEndTime)) {
-                sb.append(decoratorUtil.getDateStr(decoratorAuditEndTime));
+            Map<String, String> auditTimeMap = decoratorUtil.getDecoratorAuditTime(request);
+            if (auditTimeMap != null && auditTimeMap.size() > 0) {
+                String decoratorAuditStartTime = auditTimeMap.get("decoratorAuditStartTime");
+                if (StrUtil.isNotEmpty(decoratorAuditStartTime)) {
+                    sb.append("审核开始时间：");
+                    sb.append(decoratorUtil.getDateStr(decoratorAuditStartTime));
+                }
+                String decoratorAuditEndTime = auditTimeMap.get("decoratorAuditEndTime");
+                if (StrUtil.isNotEmpty(decoratorAuditEndTime)) {
+                    if (StrUtil.isNotEmpty(decoratorAuditStartTime)) {
+                        sb.append("，");
+                    }
+                    sb.append("审核截止时间：");
+                    sb.append(decoratorUtil.getDateStr(decoratorAuditEndTime));
+                }
             }
             Map<String, Object> dataMap = new HashMap<>();
             dataMap.put("auditTimeText", sb.toString());
