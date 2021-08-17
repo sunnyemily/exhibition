@@ -804,6 +804,7 @@ public class SysSmsTemplateServiceImpl implements SysSmsTemplateService {
 			params[2] = decoratorAuditAgreePerson;
 			params[3] = decoratorAuditAgreeTelephone;
 			String[] receivers = {"86 "+ phone};
+			log.info("发送搭建商审核通过短信，参数:{}，手机号:{}", params, receivers);
 			SendSmsResponse smsResult = TencentSMSUtil.sendSMS(receivers, params, BianHao);
 			log.info("发送搭建商审核通过短信，手机号:{}，发送结果:{}", phone, JSONUtil.toJsonStr(smsResult));
 			EbsSendMessageLog eml = new EbsSendMessageLog();
